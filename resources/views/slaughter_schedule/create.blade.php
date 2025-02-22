@@ -1,0 +1,168 @@
+@extends('layouts.layout')
+@section('content')
+<div class="main-panel">
+    <div class="content-wrapper">
+        <div class="col-12 grid-margin createtable">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <h4 class="card-title">Slaughter Schedule</h4>
+                        </div>
+                        <div class="col-6 text-end">
+                            <a href="{{ url('slaughter-schedules-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        </div>
+                    </div>
+                    
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    
+                    <form method="POST" action="{{ url('slaughter-schedule') }}">
+                        @csrf
+                        
+                        <!-- General Information -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="slaughter_no">Slaughter No:</label>
+                                        <input type="text" class="form-control" id="slaughter_no" name="slaughter_no"  value="{{$invoice_no}}"required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="date">Date:</label>
+                                        <input type="date" class="form-control" id="date" name="date" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Transportation Details -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Transportation Details</h5>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="loading_time">Loading Time:</label>
+                                        <input type="time" class="form-control" id="loading_time" name="loading_time" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="airport_time">Airport Time:</label>
+                                        <input type="time" class="form-control" id="airport_time" name="airport_time" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Airline Details -->
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Airline Details</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="airline_name">Airline Name:</label>
+                                        <input type="text" class="form-control" id="airline_name" name="airline_name" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="airline_number">Flight Number:</label>
+                                        <input type="text" class="form-control" id="airline_number" name="airline_number" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="airline_date">Date:</label>
+                                        <input type="date" class="form-control" id="airline_date" name="airline_date" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="airline_time">Time:</label>
+                                        <input type="time" class="form-control" id="airline_time" name="airline_time" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                           <!-- Slaughter Timing -->
+                           <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Slaughter Timing</h5>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="starting_time_of_slaughter">Starting Time:</label>
+                                        <input type="time" class="form-control" id="starting_time_of_slaughter" name="starting_time_of_slaughter" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ending_time_of_slaughter">Ending Time:</label>
+                                        <input type="time" class="form-control" id="ending_time_of_slaughter" name="ending_time_of_slaughter" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                 <!-- Products Selection -->
+                 <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Products</h5>
+                                <div id="product-list">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <div class="col-md-4">
+                                        <select name="products[]" class="form-control" required>
+                                            <option value="">Select Product</option>
+                                              @foreach($products as $product)
+                                             <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                                                @endforeach
+                                        </select>
+
+
+                                        </div>
+                                        <button type="button" class="btn btn-danger remove-product ms-2">X</button>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <button type="button" class="btn btn-success" id="add-product">Add Product</button>
+                                </div>
+                            </div>
+                        </div>
+
+                     
+                        
+                        <button type="submit" class="btn btn-primary">Create Schedule</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+   document.getElementById('add-product').addEventListener('click', function() {
+    let productList = document.getElementById('product-list');
+    
+    let newProduct = document.createElement('div');
+    newProduct.classList.add('d-flex', 'align-items-center', 'mb-2', 'product-item');
+    newProduct.innerHTML = `
+        <div class="col-md-4">
+            <select name="products[]" class="form-control" required>
+                <option value="">Select Product</option>
+                @foreach($products as $product)
+                    <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <button type="button" class="btn btn-danger remove-product ms-2">X</button>
+    `;
+
+    productList.appendChild(newProduct);
+});
+
+// Event delegation for dynamically added elements
+document.getElementById('product-list').addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-product')) {
+        event.target.closest('.product-item').remove();
+    }
+});
+
+
+</script>
+@endsection
