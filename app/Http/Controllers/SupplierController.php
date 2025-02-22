@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Supplier;
+use Illuminate\Support\Facades\DB;
+use App\Models\OpeningBalance;
+
 
 
 class SupplierController extends Controller
@@ -39,36 +42,57 @@ class SupplierController extends Controller
 
 
     public function store(Request $request)
-{
-    $request->validate([
-       
-        'name' => 'required|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'contact_number' => 'required|string|max:15',
-        'address' => 'nullable|string',
-       'credit_limit_days'=>  'required|numeric|min:0',
-       'opening_balance' => 'nullable|numeric|min:0',
-       'dr_cr' => 'nullable|in:Dr,Cr',
-        
-    ]);
-
-    Supplier::create([
-        'code' => $request->code,
-        'name' => $request->name,
-        'email' => $request->email,
-        'contact_number' => $request->contact_number,
-        'address' => $request->address,
-        'payment_terms' => $request->payment_terms,
-        'credit_limit_days' => $request->credit_limit_days,
-        'opening_balance' => $request->opening_balance ?? 0,
-        'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
-        'store_id' => 1, 
-       'user_id' => auth()->id(),
-    ]);
-    InvoiceNumber::updateinvoiceNumber('supplier_code',1);
-
-    return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
-}
+    {
+        DB::beginTransaction();
+    
+        try {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'nullable|email|max:255',
+                'contact_number' => 'required|string|max:15',
+                'address' => 'nullable|string',
+                'credit_limit_days' => 'required|numeric|min:0',
+                'opening_balance' => 'nullable|numeric|min:0',
+                'dr_cr' => 'nullable|in:Dr,Cr',
+            ]);
+    
+            $supplier = Supplier::create([
+                'code' => $request->code,
+                'name' => $request->name,
+                'email' => $request->email,
+                'contact_number' => $request->contact_number,
+                'address' => $request->address,
+                'payment_terms' => $request->payment_terms,
+                'credit_limit_days' => $request->credit_limit_days,
+                'opening_balance' => $request->opening_balance ?? 0,
+                'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
+                'store_id' => 1,
+                'user_id' => auth()->id(),
+            ]);
+    
+            if ($request->opening_balance > 0) {
+                $openingBalance = OpeningBalance::create([
+                    'account_id' => $supplier->id,
+                    'opening_balance' => $request->opening_balance,
+                    'dr_cr' => $request->dr_cr,
+                    'account_type' => 'supplier', 
+                    'store_id' => 1,
+                    'user_id' => auth()->id(),
+                ]);
+            }
+    
+            // Update the invoice number
+            InvoiceNumber::updateinvoiceNumber('supplier_code', 1);
+    
+            DB::commit();
+    
+            return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Supplier Store Error: ' . $e->getMessage(), ['exception' => $e]);
+            return redirect()->back()->with('error', 'Failed to create supplier: ' . $e->getMessage());
+        }
+    }
 
 
 public function edit($id)
@@ -79,45 +103,60 @@ public function edit($id)
 }
 
 
-public function update(Request $request, $id)
+public function update(Request $request, $id) 
 {
-    // Find the supplier by ID
-    $supplier = Supplier::findOrFail($id);
+    DB::beginTransaction();
 
-    // Validate the incoming request data
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'nullable|email|max:255',
-        'contact_number' => 'required|string|max:15',
-        'address' => 'nullable|string',
-        'credit_limit_days' => 'nullable|numeric',
-        'opening_balance' => 'nullable|numeric|min:0',
-        'dr_cr' => 'nullable|in:Dr,Cr',
-    ]);
+    try {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'contact_number' => 'required|string|max:15',
+            'address' => 'nullable|string|max:500',
+            'credit_limit_days' => 'nullable|numeric|min:0',
+            'opening_balance' => 'nullable|numeric|min:0',
+            'dr_cr' => 'nullable|in:Dr,Cr',
+        ]);
 
-    // Ensure dr_cr is only updated when opening_balance is present
-    $updateData = [
-        'name' => $request->name,
-        'email' => $request->email,
-        'contact_number' => $request->contact_number,
-        'address' => $request->address,
-        'payment_terms' => $request->payment_terms,
-        'credit_limit_days' => $request->credit_limit_days,
-        'opening_balance' => $request->opening_balance ?? 0, // Set to 0 if empty
-    ];
+        $supplier = Supplier::findOrFail($id);
 
-    if (!empty($request->opening_balance)) {
-        $updateData['dr_cr'] = $request->dr_cr;
-    } else {
-        $updateData['dr_cr'] = null; // Set to null if opening balance is removed
+        // Prepare update data
+        $validated['opening_balance'] = $request->opening_balance ?? 0;
+        $validated['dr_cr'] = $request->opening_balance ? $request->dr_cr : null;
+
+        // Update supplier details
+        $supplier->update($validated);
+
+        // Handle Opening Balance update
+        if ($request->opening_balance > 0) {
+            OpeningBalance::updateOrCreate(
+                ['account_id' => $supplier->id, 'account_type' => 'supplier'],
+                [
+                    'opening_balance' => $request->opening_balance,
+                    'dr_cr' => $request->dr_cr,
+                    'store_id' => 1,
+                    'user_id' => auth()->id(),
+                ]
+            );
+        } else {
+            // If opening balance is removed, delete the record
+            OpeningBalance::where('account_id', $supplier->id)
+                ->where('account_type', 'supplier')
+                ->delete();
+        }
+
+        DB::commit();
+
+        return redirect()->route('supplier.index')->with('success', 'Supplier updated successfully.');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Supplier Update Error: ' . $e->getMessage(), ['exception' => $e]);
+
+        return redirect()->back()->with('error', 'Failed to update supplier: ' . $e->getMessage());
     }
-
-    // Update the supplier record
-    $supplier->update($updateData);
-
-    // Redirect back with success message
-    return redirect()->route('supplier.index')->with('success', 'Supplier updated successfully.');
 }
+
 
 
 

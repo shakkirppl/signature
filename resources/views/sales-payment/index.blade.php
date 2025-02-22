@@ -36,6 +36,9 @@
                                         <td>
                                             <a href="{{ route('sales_payment.view', $sale->id) }}" class="btn btn-info btn-sm">View</a>
                                             <a href="{{ route('sales_payment.edit', $sale->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                            <a href="{{ route('invoice.print', $sale->order_no) }}" target="_blank" class="btn btn-primary btn-sm">
+                                            <i class="mdi mdi-printer"></i> Print
+                                            </a> 
                                             <a href="{{ route('sales_payment.destroy',  $sale->id) }}" 
                                                     class="btn btn-danger btn-sm" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">

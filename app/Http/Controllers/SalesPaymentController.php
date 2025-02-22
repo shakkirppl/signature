@@ -50,6 +50,8 @@ public function store(Request $request)
         'sales_no' => 'required|exists:sales_order,id',
         'customer_id' => 'required|exists:customer,id',
         'grand_total' => 'required|numeric|min:0',
+        'shipping_mode' => 'nullable|string|min:0',
+        'shipping_agent' => 'nullable|string|min:0',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
         'products.*.qty' => 'required|numeric|min:1',
@@ -64,6 +66,8 @@ public function store(Request $request)
             'date' => $request->date,
             'sales_no' => $request->sales_no,
             'customer_id' => $request->customer_id,
+            'shipping_agent' => $request->shipping_agent,
+            'shipping_mode' => $request->shipping_mode,
             'grand_total' => $request->grand_total,
             'advance_amount' => $request->advance_amount ?? 0,
             'balance_amount' => ($request->grand_total - ($request->advance_amount ?? 0)),
@@ -114,6 +118,8 @@ public function update(Request $request, $id)
         'date' => 'required|date',
         'customer_id' => 'required|exists:customer,id', 
         'sales_no' => 'required|exists:sales_order,id',
+        'shipping_mode' => 'nullable|string|min:0',
+        'shipping_agent' => 'nullable|string|min:0',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
         'products.*.qty' => 'required|numeric|min:1',
@@ -131,6 +137,8 @@ public function update(Request $request, $id)
             'date' => $request->date,
             'sales_no' => $request->sales_no, 
             'customer_id' => $request->customer_id,
+            'shipping_agent' => $request->shipping_agent,
+            'shipping_mode' => $request->shipping_mode,
             'grand_total' => $request->grand_total,
             'advance_amount' => $request->advance_amount ?? 0,
             'balance_amount' => ($request->grand_total - ($request->advance_amount ?? 0)),
@@ -196,4 +204,22 @@ public function report(Request $request)
 
     return view('sales-payment.report', compact('SalesPayments', 'customers'));
 }
+
+public function printInvoice($order_no)
+{
+    $order = SalesPayment::where('order_no', $order_no)->firstOrFail();
+    $products = SalesPaymentDetail::where('sales_payment_id', $order->id)
+        ->join('product', 'sales_payment_detail.product_id', '=', 'product.id')
+        ->select('product.description', 'product.hsn_code', 'sales_payment_detail.qty as quantity', 'sales_payment_detail.rate as price')
+        ->get();
+
+    $total_amount = $products->sum(function ($product) {
+        return $product->quantity * $product->price;
+    });
+
+    $total_kg = $products->sum('quantity');
+
+    return view('sales-payment.invoice-print', compact('order', 'products', 'total_amount', 'total_kg'));
+}
+
 }

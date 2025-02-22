@@ -291,6 +291,8 @@ Route::get('sales_payment/{id}/edit', [SalesPaymentController::class, 'edit'])->
 Route::post('sales_payment/{id}', [SalesPaymentController::class, 'update'])->name('sales_payment.update');
 Route::get('/sales_payment/delete/{id}', [SalesPaymentController::class, 'destroy'])->name('sales_payment.destroy');
 Route::get('sales_payment-report', [SalesPaymentController::class, 'report'])->name('sales_payment.report');
+Route::get('/invoice-print/{order_no}', [SalesPaymentController::class, 'printInvoice'])->name('invoice.print');
+
 
 
 

@@ -20,7 +20,9 @@ class SalesPayment extends Model
     'status',
     'store_id',
     'user_id',
-    'paid_amount'];
+    'paid_amount',
+    'shipping_mode',
+    'shipping_agent',];
 
     
     public function customer()

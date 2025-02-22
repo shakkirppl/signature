@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
-use DB;
+use App\Models\OpeningBalance;
+use Illuminate\Support\Facades\DB;
+
 
 class CustomerController extends Controller
 {
@@ -14,33 +16,57 @@ class CustomerController extends Controller
     }
 
 
+
     public function store(Request $request)
     {
-        // Validate and save the customer data
-        $validated = $request->validate([
-            'customer_code' => 'required|string|max:255',
-            'customer_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-           
-            'address' => 'required|string|max:500',
-            'state' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'credit_limit_days'=>  'required|numeric|min:10',
-            'opening_balance' => 'nullable|numeric|min:0',
-            'dr_cr' => 'required|in:Dr,Cr',
+        DB::beginTransaction();
+    
+        try {
+            $validated = $request->validate([
+                'customer_code' => 'required|string|max:255',
+                'customer_name' => 'required|string|max:255',
+                'email' => 'required|email|max:255',
+                'address' => 'required|string|max:500',
+                'state' => 'required|string|max:255',
+                'country' => 'required|string|max:255',
+                'credit_limit_days' => 'required|numeric|min:10',
+                'opening_balance' => 'nullable|numeric|min:0',
+                'dr_cr' => 'required|in:Dr,Cr',
+            ]);
+    
+            $validated['opening_balance'] = $request->opening_balance ?? 0;
+            $validated['dr_cr'] = $request->opening_balance ? $request->dr_cr : null;
+            $validated['user_id'] = auth()->id();
+            $validated['store_id'] = 1;
+    
+          
+            $customer = Customer::create($validated);
+    
+            
+            if ($request->opening_balance > 0) {
+                OpeningBalance::create([
+                    'account_id' => $customer->id, 
+                    'opening_balance' => $request->opening_balance,
+                    'dr_cr' => $request->dr_cr,
+                    'account_type' => 'customer', 
+                    'store_id' => 1,
+                    'user_id' => auth()->id(),
+                ]);
+            }
+    
+            DB::commit();
+    
+            // Redirect to the index page with a success message
+            return redirect()->route('customer.index')->with('success', 'Customer created successfully!');
+    
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('customer Store Error: ' . $e->getMessage(), ['exception' => $e]);
 
-        ]);
-        $validated['opening_balance'] = $request->opening_balance ?? 0;
-       $validated['dr_cr'] = $request->opening_balance ? $request->dr_cr : null; 
-
-        $validated['user_id'] = auth()->id();
-        $validated['store_id'] = 1;
-       
-        Customer::create($validated);
-
-        // Redirect to the index page with a success message
-        return redirect()->route('customer.index')->with('success', 'Customer created successfully!');
+            return redirect()->back()->with('error', 'Failed to create customer: ' . $e->getMessage());
+        }
     }
+    
 
 
     public function index()
@@ -61,38 +87,57 @@ public function edit($id)
 
 public function update(Request $request, $id)
 {
-    $request->validate([
-        'customer_code' => 'required',
-        'customer_name' => 'required',
-        'email' => 'nullable|email',
-        'address' => 'nullable|string',
-        'state' => 'nullable|string',
-        'country' => 'nullable|string',
-        'credit_limit_days'=>  'nullable|numeric|min:0',
-    ]);
+    DB::beginTransaction();
 
-    $customer =Customer::findOrFail($id);
+    try {
+        $validated = $request->validate([
+            'customer_code' => 'required|string|max:255',
+            'customer_name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
+            'state' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
+            'credit_limit_days' => 'nullable|numeric|min:10',
+            'opening_balance' => 'nullable|numeric|min:0',
+            'dr_cr' => 'required_if:opening_balance,>,0|in:Dr,Cr',
+        ]);
 
-    
-    $customer->update([
-        'customer_code' => $request->customer_code,
-        'customer_name' => $request->customer_name,
-        'email' => $request->email,
-        'address' => $request->address,
-        'state' => $request->state,
-        'country' => $request->country,
-        'credit_limit_days'=> $request->credit_limit_days,
-        'opening_balance' => $request->opening_balance ?? 0,
-    ]);
-    if (!empty($request->opening_balance)) {
-        $updateData['dr_cr'] = $request->dr_cr;
-    } else {
-        $updateData['dr_cr'] = null; // Set to null if opening balance is removed
+        $customer = Customer::findOrFail($id);
+
+        $validated['opening_balance'] = $request->opening_balance ?? 0;
+        $validated['dr_cr'] = $request->opening_balance ? $request->dr_cr : null;
+
+        // Update customer details
+        $customer->update($validated);
+
+        // Handle Opening Balance update
+        if ($request->opening_balance > 0) {
+            OpeningBalance::updateOrCreate(
+                ['account_id' => $customer->id, 'account_type' => 'customer'],
+                [
+                    'opening_balance' => $request->opening_balance,
+                    'dr_cr' => $request->dr_cr,
+                    'store_id' => 1,
+                    'user_id' => auth()->id(),
+                ]
+            );
+        } else {
+            // If opening balance is removed, delete the record
+            OpeningBalance::where('account_id', $customer->id)
+                ->where('account_type', 'customer')
+                ->delete();
+        }
+
+        DB::commit();
+
+        return redirect()->route('customer.index')->with('success', 'Customer updated successfully!');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Customer Update Error: ' . $e->getMessage(), ['exception' => $e]);
+
+        return redirect()->back()->with('error', 'Failed to update customer: ' . $e->getMessage());
     }
-
-    // Update the supplier record
-    $customer->update($updateData);
-    return redirect()->route('customer.index')->with('success');
 }
 
 public function destroy($id)

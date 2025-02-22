@@ -40,6 +40,15 @@
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" required>
                             </div>
+                            <div class="col-md-4">
+                                <label for="sales_no" class="form-label">Sales No:</label>
+                                <select name="sales_no" id="sales_no" class="form-control" required>
+                                 <option value="">Select sales no</option>
+                                    @foreach ($SalesOrders as $SalesOrder)
+                                    <option value="{{ $SalesOrder->id }}">{{ $SalesOrder->order_no }}</option>
+                                    @endforeach
+                               </select>
+                          </div>
                             </div>
                             <div class="row mb-3">
                             <div class="col-md-4">
@@ -51,17 +60,16 @@
                                     @endforeach
                                 </select>
                             </div>
-                       
-                        <div class="col-md-4">
-    <label for="sales_no" class="form-label">Sales No:</label>
-    <select name="sales_no" id="sales_no" class="form-control" required>
-        <option value="">Select sales no</option>
-        @foreach ($SalesOrders as $SalesOrder)
-            <option value="{{ $SalesOrder->id }}">{{ $SalesOrder->order_no }}</option>
-        @endforeach
-    </select>
-</div>
-</div><br>
+                            <div class="col-md-4">
+                                <label for="code" class="form-label">Shipping Mode</label>
+                                <input type="text" class="form-control" id="shipping_mode" name="shipping_mode" value="">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="date" class="form-label">Shipping Agent</label>
+                                <input type="text" class="form-control" id="shipping_agent" name="shipping_agent" >
+                            </div>
+                             
+                        </div><br>
                         <table class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
