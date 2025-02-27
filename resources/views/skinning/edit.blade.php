@@ -1,6 +1,19 @@
 @extends('layouts.layout')
 @section('content')
+<style>
+    #componentTable tbody tr {
+        line-height: 1.2em;
+        margin-bottom: 0.3em;
+    }
+    .table {
+    border-collapse: collapse;
+    width: 40%;
+}
 
+button.remove-row {
+    padding: 5px 10px;
+}
+</style>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin createtable">
@@ -56,7 +69,7 @@
                         </div>
 
                         <br>
-
+                        <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
@@ -72,7 +85,7 @@
                                 @foreach ($skinning->skinningDetails as $detail)
                                     <tr>
                                         <td>
-                                            <select name="employees[]" class="form-control" required>
+                                            <select name="employees[]" class="form-control" required style="width: 200px;">
                                                 <option value="">Select Employee</option>
                                                 @foreach ($employees as $employee)
                                                     <option value="{{ $employee->id }}" {{ $detail->employee_id == $employee->id ? 'selected' : '' }}>
@@ -82,7 +95,7 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="products[]" class="form-control" required>
+                                            <select name="products[]" class="form-control" required style="width: 200px;">
                                                 <option value="">Select Product</option>
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->id }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -91,14 +104,14 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="number" name="quandity[]" class="form-control" value="{{ $detail->quandity }}" required></td>
-                                        <td><input type="text" step="0.01" name="skin_percentage[]" class="form-control" value="{{ $detail->skin_percentage }} %" required></td>
+                                        <td><input type="number" name="quandity[]" class="form-control" value="{{ $detail->quandity }}" required style="width: 150px;"></td>
+                                        <td><input type="text" step="0.01" name="skin_percentage[]" class="form-control" value="{{ $detail->skin_percentage }} %" required style="width: 150px;"></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
-
+</div>
                         <button type="button" class="btn btn-primary" id="addRow">Add New Row</button>
                         <br>
                         <button type="submit" class="btn btn-success mt-4">Update</button>

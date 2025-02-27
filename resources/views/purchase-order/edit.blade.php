@@ -1,10 +1,13 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-/* Adjust spacing between table rows */
-#componentTable tbody tr {
-    line-height: 1.2em;
-    margin-bottom: 0.3em;
+.table {
+    border-collapse: collapse;
+    width: 40%;
+}
+
+button.remove-row {
+    padding: 5px 10px;
 }
 </style>
 
@@ -54,13 +57,13 @@
                                 </select>
                             </div>
                         </div>
-
+                        <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
                                     <th>Product</th>
                                     <th>Type</th>
-                                    <th>Mark</th>
+                                   
                                     <th>Qty</th>
                                     <th>Rate</th>
                                     <th>Total</th>
@@ -72,7 +75,7 @@
     @foreach ($purchaseOrder->products as $index => $orderProduct)
         <tr>
             <td>
-                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required>
+                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 200px;">
                     <option value="">Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" 
@@ -83,15 +86,14 @@
                 </select>
             </td>
             <td>
-                <select name="products[{{ $index }}][type]" class="form-control" required>
+                <select name="products[{{ $index }}][type]" class="form-control" required style="width: 150px;">
                     <option value="Male" {{ $orderProduct->type == 'Male' ? 'selected' : '' }}>Male</option>
                     <option value="Female" {{ $orderProduct->type == 'Female' ? 'selected' : '' }}>Female</option>
                 </select>
             </td>
-            <td><input type="text" name="products[{{ $index }}][mark]" class="form-control" value="{{ $orderProduct->mark }}"></td>
-            <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $orderProduct->qty }}" min="1" required></td>
-            <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $orderProduct->rate }}"></td>
-            <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $orderProduct->total }}" readonly></td>
+            <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $orderProduct->qty }}" min="1" required style="width: 80px;"></td>
+            <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $orderProduct->rate }}" style="width: 150px;"></td>
+            <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $orderProduct->total }}" readonly style="width: 150px;"></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         </tr>
     @endforeach
@@ -103,6 +105,7 @@
 
                             </tbody>
                         </table>
+</div>
 
                         <button type="button" class="btn btn-primary" id="add-row">Add New Row</button>
 
@@ -162,7 +165,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     <option value="Female">Female</option>
                 </select>
             </td>
-            <td><input type="text" name="products[${rowCount}][mark]" class="form-control"></td>
             <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required></td>
             <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate"></td>
             <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly></td>

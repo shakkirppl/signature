@@ -34,7 +34,7 @@
                     </div>
 
                     <hr>
-
+                    <div class="table-responsive">
                     <h5 class="mt-4">Product Details</h5>
                     <table class="table table-bordered">
                         <thead class="table-light">
@@ -56,6 +56,7 @@
                             @endforeach
                         </tbody>
                     </table>
+</div>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label><strong>Grand Total:</strong></label>

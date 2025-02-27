@@ -7,6 +7,7 @@ use App\Models\ReceiptVoucher;
 use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BankMaster;
+use App\Models\AccountHead;
 
 class ReceiptVoucherController extends Controller
 {
@@ -20,9 +21,9 @@ class ReceiptVoucherController extends Controller
 
     public function create()
     {
-        $banks = \App\Models\BankMaster::all();
+        $banks = BankMaster::all();
 
-        $coa = \App\Models\AccountHead::whereIn('parent_id', function ($query) {
+        $coa = AccountHead::whereIn('parent_id', function ($query) {
             $query->select('id')
                   ->from('account_heads')
                   ->whereIn('name', ['Assets', 'Income']);
@@ -89,9 +90,9 @@ class ReceiptVoucherController extends Controller
     public function edit($id)
     {
         $voucher = ReceiptVoucher::findOrFail($id);
-        $banks = \App\Models\BankMaster::all();
+        $banks = BankMaster::all();
     
-        $coa = \App\Models\AccountHead::whereIn('parent_id', function ($query) {
+        $coa = AccountHead::whereIn('parent_id', function ($query) {
             $query->select('id')
                   ->from('account_heads')
                   ->whereIn('name', ['Assets', 'Income']);

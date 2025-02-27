@@ -1,11 +1,16 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-/* Adjust spacing between table rows */
-#componentTable tbody tr {
-    line-height: 1.2em;
-    margin-bottom: 0.3em;
+.table {
+    border-collapse: collapse;
+    width: 40%;
 }
+
+button.remove-row {
+    padding: 5px 10px;
+}
+
+
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -50,44 +55,45 @@
                                 </select>
                             </div>
                         </div>
-                        <table class="table table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th>Product</th>
-            <th>Type</th>
-            <th>Mark</th>
-            <th>Qty</th>
-            <th>Rate</th>
-            <th>Total</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody id="product-rows">
-        <tr>
-            <td>
-                <select name="products[0][product_id]" class="form-control product-select" required>
-                    <option value="">Select Product</option>
-                    @foreach ($products as $product)
-                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
-                    @endforeach
-                </select>
-            </td>
-            <td>
-                <select name="products[0][type]" class="form-control" required>
-                    <option value="">Select Type</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                </select>
-            </td>
-            <td><input type="text" name="products[0][mark]" class="form-control"></td>
-            <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required></td>
-            <td><input type="number" name="products[0][rate]" class="form-control rate"></td>
-            <td><input type="number" name="products[0][total]" class="form-control total" readonly></td>
-            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-        </tr>
-    </tbody>
-</table>
-                        <button type="button" class="btn btn-primary" id="add-row">Add New Row</button>
+                        <div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Type</th>
+                <th>Qty</th>
+                <th>Rate</th>
+                <th>Total</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="product-rows">
+            <tr>
+                <td>
+                    <select name="products[0][product_id]" class="form-control product-select" required style="width: 200px;">
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td>
+                    <select name="products[0][type]" class="form-control" style="width: 150px;">
+                        <option value="">Select Type</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </td>
+                <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 80px;"></td>
+                <td><input type="number" name="products[0][rate]" class="form-control rate" style="width: 150px;"></td>
+                <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
+                <td><button type="button" class="btn btn-danger remove-row" >Remove</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+                        <button type="button" class="btn btn-primary" id="add-row" >Add New Row</button>
                         <div class="row mt-4">
                             <div class="col-md-3">
                                 <label for="grand_total" class="form-label">Grand Total:</label>
@@ -142,7 +148,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     <option value="Female">Female</option>
                 </select>
             </td>
-            <td><input type="text" name="products[${rowCount}][mark]" class="form-control"></td>
             <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required></td>
             <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate"></td>
             <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly></td>

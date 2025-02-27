@@ -26,7 +26,7 @@
             <div class="col-md-4">
                 <label for="slaughter_no">Slaughter No:</label>
                 <input type="text" class="form-control" id="slaughter_no" name="slaughter_no"
-                    value="{{ old('slaughter_no', $schedule->slaughter_no) }}" required>
+                    value="{{ old('slaughter_no', $schedule->slaughter_no) }}" readonly>
             </div>
 
             <!-- Date -->
@@ -35,24 +35,35 @@
                 <input type="date" class="form-control" id="date" name="date"
                     value="{{ old('date', $schedule->date) }}" required>
             </div>
-        </div>
+        </div><br>
+        <h5 class="card-title">Transportation Details</h5>          
 
         <div class="row mt-3">
-            <!-- Loading Time -->
-            <div class="col-md-4">
+          <div class="col-md-6">
+                 <label for="airline_date"> Transportation Date:</label>
+                    <input type="date" class="form-control" id="transportation_date" name="transportation_date" required
+                          value="{{ old('transportation_date', $schedule->transportation_date) }}">
+            </div>
+                <div class="col-md-6">
+                <label for="airline_time"> Transportation Time:</label>
+                 <input type="time" class="form-control" id="transportation_time" name="transportation_time" required
+                    value="{{ old('transportation_time', $schedule->transportation_time) }}">
+            </div>
+            <div class="col-md-6">
                 <label for="loading_time">Loading Time:</label>
                 <input type="time" class="form-control" id="loading_time" name="loading_time"
                     value="{{ old('loading_time', $schedule->loading_time) }}" required>
             </div>
 
             <!-- Airport Time -->
-            <div class="col-md-4">
-                <label for="airport_time">Airport Time:</label>
+            <div class="col-md-6">
+                <label for="airport_time">Airport Cutoff Time:</label>
                 <input type="time" class="form-control" id="airport_time" name="airport_time"
                     value="{{ old('airport_time', $schedule->airport_time) }}" required>
             </div>
         </div>
-
+<br>
+<h5 class="card-title">Airline Details</h5>
         <div class="row mt-3">
             <!-- Airline Name -->
             <div class="col-md-6">
@@ -84,7 +95,8 @@
                     value="{{ old('airline_time', $schedule->airline_time) }}" required>
             </div>
         </div>
-
+<br>
+<h5 class="card-title">Slaughter Timing</h5>
         <div class="row mt-3">
             <!-- Starting Time of Slaughter -->
             <div class="col-md-4">

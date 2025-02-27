@@ -16,7 +16,7 @@ class OffalSalesController extends Controller
 {
     public function create()
     {
-        $localcustomers = \App\Models\Localcustomer::all(); 
+        $localcustomers = Localcustomer::all(); 
         $products = Product::all();
         $shipments = Shipment::all();
        
@@ -99,7 +99,7 @@ public function edit($id)
 {
     $offalSale = OffalSales::with('details')->findOrFail($id);
     $localcustomers = Localcustomer::all();
-    $shipments = Shipment::all();
+    $shipments = Shipment::where('shipment_status', 0)->get();
     $products = Product::all();
 
     return view('offal-sales.edit', compact('offalSale', 'localcustomers', 'shipments', 'products'));

@@ -6,7 +6,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Purchase Conformation Report</h4>
+                    <h4 class="card-title">Purchase Confirmation Report</h4>
 
                     <form method="GET" action="{{ route('purchase-confirmation.report') }}">
                         @csrf

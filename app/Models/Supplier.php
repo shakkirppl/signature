@@ -9,7 +9,7 @@ class Supplier extends Model
 {
     use HasFactory;
     protected $table = 'supplier';
-    protected $fillable = ['id', 'name','code','address','contact_number','email','credit_limit_days','store_id','user_id','opening_balance','dr_cr'];
+    protected $fillable = ['id', 'name','code','address','contact_number','email','credit_limit_days','store_id','user_id','opening_balance','dr_cr','state','country'];
 
 
     public function invoice_no()

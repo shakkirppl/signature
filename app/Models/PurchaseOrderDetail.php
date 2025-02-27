@@ -13,7 +13,7 @@ class PurchaseOrderDetail extends Model
         'purchase_order_id',
         'product_id',
         'type',
-        'mark',
+        
         'qty',
         'rate',
         'total',

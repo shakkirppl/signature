@@ -16,7 +16,7 @@ class BankMasterController extends Controller
             return $e->getMessage();
         }
     }
-// test
+
 
 
     public function create() 

@@ -1,6 +1,15 @@
 @extends('layouts.layout')
 @section('content')
+<style>
+    .table {
+    border-collapse: collapse;
+    width: 70%;
+}
 
+button.remove-row {
+    padding: 5px 10px;
+}
+</style>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin createtable">
@@ -35,7 +44,7 @@
                       </select>
                   </div>
                </div>
-
+               <div class="table-responsive">
                   <table class="table">
                             <thead>
                                 <tr>
@@ -48,15 +57,15 @@
                             @foreach($suppliers as $supplier)
                               <tr>
                                    <td>
-                                        <select name="products[]" class="form-control product-dropdown">
+                                        <select name="products[]" class="form-control product-dropdown" style="width: 200px;">
                                           <option value="">Select Product</option>
                                        </select>
                                   </td>
                                    <td>
-                                       <input type="number" name="quandity[]" value="{{ $existing->quandity ?? '' }}" class="form-control">
+                                       <input type="number" name="quandity[]" value="{{ $existing->quandity ?? '' }}" class="form-control" style="width: 200px;">
                                   </td>
                                    <td>
-                                       <input type="text" name="weight[]" value="{{ $existing->weight ?? '' }}" class="form-control weight-input" required>
+                                       <input type="text" name="weight[]" value="{{ $existing->weight ?? '' }}" class="form-control weight-input" required style="width: 200px;">
                                   </td>
                               </tr>
                             @endforeach
@@ -72,6 +81,7 @@
                              </tr>
                             </tfoot>
                         </table>
+</div>
                         <div class="modal fade" id="editWeightModal" tabindex="-1" aria-labelledby="editWeightModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

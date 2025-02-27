@@ -11,7 +11,7 @@
         <label>Date</label>
         <input type="date" class="form-control" name="date" value="{{ $weightMaster->date }}" required>
     </div>
-
+    <div class="table-responsive">
     <table class="table">
         <thead>
             <tr>
@@ -28,13 +28,13 @@
                         <input type="number" name="quandity[{{ $detail->id }}]" value="{{ $detail->quandity }}" class="form-control">
                     </td>
                     <td>
-                        <input type="text" name="weight[{{ $detail->id }}]" value="{{ $detail->weight }}" class="form-control weight-input">
+                        <input type="text" name="weight[{{ $detail->id }}]" value="{{ $detail->weight }}" class="form-control weight-input" style="width: 100px;">
                     </td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
+</div>
     <!-- Single Total Weight Field -->
     <div class="form-group">
         <label for="edit_total_weight">Total Weight</label>

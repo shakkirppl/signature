@@ -20,7 +20,7 @@
                             <a href="{{ route('skinning.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
-
+                    <div class="table-responsive">
                     <table class="table table-bordered mt-4">
                         <tr>
                             <th>Skinning Code</th>
@@ -63,7 +63,7 @@
                             @endforeach
                         </tbody>
                     </table>
-
+</div>
                 </div>
             </div>
         </div>

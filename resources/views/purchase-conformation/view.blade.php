@@ -6,7 +6,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Purchase Conformation Details</h4>
+                    <h4 class="card-title">Purchase Confirmation Details</h4>
                     <div class="col-6 col-md-6 col-sm-6 col-xs-12 heading" style="text-align:end;">
                             <a href="{{ url('purchase-conformation-report') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>

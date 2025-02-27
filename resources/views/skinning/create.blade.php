@@ -6,7 +6,14 @@
         line-height: 1.2em;
         margin-bottom: 0.3em;
     }
-   
+    .table {
+    border-collapse: collapse;
+    width: 40%;
+}
+
+button.remove-row {
+    padding: 5px 10px;
+}
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -33,20 +40,20 @@
                     <form action="{{ route('skinning.store') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                                 <label for="skinning_code" class="form-label">Skinning Code:</label>
                                 <input type="text" class="form-control" id="skinning_code" name="skinning_code" value="{{$invoice_no}}" readonly>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" required>
                             </div>
                        
                         
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="shipment_id" class="form-label">Shipment No:</label>
                                 <select name="shipment_id" id="shipment_id" class="form-control" required>
-                                    <option value="">Select Shipment_No</option>
+                                    <option value="">Select Shipment No</option>
                                     @foreach ($shipments as $shipment)
                                         <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
                                     @endforeach
@@ -55,6 +62,7 @@
                             </div>  
 
                         <br>
+                        <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
@@ -68,7 +76,7 @@
                             <tbody id="details">
                                 <tr>
                                     <td>
-                                    <select name="employees[]" class="form-control" required>
+                                    <select name="employees[]" class="form-control" required style="width: 200px;">
                                          <option value="">Select Employee</option>
                                              @foreach ($employees as $employee)
                                               <option value="{{ $employee->id }}">{{ $employee->name }}</option>
@@ -76,19 +84,20 @@
                                     </select>
                                     </td>
                                     <td>
-                                    <select name="products[]" class="form-control" required>
+                                    <select name="products[]" class="form-control" required style="width: 200px;">
                                        <option value="">Select Product</option>
                                           @foreach ($products as $product)
                                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
                                         @endforeach
                                   </select>
                                     </td>
-                                    <td><input type="number" name="quandity[]" class="form-control" required></td>
-                                    <td><input type="text" name="skin_percentage[]" class="form-control" required></td>
+                                    <td><input type="number" name="quandity[]" class="form-control" required style="width: 150px;"></td>
+                                    <td><input type="text" name="skin_percentage[]" class="form-control" required style="width: 150px;"></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
                         </table>
+</div>
                         <button type="button" class="btn btn-primary" id="addRow">Add New Row</button>
                         <br>
 

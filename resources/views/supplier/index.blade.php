@@ -25,9 +25,11 @@
                    <th>Code</th>
                    <th>Name</th>
                    <th>Email</th>
-                   <th>Address</th>
                    <th>Contact Number</th>
-                   <th>Credit Limit Days</th>
+                   <th>Address</th>
+                   <th>State</th>
+                   <th>Country</th>
+                  <th>Credit Limit Days</th>
                    <th>Opening Balance</th>
                    <th>Dr/Cr</th>
                    <th>Actions</th>
@@ -40,8 +42,10 @@
                   <td>{{ $supplier->code }}</td>
             <td>{{ $supplier->name }}</td>
             <td>{{ $supplier->email }}</td>
-            <td>{{ $supplier->address }}</td>
             <td>{{ $supplier->contact_number }}</td>
+            <td>{{ $supplier->address }}</td>
+            <td>{{ $supplier->state }}</td>
+            <td>{{ $supplier->country }}</td>
             <td>{{ $supplier->credit_limit_days }}</td>
             <td>{{ $supplier->opening_balance }}</td>
             <td>{{ $supplier->dr_cr }}</td>

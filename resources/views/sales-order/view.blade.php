@@ -27,6 +27,7 @@
                             <input type="text" class="form-control" id="customer" value="{{ $salesOrder->customer->customer_name }}" readonly>
                         </div>
                     </div>
+                    <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="table-light">
                             <tr>
@@ -51,7 +52,7 @@
                         @endforelse
                         </tbody>
                     </table>
-                   
+</div>
                     </div>
                 </div>
             </div>

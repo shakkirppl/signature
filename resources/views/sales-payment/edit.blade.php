@@ -1,9 +1,13 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-#componentTable tbody tr {
-    line-height: 1.2em;
-    margin-bottom: 0.3em;
+.table {
+    border-collapse: collapse;
+    width: 40%;
+}
+
+button.remove-row {
+    padding: 5px 10px;
 }
 </style>
 <div class="main-panel">
@@ -33,40 +37,50 @@
                         @method('POST')
                         <div class="row mb-3">
                             <div class="col-md-4">
-                                <label for="order_no" class="form-label">Order No:</label>
-                                <input type="text" class="form-control" id="order_no" name="order_no" value="{{ $SalesPayment->order_no }}" readonly>
+                                <label for="code" class="form-label">Order No:</label>
+                                <input type="text" class="form-control" id="code" name="order_no" value="{{$SalesPayment->order_no}}" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" value="{{ $SalesPayment->date }}" required>
                             </div>
-                        </div>
-                        <div class="row mb-3">
                             <div class="col-md-4">
-                                <label for="customer_id" class="form-label">Customer:</label>
-                                <select name="customer_id" id="customer_id" class="form-control" required>
-                                    <option value="">Select Customer</option>
-                                    @foreach ($customers as $customer)
-                                        <option value="{{ $customer->id }}" {{ $customer->id == $SalesPayment->customer_id ? 'selected' : '' }}>
-                                            {{ $customer->customer_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="col-md-4">
-                            <label for="sales_no" class="form-label">Sales No:</label>
-                              <select name="sales_no" id="sales_no" class="form-control" required>
-                                    <option value="">Select Sales Order</option>
+                                <label for="sales_no" class="form-label">Sales No:</label>
+                                <select name="sales_no" id="sales_no" class="form-control" required>
+                                <option value="">Select Sales Order</option>
                                          @foreach ($SalesOrders as $SalesOrder)
                                                  <option value="{{ $SalesOrder->id }}" 
                                          {{ isset($SalesPayment) && $SalesOrder->id == $SalesPayment->sales_no ? 'selected' : '' }}>
                                             {{ $SalesOrder->order_no }}
                                      </option>
-                                           @endforeach
-                              </select>
 
-                            </div>
+                                    @endforeach
+                               </select>
+                          </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label for="customer_id" class="form-label"> Customer:</label>
+                                <select name="customer_id" id="customer_id" class="form-control" required>
+                                    <option value="">Select Customers</option>
+                                    @foreach ($customers as $customer)
+                                    <option value="{{ $customer->id }}" {{ $customer->id == $SalesPayment->customer_id ? 'selected' : '' }}>
+                                            {{ $customer->customer_name }}
+                                        </option>                
+                                        @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="shipping_mode" class="form-label">Shipping Mode</label>
+                                <input type="text" class="form-control" id="shipping_mode" name="shipping_mode" value="{{$SalesPayment->shipping_mode}}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="shipping_agent" class="form-label">Shipping Agent</label>
+                                <input type="text" class="form-control" id="shipping_agent" name="shipping_agent" value="{{$SalesPayment->shipping_agent}}">
+                            </div>
+                        </div><br>
+                        <div class="table-responsive">
                         <table class="table table-bordered" id="productTable">
                             <thead class="table-light">
                                 <tr>
@@ -74,13 +88,14 @@
                                     <th>Qty</th>
                                     <th>Rate</th>
                                     <th>Total</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($SalesPayment->details as $key => $detail)
                                 <tr>
                                     <td>
-                                        <select name="products[{{ $key }}][product_id]" class="form-control product-select" required>
+                                        <select name="products[{{ $key }}][product_id]" class="form-control product-select" required style="width: 200px;">
                                             <option value="">Select Product</option>
                                             @foreach ($products as $product)
                                                 <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $product->id == $detail->product_id ? 'selected' : '' }}>
@@ -89,15 +104,16 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required></td>
-                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}"></td>
-                                    <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly></td>
+                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 150px;"></td>
+                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;"></td>
+                                    <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly style="width: 150px;"></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
 
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
+</div>
                         <button type="button" id="addRow" class="btn btn-success">Add Row</button>
 
 

@@ -1,10 +1,13 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-/* Adjust spacing between table rows */
-#componentTable tbody tr {
-    line-height: 1.2em;
-    margin-bottom: 0.3em;
+.table {
+    border-collapse: collapse;
+    width: 80%;
+}
+
+button.remove-row {
+    padding: 5px 10px;
 }
 </style>
 <div class="main-panel">
@@ -53,6 +56,7 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="table-light">
                                 <tr>
@@ -67,7 +71,7 @@
                                 @foreach ($salesOrder->details as $index => $detail)
                                     <tr>
                                         <td>
-                                            <select name="products[{{ $index }}][product_id]" class="form-control product-select" required>
+                                            <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 200px;">
                                                 <option value="">Select Product</option>
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -76,14 +80,15 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required></td>
-                                        <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}"></td>
-                                        <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly></td>
+                                        <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 150px;"></td>
+                                        <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;"></td>
+                                        <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly style="width: 150px;"></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+</div>
                         <button type="button" class="btn btn-primary" id="add-row">Add New Row</button>
                         <div class="row mt-4">
                             <div class="col-md-3">

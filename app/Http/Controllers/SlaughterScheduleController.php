@@ -42,6 +42,8 @@ class SlaughterScheduleController extends Controller
     $request->validate([
         'slaughter_no' => 'required',
         'date' => 'required|date',
+        'transportation_date'=>'required',
+        'transportation_time'=>'required',
         'loading_time' => 'required',
         'airport_time' => 'required',
         'airline_name' => 'required',
@@ -60,6 +62,9 @@ class SlaughterScheduleController extends Controller
         // Insert into slaughter_schedules_master
         $slaughterMaster = SlaughterSchedule::create([
             'slaughter_no' => $request->slaughter_no,
+            'date' => $request->date,
+            'transportation_date' => $request->transportation_date,
+            'transportation_time' => $request->transportation_time,
             'loading_time' => $request->loading_time,
             'airport_time' => $request->airport_time,
             'airline_name' => $request->airline_name,
@@ -117,6 +122,8 @@ public function update(Request $request, $id)
     $request->validate([
         'slaughter_no' => 'required',
         'date' => 'required|date',
+        'transportation_date'=>'required',
+        'transportation_time'=>'required',
         'loading_time' => 'required',
         'airport_time' => 'required',
         'airline_name' => 'required',
@@ -135,6 +142,9 @@ public function update(Request $request, $id)
         $schedule = SlaughterSchedule::findOrFail($id);
         $schedule->update([
             'slaughter_no' => $request->slaughter_no,
+            'date' => $request->date,
+            'transportation_date' => $request->transportation_date,
+            'transportation_time' => $request->transportation_time,
             'loading_time' => $request->loading_time,
             'airport_time' => $request->airport_time,
             'airline_name' => $request->airline_name,

@@ -64,9 +64,12 @@
             <div class="collapse" id="animal-purchase-order">
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-order-index')}}">Purchase order</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Conformation</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('postmortem-report-create')}}">Postmortem Report</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('antemortem-report-create')}}">Antemortem Report</a></li> 
+
 
 
 
@@ -137,9 +140,10 @@
             <div class="collapse" id="report">
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-calculator-report')}}">Weight Calculator</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-conformation-report')}}">Purchase Conformation </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-conformation-report')}}">Purchase Confirmation </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-report')}}">Inspection </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-order-report')}}">Purchase Order </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales_payment-report')}}">Sales </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order-report')}}">Sales Order </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-report')}}">Offal Sales  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher-report')}}">Payment Voucher  </a></li>

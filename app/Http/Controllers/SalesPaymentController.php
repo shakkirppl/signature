@@ -125,6 +125,7 @@ public function update(Request $request, $id)
         'products.*.qty' => 'required|numeric|min:1',
         'products.*.rate' => 'required|numeric|min:0',
         'grand_total' => 'required|numeric|min:0',
+       
     ]);
 
     DB::beginTransaction();
@@ -199,7 +200,7 @@ public function report(Request $request)
         $query->whereBetween('date', [$request->from_date, $request->to_date]);
     }
 
-    $SalesPayment = $query->get();
+    $SalesPayments = $query->get();
     $customers = Customer::all();
 
     return view('sales-payment.report', compact('SalesPayments', 'customers'));
@@ -207,10 +208,20 @@ public function report(Request $request)
 
 public function printInvoice($order_no)
 {
-    $order = SalesPayment::where('order_no', $order_no)->firstOrFail();
+    $order = SalesPayment::where('order_no', $order_no)
+        ->join('customer', 'sales_payment_master.customer_id', '=', 'customer.id')
+        ->select('sales_payment_master.*', 'customer.customer_code') // Fetch customer_code
+        ->firstOrFail();
+
     $products = SalesPaymentDetail::where('sales_payment_id', $order->id)
         ->join('product', 'sales_payment_detail.product_id', '=', 'product.id')
-        ->select('product.description', 'product.hsn_code', 'sales_payment_detail.qty as quantity', 'sales_payment_detail.rate as price')
+        ->select(
+            'product.description',
+            'product.hsn_code',
+            'sales_payment_detail.qty as quantity',
+            'sales_payment_detail.rate as price',
+           
+        )
         ->get();
 
     $total_amount = $products->sum(function ($product) {
@@ -219,7 +230,10 @@ public function printInvoice($order_no)
 
     $total_kg = $products->sum('quantity');
 
-    return view('sales-payment.invoice-print', compact('order', 'products', 'total_amount', 'total_kg'));
+    return view('sales-payment.invoice-print', compact('order', 'products', 'total_amount', 'total_kg', ));
 }
+
+
+
 
 }

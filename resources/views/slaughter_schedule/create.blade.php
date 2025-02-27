@@ -33,7 +33,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label for="slaughter_no">Slaughter No:</label>
-                                        <input type="text" class="form-control" id="slaughter_no" name="slaughter_no"  value="{{$invoice_no}}"required>
+                                        <input type="text" class="form-control" id="slaughter_no" name="slaughter_no"  value="{{$invoice_no}}"required readonly>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="date">Date:</label>
@@ -48,14 +48,23 @@
                             <div class="card-body">
                                 <h5 class="card-title">Transportation Details</h5>
                                 <div class="row">
-                                    <div class="col-md-4">
+                                <div class="col-md-6">
+                                        <label for="airline_date"> Transportation Date:</label>
+                                        <input type="date" class="form-control" id="transportation_date" name="transportation_date" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="airline_time"> Transportation Time:</label>
+                                        <input type="time" class="form-control" id="transportation_time" name="transportation_time" required>
+                                    </div>
+                                    <div class="col-md-6">
                                         <label for="loading_time">Loading Time:</label>
                                         <input type="time" class="form-control" id="loading_time" name="loading_time" required>
                                     </div>
-                                    <div class="col-md-4">
-                                        <label for="airport_time">Airport Time:</label>
+                                    <div class="col-md-6">
+                                        <label for="airport_time">Airport Cutoff Time:</label>
                                         <input type="time" class="form-control" id="airport_time" name="airport_time" required>
                                     </div>
+                                   
                                 </div>
                             </div>
                         </div>
@@ -72,7 +81,7 @@
                                     <div class="col-md-6">
                                         <label for="airline_number">Flight Number:</label>
                                         <input type="text" class="form-control" id="airline_number" name="airline_number" required>
-                                    </div>
+                                    </div><br>
                                     <div class="col-md-6">
                                         <label for="airline_date">Date:</label>
                                         <input type="date" class="form-control" id="airline_date" name="airline_date" required>

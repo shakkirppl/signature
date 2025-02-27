@@ -1,10 +1,13 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-/* Adjust spacing between table rows */
-#componentTable tbody tr {
-    line-height: 1.2em;
-    margin-bottom: 0.3em;
+.table {
+    border-collapse: collapse;
+    width: 40%;
+}
+
+button.remove-row {
+    padding: 5px 10px;
 }
 </style>
 <div class="main-panel">
@@ -49,11 +52,12 @@
                                     @endforeach
                                </select>
                           </div>
-                            </div>
-                            <div class="row mb-3">
+                        </div>
+
+                        <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="customer_id" class="form-label"> Customer:</label>
-                                <select name="customer_id" id="customer_id" class="form-control" required>
+                                <select name="customer_id" id="customer_id" class="form-control" required >
                                     <option value="">Select Customers</option>
                                     @foreach ($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->customer_name }}</option>
@@ -61,40 +65,45 @@
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="code" class="form-label">Shipping Mode</label>
-                                <input type="text" class="form-control" id="shipping_mode" name="shipping_mode" value="">
+                                <label for="shipping_mode" class="form-label">Shipping Mode</label>
+                                <input type="text" class="form-control" id="shipping_mode" name="shipping_mode">
                             </div>
                             <div class="col-md-4">
-                                <label for="date" class="form-label">Shipping Agent</label>
-                                <input type="text" class="form-control" id="shipping_agent" name="shipping_agent" >
+                                <label for="shipping_agent" class="form-label">Shipping Agent</label>
+                                <input type="text" class="form-control" id="shipping_agent" name="shipping_agent">
                             </div>
-                             
                         </div><br>
-                        <table class="table table-bordered">
+                        <div class="table-responsive">
+                        <table class="table table-bordered" id="productTable">
                             <thead class="table-light">
                                 <tr>
                                     <th>Product</th>
                                     <th>Qty</th>
                                     <th>Rate</th>
                                     <th>Total</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>
-                                        <select name="products[0][product_id]" class="form-control product-select" required>
+                                        <select name="products[0][product_id]" class="form-control product-select" required style="width: 200px;">
                                             <option value="">Select Product</option>
                                             @foreach ($products as $product)
                                                 <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required></td>
-                                    <td><input type="number" name="products[0][rate]" class="form-control rate" ></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly></td>
+                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 150px;"></td>
+                                    <td><input type="number" name="products[0][rate]" class="form-control rate" style="width: 150px;"></td>
+                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
+                                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
+</div>
                         </table>
+                        <button type="button" class="btn btn-success mt-2" id="addRow">Add Row</button>
+
                         <div class="row mt-4">
                             <div class="col-md-3">
                                 <label for="grand_total" class="form-label">Grand Total:</label>
@@ -124,29 +133,54 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const productTable = document.getElementById('productTable').querySelector('tbody');
+    const addRowBtn = document.getElementById('addRow');
     const grandTotalField = document.getElementById('total');
     const advanceAmountField = document.getElementById('advance_amount');
     const balanceAmountField = document.getElementById('balance_amount');
-    const qtyField = document.querySelector('.qty');
-    const rateField = document.querySelector('.rate');
-    const totalField = document.querySelector('.total');
-    const productSelect = document.querySelector('.product-select');
 
     function calculateTotals() {
-        const qty = parseFloat(qtyField.value) || 0;
-        const rate = parseFloat(rateField.value || productSelect.selectedOptions[0].dataset.rate) || 0;
-        rateField.value = rate;
-        const total = qty * rate;
-        totalField.value = total.toFixed(2);
-        grandTotalField.value = total.toFixed(2);
+        let grandTotal = 0;
+        productTable.querySelectorAll('tr').forEach(row => {
+            const qty = parseFloat(row.querySelector('.qty').value) || 0;
+            const rate = parseFloat(row.querySelector('.rate').value) || 0;
+            const total = qty * rate;
+            row.querySelector('.total').value = total.toFixed(2);
+            grandTotal += total;
+        });
+        grandTotalField.value = grandTotal.toFixed(2);
         const advanceAmount = parseFloat(advanceAmountField.value) || 0;
-        balanceAmountField.value = (total - advanceAmount).toFixed(2);
+        balanceAmountField.value = (grandTotal - advanceAmount).toFixed(2);
     }
 
-    [qtyField, rateField, productSelect, advanceAmountField].forEach(element => {
-        element.addEventListener('input', calculateTotals);
+    addRowBtn.addEventListener('click', function () {
+        const index = productTable.children.length;
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <select name="products[${index}][product_id]" class="form-control product-select" required>
+                    <option value="">Select Product</option>
+                    @foreach ($products as $product)
+                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type="number" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required></td>
+            <td><input type="number" name="products[${index}][rate]" class="form-control rate"></td>
+            <td><input type="number" name="products[${index}][total]" class="form-control total" readonly></td>
+            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+        `;
+        productTable.appendChild(newRow);
     });
 
-    calculateTotals();
+    productTable.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+            calculateTotals();
+        }
+    });
+
+    productTable.addEventListener('input', calculateTotals);
+    advanceAmountField.addEventListener('input', calculateTotals);
 });
 </script>

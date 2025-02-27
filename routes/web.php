@@ -27,8 +27,9 @@ use App\Http\Controllers\SalesPaymentController;
 use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\SlaughterScheduleController;
 use App\Http\Controllers\OutstandingController;
-
-
+use App\Http\Controllers\AnimalReceivingNoteController;
+use App\Http\Controllers\PostMortemReportController;
+use App\Http\Controllers\AnteMortemReportController;
 
 
 
@@ -326,6 +327,21 @@ Route::get('supplier-ledger', [OutstandingController::class, 'supplierLedger'])-
 Route::get('customer-ledger', [OutstandingController::class, 'customerLedger'])->name('customer.ledger');
 Route::get('supplier-outstanding', [OutstandingController::class, 'supplierOutstanding'])->name('supplier.outstanding');
 Route::get('customer-outstanding', [OutstandingController::class, 'customerOutstanding'])->name('customer.outstanding');
+
+
+Route::get('animal-receiving-note', [AnimalReceivingNoteController::class, 'create']);
+
+
+Route::get('postmortem-report-create', [PostMortemReportController::class, 'create']);
+Route::post('postmortem-report-store', [PostMortemReportController::class, 'store'])->name('postmortem.store');
+
+
+
+Route::get('antemortem-report-create', [AnteMortemReportController::class, 'create'])->name('antemortem.create');
+
+
+
+
 
 
 

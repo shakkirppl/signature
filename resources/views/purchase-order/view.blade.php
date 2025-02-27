@@ -32,7 +32,7 @@
                             <tr>
                                 <th>Product</th>
                                 <th>Type</th>
-                                <th>Mark</th>
+                               
                                 <th>Qty</th>
                                 <th>Rate</th>
                                 <th>Total</th>
@@ -43,7 +43,6 @@
                             <tr>
                             <td>{{ optional($detail->product)->product_name ?? 'N/A' }}</td>
                             <td>{{ $detail->type ? $detail->type : 'N/A' }}</td>
-                             <td>{{ $detail->mark ? $detail->mark : 'N/A' }}</td>
                              <td>{{$detail->qty}}</td>
                                 <td>{{ number_format($detail->rate, 2) }}</td>
                                 <td>{{ number_format($detail->total, 2) }}</td>

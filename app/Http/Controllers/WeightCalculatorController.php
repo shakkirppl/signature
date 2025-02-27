@@ -216,7 +216,6 @@ public function checkExistingWeightCalculation(Request $request)
     $supplier_id = $request->supplier_id;
     $shipment_id = $request->shipment_id;
 
-    // Check if a weight calculation already exists for this supplier in the shipment
     $exists = WeightCalculatorMaster::where('shipment_id', $shipment_id)
         ->where('supplier_id', $supplier_id)
         ->exists();

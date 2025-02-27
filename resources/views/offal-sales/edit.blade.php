@@ -1,9 +1,13 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-#componentTable tbody tr {
-    line-height: 1.2em;
-    margin-bottom: 0.3em;
+.table {
+    border-collapse: collapse;
+    width: 40%;
+}
+
+button.remove-row {
+    padding: 5px 10px;
 }
 </style>
 <div class="main-panel">
@@ -65,20 +69,22 @@
                                 </select>
                             </div>
                         </div>
-                        <table class="table table-bordered">
+                        <div class="table-responsive">
+                        <table class="table table-bordered" id="productTable">
                             <thead class="table-light">
                                 <tr>
                                     <th>Product</th>
                                     <th>Qty</th>
                                     <th>Rate</th>
                                     <th>Total</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($offalSale->details as $key => $detail)
                                 <tr>
                                     <td>
-                                        <select name="products[{{ $key }}][product_id]" class="form-control product-select" required>
+                                        <select name="products[{{ $key }}][product_id]" class="form-control product-select" required style="width: 200px;">
                                             <option value="">Select Product</option>
                                             @foreach ($products as $product)
                                                 <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $product->id == $detail->product_id ? 'selected' : '' }}>
@@ -87,13 +93,16 @@
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required></td>
-                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}"></td>
-                                    <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly></td>
+                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 150px;"></td>
+                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;"></td>
+                                    <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly style="width: 150px;"></td>
+                                    <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
+</div>
+                        <button type="button" id="addRow" class="btn btn-success mt-3">Add Row</button>
                         <div class="row mt-4">
                             <div class="col-md-3">
                                 <label for="grand_total" class="form-label">Grand Total:</label>
@@ -119,45 +128,59 @@
         </div>
     </div>
 </div>
+
+
 @endsection
-
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    function updateTotal(row) {
-        let qty = row.querySelector(".qty").value;
-        let rate = row.querySelector(".rate").value;
-        let totalField = row.querySelector(".total");
+document.addEventListener('DOMContentLoaded', function () {
+    const productTable = document.getElementById('productTable').querySelector('tbody');
+    const addRowBtn = document.getElementById('addRow');
+    const grandTotalField = document.getElementById('total');
+    const advanceAmountField = document.getElementById('advance_amount');
+    const balanceAmountField = document.getElementById('balance_amount');
 
-        let total = (qty * rate).toFixed(2);
-        totalField.value = total;
-
-        updateGrandTotal();
-    }
-
-    function updateGrandTotal() {
+    function calculateTotals() {
         let grandTotal = 0;
-        document.querySelectorAll(".total").forEach((totalField) => {
-            grandTotal += parseFloat(totalField.value) || 0;
+        productTable.querySelectorAll('tr').forEach(row => {
+            const qty = parseFloat(row.querySelector('.qty').value) || 0;
+            const rate = parseFloat(row.querySelector('.rate').value) || 0;
+            const total = qty * rate;
+            row.querySelector('.total').value = total.toFixed(2);
+            grandTotal += total;
         });
-        document.getElementById("total").value = grandTotal.toFixed(2);
-        updateBalance();
+        grandTotalField.value = grandTotal.toFixed(2);
+        const advanceAmount = parseFloat(advanceAmountField.value) || 0;
+        balanceAmountField.value = (grandTotal - advanceAmount).toFixed(2);
     }
 
-    function updateBalance() {
-        let grandTotal = parseFloat(document.getElementById("total").value) || 0;
-        let advance = parseFloat(document.getElementById("advance_amount").value) || 0;
-        let balance = grandTotal - advance;
-        document.getElementById("balance_amount").value = balance.toFixed(2);
-    }
-
-    // Event listeners for quantity and rate fields
-    document.querySelectorAll(".qty, .rate").forEach((input) => {
-        input.addEventListener("input", function () {
-            updateTotal(this.closest("tr"));
-        });
+    addRowBtn.addEventListener('click', function () {
+        const index = productTable.children.length;
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <select name="products[${index}][product_id]" class="form-control product-select" required>
+                    <option value="">Select Product</option>
+                    @foreach ($products as $product)
+                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type="number" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required></td>
+            <td><input type="number" name="products[${index}][rate]" class="form-control rate"></td>
+            <td><input type="number" name="products[${index}][total]" class="form-control total" readonly></td>
+            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+        `;
+        productTable.appendChild(newRow);
     });
 
-    // Event listener for advance amount
-    document.getElementById("advance_amount").addEventListener("input", updateBalance);
+    productTable.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+            calculateTotals();
+        }
+    });
+
+    productTable.addEventListener('input', calculateTotals);
+    advanceAmountField.addEventListener('input', calculateTotals);
 });
 </script>

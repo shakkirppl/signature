@@ -23,6 +23,8 @@
                                 <tr>
                                 <th>No</th>
                                     <th>Slaughter No</th>
+                                    <th>Transportation Date</th>
+                                    <th>Transportation Time</th>
                                     <th>Loading Time</th>
                                     <th>Airport Time</th>
                                     <th>Airline</th>
@@ -39,6 +41,8 @@
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
                                         <td>{{ $schedule->slaughter_no }}</td>
+                                        <td>{{ $schedule->transportation_date }}</td>
+                                        <td>{{ $schedule->transportation_time }}</td>
                                         <td>{{ $schedule->loading_time }}</td>
                                         <td>{{ $schedule->airport_time }}</td>
                                         <td>{{ $schedule->airline_name }}</td>

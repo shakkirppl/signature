@@ -8,7 +8,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <h4 class="card-title">purchase Conformation</h4>
+              <h4 class="card-title">purchase Confirmation</h4>
             </div>
             <div class="col-md-6 text-right">
             <!-- <a href="{{ route('purchase-order.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a> -->

@@ -9,6 +9,8 @@ use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+
 
 class PurchaseOrderController extends Controller
 {
@@ -20,7 +22,7 @@ class PurchaseOrderController extends Controller
   
         public function create()
         {
-            $suppliers = \App\Models\Supplier::all(); 
+            $suppliers = Supplier::all(); 
             $products = Product::all();
            
             return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products'));
@@ -46,27 +48,19 @@ class PurchaseOrderController extends Controller
                          ]);
                      
                          try {
-                            InvoiceNumber::updateinvoiceNumber('purchase_order',1);
+                          
 
-                             // Get the supplier's credit limit days
-                             $supplier = Supplier::find($request->supplier_id);
-                             if (!$supplier) {
-                                 return redirect()->back()->withErrors(['error' => 'Supplier not found.']);
+                            $supplier = Supplier::find($request->supplier_id);
+                 
+                         // Calculate the credit limit expiration date
+                         if ($supplier->credit_limit_days > 0) {
+                             $credit_limit_date = Carbon::parse($supplier->created_at)->addDays($supplier->credit_limit_days);
+                 
+                             // Check if the sales order date exceeds the credit limit date
+                             if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
+                                 return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this supplier.']);
                              }
-                     
-                             // Ensure credit_limit_days is numeric and not null
-                             $credit_limit_days = is_numeric($supplier->credit_limit_days) ? (int) $supplier->credit_limit_days : 0;
-                     
-                             // Validate date and calculate the credit limit expiry date
-                             if ($credit_limit_days > 0) {
-                                 $credit_limit_date = \Carbon\Carbon::parse($request->date)->subDays($credit_limit_days);
-                                 $current_date = \Carbon\Carbon::now();
-                     
-                                 // Check if the supplier's credit limit period has expired
-                                 if ($credit_limit_date->lt($current_date)) {
-                                     return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this supplier.']);
-                                 }
-                             }
+                         }
                      
                              // Store the purchase order
                              $purchaseOrder = PurchaseOrder::create([
@@ -88,14 +82,13 @@ class PurchaseOrderController extends Controller
                                      'purchase_order_id' => $purchaseOrder->id,
                                      'product_id' => $product['product_id'],
                                      'type' => $product['type'] ?? null,
-                                     'mark' => $product['mark'] ?? null,
                                      'qty' => $product['qty'],
                                      'rate' => $product['rate'],
                                      'total' => $product['total'],
                                      'store_id' => 1, 
                                  ]);
                              }
-                     
+                             InvoiceNumber::updateinvoiceNumber('purchase_order',1);
                              return redirect()->route('purchase-order.index')->with('success', 'Purchase Order Created Successfully');
                          } catch (\Exception $e) {
                              return redirect()->back()->withErrors(['error' => $e->getMessage()]);
@@ -140,7 +133,6 @@ class PurchaseOrderController extends Controller
                     'purchase_order_id' => $purchaseOrder->id,
                     'product_id' => $product['product_id'],
                     'type' => $product['type'] ,
-                    'mark' => $product['mark'] ,
                     'qty' => $product['qty'],
                     'rate' => $product['rate'],
                     'total' => $product['total'],

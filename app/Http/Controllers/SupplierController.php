@@ -54,6 +54,8 @@ class SupplierController extends Controller
                 'credit_limit_days' => 'required|numeric|min:0',
                 'opening_balance' => 'nullable|numeric|min:0',
                 'dr_cr' => 'nullable|in:Dr,Cr',
+                'state' => 'required|string|max:255',
+                'country' => 'required|string|max:255',
             ]);
     
             $supplier = Supplier::create([
@@ -62,6 +64,8 @@ class SupplierController extends Controller
                 'email' => $request->email,
                 'contact_number' => $request->contact_number,
                 'address' => $request->address,
+                'state' => $request->state,
+                'country' => $request->country,
                 'payment_terms' => $request->payment_terms,
                 'credit_limit_days' => $request->credit_limit_days,
                 'opening_balance' => $request->opening_balance ?? 0,
@@ -116,6 +120,8 @@ public function update(Request $request, $id)
             'credit_limit_days' => 'nullable|numeric|min:0',
             'opening_balance' => 'nullable|numeric|min:0',
             'dr_cr' => 'nullable|in:Dr,Cr',
+            'state' => 'nullable|string|max:255',
+            'country' => 'nullable|string|max:255',
         ]);
 
         $supplier = Supplier::findOrFail($id);

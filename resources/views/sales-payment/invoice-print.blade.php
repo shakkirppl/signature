@@ -3,130 +3,153 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Print</title>
+    <title>Commercial Invoice</title>
     <style>
-        @page {
-            size: A4; /* Ensures the page is A4 */
-            margin: 0; /* Removes default margins */
-        }
-
+               @page {
+    size: A4;
+    margin: 15mm;
+}
         body {
             font-family: Arial, sans-serif;
-            font-size: 10px;
             margin: 0;
             padding: 0;
-        }
-
-        .container {
-            width: 210mm; /* A4 width */
-            height: 297mm; /* A4 height */
-            margin: 0;
-            padding: 0;
-            background: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .invoice-box {
-            width: 190mm; /* Ensures content fits inside A4 */
-            height: 277mm; /* Prevents content overflow */
-            padding: 10mm; /* Small padding for readability */
+            width: 210mm;
+            height: 297mm;
+            padding: 20px;
+            border: 1px solid #000;
             box-sizing: border-box;
         }
+        @media print {
+    button {
+        display: none !important;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
 
-        table {
+    }
+}
+
+        .container {
+            width: 100%;
+        }
+        .header, .table-content {
+            width: 100%;
+        }
+        .header td {
+            padding: 5px;
+            vertical-align: top;
+        }
+        .invoice-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .invoice-number {
+            color: red;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .table-content, .table-content td, .table-content th {
+            border: 1px solid black;
+            padding: 5px;
+            text-align: left;
+        }
+        .table-content th {
+            background-color: #f2f2f2;
+        }
+        .bank-details {
+            border: 1px solid black;
+            padding: 10px;
+            margin-top: 5px;
+        }
+        .total-section {
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+        }
+        .total-table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 10px;
         }
-
-        table, th, td {
+        .total-table th, .total-table td {
             border: 1px solid black;
-            text-align: center;
-            font-size: 9px;
+            padding: 8px;
+            text-align: right;
+            font-size: 16px;
+            font-weight: bold;
         }
-
-        th, td {
-            padding: 5px;
+        .total-kg {
+            text-align: left;
+            background-color: #fef6db;
+            font-style: italic;
         }
-
-        .text-left { text-align: left; }
-        .no-border { border: none; }
-        .print-button { margin-top: 5px; text-align: center; }
-
-        @media print {
-            .print-button {
-                display: none;
-            }
-            body, .container {
-                width: 100%;
-                height: 100%;
-                margin: 0;
-                padding: 0;
-            }
+        .total-usd {
+            text-align: left;
+            background-color: #e6f5e6;
+            font-style: italic;
         }
-
-        .invoice-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 0;
-            gap: 5px;
-        }
-
-        .company-details, .registration-details {
-            font-size: 10px;
-            line-height: 1.2;
-        }
-
-        h2, h5 {
-            margin: 3px 0;
-            text-align: center;
+        .total-value {
+            text-align: right;
         }
     </style>
 </head>
+
 <body>
-
-<div class="container">
-    <div class="invoice-box">
-        <!-- Header Section -->
-        <div class="invoice-header">
-            <div class="company-details">
-                <h5><strong>Signature Trading Ltd</strong></h5>
-                <p>P.O Box 1506, Plot No 147 <br>
-                   Fire Road, Arusha <br>
-                   United Republic Of Tanzania</p>
-            </div>
-            <div class="registration-details text-end">
-                <h5><strong>Reg. No. 157893564</strong></h5>
-                <p>Tel: +255 272 97 97 97 <br>
-                   Tel: +255 69 666 6606 <br>
-                   <a href="https://www.signaturetz.com">www.signaturetz.com</a> <br>
-                   Email: <a href="mailto:info@signaturetz.com">info@signaturetz.com</a></p>
-            </div>
-        </div>
-
-        <!-- Invoice Title -->
-        <h2>Commercial Invoice</h2>
-
-        <!-- Invoice Details -->
-        <table>
+    <div class="container">
+        <table class="header">
             <tr>
-                <th>INVOICE</th>
-                <td>{{ $order->order_no }}</td>
-                <th>Invoice Date</th>
-                <td>{{ date('d/m/Y', strtotime($order->date)) }}</td>
-            </tr>
-            <tr>
-                <th>Customer ID</th>
-                <td>{{ $order->customer_id }}</td>
-                <th>Page</th>
-                <td>1</td>
+                <td>
+                    <strong>Signature Trading Ltd</strong><br>
+                    P.O Box 1506, Plot No. 147<br>
+                    Fire Road, Arusha<br>
+                    United Republic Of Tanzania<br>
+                    <strong>Tel:</strong> +255 272 97 97 97 / 69 666 6606<br>
+                    <strong>Email:</strong> sales@signaturetz.com
+                </td>
+                <td align="right">
+                    <strong>Registration No:</strong> 157893564 <br>
+                    Tel: +255 272 97 97 97 <br>
+                    Tel: +255 69 666 6606 <br>
+                    <a href="https://www.signaturetz.com">www.signaturetz.com</a> <br>
+                    Email: <a href="mailto:info@signaturetz.com">info@signaturetz.com</a>
+                </td>
             </tr>
         </table>
 
-        <!-- Shipping Details -->
-        <table>
+        <h2 class="invoice-title">Commercial Invoice</h2>
+
+        <table class="table-content">
+            <tr>
+                <th>Invoice No:</th>
+                <td>{{ $order->order_no }}</td>
+                <th>Invoice Date:</th>
+                <td>{{ date('d/m/Y', strtotime($order->date)) }}</td>
+            </tr>
+            <tr>
+                <th>Customer Id</th>
+                <td>{{ $order->customer_code }}</td>
+                <th>Page</th>
+                <td>1.00</td>
+            </tr>
+        </table>
+
+        <table class="table-content">
+            <tr>
+                <td colspan="2"><strong>SIGNATURE TRADING LIMITED</strong><br>
+                    P.O Box 1506, Plot No. 147, Fire Road <br>
+                    Arusha, Tanzania <br>
+                    Tel:+255 272 97 97 97 / 69 666 6606 <br>
+                    Email: sales@signaturetz.com
+                </td>
+                <td colspan="2"><strong>TAYBAT ALBAHR</strong><br>
+                    UMM AL DOOM STREET <br>
+                    MUAITHER P.O BOX - 96393, DOHA, QATAR <br>
+                    TEL: +974 31075459
+                </td>
+            </tr>
             <tr>
                 <th>Shipping Mode</th>
                 <td>{{ $order->shipping_mode }}</td>
@@ -135,7 +158,7 @@
             </tr>
             <tr>
                 <th>Terms of Delivery</th>
-                <td>C&F, Doha, Qatar</td>
+                <td>C&F, DOHA, QATAR</td>
                 <th>Terms of Payment</th>
                 <td>100% after receiving</td>
             </tr>
@@ -145,90 +168,66 @@
             </tr>
         </table>
 
-        <!-- Product Details -->
-        <table>
+        <table class="table-content">
             <tr>
                 <th>Description</th>
-                <th>HS Code</th>
+                <th>Packaging</th>
                 <th>Quantity (kg)</th>
                 <th>Price (USD)</th>
+                <th>Par</th>
                 <th>Total Amount $</th>
             </tr>
             @foreach ($products as $product)
-                <tr>
-                    <td>{{ $product->description }}</td>
-                    <td>{{ $product->hsn_code }}</td>
-                    <td>{{ number_format($product->quantity, 2) }}</td>
-                    <td>{{ number_format($product->price, 2) }}</td>
-                    <td>{{ number_format($product->quantity * $product->price, 2) }}</td>
-                </tr>
+            <tr>
+                <td>{{ $product->description }} <br>{{ $product->hsn_code }}</td>
+                <td class="packaging">0.00</td>
+                <td class="quantity">{{ number_format($product->quantity, 2) }}</td>
+                <td class="price">{{ number_format($product->price, 2) }}</td>
+                <td>pcs</td>
+                <td class="total_amount">{{ number_format($product->quantity * $product->price, 2) }}</td>
+            </tr>
             @endforeach
         </table>
 
-        <!-- Country & Total -->
-        <table>
+        <table class="table-content">
             <tr>
-                <th>Country of Origin</th>
-                <td>Tanzania</td>
-                <th>Country of Export</th>
-                <td>Tanzania</td>
+                <td colspan="6" class="bold">Country of Origin: TANZANIA</td>
+            </tr>
+            <tr>
+                <td colspan="6" class="bold">Country of Export: TANZANIA</td>
             </tr>
         </table>
 
-        <!-- Payment Summary -->
-        <table>
-            <tr>
-                <th>Total</th>
-                <td>{{ number_format($total_amount, 2) }}</td>
-            </tr>
-            <tr>
-                <th>Subtotal</th>
-                <td>{{ number_format($total_amount, 2) }}</td>
-            </tr>
-        </table>
+        
 
-        <!-- Bank Details -->
-        <table>
-            <tr>
-                <th>Bank Details</th>
-                <td>
-                    <strong>USD Account Code:</strong> 42710052781 (USD)<br>
-                    <strong>Swift Code:</strong> NMBITZTZ | Branch Code: 016<br>
-                    <strong>Bank Account Owner:</strong> Signature Trading Limited<br>
-                    <strong>Bank Name:</strong> NMB BANK PLC<br>
-                    <strong>Bank Address:</strong> NMB Bank - Arusha Market Branch<br>
-                    P.O Box: 11168, Arusha, Tanzania
-                </td>
-            </tr>
-            <tr>
-                <th>Total KG</th>
-                <td>{{ number_format($total_kg, 2) }}</td>
-            </tr>
-            <tr>
-                <th>Total USD</th>
-                <td>{{ number_format($total_amount, 2) }}</td>
-            </tr>
-        </table>
-
-        <!-- Footer -->
-        <table>
-            <tr>
-                <td class="text-left no-border">
-                    <strong>Signature Trading Ltd</strong><br>
-                    Registration No. 157893564<br>
-                    P.O Box 1506, Plot No. 147, Fire Road, Arusha, Tanzania<br>
-                    Tel: +255 272 97 97 97 / +255 69 666 6606<br>
-                    Website: www.signaturetz.com | Email: info@signaturetz.com
-                </td>
-            </tr>
-        </table>
-
-        <!-- Print Button -->
-        <div class="print-button">
-            <button onclick="window.print()">Print Invoice</button>
+        <div class="bank-details">
+            <h3>Bank Details:</h3>
+            <p>
+                <strong>USD Account Code:</strong> 42710052781 (USD) <br>
+                <strong>Swift Code:</strong> NMIBTZTZ Branch Code: 016 <br>
+                <strong>Bank Account Owner:</strong> Signature Trading Limited <br>
+                <strong>Bank Name:</strong> NMB BANK PLC <br>
+                <strong>Bank Address:</strong> NMB Bank - Arusha Market Branch <br>
+                P.O BOX 11168, Arusha, Tanzania
+            </p>
         </div>
-    </div>
-</div>
+        <table class="total-table">
+            <tr>
+                <th class="total-kg">TOTAL KG</th>
+                <td class="total-value">{{ number_format($total_kg, 2) }}</td>
+                <th class="total-usd">TOTAL USD</th>
+                <td class="total-value">{{ number_format($total_amount, 2) }}</td>
+            </tr>
+        </table>
+        <div>
+            The deducted Withholding tax amounts remain payable to Signature Trading Limited until TRA Withholding Tax Certificate is presented as proof of payment.
+       </div>
+       <button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">
+    Print
+</button>
 
+
+
+    </div>
 </body>
 </html>

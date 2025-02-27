@@ -23,7 +23,7 @@ class SalesOrderController extends Controller
     
     public function create()
     {
-        $customers = \App\Models\Customer::all(); 
+        $customers = Customer::all(); 
         $products = Product::all();
        
         return view('sales-order.create',['invoice_no'=>$this->invoice_no()],compact('customers','products'));

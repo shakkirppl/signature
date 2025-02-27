@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\CustomerPaymentDetail;
 use App\Models\SalesPayment;
 use Illuminate\Support\Facades\Auth;
+use App\Models\BankMaster;
+use App\Models\Customer;
+
 
 
 
@@ -16,8 +19,8 @@ class CustomerPaymentController extends Controller
     
     public function create()
     {
-        $banks = \App\Models\BankMaster::all(); 
-        $customers = \App\Models\Customer::all();
+        $banks = BankMaster::all(); 
+        $customers = Customer::all();
         return view('customer-payment.create', compact('banks','customers'));
     }
 
@@ -143,10 +146,10 @@ public function store(Request $request)
     public function report(Request $request)
     {
         // Fetch customers for the dropdown
-        $customers = \App\Models\Customer::all();
+        $customers = Customer::all();
     
         // Initialize query
-        $query = \App\Models\CustomerPayment::with('customer', 'details');
+        $query = CustomerPayment::with('customer', 'details');
     
         // Apply date filters if provided
         if ($request->from_date && $request->to_date) {

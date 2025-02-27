@@ -12,6 +12,7 @@ use App\Models\InvoiceNumber;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseExpense;
+use App\Models\AccountHead;
 
 
 use Carbon\Carbon;
@@ -34,7 +35,7 @@ class PurchaseConformationController extends Controller
 public function Confirm($id)
 {
     $inspection = Inspection::with(['details.product', 'supplier', 'purchase_order','shipment'])->findOrFail($id);
-    $coa = \App\Models\AccountHead::whereIn('parent_id', function ($query) {
+    $coa = AccountHead::whereIn('parent_id', function ($query) {
         $query->select('id')
               ->from('account_heads')
               ->whereIn('name', ['Expenses']);

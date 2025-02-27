@@ -26,7 +26,7 @@
 
                     <div class="row">
                         <div class="col-md-4">
-                            <p><strong>Customer:</strong> {{ $SalesPayment->localcustomer->customer_name ?? 'N/A' }}</p>
+                            <p><strong>Customer:</strong> {{ $SalesPayment->customer->customer_name ?? 'N/A' }}</p>
                         </div>
                         <div class="col-md-4">
                             <p><strong>Sales No:</strong> {{ $SalesPayment->SalesOrder->order_no ?? 'N/A' }}</p>
@@ -35,7 +35,7 @@
 
                   <br>
 
-                    
+                  <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead class="table-light">
                             <tr>
@@ -56,6 +56,7 @@
                             @endforeach
                         </tbody>
                     </table>
+</div>
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label><strong>Grand Total:</strong></label>

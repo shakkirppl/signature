@@ -8,14 +8,21 @@
     opacity: 1 !important; 
     cursor: not-allowed;
 }
+.table {
+    border-collapse: collapse;
+    width: 40%;
+}
 
+button.remove-row {
+    padding: 5px 10px;
+}
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin createtable">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Purchase Conformation</h4>
+                    <h4 class="card-title">Purchase Confirmation</h4>
                     <form action="{{ route('purchase-conformation.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="inspection_id" value="{{ $inspection->id }}">
@@ -54,7 +61,7 @@
                             </div>
                            
                         </div>
-
+                        <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -70,7 +77,7 @@
                                 @foreach ($inspection->details as $index => $detail)
                                     <tr>
                                     <td>
-                                      <select name="products[{{ $index }}][product_id]" class="form-control product-select" required>
+                                      <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 150px;">
                                           <option value="">Select Product</option>
                                               @foreach ($products as $product)
                                                 <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -81,32 +88,34 @@
                                       </td>
 
                                         <td>
-                                            <select name="products[{{ $index }}][type]" class="form-control" required  style="width: 100px;">
+                                            <select name="products[{{ $index }}][type]" class="form-control" required  style="width: 150px;">
                                                 <option value="Male" {{ $detail->type == 'Male' ? 'selected' : '' }}>Male</option>
                                                <option value="Female" {{ $detail->type == 'Female' ? 'selected' : '' }}>Female</option>
                                            </select>
                                       </td>
                                         <td>
-                                           <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="{{ $detail->mark }}" required>
+                                           <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" required style="width: 150px;">
                                        </td>
 
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control qty" value="{{ $detail->accepted_qty }}" min="1">
+                                            <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control qty" value="{{ $detail->accepted_qty }}" min="1" style="width: 150px;">
                                         </td>
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}">
+                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;">
                                         </td>
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->actual_qty * $detail->rate }}" readonly>
+                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->actual_qty * $detail->rate }}" readonly style="width: 150px;">
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
-                        </table> <br>
+                        </table>
+</div>
+                         <br>
                         <div class="row">
    
     <div class="col-md-5">
-      
+    <div class="table-responsive">
         <table class="table table-bordered mt-3">
             <thead>
                 <tr>
@@ -116,7 +125,7 @@
             </thead>
             <tbody id="expense-details">
                 <tr>
-                    <td> <select name="expense_id[]" class="form-control expense-select" required>
+                    <td> <select name="expense_id[]" class="form-control expense-select"  style="width: 150px;">
                                           <option value="">Select Expenses</option>
                                               @foreach ($coa as $head)
                                                 <option value="{{ $head->id }}" data-rate="{{ $head->rate }}" >
@@ -125,12 +134,13 @@
                                               @endforeach
                                       </select>
                     </td>
-              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0" required></td>
+              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0"  style="width: 100px;"></td>
               <td><button type="button" class="btn btn-danger btn-sm remove-expense">X</button></td>
                 </tr>
               
             </tbody>
         </table>
+</div>
         <button type="button" id="add-expense" class="btn btn-secondary">Add Expense</button>
 
     </div>

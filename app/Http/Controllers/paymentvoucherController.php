@@ -7,6 +7,7 @@ use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
 use App\Models\paymentVoucher;
 use App\Models\BankMaster;
+use App\Models\AccountHead;
 
 
 class paymentvoucherController extends Controller
@@ -24,10 +25,10 @@ class paymentvoucherController extends Controller
 
     public function create()
     {
-        $banks = \App\Models\BankMaster::all();
+        $banks = BankMaster::all();
 
         // Fetch accounts under "Expenses" and "Liabilities"
-        $coa = \App\Models\AccountHead::whereIn('parent_id', function ($query) {
+        $coa = AccountHead::whereIn('parent_id', function ($query) {
             $query->select('id')
                   ->from('account_heads')
                   ->whereIn('name', ['Expenses', 'Liabilities']);
@@ -94,10 +95,10 @@ class paymentvoucherController extends Controller
                  public function edit($id)
                  {
                      $voucher = paymentVoucher::findOrFail($id);
-                     $banks = \App\Models\BankMaster::all();
+                     $banks = BankMaster::all();
                  
                      // Fetch accounts under "Expenses" and "Liabilities"
-                     $coa = \App\Models\AccountHead::whereIn('parent_id', function ($query) {
+                     $coa = AccountHead::whereIn('parent_id', function ($query) {
                          $query->select('id')
                                ->from('account_heads')
                                ->whereIn('name', ['Expenses', 'Liabilities']);
