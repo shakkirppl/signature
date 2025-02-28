@@ -68,7 +68,8 @@ button.remove-row {
                                 <tr>
                                     <th>Employee</th>
                                     <th>Product</th>
-                                    <th>Quantity</th>
+                                    <th>NO Of Skinning</th>
+                                    <th>Damaged Skin</th>
                                     <th>Skinning Percentage</th>
                                     <th>Action</th>
                                 </tr>
@@ -91,8 +92,9 @@ button.remove-row {
                                         @endforeach
                                   </select>
                                     </td>
-                                    <td><input type="number" name="quandity[]" class="form-control" required style="width: 150px;"></td>
-                                    <td><input type="text" name="skin_percentage[]" class="form-control" required style="width: 150px;"></td>
+                                    <td><input type="number" name="quandity[]" class="form-control skinning-quantity" required style="width: 150px;"></td>
+                                    <td><input type="number" name="damaged_quandity[]" class="form-control damaged-quantity" style="width: 150px;"></td>
+                                    <td><input type="text" name="skin_percentage[]" class="form-control skin-percentage" readonly></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
@@ -114,10 +116,34 @@ document.addEventListener('DOMContentLoaded', function () {
     const detailsContainer = document.getElementById('details');
     const addRowBtn = document.getElementById('addRow');
 
+    // Function to calculate percentage
+    function calculatePercentage(row) {
+        const quantityInput = row.querySelector('input[name="quandity[]"]');
+        const damagedInput = row.querySelector('input[name="damaged_quandity[]"]');
+        const percentageInput = row.querySelector('input[name="skin_percentage[]"]');
+
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const damaged = parseFloat(damagedInput.value) || 0;
+
+        if (quantity + damaged > 0) {
+            percentageInput.value = ((quantity / (quantity + damaged)) * 100).toFixed(2) + "%";
+        } else {
+            percentageInput.value = "";
+        }
+    }
+
+    // Add event listener for input changes
+    detailsContainer.addEventListener('input', function (e) {
+        if (e.target.name === "quandity[]" || e.target.name === "damaged_quandity[]") {
+            const row = e.target.closest('tr');
+            calculatePercentage(row);
+        }
+    });
+
     // Add new row functionality
     addRowBtn.addEventListener('click', function () {
-        const newRow = `
-        <tr>
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
             <td>
                 <select name="employees[]" class="form-control" required>
                     <option value="">Select Employee</option>
@@ -135,10 +161,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 </select>
             </td>
             <td><input type="number" name="quandity[]" class="form-control" required></td>
-            <td><input type="text" name="skin_percentage[]" class="form-control" required></td>
+            <td><input type="number" name="damaged_quandity[]" class="form-control" required></td>
+            <td><input type="text" name="skin_percentage[]" class="form-control" required readonly></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-        </tr>`;
-        detailsContainer.insertAdjacentHTML('beforeend', newRow);
+        `;
+
+        detailsContainer.appendChild(newRow);
     });
 
     // Remove row functionality
@@ -148,7 +176,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
 </script>
+
 
 
 

@@ -44,25 +44,52 @@
                         </div>
 
                         <!-- Transportation Details -->
+
+                         <!-- Slaughter Timing -->
+                         <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">Slaughter Timing</h5>
+                                <div class="row">
+                                <div class="col-md-4">
+                                        <label for="airline_date"> Slaughter Date:</label>
+                                        <input type="date" class="form-control" id="slaughter_date" name="slaughter_date" required>
+                                    </div>
+</div>
+<div class="row">
+                                    <div class="col-md-4">
+                                        <label for="starting_time_of_slaughter">Starting Time:</label>
+                                        <input type="text" class="form-control timepicker" id="starting_time_of_slaughter" name="starting_time_of_slaughter" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="ending_time_of_slaughter">Ending Time:</label>
+                                        <input type="text" class="form-control timepicker" id="ending_time_of_slaughter" name="ending_time_of_slaughter" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+
                         <div class="card mb-3">
                             <div class="card-body">
                                 <h5 class="card-title">Transportation Details</h5>
                                 <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                         <label for="airline_date"> Transportation Date:</label>
                                         <input type="date" class="form-control" id="transportation_date" name="transportation_date" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="airline_time"> Transportation Time:</label>
-                                        <input type="time" class="form-control" id="transportation_time" name="transportation_time" required>
+                                        <input type="text" class="form-control timepicker" id="transportation_time" name="transportation_time" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-4">
                                         <label for="loading_time">Loading Time:</label>
-                                        <input type="time" class="form-control" id="loading_time" name="loading_time" required>
+                                        <input type="text" class="form-control timepicker" id="loading_time" name="loading_time" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="airport_time">Airport Cutoff Time:</label>
-                                        <input type="time" class="form-control" id="airport_time" name="airport_time" required>
+                                        <input type="text" class="form-control timepicker" id="airport_time" name="airport_time" required>
                                     </div>
                                    
                                 </div>
@@ -74,41 +101,28 @@
                             <div class="card-body">
                                 <h5 class="card-title">Airline Details</h5>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="airline_name">Airline Name:</label>
                                         <input type="text" class="form-control" id="airline_name" name="airline_name" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="airline_number">Flight Number:</label>
                                         <input type="text" class="form-control" id="airline_number" name="airline_number" required>
-                                    </div><br>
-                                    <div class="col-md-6">
+                                    </div>
+                                    </div>
+                                    <div class="row"><br>
+                                    <div class="col-md-4">
                                         <label for="airline_date">Date:</label>
                                         <input type="date" class="form-control" id="airline_date" name="airline_date" required>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label for="airline_time">Time:</label>
-                                        <input type="time" class="form-control" id="airline_time" name="airline_time" required>
+                                        <input type="text" class="form-control timepicker" id="airline_time" name="airline_time" required>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                           <!-- Slaughter Timing -->
-                           <div class="card mb-3">
-                            <div class="card-body">
-                                <h5 class="card-title">Slaughter Timing</h5>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <label for="starting_time_of_slaughter">Starting Time:</label>
-                                        <input type="time" class="form-control" id="starting_time_of_slaughter" name="starting_time_of_slaughter" required>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="ending_time_of_slaughter">Ending Time:</label>
-                                        <input type="time" class="form-control" id="ending_time_of_slaughter" name="ending_time_of_slaughter" required>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                          
                  <!-- Products Selection -->
                  <div class="card mb-3">
                             <div class="card-body">
@@ -143,6 +157,8 @@
         </div>
     </div>
 </div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
 <script>
    document.getElementById('add-product').addEventListener('click', function() {
@@ -174,4 +190,15 @@ document.getElementById('product-list').addEventListener('click', function(event
 
 
 </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        flatpickr(".timepicker", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "h:i K", // 12-hour format with AM/PM
+            time_24hr: false
+        });
+    });
+</script>
+
 @endsection

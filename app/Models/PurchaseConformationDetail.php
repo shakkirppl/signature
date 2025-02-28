@@ -9,7 +9,7 @@ class PurchaseConformationDetail extends Model
 {
     use HasFactory;
     protected $table = 'purchase_conformation_detail';
-    protected $fillable = ['conformation_id', 'product_id','accepted_qty','rate','total','store_id','type','mark'];
+    protected $fillable = ['conformation_id', 'product_id','accepted_qty','rate','total','store_id','type','mark','male_accepted_qty','female_accepted_qty'];
    
     public function product()
 {

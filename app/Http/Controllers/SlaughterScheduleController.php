@@ -71,6 +71,7 @@ class SlaughterScheduleController extends Controller
             'airline_number' => $request->airline_number,
             'airline_date' => $request->airline_date,
             'airline_time' => $request->airline_time,
+            'slaughter_date'=> $request->slaughter_date,
             'starting_time_of_slaughter' => $request->starting_time_of_slaughter,
             'ending_time_of_slaughter' => $request->ending_time_of_slaughter,
             'user_id' => auth()->id(),
@@ -151,6 +152,7 @@ public function update(Request $request, $id)
             'airline_number' => $request->airline_number,
             'airline_date' => $request->airline_date,
             'airline_time' => $request->airline_time,
+            'slaughter_date'=> $request->slaughter_date,
             'starting_time_of_slaughter' => $request->starting_time_of_slaughter,
             'ending_time_of_slaughter' => $request->ending_time_of_slaughter,
         ]);

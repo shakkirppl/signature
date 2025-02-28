@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 
@@ -38,40 +39,40 @@ class PurchaseOrderController extends Controller
               }
                      }
     
+                    
+                     
                      public function store(Request $request)
                      {
                          $request->validate([
                              'order_no' => 'required|unique:purchase_order,order_no',
                              'date' => 'required|date',
                              'supplier_id' => 'required|exists:supplier,id',
-                             'grand_total' => 'required|numeric|min:0',
                          ]);
                      
+                         DB::beginTransaction();
                          try {
-                          
-
-                            $supplier = Supplier::find($request->supplier_id);
-                 
-                         // Calculate the credit limit expiration date
-                         if ($supplier->credit_limit_days > 0) {
-                             $credit_limit_date = Carbon::parse($supplier->created_at)->addDays($supplier->credit_limit_days);
-                 
-                             // Check if the sales order date exceeds the credit limit date
-                             if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
-                                 return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this supplier.']);
+                             $supplier = Supplier::find($request->supplier_id);
+                     
+                             // Calculate the credit limit expiration date
+                             if ($supplier->credit_limit_days > 0) {
+                                 $credit_limit_date = Carbon::parse($supplier->created_at)->addDays($supplier->credit_limit_days);
+                     
+                                 // Check if the sales order date exceeds the credit limit date
+                                 if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
+                                     return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this supplier.']);
+                                 }
                              }
-                         }
                      
                              // Store the purchase order
                              $purchaseOrder = PurchaseOrder::create([
                                  'order_no' => $request->order_no,
                                  'date' => $request->date,
                                  'supplier_id' => $request->supplier_id,
-                                 'grand_total' => $request->grand_total,
+                                 'grand_total' => 0,
                                  'advance_amount' => $request->advance_amount ?? 0,
-                                 'balance_amount' => $request->balance_amount ?? 0,
-                                 'store_id' => 1, 
-                                 'user_id' => auth()->id(), 
+                                 'balance_amount' => 0,
+                                 'store_id' => 1,
+                                 'user_id' => auth()->id(),
                                  'status' => 1,
                                  'inspection_status' => 0,
                              ]);
@@ -81,20 +82,25 @@ class PurchaseOrderController extends Controller
                                  PurchaseOrderDetail::create([
                                      'purchase_order_id' => $purchaseOrder->id,
                                      'product_id' => $product['product_id'],
-                                     'type' => $product['type'] ?? null,
+                                     'type' => null,
                                      'qty' => $product['qty'],
-                                     'rate' => $product['rate'],
-                                     'total' => $product['total'],
-                                     'store_id' => 1, 
+                                     'male' => $product['male'],
+                                     'female' => $product['female'],
+                                     'rate' => 0,
+                                     'total' => 0,
+                                     'store_id' => 1,
                                  ]);
                              }
-                             InvoiceNumber::updateinvoiceNumber('purchase_order',1);
+                     
+                             InvoiceNumber::updateinvoiceNumber('purchase_order', 1);
+                     
+                             DB::commit();
                              return redirect()->route('purchase-order.index')->with('success', 'Purchase Order Created Successfully');
                          } catch (\Exception $e) {
+                             DB::rollback();
                              return redirect()->back()->withErrors(['error' => $e->getMessage()]);
                          }
                      }
-    
     
     
         public function edit($id)
@@ -111,7 +117,7 @@ class PurchaseOrderController extends Controller
             'order_no' => 'required',
             'date' => 'required|date',
             'supplier_id' => 'required|exists:supplier,id',
-            'grand_total' => 'required|numeric|min:0',
+            // 'grand_total' => 'nu|numeric|min:0',
         ]);
     
         try {
@@ -120,9 +126,9 @@ class PurchaseOrderController extends Controller
             $purchaseOrder->update([
                 'date' => $request->date,
                 'supplier_id' => $request->supplier_id,
-                'grand_total' => $request->grand_total,
+                'grand_total' => 0,
                 'advance_amount' => $request->advance_amount ?? 0,
-                'balance_amount' => $request->balance_amount ?? 0,
+                'balance_amount' =>  0,
             ]);
     
             // Clear old sales order details and re-insert updated ones
@@ -132,10 +138,12 @@ class PurchaseOrderController extends Controller
                 PurchaseOrderDetail::create([
                     'purchase_order_id' => $purchaseOrder->id,
                     'product_id' => $product['product_id'],
-                    'type' => $product['type'] ,
+                    'type' => null ,
                     'qty' => $product['qty'],
-                    'rate' => $product['rate'],
-                    'total' => $product['total'],
+                    'male' => $product['male'] ,
+                    'female' => $product['female'],
+                    'rate' => 0,
+                    'total' => 0,
                     'store_id' => Auth::user()->store_id ?? 1,  // Ensure store_id is set here
                     'user_id' => Auth::id(), // Ensure user_id is set here
                 ]);

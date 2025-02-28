@@ -47,14 +47,17 @@ public function store(Request $request)
             'supplier_id' => 'required|exists:supplier,id',
             'shipment_id' => 'required|exists:shipment,id',
             'products.*.product_id' => 'required|exists:product,id',
-            'products.*.type' => 'required|string',  // Ensure type is validated
+            'products.*.type' => 'nullable|string',  // Ensure type is validated
             'products.*.mark' => 'nullable|string',
             'products.*.qty' => 'required|integer',
-            'products.*.accepted_qty' => 'nullable|integer',
-            'products.*.rejected_qty' => 'nullable|integer',
+            'products.*.male_accepted_qty' => 'required|integer',
+            'products.*.female_accepted_qty' => 'required|integer',
+            'products.*.male_rejected_qty' => 'nullable|integer',
+            'products.*.female_rejected_qty' => 'nullable|integer',
+           
             'products.*.rejected_reason' => 'nullable|exists:reject_masters,id',
-            'products.*.rate' => 'required|numeric',
-            'products.*.total' => 'required|numeric',
+            'products.*.rate' => 'nullable|numeric',
+            'products.*.total' => 'nullable|numeric',
         ]);
         
    
@@ -76,14 +79,16 @@ public function store(Request $request)
         InspectionDetail::create([
             'inspection_id' => $inspection->id,
             'product_id' => $product['product_id'],
-            'type' => $product['type'],
+            'type' => null,
             'mark' => $product['mark'],
             'qty' => $product['qty'],
-            'accepted_qty' => $product['accepted_qty'] ?? 0,
-            'rejected_qty' => $product['rejected_qty'] ?? 0,
+            'male_accepted_qty' => $product['male_accepted_qty'],
+            'female_accepted_qty' => $product['female_accepted_qty'],
+            'male_rejected_qty' => $product['male_rejected_qty'],
+            'female_rejected_qty' => $product['female_rejected_qty'],
             'rejected_reason' => $product['rejected_reason'],
-            'rate' => $product['rate'],
-            'total' => $product['total'],
+            'rate' => 0,
+            'total' =>0,
             'user_id' => Auth::id(),
             'store_id' => 1,
             'status' => 0,

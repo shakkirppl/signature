@@ -51,7 +51,7 @@ button.remove-row {
                             <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="date" class="form-label">Date:</label>
-                                <input type="date" class="form-control" id="date" name="date" value="{{ $inspection->date }}" required>
+                                <input type="date" class="form-control" id="date" name="date" value="" required>
                             </div>
                             <div class="col-md-4">
                                 <label for="supplier_id" class="form-label">Supplier:</label>
@@ -66,9 +66,10 @@ button.remove-row {
                             <thead>
                                 <tr>
                                     <th>Product</th>
-                                    <th>Type</th>
                                     <th>Mark</th>
-                                    <th>Accepted Quandity</th>
+                                    <th>Male Accepted Quandity</th>
+                                    <th>Female Accepted Quandity</th>
+                                    <th>Total Accepted Quandity</th>
                                     <th>Rate</th>
                                     <th>Total</th>
                                 </tr>
@@ -87,24 +88,25 @@ button.remove-row {
                                       </select>
                                       </td>
 
+                                      
                                         <td>
-                                            <select name="products[{{ $index }}][type]" class="form-control" required  style="width: 150px;">
-                                                <option value="Male" {{ $detail->type == 'Male' ? 'selected' : '' }}>Male</option>
-                                               <option value="Female" {{ $detail->type == 'Female' ? 'selected' : '' }}>Female</option>
-                                           </select>
-                                      </td>
-                                        <td>
-                                           <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" required style="width: 150px;">
+                                           <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="{{ $detail->mark }}" required style="width: 150px;">
                                        </td>
 
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control qty" value="{{ $detail->accepted_qty }}" min="1" style="width: 150px;">
+                                            <input type="number" name="products[{{ $index }}][male_accepted_qty]" class="form-control qty" value="{{ $detail->male_accepted_qty }}" min="1" style="width: 150px;">
                                         </td>
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;">
+                                            <input type="number" name="products[{{ $index }}][female_accepted_qty]" class="form-control qty" value="{{ $detail->female_accepted_qty }}" min="1" style="width: 150px;">
                                         </td>
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->actual_qty * $detail->rate }}" readonly style="width: 150px;">
+                                            <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control accepted_qty" value="" style="width: 150px;" readonly>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="" style="width: 150px;">
+                                        </td>
+                                        <td>
+                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->accepted_qty * $detail->rate }}" readonly style="width: 150px;">
                                         </td>
                                     </tr>
                                 @endforeach
@@ -134,7 +136,7 @@ button.remove-row {
                                               @endforeach
                                       </select>
                     </td>
-              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0"  style="width: 100px;"></td>
+              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0"  style="width: 150px;"></td>
               <td><button type="button" class="btn btn-danger btn-sm remove-expense">X</button></td>
                 </tr>
               
@@ -151,7 +153,7 @@ button.remove-row {
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="item_total" class="form-label">Item Amount:</label>
-            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $inspection->details->sum(fn($d) => $d->actual_qty * $d->rate) }}" readonly>
+            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $inspection->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" readonly>
         </div>
         <div class="col-md-4">
             <label for="total_expense" class="form-label">Expense Amount:</label>
@@ -185,67 +187,102 @@ button.remove-row {
 </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', function () {
     calculateTotals();
 
-    document.getElementById('add-expense').addEventListener('click', function () {
-        addExpenseRow();
-    });
 
-    document.getElementById('expense-details').addEventListener('click', function (event) {
-        if (event.target.classList.contains('remove-expense')) {
-            event.target.closest('tr').remove();
+    document.querySelectorAll('#product-details').forEach(table => {
+        table.addEventListener('input', function (event) {
+            const target = event.target;
+
+            if (target.classList.contains('qty') || target.classList.contains('rate')) {
+                updateRowTotal(target.closest('tr'));
+            }
+
             calculateTotals();
-        }
+        });
     });
 
+    // Event listener for expense table changes
     document.getElementById('expense-details').addEventListener('input', function (event) {
         if (event.target.classList.contains('expense-amount')) {
             calculateTotals();
         }
     });
 
+    // Add event listener for the "Add Expense" button
+    document.getElementById('add-expense').addEventListener('click', function () {
+        addExpenseRow();
+    });
+
     function addExpenseRow() {
-        const tableBody = document.getElementById('expense-details');
+        const expenseTable = document.getElementById('expense-details');
         const newRow = document.createElement('tr');
 
         newRow.innerHTML = `
             <td>
-                <select name="expense_id[]" class="form-control expense-select" required>
-                    <option value="">Select Expense</option>
-                    ${generateExpenseOptions()}
+                <select name="expense_id[]" class="form-control expense-select" style="width: 150px;">
+                    <option value="">Select Expenses</option>
+                    ${getExpenseOptions()}
                 </select>
             </td>
-            <td><input type="number" name="amount[]" class="form-control expense-amount" value="0" required></td>
-            <td><button type="button" class="btn btn-danger btn-sm remove-expense">X</button></td>
+            <td>
+                <input type="number" name="amount[]" class="form-control expense-amount" value="0" style="width: 100px;">
+            </td>
+            <td>
+                <button type="button" class="btn btn-danger btn-sm remove-expense">X</button>
+            </td>
         `;
 
-        tableBody.appendChild(newRow);
+        expenseTable.appendChild(newRow);
+
+        // Attach event listener to remove button
+        newRow.querySelector('.remove-expense').addEventListener('click', function () {
+            newRow.remove();
+            calculateTotals();
+        });
     }
 
-    function generateExpenseOptions() {
-        return `@foreach ($coa as $head)
-                    <option value="{{ $head->id }}" data-rate="{{ $head->rate }}">{{ $head->name }}</option>
-                @endforeach`;
+    function getExpenseOptions() {
+        let options = '';
+        @foreach ($coa as $head)
+            options += `<option value="{{ $head->id }}" data-rate="{{ $head->rate }}">{{ $head->name }}</option>`;
+        @endforeach
+        return options;
+    }
+
+    function updateRowTotal(row) {
+        const maleQty = parseFloat(row.querySelector('[name*="[male_accepted_qty]"]').value) || 0;
+        const femaleQty = parseFloat(row.querySelector('[name*="[female_accepted_qty]"]').value) || 0;
+        const actualQtyField = row.querySelector('[name*="[accepted_qty]"]');
+        const rateField = row.querySelector('.rate');
+        const totalField = row.querySelector('.total');
+
+        const actualQty = maleQty + femaleQty;
+        actualQtyField.value = actualQty;
+
+        const rate = parseFloat(rateField.value) || 0;
+        totalField.value = (actualQty * rate).toFixed(2);
     }
 
     function calculateTotals() {
         let grandTotal = 0;
+
+        // Calculate Item Total
         document.querySelectorAll('#product-details tr').forEach(row => {
-            const qty = parseFloat(row.querySelector('.qty').value) || 0;
-            const rate = parseFloat(row.querySelector('.rate').value) || 0;
-            const total = qty * rate;
-            row.querySelector('.total').value = total;
-            grandTotal += total;
+            updateRowTotal(row);
+            grandTotal += parseFloat(row.querySelector('.total').value) || 0;
         });
 
-        let expenseTotal = calculateExpenseTotal();
-        document.getElementById('item_total').value = grandTotal;
-        document.getElementById('grand_total').value = grandTotal + expenseTotal;
+        let totalExpense = calculateExpenseTotal();
+        
+        // Update totals
+        document.getElementById('item_total').value = grandTotal.toFixed(2);
+        document.getElementById('total_expense').value = totalExpense.toFixed(2);
+        document.getElementById('grand_total').value = (grandTotal + totalExpense).toFixed(2);
 
-        const advancedAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
-        document.getElementById('balance_amount').value = grandTotal + expenseTotal - advancedAmount;
+        const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
+        document.getElementById('balance_amount').value = (grandTotal + totalExpense - advanceAmount).toFixed(2);
     }
 
     function calculateExpenseTotal() {
@@ -253,11 +290,14 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.expense-amount').forEach(input => {
             totalExpense += parseFloat(input.value) || 0;
         });
-
-        document.getElementById('total_expense').value = totalExpense;
         return totalExpense;
     }
+
+    
+
 });
+
+
 
 </script>
 

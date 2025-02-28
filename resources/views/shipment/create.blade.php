@@ -35,13 +35,13 @@
          </div>
 
         <div class="form-group">
-           <label>Current Date</label>
-           <input type="date" class="form-control" name="date" value="{{ $currentDate }}" readonly>
+           <label> Date</label>
+           <input type="date" class="form-control" name="date" value= "">
         </div>
 
         <div class="form-group">
-            <label>Current Time</label>
-            <input type="time" class="form-control" name="time" value="{{ $currentTime }}" readonly>
+            <label>Time</label>
+            <input type="time" class="form-control" name="time" value="" >
         </div>
 
        

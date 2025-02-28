@@ -46,8 +46,8 @@
                             <tr>
                                 <th>Employee</th>
                                 <th>Product</th>
-                                <th>Quantity</th>
-                               
+                                <th>No Of Skinning</th>
+                               <th>Damaged Skin</th>
                                 <th>Skinning Percentage</th>
                             </tr>
                         </thead>
@@ -57,8 +57,8 @@
                                     <td>{{ $detail->employee->name }}</td>
                                     <td>{{ $detail->product->product_name }}</td>
                                     <td>{{ $detail->quandity }}</td>
-                                    
-                                    <td>{{ $detail->skin_percentage }}%</td>
+                                    <td>{{ $detail->damaged_quandity }}</td>
+                                    <td>{{ $detail->skin_percentage }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

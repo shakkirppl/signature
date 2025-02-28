@@ -23,6 +23,7 @@
                   <th>Code</th>
                   <th>Date</th>
                   <th>COA</th>
+                  <th>Payment To</th>
                   <th>Amount</th>
                   <th>Type</th>
                   <th>Bank</th>
@@ -36,7 +37,7 @@
                   <td>{{ $voucher->code }}</td>
                   <td>{{ \Carbon\Carbon::parse($voucher->date)->format('d-m-Y') }}</td>
                   <td>{{ $voucher->account ? $voucher->account->name : 'N/A' }}</td>
-
+                  <td>{{ $voucher->employee ? $voucher->employee->name : 'N/A' }}</td>
                   <td>{{ number_format($voucher->amount, 2) }}</td>
                   <td>{{ ucfirst($voucher->type) }}</td>
                     <td>

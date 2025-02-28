@@ -41,7 +41,7 @@ button.remove-row {
                             </div>
                             <div class="col-md-3">
                                 <label for="date" class="form-label">Date:</label>
-                                <input type="date" class="form-control" id="date" name="date" value="{{ $purchaseOrder->date }}" required>
+                                <input type="date" class="form-control" id="date" name="date" value="" required>
                             </div>
                             <div class="col-md-3">
                                 <label for="supplier_id" class="form-label">Supplier:</label>
@@ -71,11 +71,14 @@ button.remove-row {
                             <thead class="table-light">
                                 <tr>
                                     <th>Product</th>
-                                    <th>Type</th>
-                                    <th>Mark</th>
                                     <th>Quantity</th>
-                                    <th>Accepted Quantity</th>
-                                    <th>Rejected Quantity</th>
+                                    <th>Male</th>
+                                    <th>Female</th>
+                                    <th>Mark</th>
+                                    <th>Male Accepted Quantity</th>
+                                    <th>Male Rejected Quantity</th>
+                                    <th>Female Accepted Quantity</th>
+                                    <th>Female Rejected Quantity</th>
                                     <th>Rejected Reasons</th>
                                     <th>Action</th>
                                 </tr>
@@ -93,29 +96,35 @@ button.remove-row {
                     @endforeach
                 </select>
             </td>
+           
             <td>
-                <select name="products[{{ $index }}][type]" class="form-control" required  style="width: 150px;">
-                    <option value="Male" {{ $detail->type == 'Male' ? 'selected' : '' }}>Male</option>
-                    <option value="Female" {{ $detail->type == 'Female' ? 'selected' : '' }}>Female</option>
-                </select>
+                <input type="text" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}"  style="width: 150px;">
             </td>
             <td>
-                <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="{{ $detail->mark }}" required style="width: 80px;">
+                <input type="text" name="products[{{ $index }}][male]" class="form-control male" value="{{ $detail->male }}"  style="width: 150px;">
             </td>
             <td>
-                <input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 80px;">
+                <input type="number" name="products[{{ $index }}][female]" class="form-control female" value="{{ $detail->female }}" min="1" style="width: 150px;">
+            </td>
+            <td>
+                <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" style="width: 150px;">
+            </td>
+            <td>
+                <input type="number" name="products[{{ $index }}][male_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
+            </td>
+            <td>
+                <input type="number" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;">
+            </td>
+            <td>
+                <input type="number" name="products[{{ $index }}][female_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
             </td>
            
             <td>
-                <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
-            </td>
-          
-            <td>
-                <input type="number" name="products[{{ $index }}][rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;">
+                <input type="number" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;">
             </td>
          
             <td>
-                <select name="products[{{ $index }}][rejected_reason]" class="form-control rejected-reason" >
+                <select name="products[{{ $index }}][rejected_reason]" class="form-control rejected-reason" style="width: 150px;" >
                     <option value="">Select Reason</option>
                     @foreach ($rejectReasons as $reason)
                         <option value="{{ $reason->id }}" {{ isset($detail->rejected_reasons) && $detail->rejected_reasons == $reason->id ? 'selected' : '' }}>

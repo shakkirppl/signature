@@ -25,10 +25,9 @@ class ShipmentController extends Controller
 
    public function create()
 {
-    $currentDate = Carbon::now()->format('Y-m-d'); 
-    $currentTime = Carbon::now()->format('H:i:s');
    
-    return view('shipment.create', ['invoice_no' => $this->invoice_no()], compact('currentDate', 'currentTime'));
+   
+    return view('shipment.create', ['invoice_no' => $this->invoice_no()], );
 }
 
 

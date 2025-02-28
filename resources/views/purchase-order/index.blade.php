@@ -22,9 +22,9 @@
                   <th>Order No</th>
                   <th>Supplier</th>
                   <th>Date</th>
-                  <th>Grand Total</th>
+                  <!-- <th>Grand Total</th> -->
                   <th>Advance Amount</th>
-                  <th>Balance</th>
+                  <!-- <th>Balance</th> -->
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -35,9 +35,9 @@
                   <td>{{ $order->order_no }}</td>
                   <td>{{ $order->supplier ? $order->supplier->name : 'N/A' }}</td>
                   <td>{{ $order->date }}</td>
-                  <td>{{ $order->grand_total }}</td>
+                  <!-- <td>{{ $order->grand_total }}</td> -->
                   <td>{{ $order->advance_amount }}</td>
-                  <td>{{ $order->balance_amount }}</td>
+                  <!-- <td>{{ $order->balance_amount }}</td> -->
                        
                   <td>
                   <a href="{{ route('purchase-order.view', $order->id) }}" class="btn btn-info btn-sm">View</a>

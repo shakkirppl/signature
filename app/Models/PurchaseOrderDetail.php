@@ -17,6 +17,8 @@ class PurchaseOrderDetail extends Model
         'qty',
         'rate',
         'total',
+        'male',
+        'female',
         'store_id',
         
 ];

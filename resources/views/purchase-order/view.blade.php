@@ -31,21 +31,20 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Product</th>
-                                <th>Type</th>
-                               
-                                <th>Qty</th>
-                                <th>Rate</th>
-                                <th>Total</th>
+                                 <th>Qty</th>
+                                <th>Male</th>
+                                <th>Female</th>
                             </tr>
                         </thead>
                         <tbody>
                         @forelse ($purchaseOrder->details as $detail)
                             <tr>
                             <td>{{ optional($detail->product)->product_name ?? 'N/A' }}</td>
-                            <td>{{ $detail->type ? $detail->type : 'N/A' }}</td>
+                            <!-- <td>{{ $detail->type ? $detail->type : 'N/A' }}</td> -->
                              <td>{{$detail->qty}}</td>
-                                <td>{{ number_format($detail->rate, 2) }}</td>
-                                <td>{{ number_format($detail->total, 2) }}</td>
+                             <td>{{$detail->male}}</td>
+                             <td>{{$detail->female}}</td>
+                                
                             </tr>
                         @empty
                             <tr>

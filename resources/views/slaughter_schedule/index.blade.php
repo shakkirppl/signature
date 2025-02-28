@@ -30,8 +30,9 @@
                                     <th>Airline</th>
                                     <th>Airline Number</th>
                                     <th>Airline Date</th>
-                                    <th>Start Time</th>
-                                    <th>End Time</th>
+                                    <th>Slaughter Date</th>
+                                    <th> SlaughterStart Time</th>
+                                    <th> SlaughterEnd Time</th>
                                     
                                     <th>Actions</th>
                                 </tr>
@@ -48,6 +49,7 @@
                                         <td>{{ $schedule->airline_name }}</td>
                                         <td>{{ $schedule->airline_number }}</td>
                                         <td>{{ $schedule->airline_date }}</td>
+                                        <td>{{ $schedule->slaughter_date }}</td>
                                         <td>{{ $schedule->starting_time_of_slaughter }}</td>
                                         <td>{{ $schedule->ending_time_of_slaughter }}</td>
                                         

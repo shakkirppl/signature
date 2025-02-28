@@ -69,19 +69,19 @@
                   </div>
                 </div>
               </div>
-              <div class="col-md-12">
+              <!-- <div class="col-md-12">
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label required">State</label>
                   <div class="col-sm-9">
                     <input type="text" class="form-control" name="state" />
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="col-md-12">
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label required">Country</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="country" />
+                    <input type="text" class="form-control" name="country" value="Qatar"/>
                   </div>
                 </div>
               </div>

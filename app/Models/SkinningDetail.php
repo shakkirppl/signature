@@ -11,7 +11,7 @@ class SkinningDetail extends Model
     
 
     protected $table = 'skinning_detail';
-    protected $fillable = ['id', 'skinning_id','employee_id','product_id','quandity','skin_percentage','store_id'];
+    protected $fillable = ['id', 'skinning_id','employee_id','product_id','quandity','skin_percentage','store_id','damaged_quandity'];
 
 
     public function product()

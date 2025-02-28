@@ -75,8 +75,8 @@ button.remove-row {
                                 <tr>
                                     <th>Employee</th>
                                     <th>Product</th>
-                                    <th>Quantity</th>
-                                  
+                                    <th>No Of Skinning</th>
+                                  <th>Damaged Skin</th>
                                     <th>Skinning Percentage</th>
                                     <th>Action</th>
                                 </tr>
@@ -105,7 +105,8 @@ button.remove-row {
                                             </select>
                                         </td>
                                         <td><input type="number" name="quandity[]" class="form-control" value="{{ $detail->quandity }}" required style="width: 150px;"></td>
-                                        <td><input type="text" step="0.01" name="skin_percentage[]" class="form-control" value="{{ $detail->skin_percentage }} %" required style="width: 150px;"></td>
+                                        <td><input type="number" name="damaged_quandity[]" class="form-control"  value="{{ $detail->damaged_quandity }}" style="width: 150px;"></td>
+                                        <td><input type="text" step="0.01" name="skin_percentage[]" class="form-control" value="{{ $detail->skin_percentage }} %" required style="width: 150px;" readonly></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                     </tr>
                                 @endforeach
@@ -124,42 +125,70 @@ button.remove-row {
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const detailsContainer = document.getElementById('details');
-        const addRowBtn = document.getElementById('addRow');
+  document.addEventListener('DOMContentLoaded', function () {
+    const detailsContainer = document.getElementById('details');
+    const addRowBtn = document.getElementById('addRow');
 
-        addRowBtn.addEventListener('click', function () {
-            const newRow = `
-            <tr>
-                <td>
-                    <select name="employees[]" class="form-control" required>
-                        <option value="">Select Employee</option>
-                        @foreach ($employees as $employee)
-                            <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td>
-                    <select name="products[]" class="form-control" required>
-                        <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td><input type="number" name="quandity[]" class="form-control" required></td>
-                <td><input type="number" step="0.01" name="skin_percentage[]" class="form-control" required></td>
-                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-            </tr>`;
-            detailsContainer.insertAdjacentHTML('beforeend', newRow);
-        });
+    // Function to calculate percentage
+    function calculatePercentage(row) {
+        const quantityInput = row.querySelector('input[name="quandity[]"]');
+        const damagedInput = row.querySelector('input[name="damaged_quandity[]"]');
+        const percentageInput = row.querySelector('input[name="skin_percentage[]"]');
 
-        detailsContainer.addEventListener('click', function (e) {
-            if (e.target.classList.contains('remove-row')) {
-                e.target.closest('tr').remove();
-            }
-        });
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const damaged = parseFloat(damagedInput.value) || 0;
+
+        if (quantity + damaged > 0) {
+            percentageInput.value = ((quantity / (quantity + damaged)) * 100).toFixed(2) + "%";
+        } else {
+            percentageInput.value = "";
+        }
+    }
+
+    // Add event listener for input changes
+    detailsContainer.addEventListener('input', function (e) {
+        if (e.target.name === "quandity[]" || e.target.name === "damaged_quandity[]") {
+            const row = e.target.closest('tr');
+            calculatePercentage(row);
+        }
     });
+
+    // Add new row functionality
+    addRowBtn.addEventListener('click', function () {
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <select name="employees[]" class="form-control" required>
+                    <option value="">Select Employee</option>
+                    @foreach ($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td>
+                <select name="products[]" class="form-control" required>
+                    <option value="">Select Product</option>
+                    @foreach ($products as $product)
+                        <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type="number" name="quandity[]" class="form-control" required></td>
+            <td><input type="number" name="damaged_quandity[]" class="form-control" required></td>
+            <td><input type="text" name="skin_percentage[]" class="form-control" required readonly></td>
+            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+        `;
+
+        detailsContainer.appendChild(newRow);
+    });
+
+    // Remove row functionality
+    detailsContainer.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+        }
+    });
+});
 </script>
 
 @endsection

@@ -9,7 +9,7 @@ class InspectionDetail extends Model
 {
     use HasFactory;
     protected $table = 'inspection_detail';
-    protected $fillable = ['inspection_id', 'product_id', 'qty','accepted_qty','rejected_qty','rejected_reason','rate','total','store_id','user_id','status','type','mark'];
+    protected $fillable = ['inspection_id', 'product_id', 'qty','male_accepted_qty','female_accepted_qty','male_rejected_qty','female_rejected_qty','rejected_reason','rate','total','store_id','user_id','status','type','mark',];
 
     public function inspection()
     {

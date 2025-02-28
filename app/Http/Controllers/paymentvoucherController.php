@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\paymentVoucher;
 use App\Models\BankMaster;
 use App\Models\AccountHead;
+use App\Models\Employee;
 
 
 class paymentvoucherController extends Controller
@@ -26,7 +27,7 @@ class paymentvoucherController extends Controller
     public function create()
     {
         $banks = BankMaster::all();
-
+        $employees =Employee::all();
         // Fetch accounts under "Expenses" and "Liabilities"
         $coa = AccountHead::whereIn('parent_id', function ($query) {
             $query->select('id')
@@ -36,7 +37,7 @@ class paymentvoucherController extends Controller
         
         return view('paymentvoucher.create', [
             'invoice_no' => $this->invoice_no()
-        ], compact('banks', 'coa'));
+        ], compact('banks', 'coa','employees'));
     }
 
     public function invoice_no(){
@@ -60,7 +61,9 @@ class paymentvoucherController extends Controller
                              'coa_id' => 'required|exists:account_heads,id',
                              'type' => 'required|string|in:cash,bank', // Ensure only valid types are allowed
                              'amount' => 'required|numeric',
-                             'bank_id' => 'nullable|exists:bank_master,id', // Validate bank_id exists in bank_master
+                             'bank_id' => 'nullable|exists:bank_master,id', 
+                             'employee_id' => 'required|exists:employee,id',
+                            
                          ]);
                  
                          // Create a new payment voucher instance
@@ -68,6 +71,7 @@ class paymentvoucherController extends Controller
                          $voucher->code = $request->code; // Assuming code is pre-generated
                          $voucher->date = $request->date;
                          $voucher->coa_id = $request->coa_id;
+                         $voucher->employee_id = $request->employee_id;
                          $voucher->description = $request->description;
                          $voucher->type = $request->type;
                          $voucher->amount = $request->amount;
@@ -96,7 +100,7 @@ class paymentvoucherController extends Controller
                  {
                      $voucher = paymentVoucher::findOrFail($id);
                      $banks = BankMaster::all();
-                 
+                     $employees =Employee::all();
                      // Fetch accounts under "Expenses" and "Liabilities"
                      $coa = AccountHead::whereIn('parent_id', function ($query) {
                          $query->select('id')
@@ -104,7 +108,7 @@ class paymentvoucherController extends Controller
                                ->whereIn('name', ['Expenses', 'Liabilities']);
                      })->get();
                  
-                     return view('paymentvoucher.edit', compact('voucher', 'banks', 'coa'));
+                     return view('paymentvoucher.edit', compact('voucher', 'banks', 'coa','employees'));
                  }
                  
 
@@ -116,11 +120,14 @@ public function update(Request $request, $id)
         'type' => 'required|string',
         'amount' => 'required|numeric',
         'bank_name' => 'nullable|exists:bank_master,bank_name', 
+        'employee_id' => 'required|exists:employee,id',
     ]);
 
     $voucher = paymentVoucher::findOrFail($id);
     $voucher->date = $request->date;
     $voucher->coa_id = $request->coa_id;
+    $voucher->employee_id = $request->employee_id;
+
     $voucher->description = $request->description;
     $voucher->type = $request->type;
     $voucher->amount = $request->amount;

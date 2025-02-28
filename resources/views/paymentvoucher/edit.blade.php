@@ -45,21 +45,27 @@
 
                                 
 
-     <div class="form-group">
-    <label for="coa_id" class="required"> COA</label>
-    <select class="form-control" name="coa_id" id="coa_id" required>
-        <option value="">Select Account</option>
-        @foreach ($coa as $account)
-            <option value="{{ $account->id }}"  {{ $voucher->coa_id == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
-        @endforeach
-    </select>
-</div>
+                               <div class="form-group">
+                                      <label for="coa_id" class="required"> COA</label>
+                                        <select class="form-control" name="coa_id" id="coa_id" required>
+                                            <option value="">Select Account</option>
+                                                 @foreach ($coa as $account)
+                                            <option value="{{ $account->id }}"  {{ $voucher->coa_id == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
+                                                  @endforeach
+                                        </select>
+                              </div>
+                               <div class="form-group">
+                                    <label for="date" class="form-group">Payment To</label>
+                                    <select name="employee_id" class="form-control"  >
+                                         <option value="">Select Employee</option>
+                                             @foreach ($employees as $employee)
+                                              <option value="{{ $employee->id }}" {{ $voucher->employee_id == $employee->id ? 'selected' : '' }}>{{ $employee->name }}</option>
+                                             @endforeach
+                                    </select>
+                                </div>
                                     
 
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="4">{{ $voucher->description }}</textarea>
-                                </div>
+                                
                             </div>
                             <!-- Second Section -->
                             <div class="col-md-6">
@@ -86,6 +92,10 @@
                                 <div class="form-group">
                                     <label for="amount" class="required">Amount</label>
                                     <input type="number" class="form-control" id="amount" name="amount" value="{{ $voucher->amount }}" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4">{{ $voucher->description }}</textarea>
                                 </div>
                             </div>
                         </div>

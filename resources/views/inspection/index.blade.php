@@ -18,9 +18,9 @@
                   <th>Order No</th>
                   <th>Supplier</th>
                   <th>Date</th>
-                  <th>Grand Total</th>
+                  <!-- <th>Grand Total</th> -->
                   <th>Advance Amount</th>
-                  <th>Balance</th>
+                  <!-- <th>Balance</th> -->
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -31,9 +31,9 @@
                   <td>{{ $inspection->order_no }}</td>
                   <td>{{ $inspection->supplier ? $inspection->supplier->name : 'N/A' }}</td>
                   <td>{{ $inspection->date }}</td>
-                  <td>{{ $inspection->grand_total }}</td>
                   <td>{{ $inspection->advance_amount }}</td>
-                  <td>{{ $inspection->balance_amount }}</td>
+                  <!-- <td>{{ $inspection->grand_total }}</td> -->
+                  <!-- <td>{{ $inspection->balance_amount }}</td> -->
                   <td>
                   <a href="{{ route('inspection.view', $inspection->id) }}" class="btn btn-primary btn-sm">Start</a>
 

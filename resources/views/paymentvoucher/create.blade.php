@@ -52,14 +52,20 @@
                                   </div>
 
                                
-
-                                <div class="form-group">
-                                    <label for="description">Description</label>
-                                    <textarea class="form-control" id="description" name="description" rows="4"></textarea>
+                                  <div class="form-group">
+                                    <label for="date" class="form-group">Payment To</label>
+                                    <select name="employee_id" class="form-control"  >
+                                         <option value="">Select Employee</option>
+                                             @foreach ($employees as $employee)
+                                              <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                                             @endforeach
+                                    </select>
                                 </div>
+                                
                           
 </div>
                             <!-- Second Section -->
+                             
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="type" class="required">Type</label>
@@ -82,6 +88,10 @@
                                 <div class="form-group">
                                     <label for="amount" class="required">Amount</label>
                                     <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter Amount" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4"></textarea>
                                 </div>
                             </div>
                         </div>

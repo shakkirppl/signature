@@ -22,7 +22,7 @@
                   <th>Customer Name</th>
                   <th>Email</th>
                   <th>Address</th>
-                  <th>State</th>
+                  <!-- <th>State</th> -->
                   <th>Country</th>
                   <th>Credit Limit Days</th>
                   <th>Opening Balance</th>
@@ -39,7 +39,7 @@
                   <td>{{ $customer->customer_name }}</td>
                   <td>{{ $customer->email }}</td>
                   <td>{{ $customer->address }}</td>
-                  <td>{{ $customer->state }}</td>
+                  <!-- <td>{{ $customer->state }}</td> -->
                   <td>{{ $customer->country }}</td>
                   <td>{{ $customer->credit_limit_days }}</td>
                   <td>{{ $customer->opening_balance }}</td>

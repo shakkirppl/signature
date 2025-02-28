@@ -71,6 +71,8 @@ class SkinningController extends Controller
                          'products.*' => 'exists:product,id',
                          'quandity' => 'required|array',
                          'quandity.*' => 'numeric|min:1',
+                         'damaged_quandity' => 'nullable|array',
+                         'damaged_quandity.*' => 'numeric|min:0',
                          'skin_percentage' => 'required|array',
                          'skin_percentage.*' => 'string|min:0|max:100',
                      ]);
@@ -96,6 +98,7 @@ class SkinningController extends Controller
                                  'skinning_id' => $skinningMaster->id,
                                  'employee_id' => $employee_id,
                                  'product_id' => $request->products[$index],
+                                 'damaged_quandity'=> $request->damaged_quandity[$index],
                                  'quandity' => $request->quandity[$index],
                                  'skin_percentage' => $request->skin_percentage[$index],
                                  'store_id' => 1,
@@ -135,7 +138,7 @@ public function update(Request $request, $id)
         'employees.*' => 'required|exists:employee,id',
         'products.*' => 'required|exists:product,id',
         'quandity.*' => 'required|integer|min:1',
-       
+       'damaged_quandity.*'=> 'nullable|integer',
     ]);
 
     
@@ -157,7 +160,7 @@ public function update(Request $request, $id)
                 'employee_id' => $employee_id,
                 'product_id' => $request->products[$index],
                 'quandity' => $request->quandity[$index],
-               
+                'damaged_quandity'=> $request->damaged_quandity[$index],
                 'skin_percentage' => $request->skin_percentage[$index],
                 'store_id' => 1, 
             ]);
