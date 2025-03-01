@@ -71,14 +71,25 @@ button.remove-row {
                                         @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-4">
-                                <label for="shipping_mode" class="form-label">Shipping Mode</label>
-                                <input type="text" class="form-control" id="shipping_mode" name="shipping_mode" value="{{$SalesPayment->shipping_mode}}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="shipping_agent" class="form-label">Shipping Agent</label>
-                                <input type="text" class="form-control" id="shipping_agent" name="shipping_agent" value="{{$SalesPayment->shipping_agent}}">
-                            </div>
+                          <!-- Shipping Mode -->
+<div class="col-md-4">
+    <label for="shipping_mode" class="form-label">Shipping Mode</label>
+    <select class="form-control" id="shipping_mode" name="shipping_mode">
+        <option value="Buyer" {{ $SalesPayment->shipping_mode == 'Buyer' ? 'selected' : '' }}>Buyer</option>
+        <option value="By Sea" {{ $SalesPayment->shipping_mode == 'By Sea' ? 'selected' : '' }}>By Sea</option>
+        <option value="By Road" {{ $SalesPayment->shipping_mode == 'By Road' ? 'selected' : '' }}>By Road</option>
+    </select>
+</div>
+
+<!-- Shipping Agent -->
+<div class="col-md-4">
+    <label for="shipping_agent" class="form-label">Shipping Agent</label>
+    <select class="form-control" id="shipping_agent" name="shipping_agent">
+        <option value="Qatar Airways" {{ $SalesPayment->shipping_agent == 'Qatar Airways' ? 'selected' : '' }}>Qatar Airways</option>
+        <option value="Ethiopian Airlines" {{ $SalesPayment->shipping_agent == 'Ethiopian Airlines' ? 'selected' : '' }}>Ethiopian Airlines</option>
+    </select>
+</div>
+
                         </div><br>
                         <div class="table-responsive">
                         <table class="table table-bordered" id="productTable">
@@ -104,10 +115,10 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 150px;"></td>
-                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;"></td>
-                                    <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly style="width: 150px;"></td>
-                                    <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
+                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 200px;" ></td>
+                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 200px;" step="any"></td>
+                                    <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly style="width: 200px;" step="any"></td>
+                                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
 
                                 </tr>
                                 @endforeach
@@ -120,19 +131,19 @@ button.remove-row {
                         <div class="row mt-4">
                             <div class="col-md-3">
                                 <label for="grand_total" class="form-label">Grand Total:</label>
-                                <input type="number" id="total" name="grand_total" class="form-control" value="{{ $SalesPayment->grand_total }}" readonly>
+                                <input type="number" id="total" name="grand_total" class="form-control" value="{{ $SalesPayment->grand_total }}" readonly step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $SalesPayment->advance_amount }}">
+                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $SalesPayment->advance_amount }}" step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="balance_amount" class="form-label">Balance:</label>
-                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" value="{{ $SalesPayment->balance_amount }}" readonly>
+                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" value="{{ $SalesPayment->balance_amount }}" readonly step="any"> 
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Update</button>
@@ -148,110 +159,73 @@ button.remove-row {
 
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    function updateTotal(row) {
-        let qty = row.querySelector(".qty").value;
-        let rate = row.querySelector(".rate").value;
-        let totalField = row.querySelector(".total");
+document.addEventListener('DOMContentLoaded', function () {
+    const productTable = document.querySelector('#productTable tbody');
+    const addRowBtn = document.getElementById('addRow');
+    const advanceAmountField = document.getElementById('advance_amount');
 
-        let total = (qty * rate).toFixed(2);
-        totalField.value = total;
-
-        updateGrandTotal();
-    }
-
-    function updateGrandTotal() {
+    function calculateTotals() {
         let grandTotal = 0;
-        document.querySelectorAll(".total").forEach((totalField) => {
-            grandTotal += parseFloat(totalField.value) || 0;
+        document.querySelectorAll('#productTable tbody tr').forEach(row => {
+            const qtyInput = row.querySelector('.qty');
+            const rateInput = row.querySelector('.rate');
+            const totalInput = row.querySelector('.total');
+
+            const qty = parseFloat(qtyInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+
+            if (!isNaN(qty) && !isNaN(rate)) {
+                const total = qty * rate;
+                totalInput.value = total.toFixed(2);
+                grandTotal += total;
+            }
         });
-        document.getElementById("total").value = grandTotal.toFixed(2);
-        updateBalance();
+
+        document.getElementById('total').value = grandTotal.toFixed(2);
+        const advanceAmount = parseFloat(advanceAmountField.value) || 0;
+        document.getElementById('balance_amount').value = (grandTotal - advanceAmount).toFixed(2);
     }
 
-    function updateBalance() {
-        let grandTotal = parseFloat(document.getElementById("total").value) || 0;
-        let advance = parseFloat(document.getElementById("advance_amount").value) || 0;
-        let balance = grandTotal - advance;
-        document.getElementById("balance_amount").value = balance.toFixed(2);
-    }
-
-    // Attach event listeners to initial fields
-    function attachEventListeners(row) {
-        row.querySelector(".qty").addEventListener("input", function () {
-            updateTotal(row);
-        });
-
-        row.querySelector(".rate").addEventListener("input", function () {
-            updateTotal(row);
-        });
-
-        row.querySelector(".product-select").addEventListener("change", function () {
-            let selectedOption = this.options[this.selectedIndex];
-            let rateField = row.querySelector(".rate");
-            rateField.value = selectedOption.dataset.rate;
-            updateTotal(row);
-        });
-
-        row.querySelector(".removeRow").addEventListener("click", function () {
-            row.remove();
-            updateGrandTotal();
-        });
-    }
-
-    // Attach event listeners to existing rows
-    document.querySelectorAll("tbody tr").forEach(row => attachEventListeners(row));
-
-    // Add new row
-    document.getElementById("addRow").addEventListener("click", function () {
-    let table = document.getElementById("productTable").getElementsByTagName("tbody")[0];
-    let rowCount = table.rows.length; // Get the current row count to index correctly
-    let newRow = table.insertRow();
-    
-    newRow.innerHTML = `
-        <td>
-            <select name="products[${rowCount}][product_id]" class="form-control product-select" required>
-                <option value="">Select Product</option>
-                @foreach ($products as $product)
-                    <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">
-                        {{ $product->product_name }}
-                    </option>
-                @endforeach
-            </select>
-        </td>
-        <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" min="1" required></td>
-        <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate"></td>
-        <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly></td>
-        <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
-    `;
-
-    attachEventListeners(newRow);
-});
-
-
-    // Update balance when advance amount changes
-    document.getElementById("advance_amount").addEventListener("input", updateBalance);
-});
-
-    function attachEventListeners(row) {
-        row.querySelector(".removeRow").addEventListener("click", function () {
-            row.remove();
-            updateGrandTotal();
-        });
-        row.querySelector(".qty").addEventListener("input", function () {
-            updateTotal(row);
-        });
-        row.querySelector(".rate").addEventListener("input", function () {
-            updateTotal(row);
-        });
-    }
-    
-    document.querySelectorAll(".removeRow").forEach(button => {
-        button.addEventListener("click", function () {
-            this.closest("tr").remove();
-            updateGrandTotal();
-        });
+    // Event listener for input changes on quantity and rate fields
+    productTable.addEventListener('input', function (e) {
+        if (e.target.classList.contains('qty') || e.target.classList.contains('rate')) {
+            calculateTotals();
+        }
     });
 
+    // Event listener for advance amount field
+    advanceAmountField.addEventListener('input', calculateTotals);
+
+    // Add new row on button click
+    addRowBtn.addEventListener('click', function () {
+        const index = productTable.children.length;
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>
+                <select name="products[${index}][product_id]" class="form-control product-select" required style="width: 200px;">
+                    <option value="">Select Product</option>
+                    @foreach ($products as $product)
+                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
+                    @endforeach
+                </select>
+            </td>
+            <td><input type="number" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
+            <td><input type="number" name="products[${index}][rate]" class="form-control rate" style="width: 200px;" step="any"></td>
+            <td><input type="number" name="products[${index}][total]" class="form-control total" readonly style="width: 200px;" step="any"></td>
+            <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+        `;
+        productTable.appendChild(newRow);
+    });
+
+    // Remove row event listener using event delegation
+    productTable.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-row')) {
+            e.target.closest('tr').remove();
+            calculateTotals();
+        }
+    });
+
+});
 </script>
+
 @endsection

@@ -103,10 +103,10 @@ button.remove-row {
                                             <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control accepted_qty" value="" style="width: 150px;" readonly>
                                         </td>
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="" style="width: 150px;">
+                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="" style="width: 200px;">
                                         </td>
                                         <td>
-                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->accepted_qty * $detail->rate }}" readonly style="width: 150px;">
+                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->accepted_qty * $detail->rate }}" readonly style="width: 200px;">
                                         </td>
                                     </tr>
                                 @endforeach
@@ -136,7 +136,7 @@ button.remove-row {
                                               @endforeach
                                       </select>
                     </td>
-              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0"  style="width: 150px;"></td>
+              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0"  style="width: 200px;"></td>
               <td><button type="button" class="btn btn-danger btn-sm remove-expense">X</button></td>
                 </tr>
               

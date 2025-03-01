@@ -59,8 +59,8 @@ button.remove-row {
                                 <tr>
                                     <th>Product</th>
                                     <th>Qty</th>
-                                    <th>Rate</th>
-                                    <th>Total</th>
+                                    <th>Rate(USD)</th>
+                                    <th>Total(USD)</th>
                                     <th>Action</th> 
                                 </tr>
                             </thead>
@@ -74,9 +74,9 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 150px;"></td>
-                                    <td><input type="number" name="products[0][rate]" class="form-control rate" style="width: 150px;" ></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
+                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;"></td>
+                                    <td><input type="number" name="products[0][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
+                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 200px;" step="any"></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
@@ -85,20 +85,20 @@ button.remove-row {
                         <button type="button" class="btn btn-primary" id="add-row">Add New Row</button>
                         <div class="row mt-4">
                             <div class="col-md-3">
-                                <label for="grand_total" class="form-label">Grand Total:</label>
-                                <input type="number" id="total" name="grand_total" class="form-control" readonly>
+                                <label for="grand_total" class="form-label">Grand Total:(USD)</label>
+                                <input type="number" id="total" name="grand_total" class="form-control" step="any" readonly>
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
-                                <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control">
+                                <label for="advance_amount" class="form-label">Advance:(USD)</label>
+                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
-                                <label for="balance_amount" class="form-label">Balance:</label>
-                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" readonly>
+                                <label for="balance_amount" class="form-label">Balance:(USD)</label>
+                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" readonly step="any">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Submit</button>
@@ -114,9 +114,9 @@ button.remove-row {
 document.addEventListener('DOMContentLoaded', function () {
     const productRows = document.getElementById('product-rows');
     const addRowBtn = document.getElementById('add-row');
-    const grandTotalField = document.getElementById('total'); // Grand Total Field
-    const advanceAmountField = document.getElementById('advance_amount'); // Advance Amount Field
-    const balanceAmountField = document.getElementById('balance_amount'); // Balance Amount Field
+    const grandTotalField = document.getElementById('total');
+    const advanceAmountField = document.getElementById('advance_amount');
+    const balanceAmountField = document.getElementById('balance_amount');
 
     // Add new row functionality
     addRowBtn.addEventListener('click', function () {
@@ -124,16 +124,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = `
         <tr>
             <td>
-                <select name="products[${rowCount}][product_id]" class="form-control product-select" required>
+                <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 200px;">
                     <option value="">Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required></td>
-            <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate"></td>
-            <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly></td>
+            <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
+            <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
+            <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly step="any" style="width: 200px;"></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         </tr>`;
         productRows.insertAdjacentHTML('beforeend', newRow);
@@ -141,22 +141,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Handle changes in quantity, rate, and product selection
     productRows.addEventListener('input', function (e) {
-        if (
-            e.target.classList.contains('qty') ||
-            e.target.classList.contains('rate') ||
-            e.target.classList.contains('product-select')
-        ) {
+        if (e.target.classList.contains('qty') || e.target.classList.contains('rate') || e.target.classList.contains('product-select')) {
             const row = e.target.closest('tr');
             const qty = parseFloat(row.querySelector('.qty').value) || 0;
-            const rate =
-                parseFloat(
-                    row.querySelector('.rate').value ||
-                    row.querySelector('.product-select').selectedOptions[0].dataset.rate
-                ) || 0;
+            const rate = parseFloat(row.querySelector('.rate').value) || 0;
 
-            // Update rate and total fields
-            row.querySelector('.rate').value = rate;
-            row.querySelector('.total').value = qty * rate;
+            // Update total field with decimals
+            row.querySelector('.total').value = (qty * rate).toFixed(2);
 
             // Recalculate totals
             calculateTotals();
@@ -180,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
             grandTotal += parseFloat(input.value) || 0;
         });
 
-        // Update grand total and balance
+        // Ensure values are displayed with two decimal places
         grandTotalField.value = grandTotal.toFixed(2);
         const advanceAmount = parseFloat(advanceAmountField.value) || 0;
         balanceAmountField.value = (grandTotal - advanceAmount).toFixed(2);
@@ -196,5 +187,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Initial calculation to ensure totals are accurate
     calculateTotals();
 });
+
+
+
 
 </script>

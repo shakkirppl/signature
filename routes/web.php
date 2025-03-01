@@ -192,9 +192,11 @@ Route::get('inspection-index', [InspectionController::class, 'index'])->name('in
 Route::get('inspection-view/{id}', [InspectionController::class,'view'])->name('inspection.view');
 Route::post('inspection-store', [InspectionController::class, 'store'])->name('inspection.store');
 Route::get('inspection-report', [InspectionController::class, 'report'])->name('inspection.report');
-Route::get('/inspection/{id}/reportview', [InspectionController::class, 'viewReport'])->name('inspection.reportview');
+// Route::get('/inspection/{id}/reportview', [InspectionController::class, 'viewReport'])->name('inspection.reportview');
 Route::get('/rejected-animal-report', [InspectionController::class, 'rejectedAnimalReport'])->name('rejected.animal.report');
 Route::get('/shipment/rejected/details/{shipment_no}', [InspectionController::class, 'shipmentRejectedDetails'])->name('shipment.rejected.details');
+Route::get('/shipment/{shipment_no}/supplier/{supplier_name}/details', [InspectionController::class, 'viewSupplierRejectedProducts'])->name('supplier.rejected.details');
+
 
 
 

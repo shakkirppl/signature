@@ -24,26 +24,33 @@ class CustomerPaymentController extends Controller
         return view('customer-payment.create', compact('banks','customers'));
     }
 
-
     public function getCustomerSales(Request $request)
-{
-    $customerId = $request->customer_id;
-
-    $salesData = DB::table('sales_payment_master')
-        ->where('customer_id', $customerId)
-        ->join('sales_payment_detail', 'sales_payment_master.id', '=', 'sales_payment_detail.sales_payment_id')
-        ->where('sales_payment_master.balance_amount', '>', 0) 
-        ->select(
-            'sales_payment_master.order_no',
-            'sales_payment_detail.sales_payment_id as sales_payment_id',
-            'sales_payment_master.date',
-            'sales_payment_master.grand_total',
-            'sales_payment_master.balance_amount'
-        )
-        ->get();
-
-    return response()->json($salesData);
-}
+    {
+        $customerId = $request->customer_id;
+    
+        $salesData = DB::table('sales_payment_master')
+            ->where('sales_payment_master.customer_id', $customerId)
+            ->join('sales_payment_detail', 'sales_payment_master.id', '=', 'sales_payment_detail.sales_payment_id')
+            ->where('sales_payment_master.balance_amount', '>', 0) 
+            ->select(
+                'sales_payment_master.order_no',
+                'sales_payment_master.id as sales_payment_id', // Ensure unique ID is selected
+                'sales_payment_master.date',
+                'sales_payment_master.grand_total',
+                'sales_payment_master.balance_amount'
+            )
+            ->groupBy( // Prevent duplicate records
+                'sales_payment_master.order_no',
+                'sales_payment_master.id',
+                'sales_payment_master.date',
+                'sales_payment_master.grand_total',
+                'sales_payment_master.balance_amount'
+            )
+            ->get();
+    
+        return response()->json($salesData);
+    }
+    
 
 public function store(Request $request)
 {

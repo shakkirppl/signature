@@ -80,9 +80,9 @@ button.remove-row {
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 150px;"></td>
-                                        <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;"></td>
-                                        <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly style="width: 150px;"></td>
+                                        <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 200px;"></td>
+                                        <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" style="width: 200px;"></td>
+                                        <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly step="any" style="width: 200px;"></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                     </tr>
                                 @endforeach
@@ -93,19 +93,19 @@ button.remove-row {
                         <div class="row mt-4">
                             <div class="col-md-3">
                                 <label for="grand_total" class="form-label">Grand Total:</label>
-                                <input type="number" id="total" name="grand_total" class="form-control" value="{{ $salesOrder->grand_total }}" readonly>
+                                <input type="number" id="total" name="grand_total" class="form-control" value="{{ $salesOrder->grand_total }}" readonly step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $salesOrder->advance_amount }}">
+                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $salesOrder->advance_amount }}" step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="balance_amount" class="form-label">Balance:</label>
-                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" value="{{ $salesOrder->balance_amount }}" readonly>
+                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" value="{{ $salesOrder->balance_amount }}" readonly step="any">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Update</button>
@@ -118,44 +118,50 @@ button.remove-row {
 @endsection
 
 <script>
-// Similar JavaScript functionality as the Create Page
-// Preloaded product rates and totals will automatically calculate and update balance
 document.addEventListener('DOMContentLoaded', function () {
     const productRows = document.getElementById('product-rows');
     const addRowBtn = document.getElementById('add-row');
-    const grandTotalField = document.getElementById('total'); 
-    const advanceAmountField = document.getElementById('advance_amount'); 
-    const balanceAmountField = document.getElementById('balance_amount'); 
+    const grandTotalField = document.getElementById('total');
+    const advanceAmountField = document.getElementById('advance_amount');
+    const balanceAmountField = document.getElementById('balance_amount');
 
+    // Add new row functionality
     addRowBtn.addEventListener('click', function () {
         const rowCount = productRows.children.length;
         const newRow = `
         <tr>
             <td>
-                <select name="products[${rowCount}][product_id]" class="form-control product-select" required>
+                <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 200px;">
                     <option value="">Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required></td>
-            <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate"></td>
-            <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly></td>
+            <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
+            <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
+            <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly step="any" style="width: 200px;"></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         </tr>`;
         productRows.insertAdjacentHTML('beforeend', newRow);
     });
 
+    // Handle changes in quantity, rate, and product selection
     productRows.addEventListener('input', function (e) {
-        const row = e.target.closest('tr');
-        const qty = parseFloat(row.querySelector('.qty').value) || 0;
-        const rate = parseFloat(row.querySelector('.rate').value || row.querySelector('.product-select').selectedOptions[0]?.dataset.rate) || 0;
-        row.querySelector('.rate').value = rate;
-        row.querySelector('.total').value = qty * rate;
-        calculateTotals();
+        if (e.target.classList.contains('qty') || e.target.classList.contains('rate') || e.target.classList.contains('product-select')) {
+            const row = e.target.closest('tr');
+            const qty = parseFloat(row.querySelector('.qty').value) || 0;
+            const rate = parseFloat(row.querySelector('.rate').value) || 0;
+
+            // Update total field with decimals
+            row.querySelector('.total').value = (qty * rate).toFixed(2);
+
+            // Recalculate totals
+            calculateTotals();
+        }
     });
 
+    // Remove a row
     productRows.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-row')) {
             e.target.closest('tr').remove();
@@ -163,22 +169,30 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Recalculate totals and update fields
     function calculateTotals() {
         let grandTotal = 0;
-        document.querySelectorAll('.total').forEach(input => {
+
+        // Calculate grand total from all rows
+        document.querySelectorAll('.total').forEach(function (input) {
             grandTotal += parseFloat(input.value) || 0;
         });
+
+        // Ensure values are displayed with two decimal places
         grandTotalField.value = grandTotal.toFixed(2);
         const advanceAmount = parseFloat(advanceAmountField.value) || 0;
         balanceAmountField.value = (grandTotal - advanceAmount).toFixed(2);
     }
 
-    advanceAmountField.addEventListener('input', () => {
+    // Handle advance amount input
+    advanceAmountField.addEventListener('input', function () {
         const grandTotal = parseFloat(grandTotalField.value) || 0;
         const advanceAmount = parseFloat(advanceAmountField.value) || 0;
         balanceAmountField.value = (grandTotal - advanceAmount).toFixed(2);
     });
 
+    // Initial calculation to ensure totals are accurate
     calculateTotals();
 });
+
 </script>

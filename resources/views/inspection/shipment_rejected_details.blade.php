@@ -19,28 +19,35 @@
             </div>
           </div>
           <div class="table-responsive">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Supplier</th>
-                  <th>Product Name</th>
-                  <th>Rejected Quantity</th>
-                  <th>Rejection Reason</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($shipmentDetails as $index => $detail)
-                <tr>
-                  <td>{{ $index + 1 }}</td>
-                  <td>{{ $detail->name }}</td>
-                  <td>{{ $detail->product_name }}</td>
-                  <td>{{ $detail->rejected_qty }}</td>
-                  <td>{{ $detail->rejected_reason ?? 'N/A' }}</td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
+          <table class="table">
+  <thead>
+    <tr>
+      <th>No</th>
+      <th>Supplier</th>
+      <th>Total Male Rejected Quantity</th>
+      <th>Total Female Rejected Quantity</th>
+      <th>Total Rejected Quantity</th>
+      <th>Action</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    @foreach ($shipmentDetails as $index => $detail)
+    <tr>
+      <td>{{ $index + 1 }}</td>
+      <td>{{ $detail->supplier_name }}</td>
+      <td>{{ $detail->total_male_rejected_qty }}</td>
+      <td>{{ $detail->total_female_rejected_qty }}</td>
+      <td>{{ $detail->total_male_rejected_qty + $detail->total_female_rejected_qty }}</td>
+      <td>
+        <a href="{{ route('supplier.rejected.details', ['shipment_no' => $shipment_no, 'supplier_name' => $detail->supplier_name]) }}" class="btn btn-info btn-sm">View</a>
+      </td>
+      
+    </tr>
+    @endforeach
+  </tbody>
+</table>
+
           </div>
         </div>
       </div>

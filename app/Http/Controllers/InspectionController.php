@@ -122,13 +122,37 @@ public function report(Request $request)
 }
 
 
-public function viewReport($id)
+// public function viewReport($id)
+// {
+//     $inspection = Inspection::with(['supplier', 'details.product'])->findOrFail($id);
+//     return view('inspection.reportview', compact('inspection'));
+// }
+
+
+public function viewSupplierRejectedProducts($shipment_no, $supplier_name)
 {
-    $inspection = Inspection::with(['supplier', 'details.product'])->findOrFail($id);
-    return view('inspection.reportview', compact('inspection'));
+    $rejectedProducts = DB::table('inspection_detail')
+        ->join('inspection', 'inspection_detail.inspection_id', '=', 'inspection.id')
+        ->join('product', 'inspection_detail.product_id', '=', 'product.id')
+        ->join('shipment', 'inspection.shipment_id', '=', 'shipment.id')
+        ->join('supplier', 'inspection.supplier_id', '=', 'supplier.id')
+        ->leftJoin('reject_masters', 'inspection_detail.rejected_reason', '=', 'reject_masters.id')
+        ->select(
+            'product.product_name',
+            'inspection_detail.male_rejected_qty',
+            'inspection_detail.female_rejected_qty',
+            'reject_masters.rejected_reasons as rejected_reason'
+        )
+        ->where('shipment.shipment_no', '=', $shipment_no)
+        ->where('supplier.name', '=', $supplier_name)
+        ->where(function ($query) {
+            $query->where('inspection_detail.male_rejected_qty', '>', 0)
+                  ->orWhere('inspection_detail.female_rejected_qty', '>', 0);
+        })
+        ->get();
+
+    return view('inspection.reportview', compact('rejectedProducts', 'supplier_name', 'shipment_no'));
 }
-
-
 
 
 
@@ -138,7 +162,10 @@ public function rejectedAnimalReport()
         ->join('inspection', 'inspection_detail.inspection_id', '=', 'inspection.id')
         ->join('shipment', 'inspection.shipment_id', '=', 'shipment.id')
         ->select('shipment.shipment_no') // Only fetch shipment_no
-        ->where('inspection_detail.rejected_qty', '>', 0)
+        ->where(function ($query) {
+            $query->where('inspection_detail.male_rejected_qty', '>', 0)
+                  ->orWhere('inspection_detail.female_rejected_qty', '>', 0);
+        })
         ->where('shipment.shipment_status', '=', 0)
         ->distinct() // Ensures only unique shipment numbers are retrieved
         ->get();
@@ -156,17 +183,23 @@ public function shipmentRejectedDetails($shipment_no)
         ->leftJoin('reject_masters', 'inspection_detail.rejected_reason', '=', 'reject_masters.id')
         ->select(
             'shipment.shipment_no',
-            'product.product_name as product_name',
-            'inspection_detail.rejected_qty',
-            'reject_masters.rejected_reasons as rejected_reason',
-            'supplier.name' // Fetch supplier name
+            'supplier.name as supplier_name', // Grouping by supplier name
+            DB::raw('SUM(inspection_detail.male_rejected_qty) as total_male_rejected_qty'),
+            DB::raw('SUM(inspection_detail.female_rejected_qty) as total_female_rejected_qty'),
+            DB::raw('GROUP_CONCAT(DISTINCT reject_masters.rejected_reasons ORDER BY reject_masters.rejected_reasons ASC SEPARATOR ", ") as rejected_reasons') // Combine reasons
         )
-        ->where('shipment.shipment_no', '=', $shipment_no) // Filter by clicked shipment_no
-        ->where('inspection_detail.rejected_qty', '>', 0)
+        ->where('shipment.shipment_no', '=', $shipment_no) // Filter by shipment number
+        ->where(function ($query) {
+            $query->where('inspection_detail.male_rejected_qty', '>', 0)
+                  ->orWhere('inspection_detail.female_rejected_qty', '>', 0);
+        })
+        ->groupBy('shipment.shipment_no', 'supplier.id', 'supplier.name') // Group by supplier
         ->get();
 
     return view('inspection.shipment_rejected_details', compact('shipmentDetails', 'shipment_no'));
 }
+
+
 
 
 

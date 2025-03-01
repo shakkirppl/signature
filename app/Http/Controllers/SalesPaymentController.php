@@ -138,8 +138,8 @@ public function update(Request $request, $id)
             'date' => $request->date,
             'sales_no' => $request->sales_no, 
             'customer_id' => $request->customer_id,
-            'shipping_agent' => $request->shipping_agent,
-            'shipping_mode' => $request->shipping_mode,
+            'shipping_mode' => $request->shipping_mode ?? null, // Ensure null values are handled
+            'shipping_agent' => $request->shipping_agent ?? null,
             'grand_total' => $request->grand_total,
             'advance_amount' => $request->advance_amount ?? 0,
             'balance_amount' => ($request->grand_total - ($request->advance_amount ?? 0)),

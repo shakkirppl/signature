@@ -7,7 +7,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <h4 class="card-title">Supplier List</h4>
+              <h4 class="card-title">SalesOrder List</h4>
             </div>
             <div class="col-md-6 text-right">
             <a href="{{ route('goodsout-order.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>

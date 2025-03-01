@@ -2,59 +2,42 @@
 
 @section('content')
 <div class="main-panel">
-    <div class="content-wrapper">
-        <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Inspection Report Details</h4>
-                      <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label for="order_no" class="form-label">Order No:</label>
-                            <input type="text" class="form-control" id="order_no" value="{{ $inspection->order_no }}" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="date" class="form-label">Date:</label>
-                            <input type="text" class="form-control" id="date" value="{{ $inspection->date }}" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="supplier" class="form-label">Supplier:</label>
-                            <input type="text" class="form-control" id="supplier" value="{{ $inspection->supplier->name }}" readonly>
-                        </div>
-                    </div>
+  <div class="content-wrapper">
+    <div class="col-12 grid-margin">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Rejected Products - {{ $supplier_name }}</h4>
+          <h5>Shipment No: {{ $shipment_no }}</h5>
 
-                   <br>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Accepted Quantity</th>
-                                    <th>Rejected Quantity</th>
-                                    <th>Rejected Reason</th>
-                                    <th>Rate</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($inspection->details as $detail)
-                                <tr>
-                                    <td>{{ $detail->product->product_name }}</td>
-                                    <td>{{ $detail->qty }}</td>
-                                    <td>{{ $detail->accepted_qty }}</td>
-                                    <td>{{ $detail->rejected_qty }}</td>
-                                    <td>{{ optional($detail->rejectMaster)->rejected_reasons }}</td>
-                                    <td>{{ number_format($detail->rate, 2) }}</td>
-                                    <td>{{ number_format($detail->total, 2) }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Product Name</th>
+                  <th>Male Rejected Quantity</th>
+                  <th>Female Rejected Quantity</th>
+                  <th>Rejection Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach ($rejectedProducts as $index => $product)
+                <tr>
+                  <td>{{ $index + 1 }}</td>
+                  <td>{{ $product->product_name }}</td>
+                  <td>{{ $product->male_rejected_qty }}</td>
+                  <td>{{ $product->female_rejected_qty }}</td>
+                  <td>{{ $product->rejected_reason ?? 'N/A' }}</td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
 
-                </div>
-            </div>
+          <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 @endsection

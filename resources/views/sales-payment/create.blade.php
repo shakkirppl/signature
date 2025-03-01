@@ -65,13 +65,23 @@ button.remove-row {
                                 </select>
                             </div>
                             <div class="col-md-4">
-                                <label for="shipping_mode" class="form-label">Shipping Mode</label>
-                                <input type="text" class="form-control" id="shipping_mode" name="shipping_mode">
+                             <label for="shipping_mode" class="form-label">Shipping Mode</label>
+                               <select class="form-control" id="shipping_mode" name="shipping_mode">
+                                 <option value="Buyer" selected>Buyer</option>
+                                      <option value="By Sea">By Sea</option>
+                                      <option value="By Road">By Road</option>
+                               </select>
                             </div>
+
                             <div class="col-md-4">
-                                <label for="shipping_agent" class="form-label">Shipping Agent</label>
-                                <input type="text" class="form-control" id="shipping_agent" name="shipping_agent">
-                            </div>
+    <label for="shipping_agent" class="form-label">Shipping Agent</label>
+    <select class="form-control" id="shipping_agent" name="shipping_agent">
+        <option value="Qatar Airways" selected>Qatar Airways</option>
+        <option value="Ethiopian Airlines">Ethiopian Airlines</option>
+    </select>
+</div>
+
+                           
                         </div><br>
                         <div class="table-responsive">
                         <table class="table table-bordered" id="productTable">
@@ -94,9 +104,9 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 150px;"></td>
-                                    <td><input type="number" name="products[0][rate]" class="form-control rate" style="width: 150px;"></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
+                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
+                                    <td><input type="number" name="products[0][rate]" class="form-control rate" style="width: 200px;" step="any"></td>
+                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 200px;" step="any"></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
@@ -106,20 +116,20 @@ button.remove-row {
 
                         <div class="row mt-4">
                             <div class="col-md-3">
-                                <label for="grand_total" class="form-label">Grand Total:</label>
-                                <input type="number" id="total" name="grand_total" class="form-control" readonly>
+                                <label for="grand_total" class="form-label">Grand Total:(USD)</label>
+                                <input type="number" id="total" name="grand_total" class="form-control" readonly step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
-                                <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control">
+                                <label for="advance_amount" class="form-label">Advance:(USD)</label>
+                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" step="any">
                             </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
-                                <label for="balance_amount" class="form-label">Balance:</label>
-                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" readonly>
+                                <label for="balance_amount" class="form-label">Balance:(USD)</label>
+                                <input type="number" id="balance_amount" name="balance_amount" class="form-control" readonly step="any">
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary mt-4">Submit</button>
@@ -133,46 +143,64 @@ button.remove-row {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const productTable = document.getElementById('productTable').querySelector('tbody');
+    const productTable = document.querySelector('#productTable tbody');
     const addRowBtn = document.getElementById('addRow');
-    const grandTotalField = document.getElementById('total');
     const advanceAmountField = document.getElementById('advance_amount');
-    const balanceAmountField = document.getElementById('balance_amount');
 
     function calculateTotals() {
         let grandTotal = 0;
-        productTable.querySelectorAll('tr').forEach(row => {
-            const qty = parseFloat(row.querySelector('.qty').value) || 0;
-            const rate = parseFloat(row.querySelector('.rate').value) || 0;
-            const total = qty * rate;
-            row.querySelector('.total').value = total.toFixed(2);
-            grandTotal += total;
+        document.querySelectorAll('#productTable tbody tr').forEach(row => {
+            const qtyInput = row.querySelector('.qty');
+            const rateInput = row.querySelector('.rate');
+            const totalInput = row.querySelector('.total');
+
+            const qty = parseFloat(qtyInput.value) || 0;
+            const rate = parseFloat(rateInput.value) || 0;
+
+            if (!isNaN(qty) && !isNaN(rate)) {
+                const total = qty * rate;
+                totalInput.value = total.toFixed(2);
+                grandTotal += total;
+            }
         });
-        grandTotalField.value = grandTotal.toFixed(2);
+
+        document.getElementById('total').value = grandTotal.toFixed(2);
         const advanceAmount = parseFloat(advanceAmountField.value) || 0;
-        balanceAmountField.value = (grandTotal - advanceAmount).toFixed(2);
+        document.getElementById('balance_amount').value = (grandTotal - advanceAmount).toFixed(2);
     }
 
+    // Event listener for input changes on quantity and rate fields
+    productTable.addEventListener('input', function (e) {
+        if (e.target.classList.contains('qty') || e.target.classList.contains('rate')) {
+            calculateTotals();
+        }
+    });
+
+    // Event listener for advance amount field
+    advanceAmountField.addEventListener('input', calculateTotals);
+
+    // Add new row on button click
     addRowBtn.addEventListener('click', function () {
         const index = productTable.children.length;
         const newRow = document.createElement('tr');
         newRow.innerHTML = `
             <td>
-                <select name="products[${index}][product_id]" class="form-control product-select" required>
+                <select name="products[${index}][product_id]" class="form-control product-select" required style="width: 200px;">
                     <option value="">Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required></td>
-            <td><input type="number" name="products[${index}][rate]" class="form-control rate"></td>
-            <td><input type="number" name="products[${index}][total]" class="form-control total" readonly></td>
+            <td><input type="number" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
+            <td><input type="number" name="products[${index}][rate]" class="form-control rate" style="width: 200px;" step="any"></td>
+            <td><input type="number" name="products[${index}][total]" class="form-control total" readonly style="width: 200px;" step="any"></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         `;
         productTable.appendChild(newRow);
     });
 
+    // Remove row event listener using event delegation
     productTable.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-row')) {
             e.target.closest('tr').remove();
@@ -180,7 +208,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    productTable.addEventListener('input', calculateTotals);
-    advanceAmountField.addEventListener('input', calculateTotals);
 });
 </script>
+

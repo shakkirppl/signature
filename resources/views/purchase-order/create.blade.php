@@ -107,8 +107,9 @@ button.remove-row {
                         </div> -->
                         <div class="row mt-3">
                             <div class="col-md-3">
-                                <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control">
+                                <label for="advance_amount" class="form-label">Advance Amount:</label>
+                                <input type="text" id="advance_amount" name="advance_amount" class="form-control"
+                                 value="{{ old('advance_amount') ? number_format(str_replace(',', '', old('advance_amount')), 2, '.', ',') : '0.00' }}">
                             </div>
                         </div>
                         <!-- <div class="row mt-3">
@@ -266,4 +267,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const advanceAmountInput = document.getElementById("advance_amount");
+
+    advanceAmountInput.addEventListener("input", function(event) {
+        let value = this.value.replace(/,/g, ''); // Remove existing commas
+        if (!isNaN(value) && value !== '') {
+            this.value = new Intl.NumberFormat('en-US').format(value);
+        } else {
+            this.value = ''; // Ensure the field clears when the value is empty
+        }
+    });
+
+    // Ensure plain number is submitted (without commas)
+    document.querySelector("form").addEventListener("submit", function() {
+        advanceAmountInput.value = advanceAmountInput.value.replace(/,/g, '');
+    });
+});
 </script>
