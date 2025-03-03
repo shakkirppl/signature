@@ -35,12 +35,13 @@ button.remove-row {
                     <h4 class="card-title">Purchase Confirmation</h4>
                     <form action="{{ route('purchase-conformation.store') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="inspection_id" value="{{ $inspection->id }}">
-                        <input type="hidden" name="purchaseOrder_id" value="{{ $order->id }}">
+                        <input type="hidden" name="weight_id" value="{{ $WeightCalculatorMaster->id }}">
+                        <input type="hidden" name="inspection_id" value="{{ $WeightCalculatorMaster->inspection_id }}">
+                        <input type="hidden" name="purchaseOrder_id" value="{{$WeightCalculatorMaster->purchaseOrder_id  }}">
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="order_no" class="form-label">Order No:</label>
-                                <input type="text" class="form-control" id="order_no" name="order_no" value="{{ $inspection->order_no }}" readonly>
+                                <input type="text" class="form-control" id="weight_code" name="weight_code" value="{{ $WeightCalculatorMaster->weight_code }}" readonly>
                                 
                             </div>
                             <div class="col-md-4">
@@ -51,11 +52,11 @@ button.remove-row {
                             <div class="col-md-4">
                                 <label for="shipment_id" class="form-label">Shipment No:</label>
                                 <select id="shipment_id" class="form-control" disabled>
-                                       <option value="{{ $inspection->shipment->id ?? '' }}" >
-                                            {{ $inspection->shipment->shipment_no ?? 'No Shipment Assigned' }}
+                                       <option value="{{ $WeightCalculatorMaster->shipment->id ?? '' }}" >
+                                            {{ $WeightCalculatorMaster->shipment->shipment_no ?? 'No Shipment Assigned' }}
                                  </option>
                                </select>
-                                <input type="hidden" name="shipment_id" value="{{ $inspection->shipment->id ?? '' }}">
+                                <input type="hidden" name="shipment_id" value="{{ $WeightCalculatorMaster->shipment->id ?? '' }}">
 
                             </div>
                             </div>
@@ -64,7 +65,7 @@ button.remove-row {
                             <div class="col-md-4">
                                 <label for="supplier_id" class="form-label">Supplier:</label>
                                 <select name="supplier_id" id="supplier_id" class="form-control" required>
-                                    <option value="{{ $inspection->supplier->id }}" selected>{{ $inspection->supplier->name }}</option>
+                                    <option value="{{ $WeightCalculatorMaster->supplier->id }}" selected>{{ $WeightCalculatorMaster->supplier->name }}</option>
                                 </select>
                             </div>
                             <div class="col-md-4">
@@ -79,15 +80,15 @@ button.remove-row {
                                 <tr>
                                     <th>Product</th>
                                     <th>Mark</th>
-                                    <th>Male Accepted Quandity</th>
-                                    <th>Female Accepted Quandity</th>
                                     <th>Total Accepted Quandity</th>
-                                    <!-- <th>Rate</th>
-                                    <th>Total</th> -->
+                                    <th>Total Weight</th>
+                                    <th>Price/Kg</th>
+                                    <th>Transportation/Kg</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody id="product-details">
-                                @foreach ($inspection->details as $index => $detail)
+                                @foreach ($WeightCalculatorMaster->details as $index => $detail)
                                     <tr>
                                     <td>
                                       <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 150px;">
@@ -99,22 +100,26 @@ button.remove-row {
                                               @endforeach
                                       </select>
                                       </td>
-
-                                      
+                                      <td>
+                                        <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" min="1" style="width: 200px;">
+                                        </td>
                                         <td>
-                                           <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="{{ $detail->mark }}" required style="width: 150px;">
+                                        <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{$detail->total_accepted_qty }}" min="1" style="width: 200px;">
+                                        </td>
+                                        <td>
+                                        <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{$WeightCalculatorMaster->total_weight }}" min="1" style="width: 200px;">
+                                        </td>
+                                        <td>
+         
+                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="0" style="width: 200px;">
+                                        </td>
+                                        <td>
+         
+                                         <input type="number" name="products[{{ $index }}][transportation_amount]" class="form-control rate" value="0" style="width: 200px;">
                                        </td>
+                                        <td>
+                                        <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="0" readonly style="width: 200px;">
 
-                                        <td>
-                                            <input type="number" name="products[{{ $index }}][male_accepted_qty]" class="form-control qty" value="{{ $detail->male_accepted_qty }}" min="1" style="width: 150px;">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="products[{{ $index }}][female_accepted_qty]" class="form-control qty" value="{{ $detail->female_accepted_qty }}" min="1" style="width: 150px;">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control accepted_qty" value="" style="width: 150px;" readonly>
-                                            <input type="hidden" name="products[{{ $index }}][rate]" class="form-control rate" value="0" style="width: 200px;">
-                                            <input type="hidden" name="products[{{ $index }}][total]" class="form-control total" value="0" readonly style="width: 200px;">
                                         </td>
                                        
 
@@ -128,7 +133,7 @@ button.remove-row {
                         <div class="row">
    
 <div class="col-md-5">
-    <div class="table-responsive">
+    <!-- <div class="table-responsive">
         <table class="table table-bordered mt-3">
             <thead>
                 <tr>
@@ -154,7 +159,7 @@ button.remove-row {
             </tbody>
         </table>
 </div>
-        <button type="button" id="add-expense" class="btn btn-secondary">Add Expense</button>
+        <button type="button" id="add-expense" class="btn btn-secondary">Add Expense</button> -->
 
     </div>
     <div class="col-md-1"></div>
@@ -163,26 +168,26 @@ button.remove-row {
     <div class="col-md-6">
     <div class="row mb-3">
         <div class="col-md-4">
-            <label for="item_total" class="form-label">Item Amount:</label>
-            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $inspection->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" >
+            <label for="item_total" class="form-label">Item Amount:</label readonly>
+            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" >
         </div>
         <div class="col-md-4">
-            <label for="total_expense" class="form-label">Expense Amount:</label>
+            <label for="total_expense" class="form-label">Additional Expense:</label>
             <input type="number" id="total_expense" name="total_expense" class="form-control" >
         </div>
         <div class="col-md-4">
             <label for="grand_total" class="form-label">Grand Total:</label>
-            <input type="number" id="grand_total" name="grand_total" class="form-control" >
+            <input type="number" id="grand_total" name="grand_total" class="form-control" readonly>
         </div>
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $order->advance_amount}}" >
+            <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $order->advance_amount}}" readonly>
         </div>
         <div class="col-md-6">
-            <label for="balance_amount" class="form-label">Balance Amount:</label>
+            <label for="balance_amount" class="form-label">Balance Amount:</label readonly>
             <input type="number" id="balance_amount" name="balance_amount" class="form-control" >
         </div>
     </div>
@@ -201,114 +206,103 @@ button.remove-row {
 document.addEventListener('DOMContentLoaded', function () {
     calculateTotals();
 
-
-    document.querySelectorAll('#product-details').forEach(table => {
-        table.addEventListener('input', function (event) {
-            const target = event.target;
-
-            if (target.classList.contains('qty') || target.classList.contains('rate')) {
-                updateRowTotal(target.closest('tr'));
-            }
-
-            calculateTotals();
-        });
-    });
-
-    // Event listener for expense table changes
-    document.getElementById('expense-details').addEventListener('input', function (event) {
-        if (event.target.classList.contains('expense-amount')) {
+    // Event listener for input changes in product details
+    document.getElementById('product-details').addEventListener('input', function (event) {
+        const target = event.target;
+        if (target.classList.contains('qty') || target.classList.contains('rate') || target.classList.contains('weight')) {
+            updateRowTotal(target.closest('tr'));
             calculateTotals();
         }
     });
 
-    // Add event listener for the "Add Expense" button
-    document.getElementById('add-expense').addEventListener('click', function () {
-        addExpenseRow();
+    // Event listener for additional expense input
+    document.getElementById('total_expense').addEventListener('input', function () {
+        calculateTotals();
     });
 
-    function addExpenseRow() {
-        const expenseTable = document.getElementById('expense-details');
-        const newRow = document.createElement('tr');
-
-        newRow.innerHTML = `
-            <td>
-                <select name="expense_id[]" class="form-control expense-select" style="width: 150px;">
-                    <option value="">Select Expenses</option>
-                    ${getExpenseOptions()}
-                </select>
-            </td>
-            <td>
-                <input type="number" name="amount[]" class="form-control expense-amount" value="0" style="width: 100px;">
-            </td>
-            <td>
-                <button type="button" class="btn btn-danger btn-sm remove-expense">X</button>
-            </td>
-        `;
-
-        expenseTable.appendChild(newRow);
-
-        // Attach event listener to remove button
-        newRow.querySelector('.remove-expense').addEventListener('click', function () {
-            newRow.remove();
-            calculateTotals();
-        });
-    }
-
-    function getExpenseOptions() {
-        let options = '';
-        @foreach ($coa as $head)
-            options += `<option value="{{ $head->id }}" data-rate="{{ $head->rate }}">{{ $head->name }}</option>`;
-        @endforeach
-        return options;
-    }
-
     function updateRowTotal(row) {
-        const maleQty = parseFloat(row.querySelector('[name*="[male_accepted_qty]"]').value) || 0;
-        const femaleQty = parseFloat(row.querySelector('[name*="[female_accepted_qty]"]').value) || 0;
-        const actualQtyField = row.querySelector('[name*="[accepted_qty]"]');
-        const rateField = row.querySelector('.rate');
+        const totalWeight = parseFloat(row.querySelector('.weight').value) || 0;
+        const rate = parseFloat(row.querySelector('.rate').value) || 0;
+        const transportationAmount = parseFloat(row.querySelector('[name^="products"][name$="[transportation_amount]"]').value) || 0;
+
         const totalField = row.querySelector('.total');
-
-        const actualQty = maleQty + femaleQty;
-        actualQtyField.value = actualQty;
-
-        const rate = parseFloat(rateField.value) || 0;
-        totalField.value = (actualQty * rate).toFixed(2);
+        totalField.value = ((totalWeight * rate) + (transportationAmount * totalWeight)).toFixed(2);
     }
 
     function calculateTotals() {
-        let grandTotal = 0;
+        let itemTotal = 0;
 
-        // Calculate Item Total
+        // Calculate item total
         document.querySelectorAll('#product-details tr').forEach(row => {
             updateRowTotal(row);
-            grandTotal += parseFloat(row.querySelector('.total').value) || 0;
+            itemTotal += parseFloat(row.querySelector('.total').value) || 0;
         });
 
-        let totalExpense = calculateExpenseTotal();
-        
-        // Update totals
-        document.getElementById('item_total').value = grandTotal.toFixed(2);
-        document.getElementById('total_expense').value = totalExpense.toFixed(2);
-        document.getElementById('grand_total').value = (grandTotal + totalExpense).toFixed(2);
+        // Get additional expense value
+        let additionalExpense = parseFloat(document.getElementById('total_expense').value) || 0;
 
+        // Update fields
+        document.getElementById('item_total').value = itemTotal.toFixed(2);
+        document.getElementById('total_expense').value = additionalExpense.toFixed(2);
+
+        // Calculate grand total
+        let grandTotalAmount = itemTotal + additionalExpense;
+        document.getElementById('grand_total').value = grandTotalAmount.toFixed(2);
+
+        // Balance amount calculation
         const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
-        document.getElementById('balance_amount').value = (grandTotal  - advanceAmount).toFixed(2);
+        document.getElementById('balance_amount').value = (grandTotalAmount - advanceAmount).toFixed(2);
     }
-
-    function calculateExpenseTotal() {
-        let totalExpense = 0;
-        document.querySelectorAll('.expense-amount').forEach(input => {
-            totalExpense += parseFloat(input.value) || 0;
-        });
-        return totalExpense;
-    }
-
-    
-
 });
 
 
+    // // Event listener for input changes in expenses
+    // document.getElementById('expense-details').addEventListener('input', function (event) {
+    //     if (event.target.classList.contains('expense-amount')) {
+    //         calculateTotals();
+    //     }
+    // });
+
+    // // Add new expense row
+    // document.getElementById('add-expense').addEventListener('click', function () {
+    //     addExpenseRow();
+    // });
+
+    // function addExpenseRow() {
+    //     const expenseTable = document.getElementById('expense-details');
+    //     const newRow = document.createElement('tr');
+    //     newRow.innerHTML = `
+    //         <td>
+    //             <select name="expense_id[]" class="form-control expense-select" style="width: 150px;">
+    //                 <option value="">Select Expenses</option>
+    //                 ${getExpenseOptions()}
+    //             </select>
+    //         </td>
+    //         <td>
+    //             <input type="number" name="amount[]" class="form-control expense-amount" value="0" style="width: 100px;">
+    //         </td>
+    //         <td>
+    //             <button type="button" class="btn btn-danger btn-sm remove-expense">X</button>
+    //         </td>
+    //     `;
+        
+    //     expenseTable.appendChild(newRow);
+
+    //     newRow.querySelector('.remove-expense').addEventListener('click', function () {
+    //         newRow.remove();
+    //         calculateTotals();
+    //     });
+    // }
+
+    // function getExpenseOptions() {
+    //     let options = '';
+    //     @foreach ($coa as $head)
+    //         options += `<option value="{{ $head->id }}">{{ $head->name }}</option>`;
+    //     @endforeach
+    //     return options;
+    // }
+
+    
 
 </script>
 

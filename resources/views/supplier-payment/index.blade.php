@@ -27,7 +27,7 @@
                                 <tr>
                                    <th>No</th>
                                     <th>Date</th>
-                                    <!-- <th>PI NO</th> -->
+                                    <th>Shipment No</th>
                                     <th>Payment To</th>
                                     <th>Payment Type</th>
                                     <th>Bank</th>
@@ -43,12 +43,9 @@
                                     <tr>
                                     <td>{{ $loop->iteration }}</td>
                                         <td>{{ $payment->payment_date }}</td>
+                                        <td>{{ $payment->shipment->shipment_no ?? 'N/A' }}</td>
                                         <td>{{ $payment->supplier->name ?? 'N/A' }}</td>
-                                        <!-- <td> @if ($payment->details->isNotEmpty())
-                                            @foreach ($payment->details as $detail)
-                                                {{ $detail->pi_no }}
-                                            @endforeach
-                                        @endif</td> -->
+                                        
                                         <td>{{ $payment->payment_type }}</td>
                                         <td>{{ $payment->bank_name ?? 'N/A' }}</td>
                                         <td>{{ number_format($payment->outstanding_amount, 2) }}</td>

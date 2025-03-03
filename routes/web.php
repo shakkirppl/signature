@@ -138,7 +138,9 @@ Route::get('supplier-payment-edit/{id}', [SupplierPaymentController::class, 'edi
 Route::post('supplier-payment-update/{id}', [SupplierPaymentController::class, 'update'])->name('supplier-payment.update');
 Route::get('supplier-payment-delete/{id}', [SupplierPaymentController::class, 'destroy'])->name('supplier-payment.destroy');
 Route::get('supplier-payment-report', [SupplierPaymentController::class, 'report'])->name('supplier-payment.report');
+Route::get('/get-suppliers-by-shipment', [SupplierPaymentController::class, 'getSuppliersByShipment']);
 Route::get('/get-supplier-conformations', [SupplierPaymentController::class, 'getSupplierConformations']);
+
 
 
 
@@ -272,6 +274,8 @@ Route::get('/check-weight-calculation', [WeightCalculatorController::class, 'che
 
 Route::get('/get-existing-weight-calculation', [WeightCalculatorController::class, 'getExistingWeightCalculation'])->name('get.existing.weight.calculation');
 Route::post('/update-weight-calculation', [WeightCalculatorController::class, 'updateWeightCalculation'])->name('update.weight.calculation');
+Route::get('/get-supplier-products', [WeightCalculatorController::class, 'getSupplierProducts'])->name('get.supplier.products');
+
 
     
 
@@ -343,7 +347,8 @@ Route::post('postmortem-report-store', [PostMortemReportController::class, 'stor
 Route::get('antemortem-report-create', [AnteMortemReportController::class, 'create'])->name('antemortem.create');
 
 
-Route::get('supplier-advance-create', [SupplierAdvanceController::class, 'create']);
+Route::get('supplier-advance-create', [SupplierAdvanceController::class, 'create'])->name('supplieradvance.create');
+Route::get('supplier-advance-index', [SupplierAdvanceController::class, 'index'])->name('supplieradvance.index');
 Route::get('/get-suppliers', [SupplierAdvanceController::class, 'getSuppliersByShipment'])->name('getSuppliersByShipment');
 Route::get('/get-orders', [SupplierAdvanceController::class, 'getOrdersBySupplier'])->name('getOrdersBySupplier');
 Route::post('supplier-advance-store', [SupplierAdvanceController::class, 'store'])->name('supplieradvance.store');

@@ -51,6 +51,8 @@
                                  <div class="form-group">
                                     <label for="order_no">Purchase No</label>
                                         <input type="text" class="form-control" id="order_no" name="order_no" readonly>
+                                        <input type="hidden" id="purchaseOrder_id" name="purchaseOrder_id">
+
                                 </div>
                                 <div class="form-group">
                                     <label for="type" class="required">Type</label>
@@ -111,6 +113,8 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+
+
 <script>
 $(document).ready(function() {
     // Fetch suppliers based on the selected shipment
@@ -122,16 +126,16 @@ $(document).ready(function() {
                 type: 'GET',
                 data: { shipment_id: shipmentId },
                 success: function(data) {
-                    $('select[name="supplier_id"]').empty();
-                    $('select[name="supplier_id"]').append('<option value="">Select Supplier</option>');
+                    var supplierSelect = $('select[name="supplier_id"]');
+                    supplierSelect.empty();
+                    supplierSelect.append('<option value="">Select Supplier</option>');
                     $.each(data.suppliers, function(key, value) {
-                        $('select[name="supplier_id"]').append('<option value="'+ value.id +'">'+ value.name +'</option>');
+                        supplierSelect.append('<option value="'+ value.id +'">'+ value.name +'</option>');
                     });
                 }
             });
         } else {
-            $('select[name="supplier_id"]').empty();
-            $('select[name="supplier_id"]').append('<option value="">Select Supplier</option>');
+            $('select[name="supplier_id"]').empty().append('<option value="">Select Supplier</option>');
         }
     });
 
@@ -146,13 +150,18 @@ $(document).ready(function() {
                 data: { supplier_id: supplierId, shipment_id: shipmentId },
                 success: function(data) {
                     $('#order_no').val(data.order_no);
+                    $('#purchaseOrder_id').val(data.purchaseOrder_id);
                 }
             });
         }
     });
 });
-
 </script>
+
+
+
+
+
 
 <script>
     document.getElementById('type').addEventListener('change', function() {

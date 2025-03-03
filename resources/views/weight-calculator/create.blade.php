@@ -20,6 +20,16 @@ button.remove-row {
                         <div class="col-md-12 text-right">
                             <strong>Shipment No: </strong>{{ $shipment_no }}
                         </div>
+                        @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
                     <form method="POST" action="{{ route('weight_calculator.store') }}">
                         @csrf
                         <input type="hidden" name="shipment_id" value="{{ $shipment_id }}">
@@ -27,6 +37,11 @@ button.remove-row {
                    <div class="col-md-4">
                         <label for="weight_code">Weight Code</label>
                         <input type="text" class="form-control" name="weight_code" value="{{$invoice_no}}" readonly>
+                        <input type="hidden" class="form-control" id="inspection_id" name="inspection_id" value="{{ $inspection->id ?? '' }}" >
+                       <input type="hidden" class="form-control" id="purchaseOrder_id" name="purchaseOrder_id" value="{{ $inspection->purchaseOrder_id ?? '' }}" >
+
+
+
                    </div>
 
                     <div class="col-md-4">
@@ -36,12 +51,12 @@ button.remove-row {
 
                    <div class="col-md-4">
                        <label for="supplier">Supplier</label>
-                       <select name="supplier[]" class="form-control supplier-dropdown">
-                         <option value="">Select Supplier</option>
-                            @foreach($suppliers as $supplier)
-                             <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                           @endforeach
-                      </select>
+                       <select id="supplierDropdown" class="form-control" style="width: 250px;" name="supplier_id">
+                           <option value="">Select Supplier</option>
+                                @foreach($suppliers as $supplier)
+                                 <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                @endforeach
+                          </select>
                   </div>
                </div>
                <div class="table-responsive">
@@ -49,28 +64,18 @@ button.remove-row {
                             <thead>
                                 <tr>
                                     <th>Products</th>
-                                    <th>Quandity</th>
+                                    <th>Male Accepted Quandity</th>
+                                    <th>Female Accepted Quandity</th>
+                                    <th>Total Accepted Quandity</th>
                                     <th>Weight</th>
+                                    
+                                   
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($suppliers as $supplier)
-                              <tr>
-                                   <td>
-                                        <select name="products[]" class="form-control product-dropdown" style="width: 200px;">
-                                          <option value="">Select Product</option>
-                                       </select>
-                                  </td>
-                                   <td>
-                                       <input type="number" name="quandity[]" value="{{ $existing->quandity ?? '' }}" class="form-control" style="width: 200px;">
-                                  </td>
-                                   <td>
-                                       <input type="text" name="weight[]" value="{{ $existing->weight ?? '' }}" class="form-control weight-input" required style="width: 200px;">
-                                  </td>
-                              </tr>
-                            @endforeach
-
-                            </tbody>
+                            <tbody id="productDetails">
+        <!-- Products will be loaded here via AJAX -->
+                           </tbody>
                             <tfoot>
                             <tr>
                              <td colspan="2" class="text-right"><strong>Total Weight:</strong></td>
@@ -78,25 +83,26 @@ button.remove-row {
                                 <input type="text" id="total_weight_display" class="form-control" readonly>
                                 <input type="hidden" id="total_weight" name="total_weight">
                              </td>
+                            
                              </tr>
                             </tfoot>
                         </table>
-</div>
+                  </div>
                         <div class="modal fade" id="editWeightModal" tabindex="-1" aria-labelledby="editWeightModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editWeightModalLabel">Edit Weight Calculation</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="editModalBody">
+                           <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                       <h5 class="modal-title" id="editWeightModalLabel">Edit Weight Calculation</h5>
+                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                                <div class="modal-body" id="editModalBody">
                 <!-- The edit form will be loaded here via AJAX -->
-            </div>
-        </div>
-    </div>
-</div>
+                                 </div>
+                             </div>
+                         </div>
+                      </div>
 
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
@@ -130,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 
 <script>
@@ -148,74 +154,9 @@ $(document).ready(function() {
 
     $('.weight-input').on('input', calculateTotalWeight);
 
-    $('.supplier-dropdown').change(function() {
-        var supplier_id = $(this).val();
-        var shipment_id = "{{ $shipment_id }}"; 
+   
 
-        if (supplier_id) {
-            $.ajax({
-                url: "{{ route('check.weight.calculation') }}",
-                type: "GET",
-                data: { supplier_id: supplier_id, shipment_id: shipment_id },
-                success: function(response) {
-                    if (response.exists) {
-                        Swal.fire({
-                            title: "Weight Calculation Exists!",
-                            text: "Do you want to edit?",
-                            icon: "warning",
-                            showCancelButton: true,
-                            confirmButtonText: "Edit",
-                            cancelButtonText: "Cancel"
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                fetchEditForm(supplier_id, shipment_id);
-                            }
-                        });
-                    } else {
-                        fetchProducts(supplier_id, shipment_id);
-                    }
-                }
-            });
-        } else {
-            $('table tbody').html('<tr><td colspan="3">No products available for this shipment.</td></tr>');
-        }
-    });
-
-    function fetchProducts(supplier_id, shipment_id) {
-        $.ajax({
-            url: "{{ route('get.products.by.supplier') }}",
-            type: "GET",
-            data: { supplier_id: supplier_id, shipment_id: shipment_id },
-            success: function(response) {
-                var tableBody = $('table tbody');
-                tableBody.empty();
-
-                if (response.length > 0) {
-                    $.each(response, function(index, product) {
-                        var newRow = `
-                            <tr>
-                                <td>
-                                    <select name="products[]" class="form-control product-dropdown">
-                                        <option value="${product.id}">${product.product_name}</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="number" name="quandity[]" class="form-control">
-                                </td>
-                                <td>
-                                    <input type="text" name="weight[]" class="form-control weight-input" required>
-                                </td>
-                            </tr>`;
-                        tableBody.append(newRow);
-                    });
-
-                    $('.weight-input').on('input', calculateTotalWeight);
-                } else {
-                    tableBody.html('<tr><td colspan="3">No products available for this shipment.</td></tr>');
-                }
-            }
-        });
-    }
+   
 
     function fetchEditForm(supplier_id, shipment_id) {
         $.ajax({
@@ -233,6 +174,102 @@ $(document).ready(function() {
     }
 });
 </script>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+ $(document).ready(function () {
+    $('#supplierDropdown').change(function () {
+        let supplier_id = $(this).val();
+        let shipment_id = "{{ $shipment_id }}";
+
+        if (supplier_id) {
+            $.ajax({
+                url: "{{ route('get.supplier.products') }}",
+                type: "GET",
+                data: { supplier_id: supplier_id, shipment_id: shipment_id },
+                success: function (response) {
+                    let rows = '';
+                    response.forEach(detail => {
+                        let totalAcceptedQty = detail.male_accepted_qty + detail.female_accepted_qty;
+
+                        rows += `
+                            <tr>
+                                <td>
+                                    <input type="hidden" name="product_id[]" value="${detail.product.id}">
+                                    ${detail.product.product_name}
+                                </td>
+                                <td>
+                                    <input type="number" name="male_accepted_qty[]" value="${detail.male_accepted_qty}" class="form-control" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" name="female_accepted_qty[]" value="${detail.female_accepted_qty}" class="form-control" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                    
+                    // Insert the rows inside the existing table
+                    $('#productDetails').html(rows);
+
+                    // Attach event listener to new weight input fields
+                    $('.weight-input').on('input', calculateTotalWeight);
+                }
+            });
+        } else {
+            $('#productDetails').html('');
+        }
+    });
+
+    function calculateTotalWeight() {
+        let totalWeight = 0;
+        $('.weight-input').each(function () {
+            totalWeight += parseFloat($(this).val()) || 0;
+        });
+
+        $('#total_weight_display').val(totalWeight.toFixed(2) + " kg");
+        $('#total_weight').val(totalWeight.toFixed(2));
+    }
+});
+
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#supplierDropdown').change(function() {
+            var supplierId = $(this).val();
+            var shipmentId = $('#shipment_id').val(); // Make sure you have the shipment ID available
+
+            if (supplierId && shipmentId) {
+                $.ajax({
+                    url: "{{ route('check.weight.calculation') }}",
+                    type: "GET",
+                    data: {
+                        supplier_id: supplierId,
+                        shipment_id: shipmentId
+                    },
+                    success: function(response) {
+                        if (response.exists) {
+                            var confirmEdit = confirm("Weight calculation already exists for this supplier in this shipment. Do you want to edit?");
+                            if (!confirmEdit) {
+                                $('#supplier_id').val('').trigger('change'); // Reset selection if user cancels
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+
 
 
 

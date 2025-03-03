@@ -117,19 +117,32 @@ button.remove-row {
                         </div>
 
                         <div class="row">
+                        
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Payment To</label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" name="payment_to" id="payment_to" required>
-                                            <option value="">Select Supplier</option>
-                                            @foreach ($suppliers as $supplier)
-                                                <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                            @endforeach
+                                    <select class="form-control" name="shipment_id"  id="shipment">
+                                           <option value="">Select Shipment</option>
+                                                @foreach ($shipments as $shipment)
+                                                   <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
+                                                @endforeach
                                         </select>
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-3 col-form-label">Payment To</label>
+                                    <div class="col-sm-9">
+                                    <select class="form-control" name="payment_to" id="payment_to" required>
+                                      <option value="">Select Supplier</option>
+                                   </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                           
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Balance Amount</label>
@@ -202,132 +215,128 @@ button.remove-row {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    $(document).ready(function () {
-        // Set today's date automatically on page load
-        $('#payment_date').val(new Date().toISOString().split('T')[0]);
+$(document).ready(function () {
+    // Fetch suppliers when a shipment is selected
+    $('#shipment').change(function () {
+        var shipmentId = $(this).val();
+        var supplierDropdown = $('#payment_to');
+        supplierDropdown.empty().append('<option value="">Select Supplier</option>');
 
-        // Show/hide fields based on payment type selection
-        $('#payment_type').change(function () {
-            let type = $(this).val();
-            $('#cheque_fields').toggle(type === 'Cheque');
-            $('#transfer_fields').toggle(type === 'Transfer');
-            $('#bank_field').toggle(type === 'Cheque'); // Show only for Cheque
-        });
-        // Fetch supplier payment details when supplier is selected
-        $(document).ready(function () {
-            $('#payment_to').change(function () {
-    var supplierId = $(this).val();
-    var baseUrl = "{{ url('get-supplier-conformations') }}";
-
-    if (supplierId) {
-        $.ajax({
-            url: baseUrl,
-            type: 'GET',
-            data: { supplier_id: supplierId },
-            dataType: 'json',
-            success: function (response) {
-                console.log("Response Data:", response); 
-                // $('#paymentTableBody').empty();
-                let outstandingAmount = 0;
-
-                if (response.length === 0) {
-                    $('#paymentTableBody').append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
-                } else {
-                    $.each(response, function (index, item) {
-                        outstandingAmount += parseFloat(item.balance_amount || 0);
-
-                        $('#paymentTableBody').append(`
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly style="width: 150px;"></td>
-                                <td>
-                                    <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
-                                    <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly style="width: 150px;">
-                                </td>
-                                <td><input type="number" class="form-control amount" name="amount[]" value="${item.total_amount}" readonly style="width: 180px;"></td>
-                                <td><input type="number" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly style="width: 150px;"></td>
-                                <td><input type="number" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" style="width: 150px;"></td>
-                                <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
-                            </tr>
-                        `);
+        if (shipmentId) {
+            $.ajax({
+                url: "{{ url('get-suppliers-by-shipment') }}",
+                type: 'GET',
+                data: { shipment_id: shipmentId },
+                dataType: 'json',
+                success: function (response) {
+                    $.each(response, function (index, supplier) {
+                        supplierDropdown.append(`<option value="${supplier.id}">${supplier.name}</option>`);
                     });
+                },
+                error: function () {
+                    console.error("Error fetching suppliers.");
                 }
+            });
+        }
+    });
 
-                $('#outstanding_amount').val(outstandingAmount.toFixed(2));
-                updateTotals();
-            },
-            error: function (xhr, status, error) {
-                console.error("Error fetching supplier data:", error);
-                $('#paymentTableBody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>');
-            }
-        });
-    }
-});
+    // Fetch supplier payment details when supplier is selected
+    $('#payment_to').change(function () {
+        var supplierId = $(this).val();
+        var baseUrl = "{{ url('get-supplier-conformations') }}";
 
+        if (supplierId) {
+            $.ajax({
+                url: baseUrl,
+                type: 'GET',
+                data: { supplier_id: supplierId },
+                dataType: 'json',
+                success: function (response) {
+                    $('#paymentTableBody').empty();
+                    let outstandingAmount = 0;
+
+                    if (response.length === 0) {
+                        $('#paymentTableBody').append('<tr><td colspan="7" class="text-center">No records found</td></tr>');
+                    } else {
+                        $.each(response, function (index, item) {
+                            outstandingAmount += parseFloat(item.balance_amount || 0);
+
+                            $('#paymentTableBody').append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly style="width: 150px;"></td>
+                                    <td>
+                                        <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
+                                        <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly style="width: 150px;">
+                                    </td>
+                                    <td><input type="number" class="form-control amount" name="amount[]" value="${item.total_amount}" readonly style="width: 180px;"></td>
+                                    <td><input type="number" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly style="width: 150px;"></td>
+                                    <td><input type="number" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" style="width: 150px;"></td>
+                                    <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
+                                </tr>
+                            `);
+                        });
+                    }
+
+                    $('#outstanding_amount').val(outstandingAmount.toFixed(2));
+                    updateTotals();
+                },
+                error: function () {
+                    console.error("Error fetching supplier data.");
+                    $('#paymentTableBody').html('<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>');
+                }
+            });
+        }
+    });
+
+    // Remove row and update totals
     $(document).on('click', '.removeRow', function () {
         $(this).closest('tr').remove();
         updateTotals();
     });
 
+    // Update total amounts dynamically
     $(document).on('input', '.paid', function () {
         updateTotals();
     });
 
     function updateTotals() {
-        let totalPaid = 0;
+        let totalPaid = 0, totalAmount = 0, totalBalance = 0;
+
         $('.paid').each(function () {
             let paidValue = parseFloat($(this).val()) || 0;
             totalPaid += paidValue;
         });
 
+        $('.amount').each(function () {
+            let amountValue = parseFloat($(this).val()) || 0;
+            totalAmount += amountValue;
+        });
+
+        $('.balance_amount').each(function () {
+            let balanceValue = parseFloat($(this).val()) || 0;
+            totalBalance += balanceValue;
+        });
+
         let outstandingAmount = parseFloat($('#outstanding_amount').val()) || 0;
         let balance = outstandingAmount - totalPaid;
 
+        // Update the fields
         $('#allocated_amount').val(totalPaid.toFixed(2));
         $('#balance').val(balance.toFixed(2));
+
+        // Update the footer totals
+        $('#total_amount').text(totalAmount.toFixed(2));
+        $('#total_balance').text(totalBalance.toFixed(2));
+        $('#total_paid').text(totalPaid.toFixed(2));
+
+        // Update the hidden input fields
+        $('#total_amount_input').val(totalAmount.toFixed(2));
+        $('#total_balance_input').val(totalBalance.toFixed(2));
+        $('#total_paidAmount').val(totalPaid.toFixed(2));
     }
 });
-});
 
-    
-</script>
-<script>
-   function updateTotals() {
-    let totalPaid = 0, totalAmount = 0, totalBalance = 0;
-
-    $('.paid').each(function () {
-        let paidValue = parseFloat($(this).val()) || 0;
-        totalPaid += paidValue;
-    });
-
-    $('.amount').each(function () {
-        let amountValue = parseFloat($(this).val()) || 0;
-        totalAmount += amountValue;
-    });
-
-    $('.balance_amount').each(function () {
-        let balanceValue = parseFloat($(this).val()) || 0;
-        totalBalance += balanceValue;
-    });
-
-    let outstandingAmount = parseFloat($('#outstanding_amount').val()) || 0;
-    let balance = outstandingAmount - totalPaid;
-
-    // Update the fields
-    $('#allocated_amount').val(totalPaid.toFixed(2));
-    $('#balance').val(balance.toFixed(2));
-
-    // Update the footer totals
-    $('#total_amount').text(totalAmount.toFixed(2));
-    $('#total_balance').text(totalBalance.toFixed(2));
-    $('#total_paid').text(totalPaid.toFixed(2));
-
-    // Update the hidden input fields
-   $('#total_amount_input').val(totalAmount.toFixed(2));
-$('#total_balance_input').val(totalBalance.toFixed(2));
-$('#total_paidAmount').val(totalPaid.toFixed(2));
-
-}
 
 
 </script>

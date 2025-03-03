@@ -20,7 +20,7 @@
                 <tr>
                 
                      <th>no</th>
-                     <th>Order No</th>
+                     <th>Weight Code </th>
                      <th>Date</th>
                      <th>Supplier</th>
                      <th>Actions</th>
@@ -30,7 +30,7 @@
               @forelse ($conformations as $index => $conformation)
         <tr>
             <td>{{ $index + 1 }}</td>
-            <td>{{ $conformation->order_no }}</td>
+            <td>{{ $conformation->weight_code }}</td>
             <td>{{ $conformation->date }}</td>
             <td>{{ $conformation->supplier->name ?? 'N/A' }}</td>
             <td>
@@ -44,7 +44,7 @@
         </tr>
     @empty
         <tr>
-            <td colspan="6" class="text-center">No inspections found with status 0.</td>
+            <td colspan="6" class="text-center">No weight calculations found with status 0.</td>
         </tr>
     @endforelse
                  

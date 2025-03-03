@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Inspection;
+use App\Models\WeightCalculatorMaster;
 use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseConformation;
@@ -14,6 +14,7 @@ use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseExpense;
 use App\Models\AccountHead;
+use App\Models\WeightCalculatorDetail;
 
 
 use Carbon\Carbon;
@@ -25,31 +26,35 @@ class PurchaseConformationController extends Controller
     public function index()
 {
    
-    $conformations = Inspection::with('supplier', 'user')->where('purchase_status', 0)->get();
+    $conformations = WeightCalculatorMaster::with('supplier', 'user')->where('status', 1)->get();
    
 
    
     return view('purchase-conformation.index', compact('conformations'));
 }
 
-
 public function Confirm($id)
 {
-    $inspection = Inspection::with(['details.product', 'supplier', 'purchase_order','shipment'])->findOrFail($id);
+    $WeightCalculatorMaster = WeightCalculatorMaster::with(['details.product', 'supplier', 'shipment'])->findOrFail($id);
     
-    $order=PurchaseOrder::find($inspection->purchaseOrder_id);
+    // Fetch purchase order
+    $order = PurchaseOrder::find($WeightCalculatorMaster->purchaseOrder_id);
+    
+    // Fetch related COA (Chart of Accounts)
     $coa = AccountHead::whereIn('parent_id', function ($query) {
         $query->select('id')
               ->from('account_heads')
               ->whereIn('name', ['Expenses']);
     })->get();
 
-    return view('purchase-conformation.confirm',['invoice_no' => $this->invoice_no()], [
-        'inspection' => $inspection,
+    return view('purchase-conformation.confirm', [
+        'invoice_no' => $this->invoice_no(),
+        'WeightCalculatorMaster' => $WeightCalculatorMaster,
+        'details' => $WeightCalculatorMaster->details,  // Fetch details here
         'products' => Product::all(),
         'shipment' => Shipment::where('shipment_status', 0)->get(),
         'coa' => $coa,
-        'order'=>$order
+        'order' => $order
     ]);
 }
 
@@ -72,9 +77,10 @@ public function invoice_no(){
                 
                 //   return $request->all();
                  $validatedData = $request->validate([
-                     'inspection_id' => 'required|exists:inspection,id',
-                     'order_no' => 'required|string',
+                     'weight_id' => 'required|exists:weight_calculator_master,id',
+                     'weight_code' => 'required|string',
                      'purchaseOrder_id'=>'required',
+                     'inspection_id'=>'required',
                      'invoice_number' => 'required|string',
                      'shipment_id' => 'required|exists:shipment,id',
                      'date' => 'required|date',
@@ -88,23 +94,24 @@ public function invoice_no(){
                      'products.*.product_id' => 'required|exists:product,id',
                      'products.*.type' => 'nullable|string',
                      'products.*.mark' => 'required|string',
-                     'products.*.male_accepted_qty' => 'required|string',
-                     'products.*.female_accepted_qty' => 'required|string',
-                     'products.*.accepted_qty' => 'required|numeric|min:1',
+                     'products.*.total_accepted_qty' => 'required|string',
+                     'products.*.total_weight' => 'required|string',
+                     'products.*.transportation_amount' => 'required|numeric|min:1',
                      'products.*.rate' => 'required|numeric',
                      'products.*.total' => 'required|numeric',
-                     'expenses' => 'nullable|array',
-                     'expenses.*.expense_id' => 'nullable|exists:account_heads,id',
-                     'expenses.*.amount' => 'nullable|numeric',
+                    //  'expenses' => 'nullable|array',
+                     //  'expenses.*.expense_id' => 'nullable|exists:account_heads,id',
+                    //  'expenses.*.amount' => 'nullable|numeric',
                  ]);
              
                  DB::beginTransaction();
                  try {
                      
                      $purchaseConformation = PurchaseConformation::create([
+                         'weight_id' => $validatedData['weight_id'],
                          'inspection_id' => $validatedData['inspection_id'],
                          'purchaseOrder_id'=> $validatedData['purchaseOrder_id'],
-                         'order_no' => $validatedData['order_no'],
+                         'weight_code' => $validatedData['weight_code'],
                          'invoice_number' => $validatedData['invoice_number'],
                          'shipment_id' => $validatedData['shipment_id'],
                          'date' => $validatedData['date'],
@@ -127,33 +134,30 @@ public function invoice_no(){
                              'product_id' => $product['product_id'],
                              'type' => null,
                              'mark' => $product['mark'],
-                             'male_accepted_qty' => $product['male_accepted_qty'],
-                             'female_accepted_qty' => $product['female_accepted_qty'],
-                             'accepted_qty' => $product['accepted_qty'],
+                             'total_accepted_qty' => $product['total_accepted_qty'],
+                             'total_weight' => $product['total_weight'],
+                             'transportation_amount' => $product['transportation_amount'],
                              'rate' => $product['rate'],
                              'total' => $product['total'],
                              'store_id' => 1,
                          ]);
                      }
-                     if (!empty($request->expense_id)) {
-                        foreach ($request->expense_id as $index => $expense_id) {
-                            if (!empty($expense_id) && !empty($request->amount[$index])) {
-                                PurchaseExpense::create([
-                                    'purchase_id' => $purchaseConformation->id,
-                                    'expense_id' => $expense_id,
-                                    'amount' => $request->amount[$index],
-                                    'store_id' => 1
-                                ]);
-                            }
-                        }
-                    }
+                    //  if (!empty($request->expense_id)) {
+                    //     foreach ($request->expense_id as $index => $expense_id) {
+                    //         if (!empty($expense_id) && !empty($request->amount[$index])) {
+                    //             PurchaseExpense::create([
+                    //                 'purchase_id' => $purchaseConformation->id,
+                    //                 'expense_id' => $expense_id,
+                    //                 'amount' => $request->amount[$index],
+                    //                 'store_id' => 1
+                    //             ]);
+                    //         }
+                    //     }
+                    // }
 
-                    
-             
-                    
-                     $inspection = Inspection::find($request->inspection_id);
-                     if ($inspection) {
-                         $inspection->update(['purchase_status' => 1]);
+                     $WeightCalculatorMaster = WeightCalculatorMaster::find($request->weight_id);
+                     if ($WeightCalculatorMaster) {
+                         $WeightCalculatorMaster->update(['status' => 0]);
                      }
                      InvoiceNumber::updateinvoiceNumber('purchase_conformation',1);
 

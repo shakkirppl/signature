@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseConformation;
+use App\Models\Shipment;
 
 
 
@@ -19,10 +20,23 @@ class SupplierPaymentController extends Controller
     public function create()
     {
         $banks = BankMaster::all(); 
-        $suppliers =Supplier::all();
-        return view('supplier-payment.create', compact('banks','suppliers'));
+        $shipments = Shipment::whereIn('id', PurchaseConformation::pluck('shipment_id'))->get();
+        
+        return view('supplier-payment.create', compact('banks', 'shipments'));
     }
-
+    
+    // New function to fetch suppliers based on shipment selection
+    public function getSuppliersByShipment(Request $request)
+    {
+        $shipmentId = $request->shipment_id;
+    
+        $suppliers = Supplier::whereIn('id', PurchaseConformation::where('shipment_id', $shipmentId)
+                        ->pluck('supplier_id'))
+                        ->get();
+    
+        return response()->json($suppliers);
+    }
+    
             // return $request->all();
             public function store(Request $request)
             {
@@ -30,6 +44,7 @@ class SupplierPaymentController extends Controller
                 
                 $validatedData = $request->validate([
                     'payment_date' => 'required|date',
+                    'shipment_id' => 'required',
                     'payment_type' => 'required|string',
                     'bank_name' => 'nullable|string',
                     'outstanding_amount' => 'required|numeric',
@@ -60,7 +75,7 @@ class SupplierPaymentController extends Controller
                 try {
                     $supplierPayment = SupplierPaymentMaster::create([
                         'payment_date' => $validatedData['payment_date'] ,
-                        
+                        'shipment_id' => $validatedData['shipment_id'] ,
                         'payment_type' => $validatedData['payment_type'],
                         'bank_name' => $validatedData['bank_name'] ?? null,
                         'outstanding_amount' => $validatedData['outstanding_amount'],
@@ -115,12 +130,12 @@ class SupplierPaymentController extends Controller
         
     
     
-    public function index()
-    {
-        $supplierPayments = SupplierPaymentMaster::with('details', 'supplier')->get(); 
-        return view('supplier-payment.index', compact('supplierPayments'));
-    }
-
+            public function index()
+            {
+                $supplierPayments = SupplierPaymentMaster::with('details', 'supplier', 'shipment')->get();
+                return view('supplier-payment.index', compact('supplierPayments'));
+            }
+            
    
 
     public function view($id)

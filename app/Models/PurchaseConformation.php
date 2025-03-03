@@ -10,7 +10,7 @@ class PurchaseConformation extends Model
     use HasFactory;
 
     protected $table = 'purchase_conformation';
-    protected $fillable = ['inspection_id','purchaseOrder_id', 'order_no','date','supplier_id','grand_total','advance_amount','balance_amount','status','user_id','store_id','shipment_id','invoice_number','paid_amount','item_total','total_expense'];
+    protected $fillable = ['weight_id','inspection_id','purchaseOrder_id', 'weight_code','date','supplier_id','grand_total','advance_amount','balance_amount','status','user_id','store_id','shipment_id','invoice_number','paid_amount','item_total','total_expense'];
 
 
 

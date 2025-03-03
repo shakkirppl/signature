@@ -3,31 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\PurchaseConformation;
+use App\Models\Inspection;
 use App\Models\WeightCalculatorMaster;
 use App\Models\WeightCalculatorDetail;
 use App\Models\Product;
 use App\Models\InvoiceNumber;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth; 
 use App\Models\Supplier;
-use App\Models\PurchaseConformationDetail;
+use App\Models\InspectionDetail;
 use App\Models\Shipment;
 
 class WeightCalculatorController extends Controller
 {
     public function index()
 {
-    $shipments = PurchaseConformation::join('shipment', 'purchase_conformation.shipment_id', '=', 'shipment.id')
+    $shipments = Inspection::join('shipment', 'inspection.shipment_id', '=', 'shipment.id')
         ->where('shipment.shipment_status', 0) 
-        ->select('purchase_conformation.shipment_id', 'shipment.shipment_no')
+        ->select('inspection.shipment_id', 'shipment.shipment_no')
         ->distinct()
         ->get();
 
     return view('weight-calculator.index', compact('shipments'));
 }
 
-    
-    
 
 
     public function invoice_no(){
@@ -42,149 +40,124 @@ class WeightCalculatorController extends Controller
 
                  public function create($shipment_id)
                  {
-                     $purchaseConformation = PurchaseConformation::where('shipment_id', $shipment_id)->first();
-                 
-                     // Get the shipment number using the shipment_id
+                    $inspection = Inspection::where('shipment_id', $shipment_id)->first();
                      $shipment = Shipment::find($shipment_id);
                      $shipment_no = $shipment ? $shipment->shipment_no : null;
                  
-                     // Get all suppliers linked to this shipment
+                     // Fetch suppliers linked to this shipment
                      $suppliers = Supplier::whereIn('id', function ($query) use ($shipment_id) {
                          $query->select('supplier_id')
-                             ->from('purchase_conformation')
+                             ->from('inspection')
                              ->where('shipment_id', $shipment_id);
                      })->get();
                  
-                     // Get existing weight calculations for the shipment
-                     $existingWeightCalculations = WeightCalculatorMaster::where('shipment_id', $shipment_id)->pluck('supplier_id')->toArray();
+                     // Fetch Inspection Details
+                     $inspectionDetails = InspectionDetail::whereHas('inspection', function ($query) use ($shipment_id) {
+                         $query->where('shipment_id', $shipment_id);
+                     })->with('product')->get();
                  
                      return view('weight-calculator.create', [
                          'invoice_no' => $this->invoice_no(),
                          'shipment_id' => $shipment_id,
                          'shipment_no' => $shipment_no,
                          'suppliers' => $suppliers,
-                         'existingWeightCalculations' => $existingWeightCalculations, // Pass existing weight calculations
+                         'inspectionDetails' => $inspectionDetails,
+                         'inspection' => $inspection,
                      ]);
                  }
                  
                  
-
                  
-
                  public function store(Request $request)
                  {
-                    
+                    // return $request->all();
                      $validated = $request->validate([
-                         'weight_code' => 'required|string|max:255',
-                         'date' => 'required|date',
-                         'supplier' => 'required|array',
-                         'supplier.*' => 'exists:supplier,id', 
-                         'products' => 'required|array',
-                         'quandity' => 'required|array',
-                         'weight' => 'required|array',
+                        'date' => 'required|date',
+                        'weight_code' => 'required|string',
+                        'shipment_id' => 'required|integer',
+                        'supplier_id' => 'required|integer',
+                        'total_weight' => 'required|numeric',
+                        'weight' => 'required|array', // Ensure weight inputs exist
+                        'weight.*' => 'required|numeric|min:0',
+                        'inspection.*' => 'required|exists:inspection,id',
+                        'purchaseOrder_id'=>'required',
+
                      ]);
                  
                      \DB::beginTransaction();
                      try {
-                        
-                         foreach ($request->supplier as $supplierId) {
-                             
-                             $existingWeightCalculator = WeightCalculatorMaster::where('shipment_id', $request->shipment_id)
-                                 ->where('supplier_id', $supplierId)
-                                 ->first();
-                 
-                             
-                             if ($existingWeightCalculator) {
-                                 return redirect()->back()->with('error', 'Weight calculation already exists for this supplier in this shipment.');
-                             }
-                 
-                             
-                             $weightCalculatorMaster = new WeightCalculatorMaster();
-                             $weightCalculatorMaster->weight_code = $request->weight_code;
-                             $weightCalculatorMaster->date = $request->date;
-                             $weightCalculatorMaster->shipment_id = $request->shipment_id;
-                             $weightCalculatorMaster->supplier_id = $supplierId;
-                             $weightCalculatorMaster->total_weight = $request->total_weight;  
-                             $weightCalculatorMaster->user_id = Auth::id();  
-                             $weightCalculatorMaster->store_id = 1; 
-                             $weightCalculatorMaster->status = 1;  
-                             $weightCalculatorMaster->save();
-                 
-                           
-                             foreach ($request->products as $index => $productId) {
-                                
-                                 $existingDetail = WeightCalculatorDetail::where('weight_master_id', $weightCalculatorMaster->id)
-                                     ->where('product_id', $productId)
-                                     ->where('supplier_id', $supplierId)
-                                     ->first();
-                 
-                                 if ($existingDetail) {
-                                     
-                                     $existingDetail->quandity = $request->quandity[$index]; 
-                                     $existingDetail->weight = $request->weight[$index];
-                                     $existingDetail->shipment_id = $request->shipment_id;  
-                                     $existingDetail->save();
-                                 } else {
-                                    
-                                     $weightCalculatorDetail = new WeightCalculatorDetail();
-                                     $weightCalculatorDetail->weight_master_id = $weightCalculatorMaster->id;
-                                     $weightCalculatorDetail->product_id = $productId;
-                                     $weightCalculatorDetail->quandity = $request->quandity[$index]; 
-                                     $weightCalculatorDetail->weight = $request->weight[$index];
-                                     $weightCalculatorDetail->supplier_id = $supplierId;
-                                     $weightCalculatorDetail->shipment_id = $request->shipment_id; 
-                                     $weightCalculatorDetail->save();
-                                 }
-                             }
+                         // Use the supplier ID directly from the request
+                         $supplierId = $request->supplier_id;
+                     
+                         $existingWeightCalculator = WeightCalculatorMaster::where('shipment_id', $request->shipment_id)
+                             ->where('supplier_id', $supplierId)
+                             ->first();
+                     
+                         if ($existingWeightCalculator) {
+                            WeightCalculatorDetail::where('weight_master_id',$existingWeightCalculator->id)->delete();
+                            $existingWeightCalculator->delete();
+                            //  return redirect()->back()->with('error', 'Weight calculation already exists for this supplier in this shipment.');
                          }
-                         InvoiceNumber::updateinvoiceNumber('weight_calculator',1);
-
+                     
+                         // Store WeightCalculatorMaster
+                         $weightCalculatorMaster = new WeightCalculatorMaster();
+                         $weightCalculatorMaster->weight_code = $request->weight_code;
+                         $weightCalculatorMaster->date = $request->date;
+                         $weightCalculatorMaster->shipment_id = $request->shipment_id;
+                         $weightCalculatorMaster->purchaseOrder_id = $request->purchaseOrder_id ?? null;
+                         $weightCalculatorMaster->inspection_id = $request->inspection_id ?? null;
+                         $weightCalculatorMaster->supplier_id = $supplierId;
+                         $weightCalculatorMaster->total_weight = $request->total_weight;
+                         $weightCalculatorMaster->user_id = Auth::id();
+                         $weightCalculatorMaster->store_id = 1;
+                         $weightCalculatorMaster->status = 1;
+                         $weightCalculatorMaster->save();
+                     
+                         // Loop through products
+                         foreach ($request->product_id as $index => $productId) {
+                            //  $existingDetail = WeightCalculatorDetail::where('weight_master_id', $weightCalculatorMaster->id)
+                            //      ->where('product_id', $productId)
+                            //      ->where('supplier_id', $supplierId)
+                            //      ->first();
+                     
+                            //  if ($existingDetail) {
+                            //      $existingDetail->male_accepted_qty = $request->male_accepted_qty[$index];
+                            //      $existingDetail->female_accepted_qty = $request->female_accepted_qty[$index];
+                            //      $existingDetail->weight = $request->weight[$index];
+                            //      $existingDetail->shipment_id = $request->shipment_id;
+                            //      $existingDetail->save();
+                            //  } else {
+                                 $weightCalculatorDetail = new WeightCalculatorDetail();
+                                 $weightCalculatorDetail->weight_master_id = $weightCalculatorMaster->id;
+                                 $weightCalculatorDetail->product_id = $productId;
+                                 $weightCalculatorDetail->male_accepted_qty = $request->male_accepted_qty[$index];
+                                 $weightCalculatorDetail->female_accepted_qty = $request->female_accepted_qty[$index];
+                                 $weightCalculatorDetail->total_accepted_qty = $request->total_accepted_qty[$index];
+                                 $weightCalculatorDetail->weight = $request->weight[$index];
+                                 $weightCalculatorDetail->supplier_id = $supplierId;
+                                 $weightCalculatorDetail->shipment_id = $request->shipment_id;
+                                 $weightCalculatorDetail->save();
+                            //  }
+                         }
+                     
+                         // Update Invoice Number
+                         InvoiceNumber::updateinvoiceNumber('weight_calculator', 1);
+                     
                          \DB::commit();
-                 
+                     
                          return redirect()->route('weight_calculator.index')->with('success', 'Weight Calculator data saved successfully.');
                      } catch (\Exception $e) {
-                        
                          \DB::rollback();
-                         \Log::error('Weight Calculator Store Error: ' . $e->getMessage(), ['exception' => $e]);
-                 
+                         \Log::error('Weight Calculator Store Error', ['error' => $e->getMessage(), 'request' => $request->all()]);
+                         
                          return redirect()->back()->with('error', 'Failed to save Weight Calculator data. Please try again.');
                      }
+                     
                  }
                  
-                 
-                 
-                 
-                 public function report(Request $request) {
-                    $query = WeightCalculatorMaster::with('shipment');
-                    if ($request->has('from_date') && $request->has('to_date')) {
-                        $query->whereBetween('date', [$request->from_date, $request->to_date]);
-                    }
-                    if ($request->has('shipment_id') && $request->shipment_id != '') {
-                        $query->where('shipment_id', $request->shipment_id);
-                    }
-                    $weightMasters = $query->get();
-                    $shipments = PurchaseConformation::join('shipment', 'purchase_conformation.shipment_id', '=', 'shipment.id')
-                        ->select('purchase_conformation.shipment_id', 'shipment.shipment_no')
-                        ->distinct()
-                        ->get();
-                    return view('weight-calculator-report.report', compact('weightMasters', 'shipments'));
-                }
-
-
-                public function reportview($id) {
-                    $weightMaster = WeightCalculatorMaster::with('shipment')->findOrFail($id);
-                    $weightDetails = WeightCalculatorDetail::where('weight_master_id', $id)->with('product')->get();
-                    return view('weight-calculator-report.reportview', compact('weightMaster', 'weightDetails'));
-                }
-
-
-               
-                
-        
-
 
 public function getSuppliersByShipment($shipment_id) {
-    $suppliers = PurchaseConfirmation::where('shipment_id', $shipment_id)
+    $suppliers = Inspection::where('shipment_id', $shipment_id)
                     ->distinct()
                     ->pluck('supplier_name', 'supplier_id');
     return response()->json($suppliers);
@@ -192,23 +165,38 @@ public function getSuppliersByShipment($shipment_id) {
 
 
 
-public function getProductsBySupplier(Request $request)
+// public function getProductsBySupplier(Request $request)
+// {
+//     $supplier_id = $request->supplier_id;
+//     $shipment_id = $request->shipment_id;
+
+//     $products = InspectionDetail::whereHas('inspection', function ($query) use ($supplier_id, $shipment_id) {
+//         $query->where('supplier_id', $supplier_id)->where('shipment_id', $shipment_id);
+//     })
+//     ->with('product')
+//     ->get();
+
+//     return response()->json($products->map(function ($detail) {
+//         return [
+//             'id' => $detail->product->id,
+//             'product_name' => $detail->product->product_name
+            
+//         ];
+//     }));
+// }
+
+
+public function getSupplierProducts(Request $request)
 {
     $supplier_id = $request->supplier_id;
     $shipment_id = $request->shipment_id;
 
-    $products = PurchaseConformationDetail::whereHas('conformation', function ($query) use ($supplier_id, $shipment_id) {
-        $query->where('supplier_id', $supplier_id)->where('shipment_id', $shipment_id);
-    })
-    ->with('product')
-    ->get();
+    $inspectionDetails = InspectionDetail::whereHas('inspection', function ($query) use ($supplier_id, $shipment_id) {
+        $query->where('shipment_id', $shipment_id)
+              ->where('supplier_id', $supplier_id);
+    })->with('product')->get();
 
-    return response()->json($products->map(function ($detail) {
-        return [
-            'id' => $detail->product->id,
-            'product_name' => $detail->product->product_name
-        ];
-    }));
+    return response()->json($inspectionDetails);
 }
 
 public function checkExistingWeightCalculation(Request $request)
@@ -270,5 +258,28 @@ public function updateWeightCalculation(Request $request)
     
 
 
+
+public function report(Request $request) {
+    $query = WeightCalculatorMaster::with('shipment');
+    if ($request->has('from_date') && $request->has('to_date')) {
+        $query->whereBetween('date', [$request->from_date, $request->to_date]);
+    }
+    if ($request->has('shipment_id') && $request->shipment_id != '') {
+        $query->where('shipment_id', $request->shipment_id);
+    }
+    $weightMasters = $query->get();
+    $shipments = Inspection::join('shipment', 'inspection.shipment_id', '=', 'shipment.id')
+        ->select('inspection.shipment_id', 'shipment.shipment_no')
+        ->distinct()
+        ->get();
+    return view('weight-calculator-report.report', compact('weightMasters', 'shipments'));
+}
+
+
+public function reportview($id) {
+    $weightMaster = WeightCalculatorMaster::with('shipment')->findOrFail($id);
+    $weightDetails = WeightCalculatorDetail::where('weight_master_id', $id)->with('product')->get();
+    return view('weight-calculator-report.reportview', compact('weightMaster', 'weightDetails'));
+}
                 
 }

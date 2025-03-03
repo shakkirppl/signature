@@ -11,11 +11,21 @@ class SupplierAdvance extends Model
 
     
     protected $table = 'supplier_advance';
-    protected $fillable = ['code', 'date','shipment_id','supplier_id','type','order_no','advance_amount','bank_id','store_id','user_id','description'];
+    protected $fillable = ['code', 'date','shipment_id','supplier_id','type','order_no','advance_amount','bank_id','store_id','user_id','description','purchaseOrder_id'];
 
     
     public function bank()
     {
         return $this->belongsTo(BankMaster::class, 'bank_id', 'id');
     }
+    public function shipment()
+    {
+        return $this->belongsTo(Shipment::class, 'shipment_id');
+    }
+    
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+    
 }

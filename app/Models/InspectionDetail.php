@@ -12,9 +12,10 @@ class InspectionDetail extends Model
     protected $fillable = ['inspection_id', 'product_id', 'qty','male_accepted_qty','female_accepted_qty','male_rejected_qty','female_rejected_qty','rejected_reason','rate','total','store_id','user_id','status','type','mark',];
 
     public function inspection()
-    {
-        return $this->belongsTo(Inspection::class);
-    }
+{
+    return $this->belongsTo(Inspection::class, 'inspection_id');
+}
+
 
     public function product()
     {
