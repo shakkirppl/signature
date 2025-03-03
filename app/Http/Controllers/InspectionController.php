@@ -32,7 +32,7 @@ public function view($id)
     $suppliers = Supplier::all(); 
     $products = Product::all();   
     $rejectReasons=RejectMaster::all();
-    $shipments = Shipment::where('shipment_status', 0)->get();
+    $shipments = Shipment::where('shipment_status', 0)->where('id',$purchaseOrder->shipment_id)->get();
     return view('inspection.view', compact('purchaseOrder', 'suppliers', 'products','rejectReasons','shipments'));
 }
 
@@ -43,6 +43,7 @@ public function store(Request $request)
 
         $validated = $request->validate([
             'order_no' => 'required|string',
+            'purchaseOrder_id'=>'required',
             'date' => 'required|date',
             'supplier_id' => 'required|exists:supplier,id',
             'shipment_id' => 'required|exists:shipment,id',
@@ -64,6 +65,7 @@ public function store(Request $request)
 
     // Create the inspection record
     $inspection = Inspection::create([
+        'purchaseOrder_id' => $validated['purchaseOrder_id'],
         'order_no' => $validated['order_no'],
         'shipment_id' => $validated['shipment_id'],
         'date' => $validated['date'],

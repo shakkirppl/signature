@@ -17,20 +17,31 @@ button.remove-row {
     padding: 5px 10px;
 }
 </style>
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin createtable">
+        @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div><br />
+                    @endif
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Purchase Confirmation</h4>
                     <form action="{{ route('purchase-conformation.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="inspection_id" value="{{ $inspection->id }}">
-                        
+                        <input type="hidden" name="purchaseOrder_id" value="{{ $order->id }}">
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="order_no" class="form-label">Order No:</label>
                                 <input type="text" class="form-control" id="order_no" name="order_no" value="{{ $inspection->order_no }}" readonly>
+                                
                             </div>
                             <div class="col-md-4">
                                 <label for="invoice_number" class="form-label">Conformation Code:</label>
@@ -49,15 +60,16 @@ button.remove-row {
                             </div>
                             </div>
                             <div class="row mb-3">
-                            <div class="col-md-4">
-                                <label for="date" class="form-label">Date:</label>
-                                <input type="date" class="form-control" id="date" name="date" value="" required>
-                            </div>
+ 
                             <div class="col-md-4">
                                 <label for="supplier_id" class="form-label">Supplier:</label>
                                 <select name="supplier_id" id="supplier_id" class="form-control" required>
                                     <option value="{{ $inspection->supplier->id }}" selected>{{ $inspection->supplier->name }}</option>
                                 </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="date" class="form-label">Date:</label>
+                                <input type="date" class="form-control" id="date" name="date" value="" required>
                             </div>
                            
                         </div>
@@ -70,8 +82,8 @@ button.remove-row {
                                     <th>Male Accepted Quandity</th>
                                     <th>Female Accepted Quandity</th>
                                     <th>Total Accepted Quandity</th>
-                                    <th>Rate</th>
-                                    <th>Total</th>
+                                    <!-- <th>Rate</th>
+                                    <th>Total</th> -->
                                 </tr>
                             </thead>
                             <tbody id="product-details">
@@ -101,13 +113,12 @@ button.remove-row {
                                         </td>
                                         <td>
                                             <input type="number" name="products[{{ $index }}][accepted_qty]" class="form-control accepted_qty" value="" style="width: 150px;" readonly>
+                                            <input type="hidden" name="products[{{ $index }}][rate]" class="form-control rate" value="0" style="width: 200px;">
+                                            <input type="hidden" name="products[{{ $index }}][total]" class="form-control total" value="0" readonly style="width: 200px;">
                                         </td>
-                                        <td>
-                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="" style="width: 200px;">
-                                        </td>
-                                        <td>
-                                            <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->accepted_qty * $detail->rate }}" readonly style="width: 200px;">
-                                        </td>
+                                       
+
+                                        
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -116,7 +127,7 @@ button.remove-row {
                          <br>
                         <div class="row">
    
-    <div class="col-md-5">
+<div class="col-md-5">
     <div class="table-responsive">
         <table class="table table-bordered mt-3">
             <thead>
@@ -153,26 +164,26 @@ button.remove-row {
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="item_total" class="form-label">Item Amount:</label>
-            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $inspection->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" readonly>
+            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $inspection->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" >
         </div>
         <div class="col-md-4">
             <label for="total_expense" class="form-label">Expense Amount:</label>
-            <input type="number" id="total_expense" name="total_expense" class="form-control" readonly>
+            <input type="number" id="total_expense" name="total_expense" class="form-control" >
         </div>
         <div class="col-md-4">
             <label for="grand_total" class="form-label">Grand Total:</label>
-            <input type="number" id="grand_total" name="grand_total" class="form-control" readonly>
+            <input type="number" id="grand_total" name="grand_total" class="form-control" >
         </div>
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ optional($inspection->purchase_order)->advance_amount ?? 0 }}" readonly>
+            <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $order->advance_amount}}" >
         </div>
         <div class="col-md-6">
             <label for="balance_amount" class="form-label">Balance Amount:</label>
-            <input type="number" id="balance_amount" name="balance_amount" class="form-control" readonly>
+            <input type="number" id="balance_amount" name="balance_amount" class="form-control" >
         </div>
     </div>
 </div>

@@ -37,11 +37,11 @@ button.remove-row {
                     <form action="{{ route('purchase-order.store') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="code" class="form-label">Order No:</label>
                                 <input type="text" class="form-control" id="code" name="order_no" value="{{ $invoice_no }}" readonly>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" required>
                             </div>
@@ -51,6 +51,15 @@ button.remove-row {
                                     <option value="">Select Suppliers</option>
                                     @foreach ($suppliers as $supplier)
                                         <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                            <label for="shipment_id" class="form-label">Shipment No:</label>
+                                <select name="shipment_id" id="shipment_id" class="form-control" required>
+                                    <option value="">Select Shipment No</option>
+                                    @foreach ($shipments as $shipment)
+                                        <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
                                     @endforeach
                                 </select>
                             </div>

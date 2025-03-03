@@ -7,7 +7,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <h4 class="card-title">Inspection List</h4>
+              <h4 class="card-title">Inspection & Animal Receive Pending List</h4>
             </div>
           </div>
           <div class="table-responsive">
