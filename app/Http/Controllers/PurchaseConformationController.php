@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Inspection;
 use App\Models\Product;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseConformation;
 use App\Models\PurchaseConformationDetail;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,8 @@ class PurchaseConformationController extends Controller
 public function Confirm($id)
 {
     $inspection = Inspection::with(['details.product', 'supplier', 'purchase_order','shipment'])->findOrFail($id);
+    
+    $order=PurchaseOrder::find($inspection->purchaseOrder_id);
     $coa = AccountHead::whereIn('parent_id', function ($query) {
         $query->select('id')
               ->from('account_heads')
@@ -43,10 +46,10 @@ public function Confirm($id)
 
     return view('purchase-conformation.confirm',['invoice_no' => $this->invoice_no()], [
         'inspection' => $inspection,
-        'suppliers' => Supplier::all(),
         'products' => Product::all(),
         'shipment' => Shipment::where('shipment_status', 0)->get(),
         'coa' => $coa,
+        'order'=>$order
     ]);
 }
 
@@ -67,10 +70,11 @@ public function invoice_no(){
              public function store(Request $request)
              {
                 
-                // return $request->all();
+                //   return $request->all();
                  $validatedData = $request->validate([
                      'inspection_id' => 'required|exists:inspection,id',
                      'order_no' => 'required|string',
+                     'purchaseOrder_id'=>'required',
                      'invoice_number' => 'required|string',
                      'shipment_id' => 'required|exists:shipment,id',
                      'date' => 'required|date',
@@ -99,16 +103,17 @@ public function invoice_no(){
                      
                      $purchaseConformation = PurchaseConformation::create([
                          'inspection_id' => $validatedData['inspection_id'],
+                         'purchaseOrder_id'=> $validatedData['purchaseOrder_id'],
                          'order_no' => $validatedData['order_no'],
                          'invoice_number' => $validatedData['invoice_number'],
                          'shipment_id' => $validatedData['shipment_id'],
                          'date' => $validatedData['date'],
                          'supplier_id' => $validatedData['supplier_id'],
-                         'item_total' => $validatedData['item_total'],
-                         'total_expense' => $validatedData['total_expense'],
-                         'grand_total' => $validatedData['grand_total'],
-                         'advance_amount' => $validatedData['advance_amount'],
-                         'balance_amount' => $validatedData['balance_amount'],
+                         'item_total' => $validatedData['item_total']?? 0,
+                         'total_expense' => $validatedData['total_expense']?? 0,
+                         'grand_total' => $validatedData['grand_total']?? 0,
+                         'advance_amount' => $validatedData['advance_amount']?? 0,
+                         'balance_amount' => $validatedData['balance_amount'] ?? 0,
                          'status' => 1,
                          'shipment_status' => 0,
                          'user_id' => auth()->id(),

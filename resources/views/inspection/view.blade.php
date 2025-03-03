@@ -18,7 +18,7 @@ button.remove-row {
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <h4 class="card-title">Inspecton detail</h4>
+                            <h4 class="card-title">Inspection & Animal Receive  Detail</h4>
                         </div>
                         <div class="col-6" style="text-align: end;">
                         </div>
@@ -38,6 +38,7 @@ button.remove-row {
                             <div class="col-md-3">
                                 <label for="code" class="form-label">Order No:</label>
                                 <input type="text" class="form-control" id="code" name="order_no" value="{{ $purchaseOrder->order_no }}" readonly>
+                                <input type="hidden" class="form-control" id="purchaseOrder_id" name="purchaseOrder_id" value="{{ $purchaseOrder->id }}" readonly>
                             </div>
                             <div class="col-md-3">
                                 <label for="date" class="form-label">Date:</label>
@@ -58,7 +59,6 @@ button.remove-row {
                             <div class="col-md-3">
                             <label for="shipment_id" class="form-label">Shipment No:</label>
                                 <select name="shipment_id" id="shipment_id" class="form-control" required>
-                                    <option value="">Select Shipment No</option>
                                     @foreach ($shipments as $shipment)
                                         <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
                                     @endforeach

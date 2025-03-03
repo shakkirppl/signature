@@ -8,6 +8,7 @@ use App\Models\PurchaseOrderDetail;
 use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\InvoiceNumber;
+use App\Models\Shipment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -25,8 +26,8 @@ class PurchaseOrderController extends Controller
         {
             $suppliers = Supplier::all(); 
             $products = Product::all();
-           
-            return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products'));
+            $shipments = Shipment::where('shipment_status', 0)->get();
+            return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments'));
         }
     
         public function invoice_no(){
@@ -43,10 +44,12 @@ class PurchaseOrderController extends Controller
                      
                      public function store(Request $request)
                      {
+                        // return $request->all();
                          $request->validate([
                              'order_no' => 'required|unique:purchase_order,order_no',
                              'date' => 'required|date',
                              'supplier_id' => 'required|exists:supplier,id',
+                             'shipment_id'=> 'required|exists:shipment,id'
                          ]);
                      
                          DB::beginTransaction();
@@ -54,14 +57,14 @@ class PurchaseOrderController extends Controller
                              $supplier = Supplier::find($request->supplier_id);
                      
                              // Calculate the credit limit expiration date
-                             if ($supplier->credit_limit_days > 0) {
-                                 $credit_limit_date = Carbon::parse($supplier->created_at)->addDays($supplier->credit_limit_days);
+                            //  if ($supplier->credit_limit_days > 0) {
+                            //      $credit_limit_date = Carbon::parse($supplier->created_at)->addDays($supplier->credit_limit_days);
                      
-                                 // Check if the sales order date exceeds the credit limit date
-                                 if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
-                                     return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this supplier.']);
-                                 }
-                             }
+                            //      // Check if the sales order date exceeds the credit limit date
+                            //      if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
+                            //          return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this supplier.']);
+                            //      }
+                            //  }
                      
                              // Store the purchase order
                              $purchaseOrder = PurchaseOrder::create([
@@ -69,12 +72,13 @@ class PurchaseOrderController extends Controller
                                  'date' => $request->date,
                                  'supplier_id' => $request->supplier_id,
                                  'grand_total' => 0,
-                                 'advance_amount' => $request->advance_amount ?? 0,
+                                 'advance_amount' => isset($request->advance_amount) ? (float) str_replace(',', '', $request->advance_amount) : 0,
                                  'balance_amount' => 0,
                                  'store_id' => 1,
                                  'user_id' => auth()->id(),
                                  'status' => 1,
                                  'inspection_status' => 0,
+                                 'shipment_id' =>$request->shipment_id,
                              ]);
                      
                              // Store the purchase order details

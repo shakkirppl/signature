@@ -20,7 +20,9 @@ class PurchaseOrder extends Model
     'status',
     'inspection_status',
     'store_id',
-    'user_id',];
+    'user_id',
+    'shipment_id'
+];
 
 
     public function invoice_no()
