@@ -30,6 +30,7 @@ use App\Http\Controllers\OutstandingController;
 use App\Http\Controllers\AnimalReceivingNoteController;
 use App\Http\Controllers\PostMortemReportController;
 use App\Http\Controllers\AnteMortemReportController;
+use App\Http\Controllers\SupplierAdvanceController;
 
 
 
@@ -340,6 +341,12 @@ Route::post('postmortem-report-store', [PostMortemReportController::class, 'stor
 
 
 Route::get('antemortem-report-create', [AnteMortemReportController::class, 'create'])->name('antemortem.create');
+
+
+Route::get('supplier-advance-create', [SupplierAdvanceController::class, 'create']);
+Route::get('/get-suppliers', [SupplierAdvanceController::class, 'getSuppliersByShipment'])->name('getSuppliersByShipment');
+Route::get('/get-orders', [SupplierAdvanceController::class, 'getOrdersBySupplier'])->name('getOrdersBySupplier');
+Route::post('supplier-advance-store', [SupplierAdvanceController::class, 'store'])->name('supplieradvance.store');
 
 
 

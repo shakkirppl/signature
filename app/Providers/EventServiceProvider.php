@@ -20,6 +20,8 @@ use App\Models\PurchaseConformation;
 use App\Observers\PurchaseConformationObserver;
 use App\Models\OpeningBalance;
 use App\Observers\OpeningBalanceObserver;
+use App\Models\SupplierAdvance;
+use App\Observers\SupplierAdvanceObserver;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -48,6 +50,7 @@ class EventServiceProvider extends ServiceProvider
         SalesPayment::observe(SalesObserver::class);
         PurchaseConformation::observe(PurchaseConformationObserver::class);
         OpeningBalance::observe(OpeningBalanceObserver::class);
+        SupplierAdvance::observe(SupplierAdvanceObserver::class);
 
 
 

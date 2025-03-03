@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('grand_total').value = (grandTotal + totalExpense).toFixed(2);
 
         const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
-        document.getElementById('balance_amount').value = (grandTotal + totalExpense - advanceAmount).toFixed(2);
+        document.getElementById('balance_amount').value = (grandTotal  - advanceAmount).toFixed(2);
     }
 
     function calculateExpenseTotal() {
