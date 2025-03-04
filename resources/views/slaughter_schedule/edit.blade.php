@@ -63,6 +63,38 @@
                                    
                                 </div>
                                 <br>
+        <h5 class="card-title">Loading Details</h5>          
+
+        <div class="row mt-3">
+          <div class="col-md-4">
+                 <label for="loading_start_date">  Loading Start Date:</label>
+                    <input type="date" class="form-control" id="loading_start_date" name="loading_start_date" 
+                          value="{{ old('loading_start_date', $schedule->loading_start_date) }}">
+            </div>
+                <div class="col-md-4">
+                <label for="loading_end_date">  Loading End Date::</label>
+                 <input type="date" class="form-control " id="loading_end_date" name="loading_end_date" 
+                    value="{{ old('loading_end_date', $schedule->loading_end_date) }}">
+            </div>
+            </div>
+            <div class="row">
+            <div class="col-md-4">
+                <label for="loading_time">Loading Start Time:</label>
+                <input type="text" class="form-control timepicker" id="loading_time" name="loading_time"
+                    value="{{ old('loading_time', $schedule->loading_time) }}" >
+            </div>
+
+            <!-- Airport Time -->
+            <div class="col-md-4">
+                <label for="loading_end_time">Loading End Time:</label>
+                <input type="text" class="form-control timepicker" id="loading_end_time" name="loading_end_time"
+                    value="{{ old('loading_end_time', $schedule->loading_end_time) }}" >
+            </div>
+        </div>
+
+
+
+        <br>
         <h5 class="card-title">Transportation Details</h5>          
 
         <div class="row mt-3">
@@ -78,11 +110,7 @@
             </div>
             </div>
             <div class="row">
-            <div class="col-md-4">
-                <label for="loading_time">Loading Time:</label>
-                <input type="text" class="form-control timepicker" id="loading_time" name="loading_time"
-                    value="{{ old('loading_time', $schedule->loading_time) }}" >
-            </div>
+           
 
             <!-- Airport Time -->
             <div class="col-md-4">
@@ -91,6 +119,7 @@
                     value="{{ old('airport_time', $schedule->airport_time) }}" >
             </div>
         </div>
+<br>
 <br>
 <h5 class="card-title">Airline Details</h5>
         <div class="row mt-3">
