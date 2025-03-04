@@ -21,7 +21,8 @@ class PurchaseOrder extends Model
     'inspection_status',
     'store_id',
     'user_id',
-    'shipment_id'
+    'shipment_id',
+    'SalesOrder_id'
 ];
 
 
@@ -76,10 +77,13 @@ class PurchaseOrder extends Model
         return $this->hasMany(PurchaseOrderDetail::class, 'purchase_order_id');
     }
 
-    public function shipments()
-    {
-        return $this->belongsTo(Shipment::class, 'shipment_id');
+    public function shipment() {
+        return $this->belongsTo(Shipment::class, 'shipment_id'); // Ensure the column name is correct
     }
     
+    
+    public function salesOrder() {
+        return $this->belongsTo(SalesOrder::class, 'SalesOrder_id');
+    }
     
 }

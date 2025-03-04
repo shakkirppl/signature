@@ -21,4 +21,9 @@ public function conformation()
     return $this->belongsTo(PurchaseConformation::class, 'conformation_id');
 }
 
+public function purchaseConformation()
+{
+    return $this->belongsTo(PurchaseConformation::class, 'conformation_id', 'id');
+}
+
 }

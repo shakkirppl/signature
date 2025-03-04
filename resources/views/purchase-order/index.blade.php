@@ -22,7 +22,8 @@
                   <th>Order No</th>
                   <th>Supplier</th>
                   <th>Date</th>
-                  <!-- <th>Grand Total</th> -->
+                  <th>Shipment No</th>
+                 <th>SalesOrder No</th>
                   <th>Advance Amount</th>
                   <!-- <th>Balance</th> -->
                   <th>Actions</th>
@@ -35,6 +36,12 @@
                   <td>{{ $order->order_no }}</td>
                   <td>{{ $order->supplier ? $order->supplier->name : 'N/A' }}</td>
                   <td>{{ $order->date }}</td>
+                  <td>{{ $order->shipment ? $order->shipment->shipment_no : 'N/A' }}</td>
+
+                  <td>{{ $order->salesOrder ? $order->salesOrder->order_no : 'N/A' }}</td>
+
+                
+                  
                   <!-- <td>{{ $order->grand_total }}</td> -->
                   <td>{{ $order->advance_amount }}</td>
                   <!-- <td>{{ $order->balance_amount }}</td> -->

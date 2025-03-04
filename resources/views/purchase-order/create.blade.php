@@ -54,7 +54,8 @@ button.remove-row {
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            
+                            <div class="col-md-4">
                             <label for="shipment_id" class="form-label">Shipment No:</label>
                                 <select name="shipment_id" id="shipment_id" class="form-control" required>
                                     <option value="">Select Shipment No</option>
@@ -63,6 +64,16 @@ button.remove-row {
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="col-md-4">
+                            <label for="sales_no" class="form-label">SalesOrder No:</label>
+                                <select name="SalesOrder_id" id="SalesOrder_id" class="form-control" required>
+                                 <option value="">Select sales no</option>
+                                    @foreach ($SalesOrders as $SalesOrder)
+                                    <option value="{{ $SalesOrder->id }}">{{ $SalesOrder->order_no }}</option>
+                                    @endforeach
+                               </select>
+                            </div>
+                           
                         </div>
                         <div class="table-responsive">
     <table class="table table-bordered">

@@ -24,6 +24,7 @@
                                     <th>Code</th>
                                     <th>Date</th>
                                     <th>Shipment</th>
+                                    <th>PurchaseOrder No</th>
                                     <th>Supplier</th>
                                     <th>Type</th>
                                     <th>Advance Amount</th>
@@ -40,6 +41,7 @@
                                      <td>{{ $advance->code }}</td>
                                      <td>{{ $advance->date }}</td>
                                      <td>{{ $advance->shipment->shipment_no ?? 'N/A' }}</td>
+                                     <td>{{$advance->order_no}}</td>
                                      <td>{{ $advance->supplier->name ?? 'N/A' }}</td>
                                      <td>{{ ucfirst($advance->type) }}</td>
                                      <td>{{ number_format($advance->advance_amount, 2) }}</td>

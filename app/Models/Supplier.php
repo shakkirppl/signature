@@ -32,4 +32,10 @@ public function purchaseConfirmations()
     return $this->hasMany(PurchaseConformation::class, 'supplier_id');
 }
 
+public function purchaseOrders()
+{
+    return $this->hasMany(PurchaseOrder::class, 'supplier_id');
+}
+
+
 }

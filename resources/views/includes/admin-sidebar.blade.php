@@ -140,6 +140,7 @@
             </a>
             <div class="collapse" id="report">
               <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('shipment-report')}}"> Shipment Report  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-calculator-report')}}">Weight Calculator</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-conformation-report')}}">Purchase Confirmation </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-report')}}">Inspection </a></li>

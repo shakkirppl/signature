@@ -38,39 +38,42 @@
         </div><br>
         <h5 class="card-title">Slaughter Timing</h5>
         <div class="row mt-3">
-            <!-- Starting Time of Slaughter -->
-            <div class="col-md-4">
-                                        <label for="airline_date"> Slaughter Date:</label>
-                                        <input type="date" class="form-control" id="slaughter_date" name="slaughter_date" required 
-                                        value="{{ old('slaughter_date', $schedule->slaughter_date) }}">
+        <div class="col-md-4">
+                                <label for="slaughter_date"> Slaughter Start Date:</label>
+                                <input type="date" class="form-control" id="slaughter_date" name="slaughter_date" 
+                                value="{{ old('slaughter_date', $schedule->slaughter_date) }}">
                                     </div>
-
-            </div>
-            <div class="row">
-            <div class="col-md-4">
-                <label for="starting_time_of_slaughter">Starting Time:</label>
-                <input type="text" class="form-control timepicker" id="starting_time_of_slaughter" name="starting_time_of_slaughter"
-                    value="{{ old('starting_time_of_slaughter', $schedule->starting_time_of_slaughter) }}" required>
-            </div>
-
-            <!-- Ending Time of Slaughter -->
-            <div class="col-md-4">
-                <label for="ending_time_of_slaughter">Ending Time:</label>
-                <input type="text" class="form-control timepicker" id="ending_time_of_slaughter" name="ending_time_of_slaughter"
-                    value="{{ old('ending_time_of_slaughter', $schedule->ending_time_of_slaughter) }}" required>
-            </div>
-        </div> <br>
+                                    <div class="col-md-4">
+                                        <label for="slaughter_end_date">Slaughter End Date: :</label>
+                                        <input type="date" class="form-control " id="slaughter_end_date" name="slaughter_end_date" 
+                                        value="{{ old('slaughter_end_date', $schedule->slaughter_end_date) }}">
+                                    </div>
+                                    </div>
+                                    <div class="row">
+                                    <div class="col-md-4">
+                                    <label for="starting_time_of_slaughter">Starting Time:</label>
+                                    <input type="text" class="form-control timepicker" id="starting_time_of_slaughter" name="starting_time_of_slaughter" 
+                                    value="{{ old('starting_time_of_slaughter', $schedule->starting_time_of_slaughter) }}">
+                                    </div>
+                                    <div class="col-md-4">
+                                    <label for="ending_time_of_slaughter">Ending Time:</label>
+                                    <input type="text" class="form-control timepicker" id="ending_time_of_slaughter" name="ending_time_of_slaughter" 
+                                    value="{{ old('ending_time_of_slaughter', $schedule->ending_time_of_slaughter) }}">
+                                    </div>
+                                   
+                                </div>
+                                <br>
         <h5 class="card-title">Transportation Details</h5>          
 
         <div class="row mt-3">
           <div class="col-md-4">
                  <label for="airline_date"> Transportation Date:</label>
-                    <input type="date" class="form-control" id="transportation_date" name="transportation_date" required
+                    <input type="date" class="form-control" id="transportation_date" name="transportation_date" 
                           value="{{ old('transportation_date', $schedule->transportation_date) }}">
             </div>
                 <div class="col-md-4">
                 <label for="airline_time"> Transportation Time:</label>
-                 <input type="text" class="form-control timepicker" id="transportation_time" name="transportation_time" required
+                 <input type="text" class="form-control timepicker" id="transportation_time" name="transportation_time" 
                     value="{{ old('transportation_time', $schedule->transportation_time) }}">
             </div>
             </div>
@@ -78,14 +81,14 @@
             <div class="col-md-4">
                 <label for="loading_time">Loading Time:</label>
                 <input type="text" class="form-control timepicker" id="loading_time" name="loading_time"
-                    value="{{ old('loading_time', $schedule->loading_time) }}" required>
+                    value="{{ old('loading_time', $schedule->loading_time) }}" >
             </div>
 
             <!-- Airport Time -->
             <div class="col-md-4">
                 <label for="airport_time">Airport Cutoff Time:</label>
                 <input type="text" class="form-control timepicker" id="airport_time" name="airport_time"
-                    value="{{ old('airport_time', $schedule->airport_time) }}" required>
+                    value="{{ old('airport_time', $schedule->airport_time) }}" >
             </div>
         </div>
 <br>
@@ -95,14 +98,14 @@
             <div class="col-md-4">
                 <label for="airline_name">Airline Name:</label>
                 <input type="text" class="form-control" id="airline_name" name="airline_name"
-                    value="{{ old('airline_name', $schedule->airline_name) }}" required>
+                    value="{{ old('airline_name', $schedule->airline_name) }}" >
             </div>
 
             <!-- Airline Flight Number -->
             <div class="col-md-4">
                 <label for="airline_number">Flight Number:</label>
                 <input type="text" class="form-control" id="airline_number" name="airline_number"
-                    value="{{ old('airline_number', $schedule->airline_number) }}" required>
+                    value="{{ old('airline_number', $schedule->airline_number) }}" >
             </div>
         </div>
        
@@ -111,14 +114,14 @@
             <div class="col-md-4">
                 <label for="airline_date">Airline Date:</label>
                 <input type="date" class="form-control" id="airline_date" name="airline_date"
-                    value="{{ old('airline_date', $schedule->airline_date) }}" required>
+                    value="{{ old('airline_date', $schedule->airline_date) }}" >
             </div>
 
             <!-- Airline Time -->
             <div class="col-md-4">
                 <label for="airline_time">Airline Time:</label>
                 <input type="text" class="form-control timepicker" id="airline_time" name="airline_time"
-                    value="{{ old('airline_time', $schedule->airline_time) }}" required>
+                    value="{{ old('airline_time', $schedule->airline_time) }}" >
             </div>
         </div>
 <br>
@@ -134,7 +137,7 @@
                                         @foreach ($schedule->details as $detail)
                                       <div class="d-flex align-items-center mb-2 product-item">
                                       <div class="col-md-10">
-                                         <select name="products[]" class="form-control product-select" required>
+                                         <select name="products[]" class="form-control product-select" >
                                             <option value="">Select Product</option>
                                                 @foreach($products as $product)
                                             <option value="{{ $product->id }}" 
@@ -175,7 +178,7 @@
         let newProduct = `
             <div class="row product-item align-items-center mb-2">
                 <div class="col-md-3">
-                    <select name="products[]" class="form-control product-select" required>
+                    <select name="products[]" class="form-control product-select" >
                         <option value="">Select Product</option>
                         @foreach($products as $product)
                             <option value="{{ $product->id }}">{{ $product->product_name }}</option>

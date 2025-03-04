@@ -12,13 +12,14 @@ use App\Models\Shipment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\SalesOrder;
 
 
 class PurchaseOrderController extends Controller
 {
     public function index()
 {
-    $purchaseOrders = PurchaseOrder::with(['supplier', 'details'])->get();
+    $purchaseOrders = PurchaseOrder::with(['supplier', 'details','salesOrder','shipment'])->get();
     return view('purchase-order.index', compact('purchaseOrders'));
 }
   
@@ -26,8 +27,9 @@ class PurchaseOrderController extends Controller
         {
             $suppliers = Supplier::all(); 
             $products = Product::all();
+            $SalesOrders=SalesOrder::all();
             $shipments = Shipment::where('shipment_status', 0)->get();
-            return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments'));
+            return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments','SalesOrders'));
         }
     
         public function invoice_no(){
@@ -49,7 +51,8 @@ class PurchaseOrderController extends Controller
                              'order_no' => 'required|unique:purchase_order,order_no',
                              'date' => 'required|date',
                              'supplier_id' => 'required|exists:supplier,id',
-                             'shipment_id'=> 'required|exists:shipment,id'
+                             'shipment_id'=> 'required|exists:shipment,id',
+                             'SalesOrder_id' => 'required|exists:sales_order,id',
                          ]);
                      
                          DB::beginTransaction();
@@ -79,6 +82,7 @@ class PurchaseOrderController extends Controller
                                  'status' => 1,
                                  'inspection_status' => 0,
                                  'shipment_id' =>$request->shipment_id,
+                                 'SalesOrder_id' => $request->SalesOrder_id,
                              ]);
                      
                              // Store the purchase order details
@@ -112,7 +116,8 @@ class PurchaseOrderController extends Controller
             $purchaseOrder = PurchaseOrder::with('details','products')->findOrFail($id);
             $suppliers = Supplier::all();
             $products = Product::all();
-            return view('purchase-order.edit', compact('purchaseOrder', 'suppliers', 'products'));
+            $SalesOrders=SalesOrder::all();
+            return view('purchase-order.edit', compact('purchaseOrder', 'suppliers', 'products','SalesOrders'));
         }
     
     public function update(Request $request, $id)
@@ -121,6 +126,7 @@ class PurchaseOrderController extends Controller
             'order_no' => 'required',
             'date' => 'required|date',
             'supplier_id' => 'required|exists:supplier,id',
+            'SalesOrder_id' => 'required|exists:sales_order,id',
             // 'grand_total' => 'nu|numeric|min:0',
         ]);
     
@@ -133,6 +139,7 @@ class PurchaseOrderController extends Controller
                 'grand_total' => 0,
                 'advance_amount' => $request->advance_amount ?? 0,
                 'balance_amount' =>  0,
+                'SalesOrder_id' => $request->SalesOrder_id,
             ]);
     
             // Clear old sales order details and re-insert updated ones

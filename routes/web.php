@@ -217,6 +217,11 @@ Route::get('shipment-create', [ShipmentController::class, 'create'])->name('ship
 Route::post('shipment-store', [ShipmentController::class, 'store'])->name('shipment.store');
 Route::delete('/shipment/{id}', [ShipmentController::class, 'destroy'])->name('shipment.destroy');
 
+Route::get('shipment-report', [ShipmentController::class, 'report']);
+Route::get('shipment-report.view/{id}', [ShipmentController::class,'view'])->name('shipment-report.view');
+Route::get('shipment-suppllier-final-payment-report/{id}', [ShipmentController::class,'shipment_suppllier_final_payment_report'])->name('shipment-suppllier-final-payment-report');
+Route::get('shipment-suppllier-final-payment-report-detail', [ShipmentController::class,'shipment_suppllier_final_payment_report_detail'])->name('shipment-suppllier-final-payment-report-detail');
+
 
 
 Route::get('offal-sales-create', [OffalSalesController::class, 'create'])->name('offal-sales.create');
