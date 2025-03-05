@@ -54,14 +54,13 @@ class SupplierController extends Controller
                 'credit_limit_days' => 'required|numeric|min:0',
                 'opening_balance' => 'nullable|numeric|min:0',
                 'dr_cr' => 'nullable|in:Dr,Cr',
-                'state' => 'required|string|max:255',
-                'country' => 'required|string|max:255',
+                'state' => 'nullable|string|max:255',
+                'country' => 'nullable|string|max:255',
             ], [
                 'name.required' => 'Please select the name.',
                 'contact_number.required' => 'Please select the contact no.',
                 'credit_limit_days.required' => 'Please select the credit limit days.',
-                'state.required' => 'Please select the state.',
-                'country.required' => 'Please select the country.',
+               
             ]);
     
     

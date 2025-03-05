@@ -98,20 +98,18 @@
                       </div>
                       <div class="col-md-12">
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label required">State</label>
+                  <label class="col-sm-2 col-form-label ">State</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="state"  required="true"/>
-                    @error('state')
-                     <span class="text-danger">{{ $message }}</span>
-                   @enderror
+                    <input type="text" class="form-control" name="state"  />
+                  
                   </div>
                 </div>
               </div>
               <div class="col-md-12">
                 <div class="form-group row">
-                  <label class="col-sm-2 col-form-label required">Country</label>
+                  <label class="col-sm-2 col-form-label ">Country</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="country"   required="true"/>
+                    <input type="text" class="form-control" name="country"   />
                   </div>
                 </div>
               </div>
