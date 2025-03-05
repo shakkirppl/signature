@@ -117,7 +117,9 @@ class PurchaseOrderController extends Controller
             $suppliers = Supplier::all();
             $products = Product::all();
             $SalesOrders=SalesOrder::all();
-            return view('purchase-order.edit', compact('purchaseOrder', 'suppliers', 'products','SalesOrders'));
+           
+            $shipments = Shipment::where('shipment_status', 0)->get();
+            return view('purchase-order.edit', compact('purchaseOrder', 'suppliers', 'products','SalesOrders','shipments'));
         }
     
     public function update(Request $request, $id)
@@ -140,6 +142,7 @@ class PurchaseOrderController extends Controller
                 'advance_amount' => $request->advance_amount ?? 0,
                 'balance_amount' =>  0,
                 'SalesOrder_id' => $request->SalesOrder_id,
+                'shipment_id' =>$request->shipment_id,
             ]);
     
             // Clear old sales order details and re-insert updated ones

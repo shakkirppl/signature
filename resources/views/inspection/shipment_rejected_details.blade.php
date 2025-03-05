@@ -8,6 +8,9 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
+            <div class="col-md-6 text-right">
+                        <a href="{{ url()->previous() }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+          </div>
               <h4 class="card-title">Rejected Products </h4>
             </div>
             <div class="col-md-2">

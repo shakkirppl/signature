@@ -56,7 +56,14 @@ class SupplierController extends Controller
                 'dr_cr' => 'nullable|in:Dr,Cr',
                 'state' => 'required|string|max:255',
                 'country' => 'required|string|max:255',
+            ], [
+                'name.required' => 'Please select the name.',
+                'contact_number.required' => 'Please select the contact no.',
+                'credit_limit_days.required' => 'Please select the credit limit days.',
+                'state.required' => 'Please select the state.',
+                'country.required' => 'Please select the country.',
             ]);
+    
     
             $supplier = Supplier::create([
                 'code' => $request->code,
@@ -93,7 +100,6 @@ class SupplierController extends Controller
             return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Supplier Store Error: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'Failed to create supplier: ' . $e->getMessage());
         }
     }

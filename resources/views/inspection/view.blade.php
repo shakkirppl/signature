@@ -74,7 +74,7 @@ button.remove-row {
                                     <th>Quantity</th>
                                     <th>Male</th>
                                     <th>Female</th>
-                                    <th>Mark</th>
+                                    <!-- <th>Mark</th> -->
                                     <th>Male Accepted Quantity</th>
                                     <th>Male Rejected Quantity</th>
                                     <th>Female Accepted Quantity</th>
@@ -106,21 +106,21 @@ button.remove-row {
             <td>
                 <input type="number" name="products[{{ $index }}][female]" class="form-control female" value="{{ $detail->female }}" min="1" style="width: 150px;">
             </td>
-            <td>
+            <!-- <td>
                 <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" style="width: 150px;">
-            </td>
+            </td> -->
             <td>
                 <input type="number" name="products[{{ $index }}][male_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
             </td>
             <td>
-                <input type="number" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;">
+                <input type="number" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" readonly>
             </td>
             <td>
                 <input type="number" name="products[{{ $index }}][female_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
             </td>
            
             <td>
-                <input type="number" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;">
+                <input type="number" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" readonly>
             </td>
          
             <td>
@@ -172,3 +172,35 @@ document.addEventListener('DOMContentLoaded', function () {
    
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.accepted-qty').forEach(input => {
+        input.addEventListener('input', function () {
+            let row = this.closest('tr');
+            let maleQty = parseInt(row.querySelector('.male')?.value) || 0;
+            let femaleQty = parseInt(row.querySelector('.female')?.value) || 0;
+            let maleAcceptedQty = parseInt(row.querySelector('[name^="products"][name$="[male_accepted_qty]"]')?.value) || 0;
+            let femaleAcceptedQty = row.querySelector('[name^="products"][name$="[female_accepted_qty]"]')?.value;
+
+            let maleRejectedQtyField = row.querySelector('[name^="products"][name$="[male_rejected_qty]"]');
+            let femaleRejectedQtyField = row.querySelector('[name^="products"][name$="[female_rejected_qty]"]');
+
+            // Update Male Rejected Quantity Immediately
+            if (maleRejectedQtyField) {
+                maleRejectedQtyField.value = Math.max(maleQty - maleAcceptedQty, 0);
+            }
+
+            // Update Female Rejected Quantity Only After User Enters Female Accepted Qty
+            if (femaleRejectedQtyField) {
+                if (femaleAcceptedQty !== "") { // Check if user entered a value
+                    femaleRejectedQtyField.value = Math.max(femaleQty - parseInt(femaleAcceptedQty), 0);
+                } else {
+                    femaleRejectedQtyField.value = ""; // Keep it empty if no value entered
+                }
+            }
+        });
+    });
+});
+</script>
+
+

@@ -5,10 +5,17 @@
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
       <div class="card">
+        
         <div class="card-body">
+        
+          <div class="col-md-6 text-right">
+                     <a href="{{ url()->previous() }}" class="backicon">
+                    <i class="mdi mdi-backburger"></i>
+                   </a>
+          </div>
           <h4 class="card-title">Rejected Products - {{ $supplier_name }}</h4>
           <h5>Shipment No: {{ $shipment_no }}</h5>
-
+          
           <div class="table-responsive">
             <table class="table">
               <thead>
@@ -34,7 +41,6 @@
             </table>
           </div>
 
-          <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
         </div>
       </div>
     </div>

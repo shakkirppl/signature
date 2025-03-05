@@ -232,12 +232,21 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        flatpickr(".timepicker", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "h:i K", // 12-hour format with AM/PM
-            time_24hr: false
-        });
+    flatpickr(".timepicker", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "h:i K", // 12-hour format with AM/PM
+        time_24hr: false,
+        onOpen: function(selectedDates, dateStr, instance) {
+            let currentTime = new Date().toLocaleTimeString("en-US", { 
+                timeZone: "Africa/Dar_es_Salaam",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true 
+            });
+            instance.setDate(currentTime, true);
+        }
     });
+});
 </script>
 @endsection

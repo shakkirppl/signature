@@ -82,7 +82,7 @@ public function store(Request $request)
             'inspection_id' => $inspection->id,
             'product_id' => $product['product_id'],
             'type' => null,
-            'mark' => $product['mark'],
+            'mark' => null,
             'qty' => $product['qty'],
             'male_accepted_qty' => $product['male_accepted_qty'],
             'female_accepted_qty' => $product['female_accepted_qty'],

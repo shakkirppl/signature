@@ -61,3 +61,24 @@
 
 
 @endsection
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    let timeInput = document.querySelector('input[name="time"]');
+
+    timeInput.addEventListener("focus", function() {
+        let currentTime = new Date().toLocaleTimeString("en-US", { 
+            timeZone: "Africa/Dar_es_Salaam",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false 
+        });
+
+        
+        let formattedTime = currentTime.slice(0, 5); 
+
+        timeInput.value = formattedTime;
+    });
+});
+
+</script>

@@ -33,16 +33,17 @@
                    </div>
                 
                   <div class="col-xl-12 col-md-12 col-sm-12 col-12">
-           
-          @if ($errors->any())
-          <div class="alert alert-danger">
-            <ul>
-              @foreach ($errors->all() as $error)
-              <li>{{ $error }}</li>
-              @endforeach
-            </ul>
-          </div><br />
-          @endif
+                  @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+
           
         </div>
                   <form class="form-sample"  action="{{ route('supplier.store') }}" method="post" enctype="multipart/form-data"  >
@@ -62,6 +63,9 @@
                           <label class="col-sm-2 col-form-label required"> Supplier Name</label>
                           <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder=" Name" name="name"  required="true"  value="{{old('name')}}" />
+                            @error('name')
+                            <span class="text-danger">{{ $message }}</span>
+                            @enderror
                           </div>
                         </div>
                       </div>
@@ -77,6 +81,9 @@
                           <label class="col-sm-2 col-form-label required"> Contact No</label>
                           <div class="col-sm-9">
                             <input type="text" class="form-control" placeholder="Contact No" name="contact_number"  required="true" value="{{old('contact_number')}}"  />
+                            @error('contact_number')
+                           <span class="text-danger">{{ $message }}</span>
+                            @enderror
                           </div>
                         </div>
                       </div>
@@ -93,7 +100,10 @@
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label required">State</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="state" />
+                    <input type="text" class="form-control" name="state"  required="true"/>
+                    @error('state')
+                     <span class="text-danger">{{ $message }}</span>
+                   @enderror
                   </div>
                 </div>
               </div>
@@ -101,7 +111,7 @@
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label required">Country</label>
                   <div class="col-sm-9">
-                    <input type="text" class="form-control" name="country" />
+                    <input type="text" class="form-control" name="country"   required="true"/>
                   </div>
                 </div>
               </div>
@@ -110,8 +120,10 @@
                         <div class="form-group row">
                           <label class="col-sm-2 col-form-label required"> Credit Limit Days</label>
                           <div class="col-sm-9">
-                          <input type="text" class="form-control"  name="credit_limit_days"  required="true" value="{{old('credit_limit_days')}}"  />
-
+                          <input type="text" class="form-control"  name="credit_limit_days"  required="true" value="{{old('credit_limit_days')}}"  required="true"  />
+                          @error('credit_limit_days')
+                        <span class="text-danger">{{ $message }}</span>
+                         @enderror
                           </div>
                         </div>
                       </div>   

@@ -78,12 +78,16 @@ class PurchaseOrder extends Model
     }
 
     public function shipment() {
-        return $this->belongsTo(Shipment::class, 'shipment_id'); // Ensure the column name is correct
+        return $this->belongsTo(Shipment::class, 'shipment_id'); 
     }
     
     
     public function salesOrder() {
         return $this->belongsTo(SalesOrder::class, 'SalesOrder_id');
+    }
+    public function shipments()
+    {
+        return $this->belongsTo(Shipment::class, 'shipment_id');
     }
     
 }

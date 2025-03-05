@@ -56,6 +56,33 @@ button.remove-row {
                                     @endforeach
                                 </select>
                             </div>
+
+                            <div class="col-md-4">
+    <label for="shipment_id" class="form-label">Shipment No:</label>
+    <select name="shipment_id" id="shipment_id" class="form-control" required>
+        <option value="">Select Shipment No</option>
+        @foreach ($shipments as $shipment)
+            <option value="{{ $shipment->id }}" 
+                {{ $shipment->id == $purchaseOrder->shipment_id ? 'selected' : '' }}>
+                {{ $shipment->shipment_no }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div class="col-md-4">
+    <label for="SalesOrder_id" class="form-label">Sales Order No:</label>
+    <select name="SalesOrder_id" id="SalesOrder_id" class="form-control" required>
+        <option value="">Select Sales No</option>
+        @foreach ($SalesOrders as $SalesOrder)
+            <option value="{{ $SalesOrder->id }}" 
+                {{ $SalesOrder->id == $purchaseOrder->SalesOrder_id ? 'selected' : '' }}>
+                {{ $SalesOrder->order_no }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
                         </div>
                         <div class="table-responsive">
                         <table class="table table-bordered">
