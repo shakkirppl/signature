@@ -93,8 +93,8 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 150px;"></td>
-                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}" style="width: 150px;"></td>
+                                    <td><input type="number" name="products[{{ $key }}][qty]" class="form-control qty" value="{{ $detail->qty }}" step="0.01" required style="width: 150px;"></td>
+                                    <td><input type="number" name="products[{{ $key }}][rate]" class="form-control rate" value="{{ $detail->rate }}"  step="0.01" style="width: 150px;"></td>
                                     <td><input type="number" name="products[{{ $key }}][total]" class="form-control total" value="{{ $detail->qty * $detail->rate }}" readonly style="width: 150px;"></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
@@ -112,7 +112,7 @@ button.remove-row {
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $offalSale->advance_amount }}">
+                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $offalSale->advance_amount }}" step="0.01">
                             </div>
                         </div>
                         <div class="row mt-3">

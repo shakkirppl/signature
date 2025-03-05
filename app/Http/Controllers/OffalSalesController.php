@@ -44,8 +44,8 @@ class OffalSalesController extends Controller
                          'grand_total' => 'required|numeric|min:0',
                          'products' => 'required|array',
                          'products.*.product_id' => 'required|exists:product,id',
-                         'products.*.qty' => 'required|numeric|min:1',
-                         'products.*.rate' => 'required|numeric|min:0',
+                         'products.*.qty' => 'required|numeric|min:0.01',
+                         'products.*.rate' => 'required|numeric|min:0.01',
                      ]);
                  
                      DB::beginTransaction(); 
@@ -116,8 +116,8 @@ public function update(Request $request, $id)
         'grand_total' => 'required|numeric|min:0',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
-        'products.*.qty' => 'required|numeric|min:1',
-        'products.*.rate' => 'required|numeric|min:0',
+        'products.*.qty' => 'required|numeric|min:0.01',
+        'products.*.rate' => 'required|numeric|min:0.01',
     ]);
 
     DB::beginTransaction();

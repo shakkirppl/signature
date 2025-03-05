@@ -88,8 +88,8 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][qty]" class="form-control qty" value="1" min="1" required style="width: 150px;"></td>
-                                    <td><input type="number" name="products[0][rate]" class="form-control rate" style="width: 150px;"></td>
+                                    <td><input type="number" name="products[0][qty]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
+                                    <td><input type="number" name="products[0][rate]" class="form-control rate"  step="0.01"style="width: 150px;"></td>
                                     <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
@@ -107,7 +107,7 @@ button.remove-row {
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="advance_amount" class="form-label">Advance:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control">
+                                <input type="number" id="advance_amount" name="advance_amount" class="form-control" step="0.01">
                             </div>
                         </div>
                         <div class="row mt-3">

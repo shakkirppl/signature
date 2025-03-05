@@ -47,6 +47,7 @@ class SalesOrderController extends Controller
                          'date' => 'required|date',
                          'customer_id' => 'required|exists:customer,id',
                          'grand_total' => 'required|numeric|min:0',
+                         'products.*.qty' => 'required|numeric|min:0.01',
                      ]);
                  
                      try {
@@ -112,6 +113,7 @@ public function update(Request $request, $id)
         'date' => 'required|date',
         'customer_id' => 'required|exists:customer,id',
         'grand_total' => 'required|numeric|min:0',
+        'products.*.qty' => 'required|numeric|min:0.01',
     ]);
 
     try {

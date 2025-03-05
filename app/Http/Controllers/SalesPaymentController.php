@@ -54,7 +54,7 @@ public function store(Request $request)
         'shipping_agent' => 'nullable|string|min:0',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
-        'products.*.qty' => 'required|numeric|min:1',
+        'products.*.qty' => 'required|numeric|min:0.01',
         'products.*.rate' => 'required|numeric|min:0',
     ]);
 
@@ -122,7 +122,7 @@ public function update(Request $request, $id)
         'shipping_agent' => 'nullable|string|min:0',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
-        'products.*.qty' => 'required|numeric|min:1',
+        'products.*.qty' => 'required|numeric|min:0.01',
         'products.*.rate' => 'required|numeric|min:0',
         'grand_total' => 'required|numeric|min:0',
        

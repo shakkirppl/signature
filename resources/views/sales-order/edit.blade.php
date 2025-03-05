@@ -80,7 +80,7 @@ button.remove-row {
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" min="1" required style="width: 200px;"></td>
+                                        <td><input type="number" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" step="0.01" required style="width: 200px;"></td>
                                         <td><input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" style="width: 200px;"></td>
                                         <td><input type="number" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly step="any" style="width: 200px;"></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
