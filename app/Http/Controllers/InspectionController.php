@@ -51,6 +51,7 @@ public function store(Request $request)
             'products.*.type' => 'nullable|string',  // Ensure type is validated
             'products.*.mark' => 'nullable|string',
             'products.*.qty' => 'required|integer',
+            'products.*.received_qty' => 'required|integer',
             'products.*.male_accepted_qty' => 'required|integer',
             'products.*.female_accepted_qty' => 'required|integer',
             'products.*.male_rejected_qty' => 'nullable|integer',
@@ -84,6 +85,7 @@ public function store(Request $request)
             'type' => null,
             'mark' => null,
             'qty' => $product['qty'],
+            'received_qty' => $product['received_qty'],
             'male_accepted_qty' => $product['male_accepted_qty'],
             'female_accepted_qty' => $product['female_accepted_qty'],
             'male_rejected_qty' => $product['male_rejected_qty'],

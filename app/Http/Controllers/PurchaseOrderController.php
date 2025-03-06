@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\SalesOrder;
+use App\Models\Outstanding;
+use Illuminate\Support\Facades\Log;
 
 
 class PurchaseOrderController extends Controller
@@ -25,11 +27,19 @@ class PurchaseOrderController extends Controller
   
         public function create()
         {
+            $supplierOutstandingBalances = Outstanding::where('account_type', 'supplier')
+            ->select('account_id', DB::raw('SUM(payment) as total_payment, SUM(receipt) as total_receipt'))
+            ->groupBy('account_id')
+            ->get()
+            ->mapWithKeys(function($item) {
+                $balance = $item->total_payment - $item->total_receipt;
+                return [$item->account_id => number_format($balance, 2, '.', '')];
+            });
             $suppliers = Supplier::all(); 
             $products = Product::all();
             $SalesOrders=SalesOrder::all();
             $shipments = Shipment::where('shipment_status', 0)->get();
-            return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments','SalesOrders'));
+            return view('purchase-order.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments','SalesOrders','supplierOutstandingBalances'));
         }
     
         public function invoice_no(){
@@ -217,6 +227,24 @@ class PurchaseOrderController extends Controller
 }
 
 
+public function getOutstandingBalance($supplierId)
+{
+    try {
+        $outstanding = Outstanding::where('account_id', $supplierId)
+            ->selectRaw('SUM(payment) as total_payment, SUM(receipt) as total_receipt')
+            ->first();
+
+        if ($outstanding) {
+            $balance = $outstanding->total_payment - $outstanding->total_receipt;
+            return response()->json(['balance' => number_format($balance, 2)]);
+        } else {
+            return response()->json(['balance' => '0.00']);
+        }
+    } catch (\Exception $e) {
+        Log::error('Error fetching outstanding balance: ' . $e->getMessage());
+        return response()->json(['error' => 'Something went wrong'], 500);
+    }
+}
 
     
 }

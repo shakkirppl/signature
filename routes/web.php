@@ -87,6 +87,7 @@ Route::post('supplier/{id}', [SupplierController::class, 'update'])->name('suppl
 Route::get('supplier/delete/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
 
 
+
 Route::get('customer-create', [CustomerController::class, 'create'])->name('customer.create');
 Route::post('customer-store', [CustomerController::class, 'store'])->name('customer.store');
 Route::get('customer-index', [CustomerController::class, 'index'])->name('customer.index');
@@ -188,6 +189,7 @@ Route::get('purchase-order-delete/{id}', [PurchaseOrderController::class, 'destr
 Route::get('purchase-order-report', [PurchaseOrderController::class, 'report'])->name('purchase-order.report');
 Route::get('/purchase-order/{id}/view', [PurchaseOrderController::class, 'reportview'])->name('purchase-order.reportview');
 
+Route::get('/get-outstanding/{supplierId}', [PurchaseOrderController::class, 'getOutstandingBalance']);
 
 
 
@@ -344,7 +346,7 @@ Route::get('customer-outstanding', [OutstandingController::class, 'customerOutst
 Route::get('animal-receiving-note', [AnimalReceivingNoteController::class, 'create']);
 
 
-Route::get('postmortem-report-create', [PostMortemReportController::class, 'create']);
+Route::get('postmortem-report-create', [PostMortemReportController::class, 'create'])->name('postmortem.create');;
 Route::post('postmortem-report-store', [PostMortemReportController::class, 'store'])->name('postmortem.store');
 
 

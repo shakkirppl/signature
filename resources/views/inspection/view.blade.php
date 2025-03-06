@@ -71,7 +71,8 @@ button.remove-row {
                             <thead class="table-light">
                                 <tr>
                                     <th>Product</th>
-                                    <th>Quantity</th>
+                                    <th>Actual Quantity</th>
+                                    <th>Received Quantity</th>
                                     <th>Male</th>
                                     <th>Female</th>
                                     <!-- <th>Mark</th> -->
@@ -101,10 +102,13 @@ button.remove-row {
                 <input type="text" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}"  style="width: 150px;">
             </td>
             <td>
-                <input type="text" name="products[{{ $index }}][male]" class="form-control male" value="{{ $detail->male }}"  style="width: 150px;">
+                <input type="text" name="products[{{ $index }}][received_qty]" class="form-control qty" value="{{ $detail->received_qty }}"  style="width: 150px;">
             </td>
             <td>
-                <input type="number" name="products[{{ $index }}][female]" class="form-control female" value="{{ $detail->female }}" min="1" style="width: 150px;">
+                <input type="text" name="products[{{ $index }}][male]" class="form-control male" value=""  style="width: 150px;">
+            </td>
+            <td>
+                <input type="number" name="products[{{ $index }}][female]" class="form-control female" value="" min="1" style="width: 150px;">
             </td>
             <!-- <td>
                 <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" style="width: 150px;">
@@ -171,6 +175,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
    
 });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.qty').forEach(input => {
+        input.addEventListener('input', function () {
+            let row = this.closest('tr');
+            let receivedQty = parseInt(row.querySelector('[name^="products"][name$="[received_qty]"]').value) || 0;
+
+            // Calculate Male (75%) and Female (25%) distribution
+            let maleQtyField = row.querySelector('[name^="products"][name$="[male]"]');
+            let femaleQtyField = row.querySelector('[name^="products"][name$="[female]"]');
+
+            if (maleQtyField && femaleQtyField) {
+                maleQtyField.value = Math.floor(receivedQty * 0.75); // 75% of received quantity
+                femaleQtyField.value = Math.ceil(receivedQty * 0.25); // 25% of received quantity
+            }
+        });
+    });
+});
+
 </script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {

@@ -46,14 +46,14 @@ button.remove-row {
                                 <input type="date" class="form-control" id="date" name="date" required>
                             </div>
                             <div class="col-md-4">
-                                <label for="supplier_id" class="form-label">Suppliers:</label>
-                                <select name="supplier_id" id="supplier_id" class="form-control" required>
-                                    <option value="">Select Suppliers</option>
-                                    @foreach ($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
+    <label for="supplier_id" class="form-label">Suppliers:</label>
+    <select name="supplier_id" id="supplier_id" class="form-control" required>
+        <option value="">Select Suppliers</option>
+        @foreach ($suppliers as $supplier)
+            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+        @endforeach
+    </select>
+</div>
                             
                             <div class="col-md-4">
                             <label for="shipment_id" class="form-label">Shipment No:</label>
@@ -119,6 +119,13 @@ button.remove-row {
                                   value="" step="0.01" min="0">
                
                             </div>
+
+                            <div class="col-md-3">
+    <label for="outstanding_balance" class="form-label">Outstanding Balance:</label>
+    <input type="text" id="outstanding_balance" class="form-control" readonly>
+    <small id="outstanding_error" class="text-danger" style="display:none;"></small> <!-- Error Message -->
+</div>
+
                         </div>
                         
                         <button type="submit" class="btn btn-primary mt-4">Submit</button>
@@ -186,4 +193,39 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 </script>
+<script>
+    // Preload supplier outstanding balances
+    var supplierOutstandingBalances = @json($supplierOutstandingBalances);
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#supplier_id').change(function () {
+        var supplierId = $(this).val();
+        // Hide any error messages if using an error field
+        $('#outstanding_error').hide();
+
+        if (supplierId && supplierOutstandingBalances[supplierId] !== undefined) {
+            $('#outstanding_balance').val(supplierOutstandingBalances[supplierId]);
+        } else {
+            $('#outstanding_balance').val('0.00');
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
