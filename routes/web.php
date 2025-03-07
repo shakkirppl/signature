@@ -188,7 +188,6 @@ Route::post('purchase-order-update/{id}', [PurchaseOrderController::class, 'upda
 Route::get('purchase-order-delete/{id}', [PurchaseOrderController::class, 'destroy'])->name('purchase-order.destroy');
 Route::get('purchase-order-report', [PurchaseOrderController::class, 'report'])->name('purchase-order.report');
 Route::get('/purchase-order/{id}/view', [PurchaseOrderController::class, 'reportview'])->name('purchase-order.reportview');
-
 Route::get('/get-outstanding/{supplierId}', [PurchaseOrderController::class, 'getOutstandingBalance']);
 
 
@@ -348,6 +347,13 @@ Route::get('animal-receiving-note', [AnimalReceivingNoteController::class, 'crea
 
 Route::get('postmortem-report-create', [PostMortemReportController::class, 'create'])->name('postmortem.create');;
 Route::post('postmortem-report-store', [PostMortemReportController::class, 'store'])->name('postmortem.store');
+Route::get('postmortem-report-index', [PostMortemReportController::class, 'index'])->name('postmortem.index');
+Route::get('postmortem/edit/{id}', [PostMortemReportController::class, 'edit'])->name('postmortem.edit');
+Route::post('postmortem/update/{id}', [PostMortemReportController::class, 'update'])->name('postmortem.update');
+Route::get('/postmortem/print/{id}', [PostMortemReportController::class, 'print'])->name('postmortem.print');
+
+
+
 
 
 

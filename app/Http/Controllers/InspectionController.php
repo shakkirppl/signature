@@ -12,6 +12,8 @@ use App\Models\InspectionDetail;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
+use App\Models\InvoiceNumber;
+
 
 
 
@@ -25,6 +27,16 @@ class InspectionController extends Controller
     return view('inspection.index', compact('inspections'));
 }
 
+public function invoice_no(){
+    try {
+         
+     return $invoice_no =  InvoiceNumber::ReturnInvoice('inspection_no',Auth::user()->store_id=1);
+              } catch (\Exception $e) {
+     
+        return $e->getMessage();
+      }
+    }
+
 
 public function view($id)
 {
@@ -33,16 +45,17 @@ public function view($id)
     $products = Product::all();   
     $rejectReasons=RejectMaster::all();
     $shipments = Shipment::where('shipment_status', 0)->where('id',$purchaseOrder->shipment_id)->get();
-    return view('inspection.view', compact('purchaseOrder', 'suppliers', 'products','rejectReasons','shipments'));
+    return view('inspection.view', compact('purchaseOrder', 'suppliers', 'products','rejectReasons','shipments'),[ 'invoice_no' => $this->invoice_no()]);
 }
 
 
 public function store(Request $request)
 {
     // Validate form data
-
+    // return $request->all();
         $validated = $request->validate([
             'order_no' => 'required|string',
+            'inspection_no' => 'required|string',
             'purchaseOrder_id'=>'required',
             'date' => 'required|date',
             'supplier_id' => 'required|exists:supplier,id',
@@ -67,6 +80,7 @@ public function store(Request $request)
     // Create the inspection record
     $inspection = Inspection::create([
         'purchaseOrder_id' => $validated['purchaseOrder_id'],
+        'inspection_no'=>$validated['inspection_no'],
         'order_no' => $validated['order_no'],
         'shipment_id' => $validated['shipment_id'],
         'date' => $validated['date'],
@@ -76,7 +90,7 @@ public function store(Request $request)
         'status' => 1,
         'purchase_status' => 0,
     ]);
-
+    InvoiceNumber::updateinvoiceNumber('inspection_no', 1);
     // Loop through the product details and create InspectionDetail records
     foreach ($validated['products'] as $product) {
         InspectionDetail::create([

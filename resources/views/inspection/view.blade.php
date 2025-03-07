@@ -35,6 +35,10 @@ button.remove-row {
                     <form action="{{ route('inspection.store') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
+                        <div class="col-md-3">
+                               <label for="inspection_no"><strong>Inspection No:</strong></label>
+                                <input type="text" name="inspection_no" id="inspection_no" class="form-control" value="{{$invoice_no}}" readonly>
+                        </div>
                             <div class="col-md-3">
                                 <label for="code" class="form-label">Order No:</label>
                                 <input type="text" class="form-control" id="code" name="order_no" value="{{ $purchaseOrder->order_no }}" readonly>

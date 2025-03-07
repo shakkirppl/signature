@@ -103,7 +103,7 @@ table textarea {
                 <tr>
                 <tr>
                     <td>
-                        <textarea name="oragan_type[]" readonly rows="2">{{ $organ }}</textarea>
+                        <textarea name="organ_type[]" readonly rows="2">{{ $organ }}</textarea>
                     </td>
                     <td>
                         <textarea name="organs_approved[]" rows="2"></textarea>
