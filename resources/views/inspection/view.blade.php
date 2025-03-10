@@ -48,7 +48,7 @@ button.remove-row {
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" value="" required>
                             </div>
-                            <div class="col-md-3">
+                            <!-- <div class="col-md-3">
                                 <label for="supplier_id" class="form-label">Supplier:</label>
                                 <select name="supplier_id" id="supplier_id" class="form-control" required>
                                     <option value="">Select suppliers</option>
@@ -58,16 +58,31 @@ button.remove-row {
                                         </option>
                                     @endforeach
                                 </select>
+                            </div> -->
+                            <div class="col-md-3">
+                               <label for="supplier_name" class="form-label">Supplier:</label>
+                                <input type="text" class="form-control" id="supplier_name" name="supplier_name" value="{{ $purchaseOrder->supplier->name }}" readonly>
+                               <input type="hidden" name="supplier_id" value="{{ $purchaseOrder->supplier_id }}">
                             </div>
 
-                            <div class="col-md-3">
+                           <div class="col-md-3">
+                           <label for="shipment_no" class="form-label">Shipment No:</label>
+                             <input type="text" class="form-control" id="shipment_no" name="shipment_no" value="{{ $purchaseOrder->shipment->shipment_no }}" readonly>
+                            <input type="hidden" name="shipment_id" value="{{ $purchaseOrder->shipment_id }}">
+                          </div>
+
+
+
+                            <!-- <div class="col-md-3">
                             <label for="shipment_id" class="form-label">Shipment No:</label>
                                 <select name="shipment_id" id="shipment_id" class="form-control" required>
                                     @foreach ($shipments as $shipment)
                                         <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
                                     @endforeach
                                 </select>
-                            </div>
+                            </div> -->
+                           
+
 
                         </div>
                         <div class="table-responsive">
