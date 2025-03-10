@@ -64,7 +64,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group row">
                                  <label class="col-sm-2 col-form-label required">Type</label> 
                               <div class="col-sm-9">
@@ -75,7 +75,7 @@
                                 </select>
                         </div>
                     </div>
-                </div>
+                </div> -->
                            <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label required">GL</label>

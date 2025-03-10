@@ -24,7 +24,7 @@
 
                     <form class="form-sample" action="{{ route('bank-master.update', $bankMaster->id) }}" method="POST">
                         @csrf
-                        @method('PUT')  <!-- To indicate that it's an update request -->
+                        @method('POST')  <!-- To indicate that it's an update request -->
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <!-- <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label required">Type</label>
                                     <div class="col-sm-9">
@@ -62,7 +62,7 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label required">GL</label>
