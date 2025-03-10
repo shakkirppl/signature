@@ -16,7 +16,7 @@ class LocalCustomerController extends Controller
     public function invoice_no(){
         try {
              
-         return $invoice_no =  InvoiceNumber::ReturnInvoice('local_customer',Auth::user()->store_id=1);
+         return $invoice_no =  InvoiceNumber::ReturnInvoice('local_customer',1);
                   } catch (\Exception $e) {
          
             return $e->getMessage();

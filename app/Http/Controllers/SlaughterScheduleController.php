@@ -29,7 +29,7 @@ class SlaughterScheduleController extends Controller
     public function invoice_no(){
         try {
              
-         return $invoice_no =  InvoiceNumber::ReturnInvoice('slaughter_no',Auth::user()->store_id=1);
+         return $invoice_no =  InvoiceNumber::ReturnInvoice('slaughter_no',1);
                   } catch (\Exception $e) {
          
             return $e->getMessage();

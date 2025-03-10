@@ -75,7 +75,7 @@ public function Confirm($id)
 public function invoice_no(){
     try {
          
-     return $invoice_no =  InvoiceNumber::ReturnInvoice('purchase_conformation',Auth::user()->store_id=1);
+     return $invoice_no =  InvoiceNumber::ReturnInvoice('purchase_conformation',1);
               } catch (\Exception $e) {
      
         return $e->getMessage();

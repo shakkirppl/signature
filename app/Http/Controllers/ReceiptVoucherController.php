@@ -39,7 +39,7 @@ class ReceiptVoucherController extends Controller
     public function invoice_no(){
         try {
              
-         return $invoice_no =  InvoiceNumber::ReturnInvoice('receipt_voucher',Auth::user()->store_id=1);
+         return $invoice_no =  InvoiceNumber::ReturnInvoice('receipt_voucher',1);
                   } catch (\Exception $e) {
          
             return $e->getMessage();

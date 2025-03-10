@@ -31,6 +31,7 @@ use App\Http\Controllers\AnimalReceivingNoteController;
 use App\Http\Controllers\PostMortemReportController;
 use App\Http\Controllers\AnteMortemReportController;
 use App\Http\Controllers\SupplierAdvanceController;
+use App\Http\Controllers\DeathAnimalController;
 
 
 
@@ -368,6 +369,17 @@ Route::get('supplier-advance-index', [SupplierAdvanceController::class, 'index']
 Route::get('/get-suppliers', [SupplierAdvanceController::class, 'getSuppliersByShipment'])->name('getSuppliersByShipment');
 Route::get('/get-orders', [SupplierAdvanceController::class, 'getOrdersBySupplier'])->name('getOrdersBySupplier');
 Route::post('supplier-advance-store', [SupplierAdvanceController::class, 'store'])->name('supplieradvance.store');
+
+
+
+
+Route::get('/fetch-products', [DeathAnimalController::class, 'fetchProducts'])->name('fetch.products');
+Route::post('/death-animal/store', [DeathAnimalController::class, 'store'])->name('deathanimal.store');
+Route::get('/death-animal/create', [DeathAnimalController::class, 'create'])->name('deathanimal.create');
+Route::get('/get-suppliers-by-shipment', [DeathAnimalController::class, 'getSuppliersByShipment'])->name('inspection.getSuppliersByShipment');
+
+
+
 
 
 

@@ -65,6 +65,7 @@
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-order-index')}}">Purchase order</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection </a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/death-animal/create')}}">Death Animal</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('postmortem-report-create')}}">Postmortem Report</a></li> 

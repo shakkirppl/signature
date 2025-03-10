@@ -9,7 +9,7 @@ class Inspection extends Model
 {
     use HasFactory;
     protected $table = 'inspection';
-    protected $fillable = ['purchaseOrder_id','order_no', 'date', 'supplier_id','store_id','user_id','status','purchase_status','shipment_id','inspection_no'];
+    protected $fillable = ['purchaseOrder_id','order_no', 'date', 'supplier_id','store_id','user_id','status','purchase_status','shipment_id','inspection_no','total_death_qty'];
 
 
     public function details()
@@ -43,4 +43,6 @@ class Inspection extends Model
     {
         return $this->belongsTo(Shipment::class, 'shipment_id');
     }
+
+    
 }

@@ -35,7 +35,7 @@ class SupplierAdvanceController extends Controller
 public function invoice_no(){
     try {
          
-     return $invoice_no =  InvoiceNumber::ReturnInvoice('supplier_advance',Auth::user()->store_id=1);
+     return $invoice_no =  InvoiceNumber::ReturnInvoice('supplier_advance',1);
               } catch (\Exception $e) {
      
         return $e->getMessage();

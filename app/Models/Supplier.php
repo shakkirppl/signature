@@ -24,4 +24,9 @@ public function purchaseOrders()
 }
 
 
+public function inspection()
+    {
+        return $this->hasMany(Inspection::class, 'supplier_id', 'id');
+    }
+
 }

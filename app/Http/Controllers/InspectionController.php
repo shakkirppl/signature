@@ -27,15 +27,6 @@ class InspectionController extends Controller
     return view('inspection.index', compact('inspections'));
 }
 
-public function invoice_no(){
-    try {
-         
-     return $invoice_no =  InvoiceNumber::ReturnInvoice('inspection_no',Auth::user()->store_id=1);
-              } catch (\Exception $e) {
-     
-        return $e->getMessage();
-      }
-    }
 
 
 public function view($id)
