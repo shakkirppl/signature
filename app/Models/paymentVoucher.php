@@ -12,20 +12,7 @@ class paymentVoucher extends Model
     protected $table = 'payment_voucher';
     protected $fillable = ['code', 'date','name','coa_id','type','amount','description','bank_id','store_id','user_id','employee_id'];
 
-    public function invoice_no()
-    {
-        try {
-            $invoice_no = InvoiceNumber::ReturnInvoice('payment_voucher', Auth::user()->store_id = 1);
-    
-            // Update the invoice number in the database
-            InvoiceNumber::updateinvoiceNumber('payment_voucher', Auth::user()->store_id = 1);
-            
-            return $invoice_no;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-      
-    }
+   
 
 
     public function bank()

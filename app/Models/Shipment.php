@@ -13,19 +13,7 @@ class Shipment extends Model
 
 
 
-    public function invoice_no()
-    {
-        try {
-            $invoice_no = InvoiceNumber::ReturnInvoice('shipment', Auth::user()->store_id = 1);
-    
-            InvoiceNumber::updateinvoiceNumber('shipment', Auth::user()->store_id = 1);
-            
-            return $invoice_no;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-      
-    }
+  
 
     public function supplier()
     {

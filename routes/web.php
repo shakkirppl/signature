@@ -281,6 +281,8 @@ Route::get('/check-weight-calculation', [WeightCalculatorController::class, 'che
 Route::get('/get-existing-weight-calculation', [WeightCalculatorController::class, 'getExistingWeightCalculation'])->name('get.existing.weight.calculation');
 Route::post('/update-weight-calculation', [WeightCalculatorController::class, 'updateWeightCalculation'])->name('update.weight.calculation');
 Route::get('/get-supplier-products', [WeightCalculatorController::class, 'getSupplierProducts'])->name('get.supplier.products');
+Route::get('/get-purchase-order-id', [WeightCalculatorController::class, 'getPurchaseOrderId'])->name('get.purchase.order.id');
+
 
 
     

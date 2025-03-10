@@ -27,20 +27,7 @@ class OffalSales extends Model
         return $this->belongsTo(Localcustomer::class, 'lo_customer_id');
     }
 
-    public function invoice_no()
-    {
-        try {
-            $invoice_no = InvoiceNumber::ReturnInvoice('offal-sales', Auth::user()->store_id = 1);
-    
-            // Update the invoice number in the database
-            InvoiceNumber::updateinvoiceNumber('offal-sales', Auth::user()->store_id = 1);
-            
-            return $invoice_no;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-      
-    }
+   
 
     public function details()
     {

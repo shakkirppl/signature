@@ -15,11 +15,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseExpense;
 use App\Models\AccountHead;
 use App\Models\WeightCalculatorDetail;
-
-
 use Carbon\Carbon;
-
 use App\Models\Supplier;
+
 
 class PurchaseConformationController extends Controller
 {
@@ -38,7 +36,7 @@ public function Confirm($id)
     $WeightCalculatorMaster = WeightCalculatorMaster::with(['details.product', 'supplier', 'shipment'])->findOrFail($id);
     
     // Fetch purchase order
-    $order = PurchaseOrder::find($WeightCalculatorMaster->purchaseOrder_id);
+     $order = PurchaseOrder::find($WeightCalculatorMaster->purchaseOrder_id);
     
     // Fetch related COA (Chart of Accounts)
     $coa = AccountHead::whereIn('parent_id', function ($query) {

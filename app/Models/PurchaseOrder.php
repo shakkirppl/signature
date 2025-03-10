@@ -26,25 +26,12 @@ class PurchaseOrder extends Model
 ];
 
 
-    public function invoice_no()
-    {
-        try {
-            $invoice_no = InvoiceNumber::ReturnInvoice('purchase_order', Auth::user()->store_id = 1);
-    
-            // Update the invoice number in the database
-            InvoiceNumber::updateinvoiceNumber('purchase_order', Auth::user()->store_id = 1);
-            
-            return $invoice_no;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-      
-    }
+  
 
 
     public function supplier()
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Supplier::class,'supplier_id');
     }
     
    

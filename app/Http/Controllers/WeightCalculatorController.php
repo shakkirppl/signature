@@ -80,7 +80,7 @@ class WeightCalculatorController extends Controller
                         'weight' => 'required|array', // Ensure weight inputs exist
                         'weight.*' => 'required|numeric|min:0',
                         'inspection.*' => 'required|exists:inspection,id',
-                        'purchaseOrder_id'=>'required',
+                        'purchaseOrder_id'=>'required|exists:purchase_order,id',
 
                      ]);
                  
@@ -165,25 +165,6 @@ public function getSuppliersByShipment($shipment_id) {
 
 
 
-// public function getProductsBySupplier(Request $request)
-// {
-//     $supplier_id = $request->supplier_id;
-//     $shipment_id = $request->shipment_id;
-
-//     $products = InspectionDetail::whereHas('inspection', function ($query) use ($supplier_id, $shipment_id) {
-//         $query->where('supplier_id', $supplier_id)->where('shipment_id', $shipment_id);
-//     })
-//     ->with('product')
-//     ->get();
-
-//     return response()->json($products->map(function ($detail) {
-//         return [
-//             'id' => $detail->product->id,
-//             'product_name' => $detail->product->product_name
-            
-//         ];
-//     }));
-// }
 
 
 public function getSupplierProducts(Request $request)
@@ -210,6 +191,24 @@ public function checkExistingWeightCalculation(Request $request)
 
     return response()->json(['exists' => $exists]);
 }
+
+public function getPurchaseOrderId(Request $request)
+{
+    $supplier_id = $request->supplier_id;
+    $shipment_id = $request->shipment_id;
+
+    $inspection = Inspection::where('shipment_id', $shipment_id)
+        ->where('supplier_id', $supplier_id)
+        ->first();
+
+    if ($inspection) {
+        return response()->json(['purchaseOrder_id' => $inspection->purchaseOrder_id]);
+    } else {
+        return response()->json(['purchaseOrder_id' => null]);
+    }
+}
+
+
 
 
 public function getExistingWeightCalculation(Request $request)

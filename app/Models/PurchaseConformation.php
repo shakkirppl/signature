@@ -42,19 +42,5 @@ class PurchaseConformation extends Model
 }
 
 
-public function invoice_no()
-{
-    try {
-        $invoice_no = InvoiceNumber::ReturnInvoice('purchase_conformation', Auth::user()->store_id = 1);
-
-        // Update the invoice number in the database
-        InvoiceNumber::updateinvoiceNumber('purchase_conformation', Auth::user()->store_id = 1);
-        
-        return $invoice_no;
-    } catch (\Exception $e) {
-        return $e->getMessage();
-    }
-  
-}
 
 }

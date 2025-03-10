@@ -37,8 +37,8 @@ button.remove-row {
                    <div class="col-md-4">
                         <label for="weight_code">Weight Code</label>
                         <input type="text" class="form-control" name="weight_code" value="{{$invoice_no}}" readonly>
-                        <input type="hidden" class="form-control" id="inspection_id" name="inspection_id" value="{{ $inspection->id ?? '' }}" >
-                       <input type="hidden" class="form-control" id="purchaseOrder_id" name="purchaseOrder_id" value="{{ $inspection->purchaseOrder_id ?? '' }}" >
+                        <input type="hidden" class="form-control" id="inspection_id" name="inspection_id" value="{{ $inspection->id }}" >
+                        <input type="hidden" class="form-control" id="purchaseOrder_id" name="purchaseOrder_id">
 
 
 
@@ -157,8 +157,8 @@ $(document).ready(function() {
    
 
    
-
-    function fetchEditForm(supplier_id, shipment_id) {
+supplier_id
+    function fetchEditForm(, shipment_id) {
         $.ajax({
             url: "{{ route('get.existing.weight.calculation') }}",
             type: "GET",
@@ -178,12 +178,13 @@ $(document).ready(function() {
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
- $(document).ready(function () {
+$(document).ready(function () {
     $('#supplierDropdown').change(function () {
         let supplier_id = $(this).val();
         let shipment_id = "{{ $shipment_id }}";
 
         if (supplier_id) {
+            // Fetch Supplier Products
             $.ajax({
                 url: "{{ route('get.supplier.products') }}",
                 type: "GET",
@@ -215,17 +216,31 @@ $(document).ready(function() {
                         `;
                     });
                     
-                    // Insert the rows inside the existing table
                     $('#productDetails').html(rows);
-
-                    // Attach event listener to new weight input fields
                     $('.weight-input').on('input', calculateTotalWeight);
+                }
+            });
+
+            // Fetch Purchase Order ID
+            $.ajax({
+                url: "{{ route('get.purchase.order.id') }}",
+                type: "GET",
+                data: { supplier_id: supplier_id, shipment_id: shipment_id },
+                success: function (response) {
+                    if (response.purchaseOrder_id) {
+                        $('#purchaseOrder_id').val(response.purchaseOrder_id);
+                    } else {
+                        $('#purchaseOrder_id').val('');
+                    }
                 }
             });
         } else {
             $('#productDetails').html('');
+            $('#purchaseOrder_id').val('');
         }
     });
+
+
 
     function calculateTotalWeight() {
         let totalWeight = 0;

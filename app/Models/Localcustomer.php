@@ -13,19 +13,6 @@ class Localcustomer extends Model
     'store_id',
 ];
 
-public function invoice_no()
-    {
-        try {
-            $invoice_no = InvoiceNumber::ReturnInvoice('local_customer', Auth::user()->store_id = 1);
-    
-            // Update the invoice number in the database
-            InvoiceNumber::updateinvoiceNumber('local_customer', Auth::user()->store_id = 1);
-            
-            return $invoice_no;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-      
-    }
+
 
 }
