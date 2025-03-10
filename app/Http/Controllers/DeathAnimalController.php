@@ -7,6 +7,9 @@ use App\Models\Inspection;
 use App\Models\Supplier;
 use App\Models\InspectionDetail;
 use App\Models\Shipment;
+use App\Models\DeathAnimalMaster;
+use App\Models\DeathAnimalDetail;
+use Illuminate\Support\Facades\Auth;
 
 
 class DeathAnimalController extends Controller
@@ -37,30 +40,8 @@ class DeathAnimalController extends Controller
     
         return response()->json(['products' => $products, 'inspection' => $inspection]);
     }
-    public function store(Request $request)
-    {
-        $inspection = Inspection::findOrFail($request->inspection_id);
-    
-        foreach ($request->products as $product_id => $productData) {
-            $inspectionDetail = InspectionDetail::where('inspection_id', $inspection->id)
-                ->where('product_id', $product_id)
-                ->first();
-    
-            if ($inspectionDetail) {
-                $inspectionDetail->update([
-                    'death_male_qty' => $inspectionDetail->death_male_qty + $productData['death_male_qty'],
-                    'death_female_qty' => $inspectionDetail->death_female_qty + $productData['death_female_qty'],
-                ]);
-            }
-        }
-    
-        $totalDeathQty = InspectionDetail::where('inspection_id', $inspection->id)
-            ->sum(DB::raw('death_male_qty + death_female_qty'));
-    
-        $inspection->update(['total_death_qty' => $totalDeathQty]);
-    
-        return redirect()->back()->with('success', 'Death details recorded successfully.');
-    }
+  
+
        
     public function getSuppliersByShipment(Request $request)
     {
@@ -75,10 +56,90 @@ class DeathAnimalController extends Controller
     
         return response()->json(['suppliers' => $suppliers]);
     }
+
+
+    public function store(Request $request)
+{
+    // return $request->all();
+    // Validate input data
+    $validated = $request->validate([
+        'date' => 'required|date',
+        'shipment_no' => 'required|exists:shipment,id',
+        'supplier_id' => 'required|exists:supplier,id',
+        'inspection_id' => 'required|exists:inspection,id',
+        'products' => 'required|array',
+        'products.*.death_male_qty' => 'nullable|integer|min:0',
+        'products.*.death_female_qty' => 'nullable|integer|min:0',
+    ]);
+
+    // Store Death Animal Master record
+    $deathAnimalMaster = DeathAnimalMaster::create([
+        'date' => $validated['date'],
+        'shipment_id' => $validated['shipment_no'],
+        'supplier_id' => $validated['supplier_id'],
+        'inspection_id' => $validated['inspection_id'],
+        'user_id' => Auth::id(),
+        'store_id' => 1,
+    ]);
+// Store Death Animal Details & Update Inspection Details
+foreach ($validated['products'] as $product_id => $product) {
+    $deathMaleQty = $product['death_male_qty'] ?? 0;
+    $deathFemaleQty = $product['death_female_qty'] ?? 0;
+    $totalDeathQty = $deathMaleQty + $deathFemaleQty;
+
+    // Store in Death Animal Detail Table
+    DeathAnimalDetail::create([
+        'death_animal_master_id' => $deathAnimalMaster->id,
+        'product_id' => $product_id,
+        'death_male_qty' => $deathMaleQty,
+        'death_female_qty' => $deathFemaleQty,
+        'total_death_qty' => $totalDeathQty,
+    ]);
+
+    InspectionDetail::where('inspection_id', $validated['inspection_id'])
+        ->where('product_id', $product_id)
+        ->update([
+            'death_male_qty' => \DB::raw("death_male_qty + $deathMaleQty"),  
+            'death_female_qty' => \DB::raw("death_female_qty + $deathFemaleQty")
+        ]);
+}
+
+    return redirect()->route('death-animal.index')->with('success', 'Death Animal and Inspection records updated successfully.');
+}
+
     
     
+public function index()
+{
+    $deathAnimals = DeathAnimalMaster::with(['shipment', 'supplier', 'inspection',])->get();
+    return view('death-animal.index', compact('deathAnimals'));
+}   
     
+public function destroy($id)
+{
+    $deathAnimal = DeathAnimalMaster::findOrFail($id);
     
+    // Fetch related DeathAnimalDetails
+    $deathDetails = DeathAnimalDetail::where('death_animal_master_id', $id)->get();
+
+    foreach ($deathDetails as $detail) {
+        // Update Inspection Detail (Subtract death quantities)
+        InspectionDetail::where('inspection_id', $deathAnimal->inspection_id)
+            ->where('product_id', $detail->product_id)
+            ->update([
+                'death_male_qty' => \DB::raw("GREATEST(death_male_qty - {$detail->death_male_qty}, 0)"),
+                'death_female_qty' => \DB::raw("GREATEST(death_female_qty - {$detail->death_female_qty}, 0)")
+            ]);
+    }
+
+    // Delete Death Animal Details
+    DeathAnimalDetail::where('death_animal_master_id', $id)->delete();
+
+    // Delete Death Animal Master record
+    $deathAnimal->delete();
+
+    return redirect()->route('deathanimal.index')->with('success', 'Death Animal record deleted successfully.');
+}
 
 
 }

@@ -9,7 +9,7 @@ class WeightCalculatorDetail extends Model
 {
     use HasFactory;
     protected $table = 'weight_calculator_detail';
-    protected $fillable = ['id', 'weight_master_id','shipment_id','product_id','quandity','weight','supplier_id','male_accepted_qty','female_accepted_qty','total_accepted_qty'];
+    protected $fillable = ['id', 'weight_master_id','shipment_id','product_id','quandity','weight','supplier_id','male_accepted_qty','female_accepted_qty','total_accepted_qty','male_death_qty','female_death_qty'];
 
 
 

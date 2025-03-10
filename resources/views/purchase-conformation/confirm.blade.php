@@ -121,6 +121,11 @@ button.remove-row {
                                         <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="0" readonly style="width: 200px;">
 
                                         </td>
+                                        <td>
+                                        <input type="hidden" name="products[{{ $index }}][original_total_accepted_qty]" value="{{ $detail->total_accepted_qty }}">
+                                         <input type="hidden" name="products[{{ $index }}][original_total_weight]" value="{{ $detail->weight }}">
+
+                                        </td>
                                        
 
                                         
@@ -133,33 +138,7 @@ button.remove-row {
                         <div class="row">
    
 <div class="col-md-5">
-    <!-- <div class="table-responsive">
-        <table class="table table-bordered mt-3">
-            <thead>
-                <tr>
-                    <th>Expense</th>
-                    <th>Amount</th>
-                </tr>
-            </thead>
-            <tbody id="expense-details">
-                <tr>
-                    <td> <select name="expense_id[]" class="form-control expense-select"  style="width: 150px;">
-                                          <option value="">Select Expenses</option>
-                                              @foreach ($coa as $head)
-                                                <option value="{{ $head->id }}" data-rate="{{ $head->rate }}" >
-                                                   {{ $head->name }}
-                                                </option>
-                                              @endforeach
-                                      </select>
-                    </td>
-              <td><input type="number" name="amount[]" class="form-control expense-amount" value="0"  style="width: 200px;"></td>
-              <td><button type="button" class="btn btn-danger btn-sm remove-expense">X</button></td>
-                </tr>
-              
-            </tbody>
-        </table>
-</div>
-        <button type="button" id="add-expense" class="btn btn-secondary">Add Expense</button> -->
+  
 
     </div>
     <div class="col-md-1"></div>
@@ -182,11 +161,10 @@ button.remove-row {
     </div>
 
     <div class="row mb-3">
-    <div class="col-md-6">
-    <label for="advance_amount" class="form-label">Advanced Amount:</label>
-    <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $totalAdvanceAmount ?? 0 }}" readonly>       
-</div>
-
+        <div class="col-md-6">
+            <label for="advance_amount" class="form-label">Advanced Amount:</label>
+            <input type="number" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly>       
+         </div>
         <div class="col-md-6">
             <label for="balance_amount" class="form-label">Balance Amount:</label readonly>
             <input type="number" id="balance_amount" name="balance_amount" class="form-control" >
@@ -257,55 +235,135 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-    // // Event listener for input changes in expenses
-    // document.getElementById('expense-details').addEventListener('input', function (event) {
-    //     if (event.target.classList.contains('expense-amount')) {
-    //         calculateTotals();
-    //     }
-    // });
-
-    // // Add new expense row
-    // document.getElementById('add-expense').addEventListener('click', function () {
-    //     addExpenseRow();
-    // });
-
-    // function addExpenseRow() {
-    //     const expenseTable = document.getElementById('expense-details');
-    //     const newRow = document.createElement('tr');
-    //     newRow.innerHTML = `
-    //         <td>
-    //             <select name="expense_id[]" class="form-control expense-select" style="width: 150px;">
-    //                 <option value="">Select Expenses</option>
-    //                 ${getExpenseOptions()}
-    //             </select>
-    //         </td>
-    //         <td>
-    //             <input type="number" name="amount[]" class="form-control expense-amount" value="0" style="width: 100px;">
-    //         </td>
-    //         <td>
-    //             <button type="button" class="btn btn-danger btn-sm remove-expense">X</button>
-    //         </td>
-    //     `;
-        
-    //     expenseTable.appendChild(newRow);
-
-    //     newRow.querySelector('.remove-expense').addEventListener('click', function () {
-    //         newRow.remove();
-    //         calculateTotals();
-    //     });
-    // }
-
-    // function getExpenseOptions() {
-    //     let options = '';
-    //     @foreach ($coa as $head)
-    //         options += `<option value="{{ $head->id }}">{{ $head->name }}</option>`;
-    //     @endforeach
-    //     return options;
-    // }
 
     
 
 </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function initializeRows() {
+        document.querySelectorAll('.product-select').forEach(select => {
+            const selectedProduct = select.options[select.selectedIndex].text;
+            const row = select.closest('tr');
+
+            if (selectedProduct === "Live Goat") {
+                addAdditionalRow(row);
+            }
+        });
+    }
+
+    document.getElementById('product-details').addEventListener('change', function (event) {
+        if (event.target.classList.contains('product-select')) {
+            const selectedProduct = event.target.options[event.target.selectedIndex].text;
+            const row = event.target.closest('tr');
+
+            if (selectedProduct === "Live Goat") {
+                addAdditionalRow(row);
+            } else {
+                removeAdditionalRow(row);
+            }
+        }
+    });
+
+    function addAdditionalRow(originalRow) {
+        const nextRow = originalRow.nextElementSibling;
+        if (nextRow && nextRow.classList.contains('additional-live-goat')) {
+            return; // Avoid duplicate rows
+        }
+
+        // Clone the row
+        const newRow = originalRow.cloneNode(true);
+        newRow.classList.add('additional-live-goat'); // Mark as additional row
+
+        // Keep the product name the same
+        let productSelect = newRow.querySelector('.product-select');
+        if (productSelect) {
+            for (let option of productSelect.options) {
+                if (option.text === "Live Goat") {
+                    option.selected = true;
+                    break;
+                }
+            }
+        }
+
+        // Get original values before modification
+        let originalQtyInput = originalRow.querySelector('[name*="[total_accepted_qty]"]');
+        let originalWeightInput = originalRow.querySelector('[name*="[total_weight]"]');
+        
+        if (!originalQtyInput.hasAttribute('data-original')) {
+            originalQtyInput.setAttribute('data-original', originalQtyInput.value);
+        }
+        if (!originalWeightInput.hasAttribute('data-original')) {
+            originalWeightInput.setAttribute('data-original', originalWeightInput.value);
+        }
+
+        // Clear the new row's input values
+        newRow.querySelector('[name*="[total_accepted_qty]"]').value = "";
+        newRow.querySelector('[name*="[total_weight]"]').value = "";
+
+        // Insert new row after original row
+        originalRow.parentNode.insertBefore(newRow, originalRow.nextSibling);
+
+        // Add event listeners to subtract values from the original row
+        newRow.querySelector('[name*="[total_accepted_qty]"]').addEventListener('input', function () {
+            updateOriginalRowQty(originalRow, newRow);
+        });
+
+        newRow.querySelector('[name*="[total_weight]"]').addEventListener('input', function () {
+            updateOriginalRowWeight(originalRow, newRow);
+        });
+    }
+
+    function updateOriginalRowQty(originalRow, newRow) {
+        let originalQtyInput = originalRow.querySelector('[name*="[total_accepted_qty]"]');
+        let newQtyInput = newRow.querySelector('[name*="[total_accepted_qty]"]');
+        
+        let newQty = parseFloat(newQtyInput.value) || 0;
+        let originalQty = parseFloat(originalQtyInput.getAttribute('data-original')) || 0;
+
+        if (newQty > originalQty) {
+            alert("Error: Entered quantity exceeds available quantity!");
+            newQtyInput.value = "";
+            return;
+        }
+
+        // Correct subtraction logic
+        originalQtyInput.value = originalQty - newQty;
+    }
+
+    function updateOriginalRowWeight(originalRow, newRow) {
+        let originalWeightInput = originalRow.querySelector('[name*="[total_weight]"]');
+        let newWeightInput = newRow.querySelector('[name*="[total_weight]"]');
+
+        let newWeight = parseFloat(newWeightInput.value) || 0;
+        let originalWeight = parseFloat(originalWeightInput.getAttribute('data-original')) || 0;
+
+        if (newWeight > originalWeight) {
+            alert("Error: Entered weight exceeds available weight!");
+            newWeightInput.value = "";
+            return;
+        }
+
+        // Correct subtraction logic for weight
+        originalWeightInput.value = originalWeight - newWeight;
+    }
+
+    function removeAdditionalRow(originalRow) {
+        const nextRow = originalRow.nextElementSibling;
+        if (nextRow && nextRow.classList.contains('additional-live-goat')) {
+            nextRow.remove();
+        }
+    }
+
+    initializeRows();
+});
+</script>
+
+
+
+
+
 
 
 

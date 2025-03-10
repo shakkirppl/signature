@@ -67,6 +67,8 @@ button.remove-row {
                                     <th>Male Accepted Quandity</th>
                                     <th>Female Accepted Quandity</th>
                                     <th>Total Accepted Quandity</th>
+                                    <th>Male Death Quandity</th>
+                                    <th>Female Death Quandity</th>
                                     <th>Weight</th>
                                     
                                    
@@ -208,6 +210,12 @@ $(document).ready(function () {
                                 </td>
                                 <td>
                                     <input type="number" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" name="male_death_qty[]" value="${detail.death_male_qty}" class="form-control" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" name="female_death_qty[]" value="${detail.death_female_qty}" class="form-control" readonly>
                                 </td>
                                 <td>
                                     <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>

@@ -27,7 +27,15 @@ class InspectionController extends Controller
     return view('inspection.index', compact('inspections'));
 }
 
-
+public function invoice_no(){
+    try {
+         
+     return $invoice_no =  InvoiceNumber::ReturnInvoice('inspection_no',1);
+              } catch (\Exception $e) {
+     
+        return $e->getMessage();
+      }
+             }
 
 public function view($id)
 {
@@ -76,6 +84,7 @@ public function store(Request $request)
         'shipment_id' => $validated['shipment_id'],
         'date' => $validated['date'],
         'supplier_id' => $validated['supplier_id'],
+        'total_death_qty' => null,
         'user_id' => Auth::id(),
         'store_id' => 1,
         'status' => 1,
@@ -96,6 +105,8 @@ public function store(Request $request)
             'male_rejected_qty' => $product['male_rejected_qty'],
             'female_rejected_qty' => $product['female_rejected_qty'],
             'rejected_reason' => $product['rejected_reason'],
+            'death_male_qty' => $product['death_male_qty'] ?? 0,
+            'death_female_qty' => $product['death_female_qty'] ?? 0,
             'rate' => 0,
             'total' =>0,
             'user_id' => Auth::id(),

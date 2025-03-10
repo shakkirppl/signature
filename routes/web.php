@@ -377,6 +377,9 @@ Route::get('/fetch-products', [DeathAnimalController::class, 'fetchProducts'])->
 Route::post('/death-animal/store', [DeathAnimalController::class, 'store'])->name('deathanimal.store');
 Route::get('/death-animal/create', [DeathAnimalController::class, 'create'])->name('deathanimal.create');
 Route::get('/get-suppliers-by-shipment', [DeathAnimalController::class, 'getSuppliersByShipment'])->name('inspection.getSuppliersByShipment');
+Route::delete('/deathanimal/{id}', [DeathAnimalController::class, 'destroy'])->name('deathanimal.destroy');
+Route::get('/deathanimal', [DeathAnimalController::class, 'index'])->name('deathanimal.index');
+
 
 
 

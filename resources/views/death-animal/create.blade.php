@@ -13,10 +13,11 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <h4 class="card-title">New Employee</h4>
+              <h4 class="card-title">Death Animal </h4>
             </div>
             <div class="col-md-6 heading">
-              <a href="" class="backicon"><i class="mdi mdi-backburger"></i></a>
+            <a href="{{ url('deathanimal') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+
             </div>
           </div>
           <div class="row">
@@ -73,6 +74,7 @@
                     <th>Female Accepted Qty</th>
                     <th>Death Male Qty</th>
                     <th>Death Female Qty</th>
+                    <th>Total Death Qty</th>
                 </tr>
             </thead>
             <tbody id="product_details">
@@ -87,13 +89,13 @@
   </div>
 </div>
 
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 $(document).ready(function() {
     $('#shipment_no').change(function() {
         let shipment_id = $(this).val();
-        $('#supplier_id').empty().append('<option value="">Select Supplier</option>'); // Clear previous options
+        $('#supplier_id').empty().append('<option value="">Select Supplier</option>');
 
         if (shipment_id) {
             $.ajax({
@@ -101,8 +103,6 @@ $(document).ready(function() {
                 type: 'GET',
                 data: { shipment_id: shipment_id },
                 success: function(response) {
-                    console.log("Suppliers Response:", response); // Debugging
-
                     if (response.suppliers && response.suppliers.length > 0) {
                         response.suppliers.forEach(supplier => {
                             $('#supplier_id').append(`<option value="${supplier.id}">${supplier.name}</option>`);
@@ -112,23 +112,17 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr) {
-                    console.error("Error fetching suppliers:", xhr.responseText); // Debugging
                     alert('Error fetching suppliers.');
                 }
             });
         }
     });
 
-
-
-
-
-    // Function to handle supplier selection and fetch related products
     $('#supplier_id').change(function() {
         let shipment_id = $('#shipment_no').val();
         let supplier_id = $(this).val();
-        $('#product_details').empty(); // Clear previous product details
-        $('#inspection_no').val(''); // Clear inspection number
+        $('#product_details').empty();
+        $('#inspection_no').val('');
         $('#inspection_id').val('');
 
         if (supplier_id) {
@@ -137,8 +131,6 @@ $(document).ready(function() {
                 type: 'GET',
                 data: { shipment_id: shipment_id, supplier_id: supplier_id },
                 success: function(response) {
-                    console.log(response); // Debugging: Check response in console
-
                     if (response.inspection) {
                         $('#inspection_no').val(response.inspection.inspection_no);
                         $('#inspection_id').val(response.inspection.id);
@@ -151,8 +143,9 @@ $(document).ready(function() {
                                     <td>${product.product_name}</td>
                                     <td>${product.male_accepted_qty}</td>
                                     <td>${product.female_accepted_qty}</td>
-                                    <td><input type="number" name="products[${product.id}][death_male_qty]" class="form-control" min="0"></td>
-                                    <td><input type="number" name="products[${product.id}][death_female_qty]" class="form-control" min="0"></td>
+                                    <td><input type="number" name="products[${product.id}][death_male_qty]" class="form-control death-male" min="0"></td>
+                                    <td><input type="number" name="products[${product.id}][death_female_qty]" class="form-control death-female" min="0"></td>
+                                    <td><input type="text" class="form-control total-death" readonly></td>
                                 </tr>
                             `);
                         });
@@ -161,16 +154,21 @@ $(document).ready(function() {
                     }
                 },
                 error: function(xhr) {
-                    console.log(xhr.responseText); // Debugging: Log errors to console
                     alert('Error fetching products.');
                 }
             });
         }
     });
 
+    $(document).on('input', '.death-male, .death-female', function() {
+        let row = $(this).closest('tr');
+        let maleQty = parseInt(row.find('.death-male').val()) || 0;
+        let femaleQty = parseInt(row.find('.death-female').val()) || 0;
+        let total = maleQty + femaleQty;
+        row.find('.total-death').val(total);
+    });
 });
-
-    </script>
+</script>
 
 
 
