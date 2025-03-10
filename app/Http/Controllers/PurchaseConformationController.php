@@ -17,6 +17,7 @@ use App\Models\AccountHead;
 use App\Models\WeightCalculatorDetail;
 use Carbon\Carbon;
 use App\Models\Supplier;
+use App\Models\SupplierAdvance;
 
 
 class PurchaseConformationController extends Controller
@@ -36,8 +37,19 @@ public function Confirm($id)
     $WeightCalculatorMaster = WeightCalculatorMaster::with(['details.product', 'supplier', 'shipment'])->findOrFail($id);
     
     // Fetch purchase order
-     $order = PurchaseOrder::find($WeightCalculatorMaster->purchaseOrder_id);
+    $order = PurchaseOrder::find($WeightCalculatorMaster->purchaseOrder_id);
     
+    // Calculate total advance amount
+    $purchaseAdvance = $order->advance_amount ?? 0;
+
+    $supplierAdvanceTotal = SupplierAdvance::where('supplier_id', $order->supplier_id ?? 0)
+        ->where('shipment_id', $order->shipment_id ?? 0)
+        ->where('purchaseOrder_id', $order->id ?? 0)
+        ->sum('advance_amount');
+
+    // Ensure totalAdvanceAmount is never null
+    $totalAdvanceAmount = ($purchaseAdvance + $supplierAdvanceTotal) ?? 0;
+
     // Fetch related COA (Chart of Accounts)
     $coa = AccountHead::whereIn('parent_id', function ($query) {
         $query->select('id')
@@ -48,13 +60,15 @@ public function Confirm($id)
     return view('purchase-conformation.confirm', [
         'invoice_no' => $this->invoice_no(),
         'WeightCalculatorMaster' => $WeightCalculatorMaster,
-        'details' => $WeightCalculatorMaster->details,  // Fetch details here
+        'details' => $WeightCalculatorMaster->details,
         'products' => Product::all(),
         'shipment' => Shipment::where('shipment_status', 0)->get(),
         'coa' => $coa,
-        'order' => $order
+        'order' => $order,
+        'totalAdvanceAmount' => $totalAdvanceAmount // Pass total advance amount to the view
     ]);
 }
+
 
 
 

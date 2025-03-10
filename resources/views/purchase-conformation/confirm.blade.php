@@ -182,10 +182,11 @@ button.remove-row {
     </div>
 
     <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="number" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly>       
-         </div>
+    <div class="col-md-6">
+    <label for="advance_amount" class="form-label">Advanced Amount:</label>
+    <input type="number" id="advance_amount" name="advance_amount" class="form-control" value="{{ $totalAdvanceAmount ?? 0 }}" readonly>       
+</div>
+
         <div class="col-md-6">
             <label for="balance_amount" class="form-label">Balance Amount:</label readonly>
             <input type="number" id="balance_amount" name="balance_amount" class="form-control" >
