@@ -35,7 +35,7 @@
                             <h2 class="card-title">AnteMortem Report</h2>
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ url('postmortem-report-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                            <a href="{{ url('antemortem-report-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
 
@@ -49,7 +49,7 @@
                         </div><br />
                     @endif
 
-                    <form action="{{ route('postmortem.store') }}" method="POST">
+                    <form action="{{ route('antemortem.store') }}" method="POST">
                         @csrf
 
                         <div class="row mb-3">

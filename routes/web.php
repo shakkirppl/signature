@@ -342,7 +342,6 @@ Route::get('supplier-outstanding', [OutstandingController::class, 'supplierOutst
 Route::get('customer-outstanding', [OutstandingController::class, 'customerOutstanding'])->name('customer.outstanding');
 
 
-Route::get('animal-receiving-note', [AnimalReceivingNoteController::class, 'create']);
 
 
 Route::get('postmortem-report-create', [PostMortemReportController::class, 'create'])->name('postmortem.create');;
@@ -353,11 +352,13 @@ Route::post('postmortem/update/{id}', [PostMortemReportController::class, 'updat
 Route::get('/postmortem/print/{id}', [PostMortemReportController::class, 'print'])->name('postmortem.print');
 
 
-
-
-
-
 Route::get('antemortem-report-create', [AnteMortemReportController::class, 'create'])->name('antemortem.create');
+Route::post('antemortem-store', [AnteMortemReportController::class, 'store'])->name('antemortem.store');
+Route::get('antemortem-report-index', [AnteMortemReportController::class, 'index'])->name('antemortem.index');
+Route::get('/antemortem/edit/{id}', [AnteMortemReportController::class, 'edit'])->name('antemortem.edit');
+Route::post('/antemortem/update/{id}', [AnteMortemReportController::class, 'update'])->name('antemortem.update');
+
+
 
 
 Route::get('supplier-advance-create', [SupplierAdvanceController::class, 'create'])->name('supplieradvance.create');
