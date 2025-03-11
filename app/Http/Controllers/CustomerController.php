@@ -97,8 +97,8 @@ public function update(Request $request, $id)
             'address' => 'nullable|string|max:500',
             'state' => 'null',
             'country' => 'nullable|string|max:255',
-            'credit_limit_days' => 'nullable|numeric|min:0',
-            'opening_balance' => 'nullable|numeric|min:0',
+            'credit_limit_days' => 'nullable|numeric',
+            'opening_balance' => 'nullable|numeric',
             'dr_cr' => 'required_if:opening_balance,>,0|in:Dr,Cr',
         ]);
 
