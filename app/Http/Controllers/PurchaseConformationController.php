@@ -65,7 +65,7 @@ public function Confirm($id)
         'shipment' => Shipment::where('shipment_status', 0)->get(),
         'coa' => $coa,
         'order' => $order,
-        'totalAdvanceAmount' => $totalAdvanceAmount // Pass total advance amount to the view
+        'totalAdvanceAmount' => $totalAdvanceAmount 
     ]);
 }
 
@@ -105,7 +105,7 @@ public function invoice_no(){
                      'products' => 'required|array',
                      'products.*.product_id' => 'required|exists:product,id',
                      'products.*.type' => 'nullable|string',
-                     'products.*.mark' => 'required|string',
+                   
                      'products.*.total_accepted_qty' => 'required|string',
                      'products.*.total_weight' => 'required|string',
                      'products.*.transportation_amount' => 'required|numeric|min:1',
@@ -145,7 +145,7 @@ public function invoice_no(){
                              'conformation_id' => $purchaseConformation->id,
                              'product_id' => $product['product_id'],
                              'type' => null,
-                             'mark' => $product['mark'],
+                             'mark' => null,
                              'total_accepted_qty' => $product['total_accepted_qty'],
                              'total_weight' => $product['total_weight'],
                              'transportation_amount' => $product['transportation_amount'],
@@ -154,18 +154,7 @@ public function invoice_no(){
                              'store_id' => 1,
                          ]);
                      }
-                    //  if (!empty($request->expense_id)) {
-                    //     foreach ($request->expense_id as $index => $expense_id) {
-                    //         if (!empty($expense_id) && !empty($request->amount[$index])) {
-                    //             PurchaseExpense::create([
-                    //                 'purchase_id' => $purchaseConformation->id,
-                    //                 'expense_id' => $expense_id,
-                    //                 'amount' => $request->amount[$index],
-                    //                 'store_id' => 1
-                    //             ]);
-                    //         }
-                    //     }
-                    // }
+                  
 
                      $WeightCalculatorMaster = WeightCalculatorMaster::find($request->weight_id);
                      if ($WeightCalculatorMaster) {

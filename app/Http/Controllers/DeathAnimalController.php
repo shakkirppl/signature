@@ -104,7 +104,7 @@ foreach ($validated['products'] as $product_id => $product) {
         ]);
 }
 
-    return redirect()->route('death-animal.index')->with('success', 'Death Animal and Inspection records updated successfully.');
+    return redirect()->route('deathanimal.index')->with('success', 'Death Animal and Inspection records updated successfully.');
 }
 
     
@@ -138,7 +138,7 @@ public function destroy($id)
     // Delete Death Animal Master record
     $deathAnimal->delete();
 
-    return redirect()->route('deathanimal.index')->with('success', 'Death Animal record deleted successfully.');
+    return redirect()->route('death-animal.index')->with('success', 'Death Animal record deleted successfully.');
 }
 
 

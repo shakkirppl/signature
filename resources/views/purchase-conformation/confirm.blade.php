@@ -79,7 +79,7 @@ button.remove-row {
                             <thead>
                                 <tr>
                                     <th>Product</th>
-                                    <th>Mark</th>
+                                  
                                     <th>Total Accepted Quandity</th>
                                     <th>Total Weight</th>
                                     <th>Price/Kg</th>
@@ -87,51 +87,38 @@ button.remove-row {
                                     <th>Total</th>
                                 </tr>
                             </thead>
-                            <tbody id="product-details">
-                                @foreach ($WeightCalculatorMaster->details as $index => $detail)
-                                    <tr>
-                                    <td>
-                                      <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 150px;">
-                                          <option value="">Select Product</option>
-                                              @foreach ($products as $product)
-                                                <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
-                                                   {{ $product->product_name }}
-                                                </option>
-                                              @endforeach
-                                      </select>
-                                      </td>
-                                      <td>
-                                        <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" min="1" style="width: 200px;">
-                                        </td>
-                                        <td>
-                                        <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{$detail->total_accepted_qty }}" min="1" style="width: 200px;">
-                                        </td>
-                                        <td>
-                                        <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{$detail->weight }}"  style="width: 200px;">
-                                        </td>
-                                        <td>
-         
-                                            <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" value="0" style="width: 200px;">
-                                        </td>
-                                        <td>
-         
-                                         <input type="number" name="products[{{ $index }}][transportation_amount]" class="form-control rate" value="0" style="width: 200px;">
-                                       </td>
-                                        <td>
-                                        <input type="number" name="products[{{ $index }}][total]" class="form-control total" value="0" readonly style="width: 200px;">
-
-                                        </td>
-                                        <td>
-                                        <input type="hidden" name="products[{{ $index }}][original_total_accepted_qty]" value="{{ $detail->total_accepted_qty }}">
-                                         <input type="hidden" name="products[{{ $index }}][original_total_weight]" value="{{ $detail->weight }}">
-
-                                        </td>
-                                       
-
-                                        
-                                    </tr>
-                                @endforeach
-                            </tbody>
+                            <tbody id="product-details">                                 
+                                    @foreach ($WeightCalculatorMaster->details as $index => $detail)                                     
+                                        <tr class="product-row">                                         
+                                            <td>                                           
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required  style="width: 150px;">                                               
+                                                    <option value="">Select Product</option>                                                   
+                                                    @foreach ($products as $product)                                                     
+                                                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" 
+                                                            {{ $detail->product_id == $product->id ? 'selected' : '' }}>                                                    
+                                                            {{ $product->product_name }}                                                 
+                                                        </option>                                                   
+                                                    @endforeach                                           
+                                                </select>                                         
+                                            </td>                                                                             
+                                            <td>                                         
+                                                <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 150px;">                                         
+                                            </td>                                         
+                                            <td>                                         
+                                                <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 150px;">                                         
+                                            </td>                                         
+                                            <td>                                                     
+                                                <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 200px;">                                         
+                                            </td>                                         
+                                            <td>                                                    
+                                                <input type="number" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 200px;">                                        
+                                            </td>                                         
+                                            <td>                                         
+                                                <input type="number" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 200px;">                                          
+                                            </td>                                                                                                                                           
+                                        </tr>                                 
+                                    @endforeach                             
+                                </tbody> 
                         </table>
 </div>
                          <br>
@@ -148,26 +135,26 @@ button.remove-row {
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="item_total" class="form-label">Item Amount:</label readonly>
-            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" >
+            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}"  step="any" >
         </div>
         <div class="col-md-4">
             <label for="total_expense" class="form-label">Additional Expense:</label>
-            <input type="number" id="total_expense" name="total_expense" class="form-control" >
+            <input type="number" id="total_expense" name="total_expense" class="form-control" step="0.01">
         </div>
         <div class="col-md-4">
             <label for="grand_total" class="form-label">Grand Total:</label>
-            <input type="number" id="grand_total" name="grand_total" class="form-control" readonly>
+            <input type="number" id="grand_total" name="grand_total" class="form-control" readonly  step="any">
         </div>
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="number" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly>       
+            <input type="number" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly  step="any">       
          </div>
         <div class="col-md-6">
             <label for="balance_amount" class="form-label">Balance Amount:</label readonly>
-            <input type="number" id="balance_amount" name="balance_amount" class="form-control" >
+            <input type="number" id="balance_amount" name="balance_amount" class="form-control"  step="any" >
         </div>
     </div>
 </div>
@@ -183,19 +170,26 @@ button.remove-row {
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    calculateTotals();
+    calculateTotals(); // Ensure totals are calculated on page load
 
     // Event listener for input changes in product details
     document.getElementById('product-details').addEventListener('input', function (event) {
         const target = event.target;
         if (target.classList.contains('qty') || target.classList.contains('rate') || target.classList.contains('weight')) {
             updateRowTotal(target.closest('tr'));
-            calculateTotals();
+            calculateTotals(); // Update all totals whenever a row value changes
         }
     });
 
     // Event listener for additional expense input
     document.getElementById('total_expense').addEventListener('input', function () {
+        calculateTotals(false); // Don't format expense immediately
+    });
+
+    // Format total_expense when input loses focus
+    document.getElementById('total_expense').addEventListener('blur', function () {
+        let additionalExpense = parseFloat(this.value) || 0;
+        this.value = additionalExpense.toFixed(2);
         calculateTotals();
     });
 
@@ -204,31 +198,35 @@ document.addEventListener('DOMContentLoaded', function () {
         const rate = parseFloat(row.querySelector('.rate').value) || 0;
         const transportationAmount = parseFloat(row.querySelector('[name^="products"][name$="[transportation_amount]"]').value) || 0;
 
-        const totalField = row.querySelector('.total');
-        totalField.value = ((totalWeight * rate) + (transportationAmount * totalWeight)).toFixed(2);
+        const rowTotal = ((totalWeight * rate) + (transportationAmount * totalWeight)).toFixed(2);
+        row.querySelector('.total').value = rowTotal; // Update row total
     }
 
-    function calculateTotals() {
+    function calculateTotals(formatExpense = true) {
         let itemTotal = 0;
 
-        // Calculate item total
+        // Calculate total of all item rows
         document.querySelectorAll('#product-details tr').forEach(row => {
             updateRowTotal(row);
             itemTotal += parseFloat(row.querySelector('.total').value) || 0;
         });
 
+        // Update item_total field
+        document.getElementById('item_total').value = itemTotal.toFixed(2);
+
         // Get additional expense value
         let additionalExpense = parseFloat(document.getElementById('total_expense').value) || 0;
 
-        // Update fields
-        document.getElementById('item_total').value = itemTotal.toFixed(2);
-        document.getElementById('total_expense').value = additionalExpense.toFixed(2);
+        // Format additional expense properly only when needed
+        if (formatExpense) {
+            document.getElementById('total_expense').value = additionalExpense.toFixed(2);
+        }
 
         // Calculate grand total
         let grandTotalAmount = itemTotal + additionalExpense;
         document.getElementById('grand_total').value = grandTotalAmount.toFixed(2);
 
-        // Balance amount calculation
+        // Calculate balance amount
         const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
         document.getElementById('balance_amount').value = (grandTotalAmount - advanceAmount).toFixed(2);
     }
@@ -274,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Clone the row
         const newRow = originalRow.cloneNode(true);
-        newRow.classList.add('additional-live-goat'); // Mark as additional row
+        newRow.classList.add('additional-live-goat'); 
 
         // Keep the product name the same
         let productSelect = newRow.querySelector('.product-select');
