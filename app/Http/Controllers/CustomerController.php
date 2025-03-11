@@ -31,7 +31,7 @@ class CustomerController extends Controller
                 'country' => 'required|string|max:255',
                 'credit_limit_days' => 'required|numeric|min:10',
                 'opening_balance' => 'nullable|numeric|min:0',
-                'dr_cr' => 'required|in:Dr,Cr',
+                'dr_cr' => 'nullable|in:Dr,Cr',
             ]);
     
             $validated['opening_balance'] = $request->opening_balance ?? 0;
