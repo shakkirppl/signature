@@ -60,15 +60,15 @@
                     <div class="row mt-3">
                         <div class="col-md-4">
                             <label><strong>Grand Total:</strong></label>
-                            <input type="text" class="form-control" value="₹{{ number_format($SalesPayment->grand_total, 2) }}" readonly>
+                            <input type="text" class="form-control" value="${{ number_format($SalesPayment->grand_total, 2) }}" readonly>
                         </div>
                         <div class="col-md-4">
                             <label><strong>Advance Paid:</strong></label>
-                            <input type="text" class="form-control" value="₹{{ number_format($SalesPayment->advance_amount, 2) }}" readonly>
+                            <input type="text" class="form-control" value="${{ number_format($SalesPayment->advance_amount, 2) }}" readonly>
                         </div>
                         <div class="col-md-4">
                             <label><strong>Balance Amount:</strong></label>
-                            <input type="text" class="form-control" value="₹{{ number_format($SalesPayment->balance_amount, 2) }}" readonly>
+                            <input type="text" class="form-control" value="${{ number_format($SalesPayment->balance_amount, 2) }}" readonly>
                         </div>
                     </div>
 

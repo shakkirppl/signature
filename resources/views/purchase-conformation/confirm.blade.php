@@ -91,7 +91,7 @@ button.remove-row {
                                     @foreach ($WeightCalculatorMaster->details as $index => $detail)                                     
                                         <tr class="product-row">                                         
                                             <td>                                           
-                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required  style="width: 150px;">                                               
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required  style="width: 140px;">                                               
                                                     <option value="">Select Product</option>                                                   
                                                     @foreach ($products as $product)                                                     
                                                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" 
@@ -105,16 +105,16 @@ button.remove-row {
                                                 <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 150px;">                                         
                                             </td>                                         
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 150px;">                                         
+                                                <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 130px;">                                         
                                             </td>                                         
                                             <td>                                                     
-                                                <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 200px;">                                         
+                                                <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 150px;">                                         
                                             </td>                                         
                                             <td>                                                    
-                                                <input type="number" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 200px;">                                        
+                                                <input type="number" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 150px;">                                        
                                             </td>                                         
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 200px;">                                          
+                                                <input type="number" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 150px;">                                          
                                             </td>                                                                                                                                           
                                         </tr>                                 
                                     @endforeach                             

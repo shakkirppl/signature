@@ -32,6 +32,7 @@ use App\Http\Controllers\PostMortemReportController;
 use App\Http\Controllers\AnteMortemReportController;
 use App\Http\Controllers\SupplierAdvanceController;
 use App\Http\Controllers\DeathAnimalController;
+use App\Http\Controllers\PackingListController;
 
 
 
@@ -379,6 +380,20 @@ Route::get('/death-animal/create', [DeathAnimalController::class, 'create'])->na
 Route::get('/get-suppliers-by-shipment', [DeathAnimalController::class, 'getSuppliersByShipment'])->name('inspection.getSuppliersByShipment');
 Route::delete('/deathanimal/{id}', [DeathAnimalController::class, 'destroy'])->name('deathanimal.destroy');
 Route::get('/deathanimal', [DeathAnimalController::class, 'index'])->name('deathanimal.index');
+
+
+
+Route::get('packinglist-create', [PackingListController::class, 'create'])->name('packinglist.create');
+Route::get('packinglist-index', [PackingListController::class, 'index'])->name('packinglist.index');
+Route::post('packinglist-store', [PackingListController::class, 'store'])->name('packinglist.store');
+Route::get('packinglist-destroy/{id}', [PackingListController::class, 'destroy'])->name('packinglist.destroy');
+Route::get('packinglist-show/{id}', [PackingListController::class, 'show'])->name('packinglist.show');
+Route::get('packinglist/{id}/edit', [PackingListController::class, 'edit'])->name('packinglist.edit');
+Route::post('packinglist/{id}', [PackingListController::class, 'update'])->name('packinglist.update');
+Route::get('packinglist-print/{id}', [PackingListController::class, 'packlistPrint'])->name('packinglist.print');
+
+
+
 
 
 

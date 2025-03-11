@@ -42,7 +42,10 @@
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order-index')}}">Sales order</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales_payment-index')}}">Sales</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-index')}}">Offal Sales</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-index')}}">Offal Sales</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('packinglist-create ')}}">Packing List</a></li>
+
+              
 
               </ul>
             </div>
