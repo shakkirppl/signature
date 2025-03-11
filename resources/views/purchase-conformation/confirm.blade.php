@@ -256,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedProduct = event.target.options[event.target.selectedIndex].text;
             const row = event.target.closest('tr');
 
-            if (selectedProduct === "Live Goat") {
+            if (selectedProduct === "Live goat") {
                 addAdditionalRow(row);
             } else {
                 removeAdditionalRow(row);
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
         let productSelect = newRow.querySelector('.product-select');
         if (productSelect) {
             for (let option of productSelect.options) {
-                if (option.text === "Live Goat") {
+                if (option.text === "Live goat") {
                     option.selected = true;
                     break;
                 }
