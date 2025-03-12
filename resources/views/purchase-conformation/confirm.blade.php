@@ -169,84 +169,71 @@ button.remove-row {
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    calculateTotals(); // Ensure totals are calculated on page load
-
-    // Event listener for input changes in product details
-    document.getElementById('product-details').addEventListener('input', function (event) {
-        const target = event.target;
-        if (target.classList.contains('qty') || target.classList.contains('rate') || target.classList.contains('weight')) {
-            updateRowTotal(target.closest('tr'));
-            calculateTotals(); // Update all totals whenever a row value changes
-        }
-    });
-
-    // Event listener for additional expense input
-    document.getElementById('total_expense').addEventListener('input', function () {
-        calculateTotals(false); // Don't format expense immediately
-    });
-
-    // Format total_expense when input loses focus
-    document.getElementById('total_expense').addEventListener('blur', function () {
-        let additionalExpense = parseFloat(this.value) || 0;
-        this.value = additionalExpense.toFixed(2);
-        calculateTotals();
-    });
-
-    function updateRowTotal(row) {
-        const totalWeight = parseFloat(row.querySelector('.weight').value) || 0;
-        const rate = parseFloat(row.querySelector('.rate').value) || 0;
-        const transportationAmount = parseFloat(row.querySelector('[name^="products"][name$="[transportation_amount]"]').value) || 0;
-
-        const rowTotal = ((totalWeight * rate) + (transportationAmount * totalWeight)).toFixed(2);
-        row.querySelector('.total').value = rowTotal; // Update row total
-    }
-
-    function calculateTotals(formatExpense = true) {
-        let itemTotal = 0;
-
-        // Calculate total of all item rows
-        document.querySelectorAll('#product-details tr').forEach(row => {
-            updateRowTotal(row);
-            itemTotal += parseFloat(row.querySelector('.total').value) || 0;
-        });
-
-        // Update item_total field
-        document.getElementById('item_total').value = itemTotal.toFixed(2);
-
-        // Get additional expense value
-        let additionalExpense = parseFloat(document.getElementById('total_expense').value) || 0;
-
-        // Format additional expense properly only when needed
-        if (formatExpense) {
-            document.getElementById('total_expense').value = additionalExpense.toFixed(2);
-        }
-
-        // Calculate grand total
-        let grandTotalAmount = itemTotal + additionalExpense;
-        document.getElementById('grand_total').value = grandTotalAmount.toFixed(2);
-
-        // Calculate balance amount
-        const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
-        document.getElementById('balance_amount').value = (grandTotalAmount - advanceAmount).toFixed(2);
+document.getElementById('product-details').addEventListener('input', function (event) {
+    const target = event.target;
+    if (target.classList.contains('qty') || target.classList.contains('rate') || target.classList.contains('weight') || target.classList.contains('transport')) {
+        updateRowTotal(target.closest('tr'));
+        calculateTotals(); // Update all totals whenever a row value changes
     }
 });
 
+// Event listener for additional expense input
+document.getElementById('total_expense').addEventListener('input', function () {
+    calculateTotals(false);
+});
 
+// Format total_expense when input loses focus
+document.getElementById('total_expense').addEventListener('blur', function () {
+    let additionalExpense = parseFloat(this.value) || 0;
+    this.value = additionalExpense.toFixed(2);
+    calculateTotals();
+});
 
+function updateRowTotal(row) {
+    const totalWeight = parseFloat(row.querySelector('.weight').value) || 0;
+    const rate = parseFloat(row.querySelector('.rate').value) || 0;
+    const transportationAmount = parseFloat(row.querySelector('.transport').value) || 0;
+
+    // Updated formula: total = (total_weight × rate) + (total_weight × transportation_amount)
+    const rowTotal = ((totalWeight * rate) + (totalWeight * transportationAmount)).toFixed(2);
     
+    row.querySelector('.total').value = rowTotal; // Update row total
+}
 
-</script>
+function calculateTotals(formatExpense = true) {
+    let itemTotal = 0;
 
-<script>
+    // Calculate total of all item rows
+    document.querySelectorAll('#product-details tr').forEach(row => {
+        updateRowTotal(row);
+        itemTotal += parseFloat(row.querySelector('.total').value) || 0;
+    });
+
+    document.getElementById('item_total').value = itemTotal.toFixed(2);
+
+    let additionalExpense = parseFloat(document.getElementById('total_expense').value) || 0;
+    if (formatExpense) {
+        document.getElementById('total_expense').value = additionalExpense.toFixed(2);
+    }
+
+    let grandTotalAmount = itemTotal + additionalExpense;
+    document.getElementById('grand_total').value = grandTotalAmount.toFixed(2);
+
+    const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
+    document.getElementById('balance_amount').value = (grandTotalAmount - advanceAmount).toFixed(2);
+}
+
 document.addEventListener('DOMContentLoaded', function () {
+    let productIndex = document.querySelectorAll('.product-row').length; 
+
     function initializeRows() {
         document.querySelectorAll('.product-select').forEach(select => {
             const selectedProduct = select.options[select.selectedIndex].text;
+            const selectedProductId = select.value;
             const row = select.closest('tr');
 
-            if (selectedProduct === "Live Goat") {
-                addAdditionalRow(row);
+            if (selectedProduct.toLowerCase() === "live goat") {
+                addAdditionalRow(row, selectedProduct, selectedProductId);
             }
         });
     }
@@ -254,41 +241,55 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('product-details').addEventListener('change', function (event) {
         if (event.target.classList.contains('product-select')) {
             const selectedProduct = event.target.options[event.target.selectedIndex].text;
+            const selectedProductId = event.target.value;
             const row = event.target.closest('tr');
 
-            if (selectedProduct === "Live goat") {
-                addAdditionalRow(row);
+            if (selectedProduct.toLowerCase() === "live goat") {
+                addAdditionalRow(row, selectedProduct, selectedProductId);
             } else {
                 removeAdditionalRow(row);
             }
         }
     });
 
-    function addAdditionalRow(originalRow) {
+    function addAdditionalRow(originalRow, productName, productId) {
         const nextRow = originalRow.nextElementSibling;
         if (nextRow && nextRow.classList.contains('additional-live-goat')) {
             return; // Avoid duplicate rows
         }
 
+        let newIndex = productIndex++;
+
         // Clone the row
         const newRow = originalRow.cloneNode(true);
-        newRow.classList.add('additional-live-goat'); 
+        newRow.classList.add('additional-live-goat');
 
-        // Keep the product name the same
+        newRow.querySelectorAll('[name]').forEach(input => {
+            input.name = input.name.replace(/\d+/, newIndex); 
+            input.value = ''; 
+        });
+
         let productSelect = newRow.querySelector('.product-select');
         if (productSelect) {
-            for (let option of productSelect.options) {
-                if (option.text === "Live goat") {
-                    option.selected = true;
-                    break;
-                }
-            }
+            let productText = document.createElement('span');
+            productText.textContent = productName;
+            productSelect.parentNode.replaceChild(productText, productSelect); 
         }
 
-        // Get original values before modification
+        let productIdInput = newRow.querySelector('[name*="[product_id]"]');
+        if (productIdInput) {
+            productIdInput.value = productId;
+        } else {
+            productIdInput = document.createElement('input');
+            productIdInput.type = 'hidden';
+            productIdInput.name = `products[${newIndex}][product_id]`;
+            productIdInput.value = productId;
+            newRow.appendChild(productIdInput);
+        }
+
         let originalQtyInput = originalRow.querySelector('[name*="[total_accepted_qty]"]');
         let originalWeightInput = originalRow.querySelector('[name*="[total_weight]"]');
-        
+
         if (!originalQtyInput.hasAttribute('data-original')) {
             originalQtyInput.setAttribute('data-original', originalQtyInput.value);
         }
@@ -296,14 +297,8 @@ document.addEventListener('DOMContentLoaded', function () {
             originalWeightInput.setAttribute('data-original', originalWeightInput.value);
         }
 
-        // Clear the new row's input values
-        newRow.querySelector('[name*="[total_accepted_qty]"]').value = "";
-        newRow.querySelector('[name*="[total_weight]"]').value = "";
-
-        // Insert new row after original row
         originalRow.parentNode.insertBefore(newRow, originalRow.nextSibling);
 
-        // Add event listeners to subtract values from the original row
         newRow.querySelector('[name*="[total_accepted_qty]"]').addEventListener('input', function () {
             updateOriginalRowQty(originalRow, newRow);
         });
@@ -311,12 +306,27 @@ document.addEventListener('DOMContentLoaded', function () {
         newRow.querySelector('[name*="[total_weight]"]').addEventListener('input', function () {
             updateOriginalRowWeight(originalRow, newRow);
         });
+
+        newRow.querySelector('.rate').addEventListener('input', function () {
+            updateRowTotal(newRow);
+            calculateTotals();
+        });
+
+        newRow.querySelector('.transport').addEventListener('input', function () {
+            updateRowTotal(newRow);
+            calculateTotals();
+        });
+
+        newRow.querySelector('.weight').addEventListener('input', function () {
+            updateRowTotal(newRow);
+            calculateTotals();
+        });
     }
 
     function updateOriginalRowQty(originalRow, newRow) {
         let originalQtyInput = originalRow.querySelector('[name*="[total_accepted_qty]"]');
         let newQtyInput = newRow.querySelector('[name*="[total_accepted_qty]"]');
-        
+
         let newQty = parseFloat(newQtyInput.value) || 0;
         let originalQty = parseFloat(originalQtyInput.getAttribute('data-original')) || 0;
 
@@ -326,8 +336,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Correct subtraction logic
-        originalQtyInput.value = originalQty - newQty;
+        originalQtyInput.value = (originalQty - newQty).toFixed(2);
     }
 
     function updateOriginalRowWeight(originalRow, newRow) {
@@ -343,8 +352,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // Correct subtraction logic for weight
-        originalWeightInput.value = originalWeight - newWeight;
+        originalWeightInput.value = (originalWeight - newWeight).toFixed(2);
     }
 
     function removeAdditionalRow(originalRow) {

@@ -88,7 +88,7 @@ public function invoice_no(){
              {
                 
                 //   dd($request);
-                return $request->all();
+                // return $request->all();
                  $validatedData = $request->validate([
                      'weight_id' => 'required|exists:weight_calculator_master,id',
                      'weight_code' => 'required|string',
