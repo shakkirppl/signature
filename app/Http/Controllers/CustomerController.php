@@ -99,7 +99,7 @@ public function update(Request $request, $id)
             'country' => 'nullable|string|max:255',
             'credit_limit_days' => 'nullable|numeric',
             'opening_balance' => 'nullable|numeric',
-            'dr_cr' => 'required_if:opening_balance,>,0|in:Dr,Cr',
+            'dr_cr' =>'nullable|in:Dr,Cr', 
         ]);
 
         $customer = Customer::findOrFail($id);
