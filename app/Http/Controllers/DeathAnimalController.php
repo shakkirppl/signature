@@ -59,54 +59,77 @@ class DeathAnimalController extends Controller
 
 
     public function store(Request $request)
-{
-    // return $request->all();
-    // Validate input data
-    $validated = $request->validate([
-        'date' => 'required|date',
-        'shipment_no' => 'required|exists:shipment,id',
-        'supplier_id' => 'required|exists:supplier,id',
-        'inspection_id' => 'required|exists:inspection,id',
-        'products' => 'required|array',
-        'products.*.death_male_qty' => 'nullable|integer|min:0',
-        'products.*.death_female_qty' => 'nullable|integer|min:0',
-    ]);
-
-    // Store Death Animal Master record
-    $deathAnimalMaster = DeathAnimalMaster::create([
-        'date' => $validated['date'],
-        'shipment_id' => $validated['shipment_no'],
-        'supplier_id' => $validated['supplier_id'],
-        'inspection_id' => $validated['inspection_id'],
-        'user_id' => Auth::id(),
-        'store_id' => 1,
-    ]);
-// Store Death Animal Details & Update Inspection Details
-foreach ($validated['products'] as $product_id => $product) {
-    $deathMaleQty = $product['death_male_qty'] ?? 0;
-    $deathFemaleQty = $product['death_female_qty'] ?? 0;
-    $totalDeathQty = $deathMaleQty + $deathFemaleQty;
-
-    // Store in Death Animal Detail Table
-    DeathAnimalDetail::create([
-        'death_animal_master_id' => $deathAnimalMaster->id,
-        'product_id' => $product_id,
-        'death_male_qty' => $deathMaleQty,
-        'death_female_qty' => $deathFemaleQty,
-        'total_death_qty' => $totalDeathQty,
-    ]);
-
-    InspectionDetail::where('inspection_id', $validated['inspection_id'])
-        ->where('product_id', $product_id)
-        ->update([
-            'death_male_qty' => \DB::raw("death_male_qty + $deathMaleQty"),  
-            'death_female_qty' => \DB::raw("death_female_qty + $deathFemaleQty")
+    {
+        // Validate input data
+        $validated = $request->validate([
+            'date' => 'required|date',
+            'shipment_no' => 'required|exists:shipment,id',
+            'supplier_id' => 'required|exists:supplier,id',
+            'inspection_id' => 'required|exists:inspection,id',
+            'products' => 'required|array',
+            'products.*.death_male_qty' => 'nullable|integer|min:0',
+            'products.*.death_female_qty' => 'nullable|integer|min:0',
         ]);
-}
-
-    return redirect()->route('deathanimal.index')->with('success', 'Death Animal and Inspection records updated successfully.');
-}
-
+    
+        // Store Death Animal Master record
+        $deathAnimalMaster = DeathAnimalMaster::create([
+            'date' => $validated['date'],
+            'shipment_id' => $validated['shipment_no'],
+            'supplier_id' => $validated['supplier_id'],
+            'inspection_id' => $validated['inspection_id'],
+            'user_id' => Auth::id(),
+            'store_id' => 1,
+        ]);
+    
+        // Store Death Animal Details & Update Inspection Details
+        foreach ($validated['products'] as $product_id => $product) {
+            $deathMaleQty = $product['death_male_qty'] ?? 0;
+            $deathFemaleQty = $product['death_female_qty'] ?? 0;
+            $totalDeathQty = $deathMaleQty + $deathFemaleQty;
+    
+            // Store in Death Animal Detail Table
+            DeathAnimalDetail::create([
+                'death_animal_master_id' => $deathAnimalMaster->id,
+                'product_id' => $product_id,
+                'death_male_qty' => $deathMaleQty,
+                'death_female_qty' => $deathFemaleQty,
+                'total_death_qty' => $totalDeathQty,
+            ]);
+    
+            // Debugging Log
+            \Log::info('Updating InspectionDetail', [
+                'inspection_id' => $validated['inspection_id'],
+                'product_id' => $product_id,
+                'death_male_qty' => $deathMaleQty,
+                'death_female_qty' => $deathFemaleQty,
+            ]);
+    
+            // Check if record exists before updating
+            $inspectionDetail = InspectionDetail::where('inspection_id', $validated['inspection_id'])
+                ->where('product_id', $product_id)
+                ->first();
+    
+            if ($inspectionDetail) {
+                // Update Inspection Detail Table
+                $inspectionDetail->update([
+                    'death_male_qty' => $inspectionDetail->death_male_qty + $deathMaleQty,
+                    'death_female_qty' => $inspectionDetail->death_female_qty + $deathFemaleQty,
+                ]);
+    
+                \Log::info("InspectionDetail updated successfully", [
+                    'inspection_id' => $validated['inspection_id'],
+                    'product_id' => $product_id,
+                    'new_death_male_qty' => $inspectionDetail->death_male_qty,
+                    'new_death_female_qty' => $inspectionDetail->death_female_qty,
+                ]);
+            } else {
+                \Log::error("No matching InspectionDetail found for inspection_id: {$validated['inspection_id']}, product_id: {$product_id}");
+            }
+        }
+    
+        return redirect()->route('deathanimal.index')->with('success', 'Death Animal and Inspection records updated successfully.');
+    }
+    
     
     
 public function index()
