@@ -29,10 +29,12 @@
                                     <td>{{ $deathAnimal->supplier->name }}</td>
                                     <td>{{ $deathAnimal->inspection ? $deathAnimal->inspection->inspection_no : 'N/A' }}</td>
                                     <td>
+                                    <a href="{{ route('deathanimal.show', $deathAnimal->id) }}" class="btn btn-info btn-sm">View</a>
+
                                         <form action="{{ route('deathanimal.destroy', $deathAnimal->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

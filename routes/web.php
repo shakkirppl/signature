@@ -95,7 +95,7 @@ Route::post('customer-store', [CustomerController::class, 'store'])->name('custo
 Route::get('customer-index', [CustomerController::class, 'index'])->name('customer.index');
 Route::get('customer/{id}/edit', [CustomerController::class, 'edit'])->name('customer.edit');
 Route::post('customer/{id}', [CustomerController::class, 'update'])->name('customer.update');
-Route::get('customer/delete/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
+Route::delete('customer/{id}', [CustomerController::class, 'destroy'])->name('customer.destroy');
 
 
 
@@ -380,6 +380,8 @@ Route::get('/death-animal/create', [DeathAnimalController::class, 'create'])->na
 Route::get('/get-suppliers-by-shipment', [DeathAnimalController::class, 'getSuppliersByShipment'])->name('inspection.getSuppliersByShipment');
 Route::delete('/deathanimal/{id}', [DeathAnimalController::class, 'destroy'])->name('deathanimal.destroy');
 Route::get('/deathanimal', [DeathAnimalController::class, 'index'])->name('deathanimal.index');
+Route::get('deathanimal/{id}', [DeathAnimalController::class, 'show'])->name('deathanimal.show');
+
 
 
 

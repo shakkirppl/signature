@@ -26,11 +26,13 @@
               <thead>
                 <tr>
                 
-                                 <th>Order No</th>
+                                    <th>Order No</th>
                                     <th>Date</th>
                                     <th>Customer</th>
                                     <th>Shipping Mode</th>
-                                    <th>Total Amount</th>
+                                    <th>Shipping Agent</th>
+                                    <th>Net Weight</th>
+                                    <th>Gross Weight</th>
                                     <th>Actions</th>
                 </tr>
               </thead>
@@ -41,11 +43,13 @@
                                     <td>{{ $packing->date }}</td>
                                     <td>{{ $packing->customer->customer_name ?? 'N/A' }}</td>
                                     <td>{{ $packing->shipping_mode }}</td>
-                                    <td>{{ number_format($packing->sum_total, 2) }} {{ strtoupper($packing->currency) }}</td>
+                                    <td>{{ $packing->shipping_agent }}</td>
+                                    <td>{{ $packing->net_weight }}</td>
+                                    <td>{{ $packing->gross_weight }}</td>
                                     <td>
                                         <a href="{{ route('packinglist.show', $packing->id) }}" class="btn btn-info btn-sm">View</a>
                                         <a href="{{ route('packinglist.edit', $packing->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                        <a href="{{ route('packinglist.print', $packing->id) }}" class="btn btn-info">
+                                        <a href="{{ route('packinglist.print', $packing->id) }}" class="btn btn-primary btn-sm">
                                          <i class="mdi mdi-printer"></i> Print
                                         </a>
                                         <form action="{{ route('packinglist.destroy', $packing->id) }}" method="POST" style="display:inline;">

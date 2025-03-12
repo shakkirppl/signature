@@ -49,11 +49,15 @@
                       <i class="mdi mdi-pencil"></i> Edit
                     </a>
                   
-                    <a href="{{route('category.destroy', $customer->id) }}" 
-                                                    class="btn btn-danger btn-sm delete-btn" 
-                                                    onclick="return confirm('Are you sure you want to delete this record?')">
-                                                    <i class="mdi mdi-delete"></i> Delete
-                                            </a>
+                    <form action="{{ route('customer.destroy', $customer->id) }}" method="POST" style="display:inline;">
+                     @csrf
+                     @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">
+                    <i class="mdi mdi-delete"></i> Delete
+                   </button>
+                 </form>
+
+
                   </td>
                 </tr>
                 @endforeach

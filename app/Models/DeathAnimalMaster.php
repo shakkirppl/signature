@@ -29,6 +29,7 @@ class DeathAnimalMaster extends Model
 
     public function inspection()
     {
-        return $this->belongsTo(Supplier::class, 'inspection_id');
+        return $this->belongsTo(Inspection::class, 'inspection_id');
     }
+    
 }

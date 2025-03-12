@@ -16,4 +16,9 @@ class DeathAnimalDetail extends Model
     {
         return $this->belongsTo(DeathAnimalMaster::class, 'death_animal_master_id');
     }
+    public function product()
+{
+    return $this->belongsTo(Product::class, 'product_id');
+}
+
 }
