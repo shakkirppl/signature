@@ -25,7 +25,7 @@ class SupplierPaymentController extends Controller
         return view('supplier-payment.create', compact('banks', 'shipments'));
     }
     
-    // New function to fetch suppliers based on shipment selection
+    
     public function getSuppliersByShipment(Request $request)
     {
         $shipmentId = $request->shipment_id;

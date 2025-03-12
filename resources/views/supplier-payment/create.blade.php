@@ -224,11 +224,12 @@ $(document).ready(function () {
 
         if (shipmentId) {
             $.ajax({
-                url: "{{ url('get-suppliers-by-shipment') }}",
+                url: "{{ url('get-suppliers-by-shipment-payment') }}",
                 type: 'GET',
                 data: { shipment_id: shipmentId },
                 dataType: 'json',
                 success: function (response) {
+                    // console.log(response);
                     $.each(response, function (index, supplier) {
                         supplierDropdown.append(`<option value="${supplier.id}">${supplier.name}</option>`);
                     });

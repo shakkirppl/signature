@@ -141,7 +141,7 @@ Route::get('supplier-payment-edit/{id}', [SupplierPaymentController::class, 'edi
 Route::post('supplier-payment-update/{id}', [SupplierPaymentController::class, 'update'])->name('supplier-payment.update');
 Route::get('supplier-payment-delete/{id}', [SupplierPaymentController::class, 'destroy'])->name('supplier-payment.destroy');
 Route::get('supplier-payment-report', [SupplierPaymentController::class, 'report'])->name('supplier-payment.report');
-Route::get('/get-suppliers-by-shipment', [SupplierPaymentController::class, 'getSuppliersByShipment']);
+Route::get('get-suppliers-by-shipment-payment', [SupplierPaymentController::class, 'getSuppliersByShipment']);
 Route::get('/get-supplier-conformations', [SupplierPaymentController::class, 'getSupplierConformations']);
 
 
