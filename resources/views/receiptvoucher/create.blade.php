@@ -111,15 +111,19 @@
         }
     </script>
 <script>
-    document.getElementById('type').addEventListener('change', function() {
+  document.getElementById('type').addEventListener('change', function() {
     var bankNameField = document.getElementById('bankNameField');
+    var bankSelect = bankNameField.querySelector('select');
+
     if (this.value === 'bank') {
         bankNameField.style.display = 'block';
-        fetchBankNames(); // Fetch bank names when bank is selected
+        bankSelect.setAttribute('required', 'required'); // Make bank_id required when bank is selected
     } else {
         bankNameField.style.display = 'none';
+        bankSelect.removeAttribute('required'); // Remove required if cash is selected
     }
 });
+
 
 
    
