@@ -128,5 +128,12 @@
 
    
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date');
+    let today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+});
+</script>
 
 @endsection

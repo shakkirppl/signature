@@ -39,7 +39,7 @@
 
         <div class="mb-3">
             <label for="date" class="form-label">Date</label>
-            <input type="date" class="form-control" name="date" required>
+            <input type="date" class="form-control" name="date" required id="date">
         </div>
 
         <div class="mb-3">
@@ -173,3 +173,10 @@ $(document).ready(function() {
 
 
 @endsection
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date');
+    let today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+});
+</script>

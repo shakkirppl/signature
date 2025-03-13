@@ -46,7 +46,7 @@ button.remove-row {
 
                     <div class="col-md-4">
                        <label for="date">Date</label>
-                       <input type="date" class="form-control" name="date" required>
+                       <input type="date" class="form-control" name="date" required id="date">
                    </div>
 
                    <div class="col-md-4">
@@ -292,13 +292,12 @@ $(document).ready(function () {
     });
 </script>
 
-
-
-
-
-
-
-
-
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date');
+    let today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
+});
+</script>
 
 @endsection

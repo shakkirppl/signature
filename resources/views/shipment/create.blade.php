@@ -63,22 +63,25 @@
 @endsection
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-    let timeInput = document.querySelector('input[name="time"]');
+        let dateInput = document.querySelector('input[name="date"]');
+        let timeInput = document.querySelector('input[name="time"]');
 
-    timeInput.addEventListener("focus", function() {
-        let currentTime = new Date().toLocaleTimeString("en-US", { 
-            timeZone: "Africa/Dar_es_Salaam",
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: false 
+        // Get current time in Tanzania timezone
+        function getTanzaniaTime() {
+            let options = { timeZone: "Africa/Dar_es_Salaam", hour12: false, hour: "2-digit", minute: "2-digit" };
+            return new Intl.DateTimeFormat("en-GB", options).format(new Date());
+        }
+
+        // Set the date field to the current date
+        let today = new Date().toISOString().split('T')[0]; 
+        dateInput.value = today;
+
+        // Set the time field to the current Tanzania time
+        timeInput.value = getTanzaniaTime();
+
+        // Update time on focus (if user clicks)
+        timeInput.addEventListener("focus", function() {
+            timeInput.value = getTanzaniaTime();
         });
-
-        
-        let formattedTime = currentTime.slice(0, 5); 
-
-        timeInput.value = formattedTime;
     });
-});
-
 </script>

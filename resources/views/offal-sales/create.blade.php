@@ -43,7 +43,7 @@ button.remove-row {
                             </div>
                             <div class="col-md-4">
                                 <label for="date" class="form-label">Date:</label>
-                                <input type="date" class="form-control" name="date" required>
+                                <input type="date" class="form-control" name="date" required id="date">
                             </div>
                         </div>
 
@@ -176,5 +176,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     productTable.addEventListener('input', calculateTotals);
     advanceAmountField.addEventListener('input', calculateTotals);
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dateInput = document.getElementById('date');
+    let today = new Date().toISOString().split('T')[0];
+    dateInput.value = today;
 });
 </script>
