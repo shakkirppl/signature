@@ -56,22 +56,28 @@
                             </div>
  </div>
                            
-                        <div class="row">
-                            <div class="col-md-4">
-                                <label>Terms of Delivery:</label>
-                                <input type="text" class="form-control" name="terms_of_delivery" value="{{ $packing->terms_of_delivery }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label>Terms of Payment:</label>
-                                <input type="text" class="form-control" name="terms_of_payment" value="{{ $packing->terms_of_payment }}">
-                            </div>
+ <div class="row">
+    <div class="col-md-4">
+        <label>Terms of Delivery:</label>
+        <input type="text" class="form-control" name="terms_of_delivery" value="{{ $packing->terms_of_delivery }}">
+    </div>
 
-                            <div class="col-md-4">
-                                <label>Currency:</label>
-                                <input type="text" class="form-control" name="currency" value="{{ strtoupper($packing->currency) }}">
-                            </div>
-                       
-                        </div>
+    <div class="col-md-4">
+        <label for="terms_of_payment" class="form-label">Terms of Payment:</label>
+        <select class="form-control" id="terms_of_payment" name="terms_of_payment">
+            <option value="100% After Receiving Goods" {{ $packing->terms_of_payment == "100% After Receiving Goods" ? 'selected' : '' }}>100% After Receiving Goods</option>
+            <option value="100% Advance Payment" {{ $packing->terms_of_payment == "100% Advance Payment" ? 'selected' : '' }}>100% Advance Payment</option>
+            <option value="50% Advance Payment" {{ $packing->terms_of_payment == "50% Advance Payment" ? 'selected' : '' }}>50% Advance Payment</option>
+            <option value="50% After Delivery" {{ $packing->terms_of_payment == "50% After Delivery" ? 'selected' : '' }}>50% After Delivery</option>
+        </select>
+    </div>
+
+    <div class="col-md-4">
+        <label>Currency:</label>
+        <input type="text" class="form-control" name="currency" value="{{ strtoupper($packing->currency) }}">
+    </div>
+</div>
+
 
                         <h5>Product Details</h5>
                         <table class="table table-bordered" id="productTable">
@@ -153,7 +159,7 @@
                     </td>
                     <td><input type="number" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
                     <td><input type="number" name="products[${rowCount}][weight]" class="form-control rate" step="any" style="width: 150px;"></td>
-                    <td><input type="text" name="products[${rowCount}][par]" class="form-control "  style="width: 150px;"></td>
+                    <td><input type="text" name="products[${rowCount}][par]" class="form-control " value="Pcs" style="width: 150px;"></td>
                     <td><input type="number" name="products[${rowCount}][total]" class="form-control total" step="any" style="width: 190px;"></td>
                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                 </tr>`;

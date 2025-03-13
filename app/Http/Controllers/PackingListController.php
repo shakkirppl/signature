@@ -44,8 +44,7 @@ class PackingListController extends Controller
         'packing_no' => 'required',
         'date' => 'required|date',
         'salesOrder_id' => 'required|exists:sales_order,id',
-        'customer_id' => 'required|exists:customer,id',
-        'sum_total' => 'required|numeric',
+      
         'net_weight' => 'required|numeric',
         'gross_weight' => 'required|numeric',
         'products' => 'required|array',
@@ -62,7 +61,7 @@ class PackingListController extends Controller
         'terms_of_delivery' => $request->terms_of_delivery,
         'terms_of_payment' => $request->terms_of_payment,
         'currency' => $request->currency,
-        'sum_total' => $request->sum_total,
+        'sum_total' => null,
         'net_weight' => $request->net_weight,
         'gross_weight' => $request->gross_weight,
         'store_id' => 1, 
@@ -146,7 +145,7 @@ public function update(Request $request, $id)
         'terms_of_delivery' => $request->terms_of_delivery,
         'terms_of_payment' => $request->terms_of_payment,
         'currency' => strtoupper($request->currency),
-        'sum_total' => $request->sum_total,
+        'sum_total' => null,
         'net_weight' => $request->net_weight,
         'gross_weight' => $request->gross_weight,
     ]);

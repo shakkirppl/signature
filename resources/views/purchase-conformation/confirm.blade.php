@@ -108,13 +108,13 @@ button.remove-row {
                                                 <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 130px;">                                         
                                             </td>                                         
                                             <td>                                                     
-                                                <input type="number" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 150px;">                                         
+                                                <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                         
                                             </td>                                         
                                             <td>                                                    
-                                                <input type="number" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 150px;">                                        
+                                                <input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                        
                                             </td>                                         
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 150px;">                                          
+                                                <input type="text" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                          
                                             </td>                                                                                                                                           
                                         </tr>                                 
                                     @endforeach                             
@@ -134,27 +134,27 @@ button.remove-row {
     <div class="col-md-6">
     <div class="row mb-3">
         <div class="col-md-4">
-            <label for="item_total" class="form-label">Item Amount:</label readonly>
-            <input type="number" id="item_total" name="item_total" class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}"  step="any" >
+            <label for="item_total" class="form-label" >Item Amount:</label>
+            <input type="text" id="item_total" name="item_total" readonly class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}"  step="any" id="formattedNumber" oninput="formatNumber(this)" >
         </div>
         <div class="col-md-4">
             <label for="total_expense" class="form-label">Additional Expense:</label>
-            <input type="number" id="total_expense" name="total_expense" class="form-control" step="0.01">
+            <input type="text" id="total_expense" name="total_expense" class="form-control" step="0.01" id="formattedNumber" oninput="formatNumber(this)">
         </div>
         <div class="col-md-4">
             <label for="grand_total" class="form-label">Grand Total:</label>
-            <input type="number" id="grand_total" name="grand_total" class="form-control" readonly  step="any">
+            <input type="text" id="grand_total" name="grand_total" class="form-control" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)">
         </div>
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="number" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly  step="any">       
+            <input type="text" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)">       
          </div>
         <div class="col-md-6">
-            <label for="balance_amount" class="form-label">Balance Amount:</label readonly>
-            <input type="number" id="balance_amount" name="balance_amount" class="form-control"  step="any" >
+            <label for="balance_amount" class="form-label" >Balance Amount:</label>
+            <input type="text" id="balance_amount" name="balance_amount" class="form-control" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)">
         </div>
     </div>
 </div>
@@ -191,13 +191,15 @@ document.getElementById('total_expense').addEventListener('blur', function () {
 
 function updateRowTotal(row) {
     const totalWeight = parseFloat(row.querySelector('.weight').value) || 0;
-    const rate = parseFloat(row.querySelector('.rate').value) || 0;
-    const transportationAmount = parseFloat(row.querySelector('.transport').value) || 0;
-
+    const rate = parseFloat(row.querySelector('.rate').value.replace(/,/g, '')) || 0;
+    const transportationAmount = parseFloat(row.querySelector('.transport').value.replace(/,/g, '')) || 0;
+    
     // Updated formula: total = (total_weight × rate) + (total_weight × transportation_amount)
     const rowTotal = ((totalWeight * rate) + (totalWeight * transportationAmount)).toFixed(2);
     
-    row.querySelector('.total').value = rowTotal; // Update row total
+    row.querySelector('.total').value = Intl.NumberFormat('en-US').format(rowTotal); // Update row total
+    
+
 }
 
 function calculateTotals(formatExpense = true) {
@@ -206,22 +208,31 @@ function calculateTotals(formatExpense = true) {
     // Calculate total of all item rows
     document.querySelectorAll('#product-details tr').forEach(row => {
         updateRowTotal(row);
-        itemTotal += parseFloat(row.querySelector('.total').value) || 0;
+        let rowTotal = parseFloat(row.querySelector('.total').value.replace(/,/g, '')) || 0;
+        itemTotal += rowTotal;
+
+        // Format and display row total with commas
+        row.querySelector('.total').value = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2 }).format(rowTotal);
     });
 
-    document.getElementById('item_total').value = itemTotal.toFixed(2);
+    // Format and display item total
+    document.getElementById('item_total').value = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2 }).format(itemTotal);
 
-    let additionalExpense = parseFloat(document.getElementById('total_expense').value) || 0;
+    let additionalExpense = parseFloat(document.getElementById('total_expense').value.replace(/,/g, '')) || 0;
     if (formatExpense) {
-        document.getElementById('total_expense').value = additionalExpense.toFixed(2);
+        document.getElementById('total_expense').value = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2 }).format(additionalExpense);
     }
 
     let grandTotalAmount = itemTotal + additionalExpense;
-    document.getElementById('grand_total').value = grandTotalAmount.toFixed(2);
+    document.getElementById('grand_total').value = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2 }).format(grandTotalAmount);
 
-    const advanceAmount = parseFloat(document.getElementById('advance_amount').value) || 0;
-    document.getElementById('balance_amount').value = (grandTotalAmount - advanceAmount).toFixed(2);
+    const advanceAmount = parseFloat(document.getElementById('advance_amount').value.replace(/,/g, '')) || 0;
+    let balanceAmount = grandTotalAmount - advanceAmount;
+    
+    // Format and display balance amount
+    document.getElementById('balance_amount').value = new Intl.NumberFormat('en-US', { minimumFractionDigits: 2 }).format(balanceAmount);
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
     let productIndex = document.querySelectorAll('.product-row').length; 
@@ -365,8 +376,28 @@ document.addEventListener('DOMContentLoaded', function () {
     initializeRows();
 });
 </script>
-
-
+<script>
+        document.getElementById('formattedNumber').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/,/g, ''); // Remove commas
+            // if (!isNaN(value) && value !== '') {
+            //     e.target.value = Number(value).toLocaleString(); // Add commas
+            // }
+        });
+    </script>
+<script>
+        function formatNumber(input) {
+            // Remove any existing formatting
+            let value = input.value.replace(/,/g, '');
+            
+            // Convert to a number
+            let number = parseFloat(value);
+            
+            // Format with commas
+            if (!isNaN(number)) {
+                input.value = new Intl.NumberFormat('en-US').format(number);
+            }
+        }
+    </script>
 
 
 

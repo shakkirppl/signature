@@ -43,7 +43,8 @@
                 
                   
                   <!-- <td>{{ $order->grand_total }}</td> -->
-                  <td>{{ $order->advance_amount }}</td>
+                  
+                  <td>{{ number_format($order->advance_amount, 2) }}</td>
                   <!-- <td>{{ $order->balance_amount }}</td> -->
                        
                   <td>

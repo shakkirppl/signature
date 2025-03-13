@@ -82,12 +82,19 @@ button.remove-row {
                            </div>
                            <div class="col-md-4">
                                 <label for="text" class="form-label">Terms of delivery:</label>
-                                <input type="text" class="form-control" id="text" name="terms_of_delivery" required>
+                                <select class="form-control" id="terms_of_delivery" name="terms_of_delivery">
+                                 <option value="C&F /DOHA, QATAR" selected>C&F /DOHA, QATAR</option>
+                                </select>
                             </div>
 
                             <div class="col-md-4">
                                 <label for="text" class="form-label">Terms of payment:</label>
-                                <input type="text" class="form-control" id="text" name="terms_of_payment" required>
+                                <select class="form-control" id="terms_of_payment" name="terms_of_payment">
+                                 <option value="100% After Receiving Goods" selected>100% After Receiving Goods</option>
+                                 <option value="100% Advance Payment">100% Advance Payment</option>
+                                 <option value="50% Advance Payment">50% Advance Payment</option>
+                                 <option value="50% After Delivery">50% After Delivery</option>
+                             </select>
                             </div>
                             <div class="col-md-4">
                              <label for="currency" class="form-label">Currency</label>
@@ -121,9 +128,9 @@ button.remove-row {
                                         </select>
                                     </td>
                                     <td><input type="number" name="products[0][packaging]" class="form-control qty" step="0.01" required style="width: 150px;" ></td>
-                                    <td><input type="number" name="products[0][weight]" class="form-control rate" style="width: 150px;" step="any"></td>
-                                    <td><input type="text" name="products[0][par]" class="form-control "  style="width: 150px;" ></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total"  style="width: 190px;" step="any"></td>
+                                    <td><input type="number" name="products[0][weight]" class="form-control weight" style="width: 150px;" step="any"></td>
+                                    <td><input type="text" name="products[0][par]" class="form-control" style="width: 150px;" value="Pcs"></td>
+                                    <td><input type="number" name="products[0][total]" class="form-control total"  style="width: 190px;" step="any" readonly></td>
 
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
@@ -136,21 +143,20 @@ button.remove-row {
                                 
                             </div>
                             <div class="col-md-3">
-                                <label for="code" class="form-label"> Total Weight</label>
-                                <input type="text" class="form-control" id="code" name="sum_total"  readonly step="any">
+                                <input type="hidden" class="form-control" id="code" name="sum_total"  readonly step="any">
                             </div>
                             <div class="col-md-3">
                                 <label for="code" class="form-label">Net weight</label>
-                                <input type="text" class="form-control" id="code" name="net_weight" step="any" >
+                                <input type="text" class="form-control" id="code" name="net_weight" step="any" readonly >
                             </div>
                             <div class="col-md-3">
                                 <label for="code" class="form-label">Gross weight</label>
-                                <input type="text" class="form-control" id="code" name="gross_weight" step="any" >
+                                <input type="text" class="form-control" id="code" name="gross_weight" step="any" readonly>
                             </div>
                             
 </div>
-                  
-                        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+<button type="submit" class="btn btn-primary mt-4 d-block mx-auto">Submit</button>
+
                     </form>
                 </div>
             </div>
@@ -160,52 +166,90 @@ button.remove-row {
 @endsection
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    $(document).ready(function () {
-        let rowCount = 1;
+  $(document).ready(function () {
+    let rowCount = 1;
 
-        // Add Row
-        $("#addRow").click(function () {
-            let newRow = `
-                <tr>
-                    <td>
-                        <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 150px;">
-                            <option value="">Select Product</option>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
-                            @endforeach
-                        </select>
-                    </td>
-                    <td><input type="number" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
-                    <td><input type="number" name="products[${rowCount}][weight]" class="form-control rate" step="any" style="width: 150px;"></td>
-                    <td><input type="text" name="products[${rowCount}][par]" class="form-control "  style="width: 150px;"></td>
-                    <td><input type="number" name="products[${rowCount}][total]" class="form-control total" step="any" style="width: 190px;"></td>
-                    <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-                </tr>`;
-            
-            $("#productTable tbody").append(newRow);
-            rowCount++;
-        });
+    // Add Row
+    $("#addRow").click(function () {
+        let newRow = `
+            <tr>
+                <td>
+                    <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 150px;">
+                        <option value="">Select Product</option>
+                        @foreach ($products as $product)
+                            <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
+                        @endforeach
+                    </select>
+                </td>
+                <td><input type="number" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
+                <td><input type="number" name="products[${rowCount}][weight]" class="form-control weight" step="any" style="width: 150px;"></td>
+                <td><input type="text" name="products[${rowCount}][par]" class="form-control" value="Pcs" style="width: 150px;"></td>
+                <td><input type="number" name="products[${rowCount}][total]" class="form-control total" step="any" style="width: 190px;" readonly></td>
+                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
+            </tr>`;
 
-        // Remove Row
-        $(document).on("click", ".remove-row", function () {
-            $(this).closest("tr").remove();
-            calculateGrandTotal();
-        });
-
-        // Calculate Grand Total
-        $(document).on("input", ".total", function () {
-            calculateGrandTotal();
-        });
-
-        function calculateGrandTotal() {
-            let grandTotal = 0;
-            $(".total").each(function () {
-                let value = parseFloat($(this).val()) || 0;
-                grandTotal += value;
-            });
-            $("input[name='sum_total']").val(grandTotal.toFixed(2));
-        }
+        $("#productTable tbody").append(newRow);
+        rowCount++;
     });
+
+    // Remove Row
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest("tr").remove();
+        calculateNetAndGrossWeight();
+    });
+
+    // When weight is entered, update total and net weight
+    $(document).on("input", ".weight", function () {
+        let weight = parseFloat($(this).val()) || 0;
+        $(this).closest("tr").find(".total").val(weight.toFixed(2));
+        calculateNetAndGrossWeight();
+    });
+
+    // Calculate Net Weight and Gross Weight
+    function calculateNetAndGrossWeight() {
+        let netWeight = 0;
+        
+        $(".total").each(function () {
+            netWeight += parseFloat($(this).val()) || 0;
+        });
+
+        $("input[name='net_weight']").val(netWeight.toFixed(2));
+
+        // Calculate Gross Weight based on Net Weight rules
+        let grossWeight = netWeight;
+        if (netWeight >= 1 && netWeight < 2000) {
+            grossWeight += 10;
+        } else if (netWeight >= 2000 && netWeight < 3000) {
+            grossWeight += 20;
+        } else if (netWeight >= 3000 && netWeight < 4000) {
+            grossWeight += 30;
+        } else if (netWeight >= 4000 && netWeight < 5000) {
+            grossWeight += 40;
+        } else if (netWeight >= 5000 && netWeight < 6000) {
+            grossWeight += 50;
+        } else if (netWeight >= 6000 && netWeight < 7000) {
+            grossWeight += 60;
+        } else if (netWeight >= 7000 && netWeight < 8000) {
+            grossWeight += 70;
+        } else if (netWeight >= 8000 && netWeight < 9000) {
+            grossWeight += 80;
+        } else if (netWeight >= 9000 && netWeight < 10000) {
+            grossWeight += 90;
+        }
+        else if (netWeight >= 10000 && netWeight < 20000) {
+            grossWeight += 100;
+        }
+        else if (netWeight >= 20000 && netWeight < 30000) {
+            grossWeight += 200;
+        }
+        else if (netWeight >= 30000 && netWeight < 40000) {
+            grossWeight += 300;
+        }
+
+        $("input[name='gross_weight']").val(grossWeight.toFixed(2));
+    }
+});
+
 </script>
 
 

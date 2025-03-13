@@ -87,7 +87,7 @@
                                  </div>
                                 <div class="form-group">
                                     <label for="amount" class="required">Amount</label>
-                                    <input type="number" class="form-control" id="amount" name="amount" placeholder="Enter Amount" required>
+                                    <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter Amount" required  id="formattedNumber" oninput="formatNumber(this)">
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
@@ -120,5 +120,19 @@
 
    
 </script>
+<script>
+        function formatNumber(input) {
+            // Remove any existing formatting
+            let value = input.value.replace(/,/g, '');
+            
+            // Convert to a number
+            let number = parseFloat(value);
+            
+            // Format with commas
+            if (!isNaN(number)) {
+                input.value = new Intl.NumberFormat('en-US').format(number);
+            }
+        }
+    </script>
 
 @endsection

@@ -64,7 +64,7 @@ class ExpenseVoucherController extends Controller
                             'date' => 'required|date',
                             'coa_id' => 'required|exists:account_heads,id',
                             'type' => 'required|string|in:cash,bank',
-                            'amount' => 'required|numeric',
+                            'amount' => 'required',
                             'description' => 'nullable|string',
                             'bank_id' => 'nullable|exists:bank_master,id',
                             'shipment_id' => 'nullable|exists:shipment,id',
@@ -77,7 +77,7 @@ class ExpenseVoucherController extends Controller
                          $voucher->coa_id = $request->coa_id;
                          $voucher->description = $request->description;
                          $voucher->type = $request->type;
-                         $voucher->amount = $request->amount;
+                         $voucher->amount = isset($request->amount) ? (float) str_replace(',', '', $request->amount) : 0.00;
                          $voucher->shipment_id = $request->shipment_id;
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1;

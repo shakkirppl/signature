@@ -146,8 +146,6 @@ Route::get('/get-supplier-conformations', [SupplierPaymentController::class, 'ge
 
 
 
-
-
 Route::get('paymentvoucher-create', [paymentvoucherController::class, 'create'])->name('paymentvoucher.create');
 Route::post('paymentvoucher-store', [paymentvoucherController::class,'store'])->name('paymentvoucher.store');
 Route::get('paymentvoucher-index', [paymentvoucherController::class, 'index'])->name('paymentvoucher.index');

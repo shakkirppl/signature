@@ -92,7 +92,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="advance_amount" class="required">Advance Amount</label>
-                                    <input type="number" class="form-control" id="advance_amount" name="advance_amount" placeholder="Enter Amount" required>
+                                    <input type="text" class="form-control" id="advance_amount" name="advance_amount" placeholder="Enter Amount" required
+                                    id="formattedNumber" oninput="formatNumber(this)">
                                 </div>
                                 <div class="form-group">
                                     <label for="description">Description</label>
@@ -113,6 +114,20 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script>
+        function formatNumber(input) {
+            // Remove any existing formatting
+            let value = input.value.replace(/,/g, '');
+            
+            // Convert to a number
+            let number = parseFloat(value);
+            
+            // Format with commas
+            if (!isNaN(number)) {
+                input.value = new Intl.NumberFormat('en-US').format(number);
+            }
+        }
+    </script>
 
 
 <script>

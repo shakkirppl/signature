@@ -115,8 +115,8 @@ button.remove-row {
                         <div class="row mt-3">
                             <div class="col-md-3">
                                 <label for="advance_amount" class="form-label">Advance Amount:</label>
-                                <input type="number" id="advance_amount" name="advance_amount" class="form-control"
-                                  value="" step="0.01" min="0">
+                                <input type="text" id="advance_amount" name="advance_amount" class="form-control"
+                                  value="" step="0.01" min="0"  id="formattedNumber" oninput="formatNumber(this)" >
                
                             </div>
 
@@ -214,9 +214,30 @@ $(document).ready(function () {
         }
     });
 });
+
 </script>
-
-
+<script>
+        document.getElementById('formattedNumber').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/,/g, ''); // Remove commas
+            // if (!isNaN(value) && value !== '') {
+            //     e.target.value = Number(value).toLocaleString(); // Add commas
+            // }
+        });
+    </script>
+<script>
+        function formatNumber(input) {
+            // Remove any existing formatting
+            let value = input.value.replace(/,/g, '');
+            
+            // Convert to a number
+            let number = parseFloat(value);
+            
+            // Format with commas
+            if (!isNaN(number)) {
+                input.value = new Intl.NumberFormat('en-US').format(number);
+            }
+        }
+    </script>
 
 
 

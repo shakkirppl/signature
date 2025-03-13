@@ -56,7 +56,7 @@ class ReceiptVoucherController extends Controller
                              'date' => 'required|date',
                              'coa_id' => 'required|string',
                              'type' => 'required|string|in:cash,bank', 
-                             'amount' => 'required|numeric',
+                             'amount' => 'required',
                              'bank_id' => 'nullable|exists:bank_master,id', 
                          ]);
                  
@@ -67,7 +67,7 @@ class ReceiptVoucherController extends Controller
                          $voucher->coa_id = $request->coa_id;
                          $voucher->description = $request->description;
                          $voucher->type = $request->type;
-                         $voucher->amount = $request->amount;
+                         $voucher->amount = isset($request->amount) ? (float) str_replace(',', '', $request->amount) : 0.00;
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1; 
                  

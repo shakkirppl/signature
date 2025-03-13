@@ -60,7 +60,7 @@ class paymentvoucherController extends Controller
                              'date' => 'required|date',
                              'coa_id' => 'required|exists:account_heads,id',
                              'type' => 'required|string|in:cash,bank', // Ensure only valid types are allowed
-                             'amount' => 'required|numeric',
+                             'amount' => 'required',
                              'bank_id' => 'nullable|exists:bank_master,id', 
                              'employee_id' => 'required|exists:employee,id',
                             
@@ -74,7 +74,7 @@ class paymentvoucherController extends Controller
                          $voucher->employee_id = $request->employee_id;
                          $voucher->description = $request->description;
                          $voucher->type = $request->type;
-                         $voucher->amount = $request->amount;
+                         $voucher->amount = isset($request->amount) ? (float) str_replace(',', '', $request->amount) : 0.00;
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1; // Assuming a default store ID
                          InvoiceNumber::updateinvoiceNumber('payment_voucher',1);

@@ -27,7 +27,7 @@ class SupplierAdvanceObserver
             'transaction_type' => 'Supplier Advance',
             'description' => $supplierAdvance->description,
             'account_type' => 'Supplier',
-            'store_id' => Auth::user()->store_id,
+            'store_id' => 1,
             'user_id' => Auth::id(),
             'financial_year' => date('Y'), 
         ]);

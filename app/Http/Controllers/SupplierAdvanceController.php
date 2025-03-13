@@ -93,7 +93,7 @@ public function store(Request $request)
         'supplier_id' => 'required',
         'date' => 'required|date',
         'type' => 'required',
-        'advance_amount' => 'required|numeric|min:0',
+        'advance_amount' => 'required',
         'purchaseOrder_id'=>'required',
     ]);
 
@@ -108,9 +108,10 @@ public function store(Request $request)
             'supplier_id' => $request->supplier_id,
             'type' => $request->type,
             'order_no' => $request->order_no,
-            'advance_amount' => $request->advance_amount,
+            'advance_amount' => isset($request->advance_amount)  ? (float) str_replace(',', '', $request->advance_amount) : 0.00,
+
             'bank_id' => $request->type === 'bank' ? $request->bank_id : null,
-            'store_id' => Auth::user()->store_id,
+            'store_id' =>1,
             'user_id' => Auth::id(),
             'description' => $request->description,
         ]);
