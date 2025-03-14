@@ -200,6 +200,14 @@ Route::get('inspection-report', [InspectionController::class, 'report'])->name('
 Route::get('/rejected-animal-report', [InspectionController::class, 'rejectedAnimalReport'])->name('rejected.animal.report');
 Route::get('/shipment/rejected/details/{shipment_no}', [InspectionController::class, 'shipmentRejectedDetails'])->name('shipment.rejected.details');
 Route::get('/shipment/{shipment_no}/supplier/{supplier_name}/details', [InspectionController::class, 'viewSupplierRejectedProducts'])->name('supplier.rejected.details');
+Route::get('/inspection/{id}/edit', [InspectionController::class, 'edit'])->name('inspection.edit');
+Route::put('/inspection/{id}', [InspectionController::class, 'update'])->name('inspection.update');
+Route::get('/inspectionview/{id}/view', [InspectionController::class, 'inspectionview'])->name('inspection.inspectionview');
+Route::delete('/inspection/{id}', [InspectionController::class, 'destroy'])->name('inspection.destroy');
+
+
+
+
 
 
 

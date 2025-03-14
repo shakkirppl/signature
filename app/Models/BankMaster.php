@@ -19,6 +19,8 @@ class BankMaster extends Model
         'gl',
         'store_id',
         'user_id',
+        'account_no',
+        'account_name'
     ];
 
   

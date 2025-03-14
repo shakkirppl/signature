@@ -22,9 +22,20 @@
                         </div>
                     </div>
 
+                    @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <br />
+                    @endif
+
                     <form class="form-sample" action="{{ route('bank-master.update', $bankMaster->id) }}" method="POST">
                         @csrf
-                        @method('POST')  <!-- To indicate that it's an update request -->
+                        @method('POST')
                         
                         <div class="row">
                             <div class="col-md-6">
@@ -45,33 +56,47 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label required">Currency</label>
+                                    <label class="col-sm-2 col-form-label required">Account Name:</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" placeholder="" name="currency" value="{{ $bankMaster->currency }}" required />
+                                        <input type="text" class="form-control" placeholder="Enter the Account Name" name="account_name" value="{{ $bankMaster->account_name }}" />
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label required">Type</label>
+                                    <label class="col-sm-2 col-form-label required">Currency</label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" name="type" required>
-                                            <option value="">Select Type</option>
-                                            <option value="cash" {{ $bankMaster->type == 'cash' ? 'selected' : '' }}>Cash</option>
-                                            <option value="bank" {{ $bankMaster->type == 'bank' ? 'selected' : '' }}>Bank</option>
+                                        <select class="form-control" id="currency" name="currency">
+                                            <option value="USD" {{ $bankMaster->currency == 'USD' ? 'selected' : '' }}>USD</option>
+                                            <option value="Shilling" {{ $bankMaster->currency == 'Shilling' ? 'selected' : '' }}>Shilling</option>
                                         </select>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label required">Account No:</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" placeholder="Enter the Account No" name="account_no" value="{{ $bankMaster->account_no }}" />
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label required">GL</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control" placeholder="" name="gl" value="{{ $bankMaster->gl }}" required />
+                                        <input type="text" class="form-control" placeholder="" name="gl" value="{{ $bankMaster->gl }}" />
                                     </div>
                                 </div>
                             </div>
-
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label required">Account Type</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" placeholder="Enter the Type" name="type" value="{{ $bankMaster->type }}" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="submitbutton">

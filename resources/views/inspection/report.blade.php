@@ -35,6 +35,7 @@
                         <table class="table table-hover" id="report-table">
                             <thead>
                                 <tr>
+                                    <th>Inspection No</th>
                                     <th>Order No</th>
                                     <th>Date</th>
                                     <th>Supplier</th>
@@ -45,6 +46,7 @@
                             <tbody>
                                 @foreach($inspections as $inspection)
                                 <tr>
+                                <td>{{ $inspection->inspection_no }}</td>
                                     <td>{{ $inspection->order_no }}</td>
                                     <td>{{ $inspection->date }}</td>
                                     <td>{{ $inspection->supplier->name }}</td>
@@ -56,7 +58,14 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <a href="{{ url('inspection/'.$inspection->id.'/reportview') }}" class="btn btn-warning">View</a>
+                                    <a href="{{ route('inspection.edit', $inspection->id) }}" class="btn btn-primary">Edit</a>
+
+                                    <a href="{{ route('inspection.inspectionview', $inspection->id) }}" class="btn btn-info">View</a>
+                                    <form action="{{ route('inspection.destroy', $inspection->id) }}" method="POST" style="display:inline;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this inspection?');">Delete</button>
+    </form>
                                     </td>
                                 </tr>
                                 @endforeach

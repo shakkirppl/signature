@@ -57,36 +57,55 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label required">Account Name:</label>
+                                    <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="Enter the Account Name" name="account_name"  />
+
+                                    </div>
+                                </div>
+                            
+                           
+                            </div>
+                           
+                            <div class="col-md-6">
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label required">Currency</label>
                                     <div class="col-sm-9">
-                                    <input type="text" class="form-control" placeholder="" name="currency" required="true"  />
+                                    <select class="form-control" id="currency" name="currency">
+                                          <option value="USD" selected>USD</option>
+                                             <option value="Shilling">Shilling</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                           <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label required">Account No:</label>
+                                    <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="Enter the Account No" name="account_no"  />
 
                                     </div>
                                 </div>
                             </div>
-                            <!-- <div class="col-md-6">
-                                <div class="form-group row">
-                                 <label class="col-sm-2 col-form-label required">Type</label> 
-                              <div class="col-sm-9">
-                                    <select class="form-control" name="type" required>
-                                          <option value="">Select Type</option>
-                                          <option value="cash" {{ old('type') == 'cash' ? 'selected' : '' }}>Cash</option>
-                                           <option value="bank" {{ old('type') == 'bank' ? 'selected' : '' }}>Bank</option>
-                                </select>
-                        </div>
-                    </div>
-                </div> -->
-                           <div class="col-md-6">
+                            <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label required">GL</label>
                                     <div class="col-sm-9">
-                                    <input type="text" class="form-control" placeholder="" name="gl" required="true"  />
+                                    <input type="text" class="form-control" placeholder="" name="gl"   />
 
                                     </div>
                                 </div>
                             </div>
-                            <input type="hidden" name="store_id" value="{{ auth()->user()->store_id }}">
-                            <input type="hidden" name="user_id" value="{{ auth()->id() }}">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label required">Account Type</label>
+                                    <div class="col-sm-9">
+                                    <input type="text" class="form-control" placeholder="Enter the Type" name="type"  />
+
+                                    </div>
+                                </div>
+                            </div>
+                           
 
                        
                                             </tbody>

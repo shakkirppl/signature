@@ -37,8 +37,10 @@ class BankMasterController extends Controller
             'code' => 'required|string|max:255',
             'bank_name' => 'required|string|max:255',
             'currency' => 'required|string|max:255',
-           
-            'gl' => 'required|string|max:255', 
+            'gl' => 'nullable|string|max:255', 
+            'account_no' => 'nullable|string|max:255', 
+            'account_name' => 'nullable|string|max:255', 
+            'type' => 'nullable|string|max:255', 
         ]);
     
        
@@ -46,8 +48,10 @@ class BankMasterController extends Controller
             'code' => $request->input('code'),
             'bank_name' => $request->input('bank_name'),
             'currency' => $request->input('currency'),
-            'type' =>null ,
+            'type' =>$request->input('type'),
             'gl' => $request->input('gl'), 
+            'account_no' => $request->input('gl'), 
+            'account_name' => $request->input('gl'), 
             'store_id' => 1, 
             'user_id' => auth()->id(), 
         ]);
@@ -76,6 +80,9 @@ class BankMasterController extends Controller
                 'bank_name' => 'required|string|max:255',
                 'currency' => 'required|string|max:255',
                 'gl' => 'nullable|string|max:255',
+                'account_no' => 'nullable|string|max:255', 
+                'account_name' => 'nullable|string|max:255', 
+                'type' => 'nullable|string|max:255', 
             ]);
     
             $bankMaster = BankMaster::findOrFail($id);

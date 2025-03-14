@@ -14,6 +14,8 @@ use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
 use App\Models\InvoiceNumber;
 
+use Illuminate\Support\Facades\Log;
+
 
 
 
@@ -125,7 +127,7 @@ public function store(Request $request)
 
 public function report(Request $request)
 {
-    $query = Inspection::with('supplier');
+    $query = Inspection::with('supplier')->where('status', 1);
 
     // Apply filters
     if ($request->supplier_id) {
@@ -222,6 +224,92 @@ public function shipmentRejectedDetails($shipment_no)
 
 
 
+public function edit($id)
+{
+    $inspection = Inspection::with('details.product')->findOrFail($id);
+    $suppliers = Supplier::all();
+    $rejectReasons = RejectMaster::all(); // Assuming reject reasons are stored here
+
+    return view('inspection.edit', compact('inspection', 'suppliers', 'rejectReasons'));
+}
+
+public function update(Request $request, $id)
+{
+    try {
+        DB::beginTransaction(); // Start transaction
+
+        // Validate input data
+        $validated = $request->validate([
+            'order_no' => 'required|string',
+            'inspection_no' => 'required|string',
+            'date' => 'required|date',
+            'supplier_id' => 'required|exists:supplier,id',
+            'products.*.received_qty' => 'required|integer',
+            'products.*.male_accepted_qty' => 'required|integer',
+            'products.*.female_accepted_qty' => 'required|integer',
+            'products.*.male_rejected_qty' => 'nullable|integer',
+            'products.*.female_rejected_qty' => 'nullable|integer',
+            'products.*.rejected_reason' => 'nullable|exists:reject_masters,id',
+        ]);
+
+        // Find the inspection record
+        $inspection = Inspection::findOrFail($id);
+
+        // Update inspection details
+        $inspection->update([
+            'order_no' => $validated['order_no'],
+            'inspection_no' => $validated['inspection_no'],
+            'date' => $validated['date'],
+            'supplier_id' => $validated['supplier_id'],
+        ]);
+
+        // Update each inspection detail record
+        foreach ($validated['products'] as $detail_id => $productData) {
+            $detail = InspectionDetail::findOrFail($detail_id);
+            $detail->update([
+                'received_qty' => $productData['received_qty'],
+                'male_accepted_qty' => $productData['male_accepted_qty'],
+                'female_accepted_qty' => $productData['female_accepted_qty'],
+                'male_rejected_qty' => $productData['male_rejected_qty'] ?? 0,
+                'female_rejected_qty' => $productData['female_rejected_qty'] ?? 0,
+                'rejected_reason' => $productData['rejected_reason'],
+            ]);
+        }
+
+        DB::commit(); // Commit transaction if everything is fine
+
+        return redirect()->route('inspection.report')->with('success', 'Inspection updated successfully.');
+
+    } catch (\Exception $e) {
+        DB::rollBack(); // Rollback transaction if error occurs
+
+        Log::error('Inspection update error: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return redirect()->back()->with('error', 'Failed to update inspection. Check logs for details.');
+    }
+}
+
+
+public function inspectionview($id)
+{
+    // Retrieve the inspection record with related supplier and details
+    $inspection = Inspection::with(['supplier', 'details.product','details.rejectMaster'])->findOrFail($id);
+
+    return view('inspection.inspectionview', compact('inspection'));
+}
+
+public function destroy($id)
+{
+    // Find the inspection record
+    $inspection = Inspection::findOrFail($id);
+
+    // Change status from 1 to 0 instead of deleting
+    $inspection->update(['status' => 0]);
+
+    return redirect()->route('inspection.report')->with('success', 'Inspection status changed successfully.');
+}
 
 
 }

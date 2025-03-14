@@ -92,12 +92,12 @@ button.remove-row {
                                     <th>Product</th>
                                     <th>Actual Quantity</th>
                                     <th>Received Quantity</th>
-                                    <th>Male</th>
-                                    <th>Female</th>
+                                    <!-- <th>Male</th>
+                                    <th>Female</th> -->
                                     <!-- <th>Mark</th> -->
-                                    <th>Male Accepted Quantity</th>
+                                    <th>Male </th>
+                                    <th>Female</th>
                                     <th>Male Rejected Quantity</th>
-                                    <th>Female Accepted Quantity</th>
                                     <th>Female Rejected Quantity</th>
                                     <th>Rejected Reasons</th>
                                     <th>Action</th>
@@ -123,12 +123,12 @@ button.remove-row {
             <td>
                 <input type="text" name="products[{{ $index }}][received_qty]" class="form-control qty" value="{{ $detail->received_qty }}"  style="width: 150px;">
             </td>
-            <td>
+            <!-- <td>
                 <input type="text" name="products[{{ $index }}][male]" class="form-control male" value=""  style="width: 150px;">
             </td>
             <td>
                 <input type="number" name="products[{{ $index }}][female]" class="form-control female" value="" min="1" style="width: 150px;">
-            </td>
+            </td> -->
             <!-- <td>
                 <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" style="width: 150px;">
             </td> -->
@@ -136,14 +136,14 @@ button.remove-row {
                 <input type="number" name="products[{{ $index }}][male_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
             </td>
             <td>
-                <input type="number" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" readonly>
+                <input type="number" name="products[{{ $index }}][female_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
             </td>
             <td>
-                <input type="number" name="products[{{ $index }}][female_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
+                <input type="number" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" >
             </td>
            
             <td>
-                <input type="number" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" readonly>
+                <input type="number" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" >
             </td>
          
             <td>

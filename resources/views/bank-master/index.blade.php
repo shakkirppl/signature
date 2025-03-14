@@ -27,7 +27,9 @@
                                     <th>No</th>
                                     <th>Code</th>
                                     <th>Bank Name</th>
-                                   
+                                    <th>Account Name</th>
+                                    <th>Account No</th>
+                                    <th>Account Type</th>
                                     <th>GL</th>
                                     <th>Action</th>
                                 </tr>
@@ -38,6 +40,9 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $bank->code }}</td>
                                         <td>{{ $bank->bank_name }}</td>
+                                        <td>{{ $bank->account_name }}</td>
+                                        <td>{{ $bank->account_no }}</td>
+                                        <td>{{ $bank->type }}</td>
                                        
                                         <td>{{ $bank->gl ?? 'N/A' }}</td>
                                         <td>
