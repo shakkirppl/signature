@@ -64,11 +64,8 @@ button.remove-row {
                             <thead>
                                 <tr>
                                     <th>Products</th>
-                                    <th>Male Accepted Quandity</th>
-                                    <th>Female Accepted Quandity</th>
                                     <th>Total Accepted Quandity</th>
-                                   
-                                    <th>Weight</th>
+                                     <th>Weight</th>
                                     
                                    
                                 </tr>
@@ -185,45 +182,6 @@ $(document).ready(function () {
         let shipment_id = "{{ $shipment_id }}";
 
         if (supplier_id) {
-            // Fetch Supplier Products
-            $.ajax({
-                url: "{{ route('get.supplier.products') }}",
-                type: "GET",
-                data: { supplier_id: supplier_id, shipment_id: shipment_id },
-                success: function (response) {
-                    let rows = '';
-                    response.forEach(detail => {
-                        let totalAcceptedQty = detail.male_accepted_qty + detail.female_accepted_qty;
-
-                        rows += `
-                            <tr>
-                                <td>
-                                    <input type="hidden" name="product_id[]" value="${detail.product.id}">
-                                    ${detail.product.product_name}
-                                </td>
-                                <td>
-                                    <input type="number" name="male_accepted_qty[]" value="${detail.male_accepted_qty}" class="form-control" readonly>
-                                </td>
-                                <td>
-                                    <input type="number" name="female_accepted_qty[]" value="${detail.female_accepted_qty}" class="form-control" readonly>
-                                </td>
-                                <td>
-                                    <input type="number" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted" readonly>
-                                </td>
-                               
-                               
-                                <td>
-                                    <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                    
-                    $('#productDetails').html(rows);
-                    $('.weight-input').on('input', calculateTotalWeight);
-                }
-            });
-
             // Fetch Purchase Order ID
             $.ajax({
                 url: "{{ route('get.purchase.order.id') }}",
@@ -237,13 +195,86 @@ $(document).ready(function () {
                     }
                 }
             });
+
+            // Fetch Supplier Products
+            $.ajax({
+                url: "{{ route('get.supplier.products') }}",
+                type: "GET",
+                data: { supplier_id: supplier_id, shipment_id: shipment_id },
+                success: function (response) {
+                    let rows = '';
+
+                    response.forEach(detail => {
+                        let totalAcceptedQty = detail.male_accepted_qty + detail.female_accepted_qty;
+                        let productName = detail.product.product_name.trim().toLowerCase();
+                        let productId = detail.product.id;
+
+                        // Original Product Row
+                        let productRow = `
+                            <tr class="product-row" data-product-id="${productId}">
+                                <td>
+                                    <input type="hidden" name="product_id[]" value="${productId}">
+                                    ${detail.product.product_name}
+                                </td>
+                                <td>
+                                    <input type="number" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted original-live-goat" readonly data-original-value="${totalAcceptedQty}">
+                                </td>
+                                <td>
+                                    <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                                </td>
+                            </tr>
+                        `;
+
+                        rows += productRow;
+
+                        // If the product name contains "live goat" in any case variation, add an additional row below it
+                        if (productName.includes("live goat")) {
+                            let additionalRow = `
+                                <tr class="additional-live-goat">
+                                    <td>
+                                        <input type="hidden" name="product_id[]" value="${productId}">
+                                         ${detail.product.product_name}
+                                    </td>
+                                    <td>
+                                        <input type="number" name="total_accepted_qty[]" class="form-control total-accepted additional-accepted" oninput="adjustLiveGoatQty(${productId})">
+                                    </td>
+                                    <td>
+                                        <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                                    </td>
+                                </tr>
+                            `;
+                            rows += additionalRow; // Append additional row below the original row
+                        }
+                    });
+
+                    $('#productDetails').html(rows);
+                    $('.weight-input').on('input', calculateTotalWeight);
+                }
+            });
         } else {
             $('#productDetails').html('');
             $('#purchaseOrder_id').val('');
         }
     });
 
+    // Function to adjust the Live Goat quantity dynamically
+    window.adjustLiveGoatQty = function (productId) {
+        let additionalQty = parseInt($(`.additional-accepted`).val()) || 0;
+        let originalQtyField = $(`[data-product-id="${productId}"] .original-live-goat`);
 
+        if (originalQtyField.length) {
+            let originalQty = parseInt(originalQtyField.attr('data-original-value')) || parseInt(originalQtyField.val()) || 0;
+            let newOriginalQty = originalQty - additionalQty;
+
+            if (newOriginalQty < 0) {
+                alert("Additional quantity cannot exceed the original accepted quantity!");
+                $('.additional-accepted').val(0);
+                newOriginalQty = originalQty;
+            }
+
+            originalQtyField.val(newOriginalQty);
+        }
+    };
 
     function calculateTotalWeight() {
         let totalWeight = 0;
@@ -255,8 +286,8 @@ $(document).ready(function () {
         $('#total_weight').val(totalWeight.toFixed(2));
     }
 });
-
 </script>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>

@@ -80,7 +80,7 @@ button.remove-row {
                                 <tr>
                                     <th>Product</th>
                                   
-                                    <th>Total Accepted Quandity</th>
+                                    <th>Quandity</th>
                                     <th>Total Weight</th>
                                     <th>Price/Kg</th>
                                     <th>Transportation/Kg</th>
@@ -91,7 +91,7 @@ button.remove-row {
                                     @foreach ($WeightCalculatorMaster->details as $index => $detail)                                     
                                         <tr class="product-row">                                         
                                             <td>                                           
-                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required  style="width: 140px;">                                               
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required  style="width: 120px;">                                               
                                                     <option value="">Select Product</option>                                                   
                                                     @foreach ($products as $product)                                                     
                                                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" 
@@ -102,16 +102,16 @@ button.remove-row {
                                                 </select>                                         
                                             </td>                                                                             
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 150px;">                                         
+                                                <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 100px;">                                         
                                             </td>                                         
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 130px;">                                         
+                                                <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 100px;">                                         
                                             </td>                                         
                                             <td>                                                     
                                                 <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                         
                                             </td>                                         
                                             <td>                                                    
-                                                <input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                        
+                                                <input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 120px;" id="formattedNumber" oninput="formatNumber(this)">                                        
                                             </td>                                         
                                             <td>                                         
                                                 <input type="text" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                          
@@ -135,15 +135,15 @@ button.remove-row {
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="item_total" class="form-label" >Item Amount:</label>
-            <input type="text" id="item_total" name="item_total" readonly class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}"  step="any" id="formattedNumber" oninput="formatNumber(this)" >
+            <input type="text" id="item_total" name="item_total" readonly class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}"  step="any" id="formattedNumber" oninput="formatNumber(this)" style="width: 150px;" >
         </div>
         <div class="col-md-4">
             <label for="total_expense" class="form-label">Additional Expense:</label>
-            <input type="text" id="total_expense" name="total_expense" class="form-control" step="0.01" id="formattedNumber" oninput="formatNumber(this)">
+            <input type="text" id="total_expense" name="total_expense" class="form-control"  step="0.01"  id="formattedNumber" oninput="formatNumber(this)" style="width: 150px;">
         </div>
         <div class="col-md-4">
             <label for="grand_total" class="form-label">Grand Total:</label>
-            <input type="text" id="grand_total" name="grand_total" class="form-control" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)">
+            <input type="text" id="grand_total" name="grand_total" class="form-control" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)" style="width: 150px;">
         </div>
     </div>
 
@@ -234,147 +234,7 @@ function calculateTotals(formatExpense = true) {
 }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    let productIndex = document.querySelectorAll('.product-row').length; 
 
-    function initializeRows() {
-        document.querySelectorAll('.product-select').forEach(select => {
-            const selectedProduct = select.options[select.selectedIndex].text;
-            const selectedProductId = select.value;
-            const row = select.closest('tr');
-
-            if (selectedProduct.toLowerCase() === "live goat") {
-                addAdditionalRow(row, selectedProduct, selectedProductId);
-            }
-        });
-    }
-
-    document.getElementById('product-details').addEventListener('change', function (event) {
-        if (event.target.classList.contains('product-select')) {
-            const selectedProduct = event.target.options[event.target.selectedIndex].text;
-            const selectedProductId = event.target.value;
-            const row = event.target.closest('tr');
-
-            if (selectedProduct.toLowerCase() === "live goat") {
-                addAdditionalRow(row, selectedProduct, selectedProductId);
-            } else {
-                removeAdditionalRow(row);
-            }
-        }
-    });
-
-    function addAdditionalRow(originalRow, productName, productId) {
-        const nextRow = originalRow.nextElementSibling;
-        if (nextRow && nextRow.classList.contains('additional-live-goat')) {
-            return; // Avoid duplicate rows
-        }
-
-        let newIndex = productIndex++;
-
-        // Clone the row
-        const newRow = originalRow.cloneNode(true);
-        newRow.classList.add('additional-live-goat');
-
-        newRow.querySelectorAll('[name]').forEach(input => {
-            input.name = input.name.replace(/\d+/, newIndex); 
-            input.value = ''; 
-        });
-
-        let productSelect = newRow.querySelector('.product-select');
-        if (productSelect) {
-            let productText = document.createElement('span');
-            productText.textContent = productName;
-            productSelect.parentNode.replaceChild(productText, productSelect); 
-        }
-
-        let productIdInput = newRow.querySelector('[name*="[product_id]"]');
-        if (productIdInput) {
-            productIdInput.value = productId;
-        } else {
-            productIdInput = document.createElement('input');
-            productIdInput.type = 'hidden';
-            productIdInput.name = `products[${newIndex}][product_id]`;
-            productIdInput.value = productId;
-            newRow.appendChild(productIdInput);
-        }
-
-        let originalQtyInput = originalRow.querySelector('[name*="[total_accepted_qty]"]');
-        let originalWeightInput = originalRow.querySelector('[name*="[total_weight]"]');
-
-        if (!originalQtyInput.hasAttribute('data-original')) {
-            originalQtyInput.setAttribute('data-original', originalQtyInput.value);
-        }
-        if (!originalWeightInput.hasAttribute('data-original')) {
-            originalWeightInput.setAttribute('data-original', originalWeightInput.value);
-        }
-
-        originalRow.parentNode.insertBefore(newRow, originalRow.nextSibling);
-
-        newRow.querySelector('[name*="[total_accepted_qty]"]').addEventListener('input', function () {
-            updateOriginalRowQty(originalRow, newRow);
-        });
-
-        newRow.querySelector('[name*="[total_weight]"]').addEventListener('input', function () {
-            updateOriginalRowWeight(originalRow, newRow);
-        });
-
-        newRow.querySelector('.rate').addEventListener('input', function () {
-            updateRowTotal(newRow);
-            calculateTotals();
-        });
-
-        newRow.querySelector('.transport').addEventListener('input', function () {
-            updateRowTotal(newRow);
-            calculateTotals();
-        });
-
-        newRow.querySelector('.weight').addEventListener('input', function () {
-            updateRowTotal(newRow);
-            calculateTotals();
-        });
-    }
-
-    function updateOriginalRowQty(originalRow, newRow) {
-        let originalQtyInput = originalRow.querySelector('[name*="[total_accepted_qty]"]');
-        let newQtyInput = newRow.querySelector('[name*="[total_accepted_qty]"]');
-
-        let newQty = parseFloat(newQtyInput.value) || 0;
-        let originalQty = parseFloat(originalQtyInput.getAttribute('data-original')) || 0;
-
-        if (newQty > originalQty) {
-            alert("Error: Entered quantity exceeds available quantity!");
-            newQtyInput.value = "";
-            return;
-        }
-
-        originalQtyInput.value = (originalQty - newQty).toFixed(2);
-    }
-
-    function updateOriginalRowWeight(originalRow, newRow) {
-        let originalWeightInput = originalRow.querySelector('[name*="[total_weight]"]');
-        let newWeightInput = newRow.querySelector('[name*="[total_weight]"]');
-
-        let newWeight = parseFloat(newWeightInput.value) || 0;
-        let originalWeight = parseFloat(originalWeightInput.getAttribute('data-original')) || 0;
-
-        if (newWeight > originalWeight) {
-            alert("Error: Entered weight exceeds available weight!");
-            newWeightInput.value = "";
-            return;
-        }
-
-        originalWeightInput.value = (originalWeight - newWeight).toFixed(2);
-    }
-
-    function removeAdditionalRow(originalRow) {
-        const nextRow = originalRow.nextElementSibling;
-        if (nextRow && nextRow.classList.contains('additional-live-goat')) {
-            nextRow.remove();
-        }
-    }
-
-    initializeRows();
-});
 </script>
 <script>
         document.getElementById('formattedNumber').addEventListener('input', function (e) {
@@ -408,6 +268,7 @@ document.addEventListener('DOMContentLoaded', function () {
     dateInput.value = today;
 });
 </script>
+
 
 
 

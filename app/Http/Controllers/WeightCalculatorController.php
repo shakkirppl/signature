@@ -119,8 +119,7 @@ class WeightCalculatorController extends Controller
                             $weightCalculatorDetail = new WeightCalculatorDetail();
                             $weightCalculatorDetail->weight_master_id = $weightCalculatorMaster->id;
                             $weightCalculatorDetail->product_id = $productId;
-                            $weightCalculatorDetail->male_accepted_qty = $request->male_accepted_qty[$index] ?? 0;
-                            $weightCalculatorDetail->female_accepted_qty = $request->female_accepted_qty[$index] ?? 0;
+                         
                             $weightCalculatorDetail->total_accepted_qty = $request->total_accepted_qty[$index] ?? 0;
                             $weightCalculatorDetail->weight = $request->weight[$index] ?? 0;
                             $weightCalculatorDetail->supplier_id = $supplierId;
