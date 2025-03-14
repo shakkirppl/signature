@@ -125,8 +125,8 @@ class WeightCalculatorController extends Controller
                             $weightCalculatorDetail->weight = $request->weight[$index] ?? 0;
                             $weightCalculatorDetail->supplier_id = $supplierId;
                             $weightCalculatorDetail->shipment_id = $request->shipment_id;
-                            $weightCalculatorDetail->male_death_qty = $request->male_death_qty[$index] ?? 0;
-                            $weightCalculatorDetail->female_death_qty = $request->female_death_qty[$index] ?? 0;
+                            
+                           
                             $weightCalculatorDetail->save();
                         }
                         
