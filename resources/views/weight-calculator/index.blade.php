@@ -43,4 +43,19 @@
     </div>
   </div>
 </div>
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 @endsection

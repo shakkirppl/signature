@@ -15,7 +15,9 @@
                         </div>
                     </div>
 
-                    <table class="table table-bordered">
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+              <thead style="background-color: #d6d6d6; color: #000;">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -41,9 +43,25 @@
 
                     {{ $reports->links() }} <!-- Pagination -->
                 </div>
+</div>
             </div>
         </div>
     </div>
 </div>
 
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 @endsection

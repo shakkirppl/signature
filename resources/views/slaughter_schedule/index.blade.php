@@ -17,9 +17,9 @@
                             </div>
                   
 
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="value-table">
-                            <thead>
+                            <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+              <thead style="background-color: #d6d6d6; color: #000;">
                                 <tr>
                                 <th>No</th>
                                     <th>Slaughter No</th>
@@ -68,12 +68,12 @@
         View 
     </a>
 
-    <a href="{{ route('slaughter-schedule.edit', $schedule->id) }}" class="btn btn-warning">Edit</a>
+    <a href="{{ route('slaughter-schedule.edit', $schedule->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
 <form action="{{ url('slaughter-schedule/delete/'.$schedule->id) }}" method="POST" style="display:inline;">
     @csrf
     @method('DELETE')
-    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this schedule?');">Delete</button>
+    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this schedule?');">Delete</button>
 </form>
 </td>
 
@@ -87,5 +87,19 @@
         </div>
     </div>
 </div>
-
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 @endsection

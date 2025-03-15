@@ -246,9 +246,9 @@ public function update(Request $request, $id)
             'inspection_no' => 'required|string',
             'date' => 'required|date',
             'supplier_id' => 'required|exists:supplier,id',
-            'products.*.received_qty' => 'required|integer',
-            'products.*.male_accepted_qty' => 'required|integer',
-            'products.*.female_accepted_qty' => 'required|integer',
+            'products.*.received_qty' => 'nullable|integer',
+            'products.*.male_accepted_qty' => 'nullable|integer',
+            'products.*.female_accepted_qty' => 'nullable|integer',
             'products.*.male_rejected_qty' => 'nullable|integer',
             'products.*.female_rejected_qty' => 'nullable|integer',
             'products.*.rejected_reason' => 'nullable|exists:reject_masters,id',
@@ -257,9 +257,7 @@ public function update(Request $request, $id)
         // Check validation for received quantity
         foreach ($validated['products'] as $detail_id => $productData) {
             $totalQuantity = ($productData['male_accepted_qty'] ?? 0) + 
-                             ($productData['female_accepted_qty'] ?? 0) + 
-                             ($productData['male_rejected_qty'] ?? 0) + 
-                             ($productData['female_rejected_qty'] ?? 0);
+                             ($productData['female_accepted_qty'] ?? 0);
 
             if ($totalQuantity !== (int)$productData['received_qty']) {
                 session()->flash('error', "Received quantity must be equal to the sum of accepted and rejected quantities.");
@@ -282,9 +280,9 @@ public function update(Request $request, $id)
         foreach ($validated['products'] as $detail_id => $productData) {
             $detail = InspectionDetail::findOrFail($detail_id);
             $detail->update([
-                'received_qty' => $productData['received_qty'],
-                'male_accepted_qty' => $productData['male_accepted_qty'],
-                'female_accepted_qty' => $productData['female_accepted_qty'],
+                'received_qty' =>  isset($productData['received_qty']) ? $productData['received_qty'] : null,
+                'male_accepted_qty' => isset($productData['male_accepted_qty']) ? $productData['male_accepted_qty'] : null,
+                'female_accepted_qty' => isset($productData['female_accepted_qty']) ? $productData['female_accepted_qty'] : null,
                 'male_rejected_qty' => $productData['male_rejected_qty'] ?? 0,
                 'female_rejected_qty' => $productData['female_rejected_qty'] ?? 0,
                 'rejected_reason' => $productData['rejected_reason'],

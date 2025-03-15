@@ -20,10 +20,10 @@
                            
                         </div>
                     </div>
-                    <br>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
+                    
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+              <thead style="background-color: #d6d6d6; color: #000;">
                                 <tr>
                                     <th>Product Name</th>
                                     <th>Quantity</th>
@@ -34,7 +34,7 @@
                                 @foreach($weightDetails as $detail)
                                 <tr>
                                     <td>{{ $detail->product->product_name }}</td>
-                                    <td>{{ $detail->quandity }}</td>
+                                    <td>{{ $detail->total_accepted_qty }}</td>
                                     <td>{{ $detail->weight }}</td>
                                 </tr>
                                 @endforeach
@@ -47,4 +47,20 @@
         </div>
     </div>
 </div>
+
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 @endsection

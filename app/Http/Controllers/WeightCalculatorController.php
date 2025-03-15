@@ -155,9 +155,6 @@ public function getSuppliersByShipment($shipment_id) {
 }
 
 
-
-
-
 public function getSupplierProducts(Request $request)
 {
     $supplier_id = $request->supplier_id;
@@ -168,8 +165,14 @@ public function getSupplierProducts(Request $request)
               ->where('supplier_id', $supplier_id);
     })->with('product')->get();
 
-    return response()->json($inspectionDetails);
+    // Filter out products where total_accepted_qty is 0 or below
+    $filteredDetails = $inspectionDetails->filter(function ($detail) {
+        return ($detail->male_accepted_qty + $detail->female_accepted_qty) > 0;
+    });
+
+    return response()->json($filteredDetails);
 }
+
 
 public function checkExistingWeightCalculation(Request $request)
 {

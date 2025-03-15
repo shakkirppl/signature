@@ -92,9 +92,9 @@
                                             <th width="15%">Recived</th>
                                             <th width="15%">Male</th>
                                             <th width="15%"> Female</th>
-                                            <th width="15%">Rejected Male</th>
-                                            <th width="10%">Rejected Female</th>
-                                            <th width="10%">Rejected Reason</th>
+                                            <th width="15%">Rjcted Male</th>
+                                            <th width="10%">Rjcted Female</th>
+                                            <th width="10%">Rjcted Reason</th>
                                         </tr>
                                     </thead>
                                     <tbody>
