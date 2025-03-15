@@ -151,33 +151,40 @@ button.remove-row {
     <div class="col-md-1"></div>
 
     <!-- Summary Section -->
-    <div class="col-md-6">
+    <div class="col-md-12">
     <div class="row mb-3">
         <div class="col-md-4">
-            <label for="item_total" class="form-label" >Item Amount:</label>
-            <input type="text" id="item_total" name="item_total" readonly class="form-control" value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}"  step="any" id="formattedNumber" oninput="formatNumber(this)" style="width: 150px;" >
+            <label for="item_total" class="form-label">Item Amount:</label>
+            <input type="text" id="item_total" name="item_total" readonly class="form-control w-100" 
+                value="{{ $WeightCalculatorMaster->details->sum(fn($d) => $d->accepted_qty * $d->rate) }}" step="any" 
+                oninput="formatNumber(this)">
         </div>
         <div class="col-md-4">
             <label for="total_expense" class="form-label">Additional Expense:</label>
-            <input type="text" id="total_expense" name="total_expense" class="form-control"  step="0.01"  id="formattedNumber" oninput="formatNumber(this)" style="width: 150px;">
+            <input type="text" id="total_expense" name="total_expense" class="form-control w-100" 
+                step="0.01" oninput="formatNumber(this)">
         </div>
         <div class="col-md-4">
             <label for="grand_total" class="form-label">Grand Total:</label>
-            <input type="text" id="grand_total" name="grand_total" class="form-control" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)" style="width: 150px;">
+            <input type="text" id="grand_total" name="grand_total" class="form-control w-100" readonly 
+                step="any" oninput="formatNumber(this)">
         </div>
     </div>
 
     <div class="row mb-3">
         <div class="col-md-6">
             <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="text" id="advance_amount" name="advance_amount" class="form-control"  value="{{ $order->advance_amount ?? 0 }}" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)">       
-         </div>
+            <input type="text" id="advance_amount" name="advance_amount" class="form-control w-100" 
+                value="{{ $order->advance_amount ?? 0 }}" readonly step="any" oninput="formatNumber(this)">       
+        </div>
         <div class="col-md-6">
-            <label for="balance_amount" class="form-label" >Balance Amount:</label>
-            <input type="text" id="balance_amount" name="balance_amount" class="form-control" readonly  step="any" id="formattedNumber" oninput="formatNumber(this)">
+            <label for="balance_amount" class="form-label">Balance Amount:</label>
+            <input type="text" id="balance_amount" name="balance_amount" class="form-control w-100" 
+                readonly step="any" oninput="formatNumber(this)">
         </div>
     </div>
 </div>
+
 
 
                         <button type="submit" class="btn btn-primary mt-3">Submit</button>
