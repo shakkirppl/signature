@@ -204,4 +204,62 @@ public function view($id)
 }
 
 
+public function edit($id)
+{
+    // Fetch the purchase confirmation record
+    $purchaseConfirmation = PurchaseConformation::with('details.product', 'supplier', 'shipment')->findOrFail($id);
+
+    // Fetch all available products
+    $products = Product::all();
+
+    return view('purchase-conformation.edit', compact('purchaseConfirmation', 'products'));
+}
+
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'supplier_id' => 'required|exists:suppliers,id',
+        'date' => 'required|date',
+        'products.*.product_id' => 'required|exists:products,id',
+        'products.*.total_accepted_qty' => 'required|numeric|min:1',
+        'products.*.total_weight' => 'required|numeric|min:0',
+        'products.*.rate' => 'required|numeric|min:0',
+        'products.*.transportation_amount' => 'required|numeric|min:0',
+        'products.*.total' => 'required|numeric|min:0',
+        'total_expense' => 'nullable|numeric|min:0',
+        'advance_amount' => 'nullable|numeric|min:0',
+    ]);
+
+    // Fetch the existing purchase confirmation record
+    $purchaseConfirmation = PurchaseConformation::findOrFail($id);
+
+    // Update master record
+    $purchaseConfirmation->update([
+        'supplier_id' => $request->supplier_id,
+        'date' => $request->date,
+        'total_expense' => $request->total_expense ?? 0,
+        'advance_amount' => $request->advance_amount ?? 0,
+        'grand_total' => $request->grand_total ?? 0,
+    ]);
+
+    // Update purchase confirmation details
+    $purchaseConfirmation->details()->delete(); // Remove old details to reinsert
+
+    foreach ($request->products as $product) {
+        PurchaseConformationDetail::create([
+            'purchase_conformation_id' => $purchaseConfirmation->id,
+            'product_id' => $product['product_id'],
+            'total_accepted_qty' => $product['total_accepted_qty'],
+            'total_weight' => $product['total_weight'],
+            'rate' => $product['rate'],
+            'transportation_amount' => $product['transportation_amount'],
+            'total' => $product['total'],
+        ]);
+    }
+
+    return redirect()->route('purchase-conformation.report')->with('success', 'Purchase Confirmation updated successfully.');
+}
+
+
 }

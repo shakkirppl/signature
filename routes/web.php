@@ -219,6 +219,10 @@ Route::get('purchase-conformation/{id}', [PurchaseConformationController::class,
 Route::post('purchade-conformation-store', [PurchaseConformationController::class,'store'])->name('purchase-conformation.store');
 Route::get('purchase-conformation-report', [PurchaseConformationController::class, 'report'])->name('purchase-confirmation.report');
 Route::get('purchase-conformation/{id}/view', [PurchaseConformationController::class, 'view']);
+Route::get('/purchase-conformation/{id}/edit', [PurchaseConformationController::class, 'edit'])->name('purchase-conformation.edit');
+Route::put('/purchase-conformation/{id}/update', [PurchaseConformationController::class, 'update'])->name('purchase-conformation.update');
+
+
 
 
 Route::get('shipment-index', [ShipmentController::class, 'index'])->name('shipment.index');

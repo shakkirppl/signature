@@ -74,9 +74,9 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][qty]" class="form-control qty"  step="0.01" required style="width: 200px;"></td>
-                                    <td><input type="number" name="products[0][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 200px;" step="any"></td>
+                                    <td><input type="text" name="products[0][qty]" class="form-control qty"  step="0.01" required style="width: 200px;"></td>
+                                    <td><input type="text" name="products[0][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
+                                    <td><input type="text" name="products[0][total]" class="form-control total" readonly style="width: 200px;" step="any"></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
@@ -131,9 +131,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
-            <td><input type="number" name="products[${rowCount}][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
-            <td><input type="number" name="products[${rowCount}][total]" class="form-control total" readonly step="any" style="width: 200px;"></td>
+            <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
+            <td><input type="text" name="products[${rowCount}][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
+            <td><input type="text" name="products[${rowCount}][total]" class="form-control total" readonly step="any" style="width: 200px;"></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         </tr>`;
         productRows.insertAdjacentHTML('beforeend', newRow);

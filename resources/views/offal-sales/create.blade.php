@@ -88,9 +88,9 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][qty]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
-                                    <td><input type="number" name="products[0][rate]" class="form-control rate"  step="0.01"style="width: 150px;"></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
+                                    <td><input type="text" name="products[0][qty]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
+                                    <td><input type="text" name="products[0][rate]" class="form-control rate"  step="0.01"style="width: 150px;"></td>
+                                    <td><input type="text" name="products[0][total]" class="form-control total" readonly style="width: 150px;"></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
                             </tbody>
@@ -159,9 +159,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required></td>
-            <td><input type="number" name="products[${index}][rate]" class="form-control rate"></td>
-            <td><input type="number" name="products[${index}][total]" class="form-control total" readonly></td>
+            <td><input type="text" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required></td>
+            <td><input type="text" name="products[${index}][rate]" class="form-control rate"></td>
+            <td><input type="text" name="products[${index}][total]" class="form-control total" readonly></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         `;
         productTable.appendChild(newRow);

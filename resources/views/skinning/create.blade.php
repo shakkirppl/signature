@@ -92,8 +92,8 @@ button.remove-row {
                                         @endforeach
                                   </select>
                                     </td>
-                                    <td><input type="number" name="quandity[]" class="form-control skinning-quantity" required style="width: 150px;"></td>
-                                    <td><input type="number" name="damaged_quandity[]" class="form-control damaged-quantity" style="width: 150px;"></td>
+                                    <td><input type="text" name="quandity[]" class="form-control skinning-quantity" required style="width: 150px;"></td>
+                                    <td><input type="text" name="damaged_quandity[]" class="form-control damaged-quantity" style="width: 150px;"></td>
                                     <td><input type="text" name="skin_percentage[]" class="form-control skin-percentage" readonly></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
@@ -160,8 +160,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     @endforeach
                 </select>
             </td>
-            <td><input type="number" name="quandity[]" class="form-control" required></td>
-            <td><input type="number" name="damaged_quandity[]" class="form-control" required></td>
+            <td><input type="text" name="quandity[]" class="form-control" required></td>
+            <td><input type="text" name="damaged_quandity[]" class="form-control" required></td>
             <td><input type="text" name="skin_percentage[]" class="form-control" required readonly></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         `;

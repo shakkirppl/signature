@@ -7,7 +7,15 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Edit Inspection</h4>
-                    
+                    @if(session('error'))
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>Error:</strong> {{ session('error') }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+@endif
+
                     <form method="POST" action="{{ route('inspection.update', $inspection->id) }}">
                         @csrf
                         @method('PUT')
@@ -45,6 +53,7 @@
                                     <thead>
                                         <tr>
                                             <th>Product</th>
+                                            <th>Actual Quantity</th>
                                             <th>Recived Quantity</th>
                                             <th>Male</th>
                                             <th> Female</th>
@@ -57,11 +66,12 @@
                                         @foreach($inspection->details as $detail)
                                             <tr>
                                                 <td>{{ $detail->product->product_name }}</td>
-                                                <td><input type="number" name="products[{{ $detail->id }}][received_qty]" class="form-control" value="{{ $detail->received_qty }}"></td>
-                                                <td><input type="number" name="products[{{ $detail->id }}][male_accepted_qty]" class="form-control" value="{{ $detail->male_accepted_qty }}"></td>
-                                                <td><input type="number" name="products[{{ $detail->id }}][female_accepted_qty]" class="form-control" value="{{ $detail->female_accepted_qty }}"></td>
-                                                <td><input type="number" name="products[{{ $detail->id }}][male_rejected_qty]" class="form-control" value="{{ $detail->male_rejected_qty }}"></td>
-                                                <td><input type="number" name="products[{{ $detail->id }}][female_rejected_qty]" class="form-control" value="{{ $detail->female_rejected_qty }}"></td>
+                                                <td><input type="text" name="products[{{ $detail->id }}][qty]" class="form-control" value="{{ $detail->qty }}" readonly></td>
+                                                <td><input type="text" name="products[{{ $detail->id }}][received_qty]" class="form-control total-qty" value="{{ $detail->received_qty }}"></td>
+                                                <td><input type="text" name="products[{{ $detail->id }}][male_accepted_qty]" class="form-control male-input" value="{{ $detail->male_accepted_qty }}"></td>
+                                                <td><input type="text" name="products[{{ $detail->id }}][female_accepted_qty]" class="form-control female-input" value="{{ $detail->female_accepted_qty }}"></td>
+                                                <td><input type="text" name="products[{{ $detail->id }}][male_rejected_qty]" class="form-control" value="{{ $detail->male_rejected_qty }}"></td>
+                                                <td><input type="text" name="products[{{ $detail->id }}][female_rejected_qty]" class="form-control" value="{{ $detail->female_rejected_qty }}"></td>
                                                 <td>
                                                     <select name="products[{{ $detail->id }}][rejected_reason]" class="form-control">
                                                         <option value="">Select Reason</option>
@@ -89,4 +99,48 @@
         </div>
     </div>
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelector("form").addEventListener("submit", function (event) {
+        let isValid = true;
+        let errorMessage = "";
+
+        document.querySelectorAll("tbody tr").forEach(row => {
+            let receivedQty = parseInt(row.querySelector("input[name*='[received_qty]']").value) || 0;
+            let maleAccepted = parseInt(row.querySelector("input[name*='[male_accepted_qty]']").value) || 0;
+            let femaleAccepted = parseInt(row.querySelector("input[name*='[female_accepted_qty]']").value) || 0;
+            let maleRejected = parseInt(row.querySelector("input[name*='[male_rejected_qty]']").value) || 0;
+            let femaleRejected = parseInt(row.querySelector("input[name*='[female_rejected_qty]']").value) || 0;
+
+            let total = maleAccepted + femaleAccepted + maleRejected + femaleRejected;
+
+            if (total !== receivedQty) {
+                errorMessage = "Received quantity must be equal to the sum of accepted and rejected quantities.";
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            event.preventDefault(); // Prevent form submission
+            let errorDiv = document.createElement("div");
+            errorDiv.classList.add("alert", "alert-danger", "alert-dismissible", "fade", "show");
+            errorDiv.setAttribute("role", "alert");
+            errorDiv.innerHTML = `
+                <strong>Error:</strong> ${errorMessage}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            `;
+            document.querySelector(".content-wrapper").prepend(errorDiv);
+        }
+    });
+});
+</script>
+
 @endsection
+
+
+
+

@@ -167,9 +167,9 @@
                                             <td>{{ $index + 1 }}</td>
                                             <td><input type="date" class="form-control" name="payment_date[]" value="{{ $detail->payment_date }}"></td>
                                             <td><input type="text" class="form-control" name="pi_no[]" value="{{ $detail->pi_no }}"></td>
-                                            <td><input type="number" class="form-control amount" name="amount[]" value="{{ $detail->amount }}"></td>
-                                            <td><input type="number" class="form-control balance-amount" name="balance_amount[]" value="{{ $detail->balance_amount }}"></td>
-                                            <td><input type="number" class="form-control paid" name="paid[]" value="{{ $detail->paid }}"></td>
+                                            <td><input type="text" class="form-control amount" name="amount[]" value="{{ $detail->amount }}"></td>
+                                            <td><input type="text" class="form-control balance-amount" name="balance_amount[]" value="{{ $detail->balance_amount }}"></td>
+                                            <td><input type="text" class="form-control paid" name="paid[]" value="{{ $detail->paid }}"></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -207,9 +207,9 @@
                         <td>${rowCount}</td>
                         <td><input type="date" class="form-control" name="payment_date[]"></td>
                         <td><input type="text" class="form-control" name="pi_no[]"></td>
-                        <td><input type="number" class="form-control amount" name="amount[]" oninput="updateTableTotals()"></td>
-                        <td><input type="number" class="form-control balance-amount" name="balance_amount[]"></td>
-                        <td><input type="number" class="form-control paid" name="paid[]" oninput="updateTableTotals()"></td>
+                        <td><input type="text" class="form-control amount" name="amount[]" oninput="updateTableTotals()"></td>
+                        <td><input type="text" class="form-control balance-amount" name="balance_amount[]"></td>
+                        <td><input type="text" class="form-control paid" name="paid[]" oninput="updateTableTotals()"></td>
                     </tr>`;
 
         // Append the new row to the table body

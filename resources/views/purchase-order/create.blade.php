@@ -97,7 +97,7 @@ button.remove-row {
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="products[0][qty]" class="form-control qty" value="0" min="1" required style="width: 200px;"></td>
+                <td><input type="text" name="products[0][qty]" class="form-control qty" value="0" min="1" required style="width: 200px;"></td>
                 <td><input type="text" name="products[0][male]" class="form-control male" value="0" min="1" required style="width: 200px;" readonly></td>
 
                 <td><input type="text" name="products[0][female]" class="form-control female" value="0" min="1" required style="width: 200px;" readonly></td>
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="products[${rowCount}][qty]" class="form-control qty" value="0" min="1" required style="width: 200px;"></td>
+                <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="0" min="1" required style="width: 200px;"></td>
                 <td><input type="text" name="products[${rowCount}][male]" class="form-control male" value="0" required style="width: 200px;" readonly></td>
                 <td><input type="text" name="products[${rowCount}][female]" class="form-control female" value="0" required style="width: 200px;" readonly></td>
                 <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>

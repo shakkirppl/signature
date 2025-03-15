@@ -143,8 +143,8 @@ $(document).ready(function() {
                                     <td>${product.product_name}</td>
                                     <td>${product.male_accepted_qty}</td>
                                     <td>${product.female_accepted_qty}</td>
-                                    <td><input type="number" name="products[${product.id}][death_male_qty]" class="form-control death-male" min="0"></td>
-                                    <td><input type="number" name="products[${product.id}][death_female_qty]" class="form-control death-female" min="0"></td>
+                                    <td><input type="text" name="products[${product.id}][death_male_qty]" class="form-control death-male" min="0"></td>
+                                    <td><input type="text" name="products[${product.id}][death_female_qty]" class="form-control death-female" min="0"></td>
                                     <td><input type="text" class="form-control total-death" readonly></td>
                                 </tr>
                             `);

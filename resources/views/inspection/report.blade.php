@@ -58,14 +58,17 @@
                                         @endif
                                     </td>
                                     <td>
-                                    <a href="{{ route('inspection.edit', $inspection->id) }}" class="btn btn-primary">Edit</a>
+                                    @if($inspection->weight_status == 1)
+                                      <a href="{{ route('inspection.edit', $inspection->id) }}" class="btn btn-primary">Edit</a>
+                                    @endif
+
 
                                     <a href="{{ route('inspection.inspectionview', $inspection->id) }}" class="btn btn-info">View</a>
                                     <form action="{{ route('inspection.destroy', $inspection->id) }}" method="POST" style="display:inline;">
-        @csrf
-        @method('DELETE')
-        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this inspection?');">Delete</button>
-    </form>
+                                     @csrf
+                                     @method('DELETE')
+                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this inspection?');">Delete</button>
+                                    </form>
                                     </td>
                                 </tr>
                                 @endforeach

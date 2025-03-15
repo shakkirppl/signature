@@ -91,6 +91,7 @@ public function store(Request $request)
         'store_id' => 1,
         'status' => 1,
         'purchase_status' => 0,
+        'weight_status' => 1,
     ]);
     InvoiceNumber::updateinvoiceNumber('inspection_no', 1);
     // Loop through the product details and create InspectionDetail records
@@ -114,6 +115,7 @@ public function store(Request $request)
             'user_id' => Auth::id(),
             'store_id' => 1,
             'status' => 0,
+           
         ]);
     }
 
@@ -252,6 +254,19 @@ public function update(Request $request, $id)
             'products.*.rejected_reason' => 'nullable|exists:reject_masters,id',
         ]);
 
+        // Check validation for received quantity
+        foreach ($validated['products'] as $detail_id => $productData) {
+            $totalQuantity = ($productData['male_accepted_qty'] ?? 0) + 
+                             ($productData['female_accepted_qty'] ?? 0) + 
+                             ($productData['male_rejected_qty'] ?? 0) + 
+                             ($productData['female_rejected_qty'] ?? 0);
+
+            if ($totalQuantity !== (int)$productData['received_qty']) {
+                session()->flash('error', "Received quantity must be equal to the sum of accepted and rejected quantities.");
+                return redirect()->back();
+            }
+        }
+
         // Find the inspection record
         $inspection = Inspection::findOrFail($id);
 
@@ -290,6 +305,8 @@ public function update(Request $request, $id)
         return redirect()->back()->with('error', 'Failed to update inspection. Check logs for details.');
     }
 }
+
+
 
 
 public function inspectionview($id)

@@ -66,6 +66,8 @@
                                     </td>
                                     <td>
                                     <a href="{{ url('purchase-conformation/'.$conformation->id.'/view') }}" class="btn btn-warning">View</a>
+                                    <!-- <a href="{{ route('purchase-conformation.edit', $conformation->id) }}" class="btn btn-primary">Edit</a> -->
+
                                     </td>
                                 </tr>
                                 @endforeach

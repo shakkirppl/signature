@@ -127,10 +127,10 @@ button.remove-row {
                                             @endforeach
                                         </select>
                                     </td>
-                                    <td><input type="number" name="products[0][packaging]" class="form-control qty" step="0.01" required style="width: 150px;" ></td>
-                                    <td><input type="number" name="products[0][weight]" class="form-control weight" style="width: 150px;" step="any"></td>
+                                    <td><input type="text" name="products[0][packaging]" class="form-control qty" step="0.01" required style="width: 150px;" ></td>
+                                    <td><input type="text" name="products[0][weight]" class="form-control weight" style="width: 150px;" step="any"></td>
                                     <td><input type="text" name="products[0][par]" class="form-control" style="width: 150px;" value="Pcs"></td>
-                                    <td><input type="number" name="products[0][total]" class="form-control total"  style="width: 190px;" step="any" readonly></td>
+                                    <td><input type="text" name="products[0][total]" class="form-control total"  style="width: 190px;" step="any" readonly></td>
 
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
@@ -181,10 +181,10 @@ button.remove-row {
                         @endforeach
                     </select>
                 </td>
-                <td><input type="number" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
-                <td><input type="number" name="products[${rowCount}][weight]" class="form-control weight" step="any" style="width: 150px;"></td>
+                <td><input type="text" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
+                <td><input type="text" name="products[${rowCount}][weight]" class="form-control weight" step="any" style="width: 150px;"></td>
                 <td><input type="text" name="products[${rowCount}][par]" class="form-control" value="Pcs" style="width: 150px;"></td>
-                <td><input type="number" name="products[${rowCount}][total]" class="form-control total" step="any" style="width: 190px;" readonly></td>
+                <td><input type="text" name="products[${rowCount}][total]" class="form-control total" step="any" style="width: 190px;" readonly></td>
                 <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
             </tr>`;
 

@@ -217,10 +217,10 @@ $(document).ready(function () {
                                     ${detail.product.product_name}
                                 </td>
                                 <td>
-                                    <input type="number" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted original-live-goat" readonly data-original-value="${totalAcceptedQty}">
+                                    <input type="text" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted original-live-goat" readonly data-original-value="${totalAcceptedQty}">
                                 </td>
                                 <td>
-                                    <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                                    <input type="text" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
                                 </td>
                             </tr>
                         `;
@@ -236,10 +236,10 @@ $(document).ready(function () {
                                          ${detail.product.product_name}
                                     </td>
                                     <td>
-                                        <input type="number" name="total_accepted_qty[]" class="form-control total-accepted additional-accepted" oninput="adjustLiveGoatQty(${productId})">
+                                        <input type="text" name="total_accepted_qty[]" class="form-control total-accepted additional-accepted" oninput="adjustLiveGoatQty(${productId})">
                                     </td>
                                     <td>
-                                        <input type="number" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                                        <input type="text" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
                                     </td>
                                 </tr>
                             `;

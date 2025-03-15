@@ -270,9 +270,9 @@ $(document).ready(function () {
                                         <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
                                         <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly style="width: 150px;">
                                     </td>
-                                    <td><input type="number" class="form-control amount" name="amount[]" value="${item.total_amount}" readonly style="width: 180px;"></td>
-                                    <td><input type="number" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly style="width: 150px;"></td>
-                                    <td><input type="number" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" style="width: 150px;"></td>
+                                    <td><input type="text" class="form-control amount" name="amount[]" value="${item.total_amount}" readonly style="width: 180px;"></td>
+                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly style="width: 150px;"></td>
+                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" style="width: 150px;"></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
                             `);

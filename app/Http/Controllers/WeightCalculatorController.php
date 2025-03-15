@@ -134,6 +134,7 @@ class WeightCalculatorController extends Controller
                          InvoiceNumber::updateinvoiceNumber('weight_calculator', 1);
                      
                          \DB::commit();
+                         Inspection::where('id', $request->inspection_id)->update(['weight_status' => 0]);
                      
                          return redirect()->route('weight_calculator.index')->with('success', 'Weight Calculator data saved successfully.');
                      } catch (\Exception $e) {

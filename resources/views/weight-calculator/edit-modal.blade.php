@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ $detail->product->product_name }}</td>
                     <td>
-                        <input type="number" name="quandity[{{ $detail->id }}]" value="{{ $detail->quandity }}" class="form-control">
+                        <input type="text" name="quandity[{{ $detail->id }}]" value="{{ $detail->quandity }}" class="form-control">
                     </td>
                     <td>
                         <input type="text" name="weight[{{ $detail->id }}]" value="{{ $detail->weight }}" class="form-control weight-input" style="width: 100px;">

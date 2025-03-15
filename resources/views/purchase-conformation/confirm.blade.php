@@ -102,10 +102,10 @@ button.remove-row {
                                                 </select>                                         
                                             </td>                                                                             
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 100px;">                                         
+                                                <input type="text" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 100px;">                                         
                                             </td>                                         
                                             <td>                                         
-                                                <input type="number" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 100px;">                                         
+                                                <input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 100px;">                                         
                                             </td>                                         
                                             <td>                                                     
                                                 <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                         

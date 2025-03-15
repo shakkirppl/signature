@@ -46,7 +46,7 @@
                                 @foreach($conformation->details as $detail)
                                     <tr>
                                         <td>{{ $detail->product->product_name }}</td>
-                                        <td>{{ $detail->accepted_qty }}</td>
+                                        <td>{{ $detail->total_accepted_qty }}</td>
                                         <td>{{ $detail->rate }}</td>
                                         <td>{{ $detail->total }}</td>
                                     </tr>
