@@ -1,14 +1,35 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-    .table {
+.table {
+    width: 100%; /* Ensures table fills the container */
     border-collapse: collapse;
-    width: 70%;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
 }
 
 button.remove-row {
-    padding: 5px 10px;
+    padding: 3px 8px;
+    font-size: 12px;
 }
+
+
+
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -51,7 +72,7 @@ button.remove-row {
 
                    <div class="col-md-4">
                        <label for="supplier">Supplier</label>
-                       <select id="supplierDropdown" class="form-control" style="width: 250px;" name="supplier_id">
+                       <select id="supplierDropdown" class="form-control"  name="supplier_id">
                            <option value="">Select Supplier</option>
                                 @foreach($suppliers as $supplier)
                                  <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>

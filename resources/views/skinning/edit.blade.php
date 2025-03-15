@@ -1,18 +1,35 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-    #componentTable tbody tr {
-        line-height: 1.2em;
-        margin-bottom: 0.3em;
-    }
-    .table {
+.table {
+    width: 100%; /* Ensures table fills the container */
     border-collapse: collapse;
-    width: 40%;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
 }
 
 button.remove-row {
-    padding: 5px 10px;
+    padding: 3px 8px;
+    font-size: 12px;
 }
+
+
+
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -85,7 +102,7 @@ button.remove-row {
                                 @foreach ($skinning->skinningDetails as $detail)
                                     <tr>
                                         <td>
-                                            <select name="employees[]" class="form-control" required style="width: 200px;">
+                                            <select name="employees[]" class="form-control" required style="width: 140px;">
                                                 <option value="">Select Employee</option>
                                                 @foreach ($employees as $employee)
                                                     <option value="{{ $employee->id }}" {{ $detail->employee_id == $employee->id ? 'selected' : '' }}>
@@ -95,7 +112,7 @@ button.remove-row {
                                             </select>
                                         </td>
                                         <td>
-                                            <select name="products[]" class="form-control" required style="width: 200px;">
+                                            <select name="products[]" class="form-control" required style="width: 120px;">
                                                 <option value="">Select Product</option>
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->id }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -104,9 +121,9 @@ button.remove-row {
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="text" name="quandity[]" class="form-control" value="{{ $detail->quandity }}" required style="width: 150px;"></td>
-                                        <td><input type="text" name="damaged_quandity[]" class="form-control"  value="{{ $detail->damaged_quandity }}" style="width: 150px;"></td>
-                                        <td><input type="text" step="0.01" name="skin_percentage[]" class="form-control" value="{{ $detail->skin_percentage }} %" required style="width: 150px;" readonly></td>
+                                        <td><input type="text" name="quandity[]" class="form-control" value="{{ $detail->quandity }}" required ></td>
+                                        <td><input type="text" name="damaged_quandity[]" class="form-control"  value="{{ $detail->damaged_quandity }}" ></td>
+                                        <td><input type="text" step="0.01" name="skin_percentage[]" class="form-control" value="{{ $detail->skin_percentage }} " required  readonly></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                     </tr>
                                 @endforeach

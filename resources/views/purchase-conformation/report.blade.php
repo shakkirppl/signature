@@ -31,10 +31,10 @@
                             </div>
                         </div>
                     </form>
-
-                    <div class="table-responsive mt-4">
-                        <table class="table table-hover" id="report-table">
-                            <thead>
+<br>
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+              <thead style="background-color: #d6d6d6; color: #000;">
                                 <tr>
                                     <th>Invoice No</th>
                                     <th>Order No</th>
@@ -65,7 +65,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                    <a href="{{ url('purchase-conformation/'.$conformation->id.'/view') }}" class="btn btn-warning">View</a>
+                                    <a href="{{ url('purchase-conformation/'.$conformation->id.'/view') }}" class="btn btn-warning btn-sm">View</a>
                                     <!-- <a href="{{ route('purchase-conformation.edit', $conformation->id) }}" class="btn btn-primary">Edit</a> -->
 
                                     </td>
@@ -83,6 +83,21 @@
         </div>
     </div>
 </div>
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 @endsection
 
 @section('script')

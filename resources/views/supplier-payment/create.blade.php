@@ -1,17 +1,34 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-    .wide-select {
-        width: 200px !important; 
-    }
-
-    .table {
-    border-collapse: collapse;
+.table {
     width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
 }
+
+.table th, .table td {
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.table input {
+    width: 100px !important; 
+    font-size: 14px;
+    padding: 3px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
 button.remove-row {
-    padding: 5px 10px;
+    padding: 3px 6px;
+    font-size: 12px;
 }
+
 
 </style>
 <div class="main-panel">
@@ -24,7 +41,7 @@ button.remove-row {
                             <h4 class="card-title">Supplier Payment</h4>
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ url('supplier-payment/list') }}" class="backicon">
+                            <a href="{{ url('supplier-payment-index') }}" class="backicon">
                                 <i class="mdi mdi-backburger"></i>
                             </a>
                         </div>
@@ -265,14 +282,14 @@ $(document).ready(function () {
                             $('#paymentTableBody').append(`
                                 <tr>
                                     <td>${index + 1}</td>
-                                    <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly style="width: 150px;"></td>
+                                    <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly ></td>
                                     <td>
                                         <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
-                                        <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly style="width: 150px;">
+                                        <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly >
                                     </td>
                                     <td><input type="text" class="form-control amount" name="amount[]" value="${item.total_amount}" readonly style="width: 180px;"></td>
-                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly style="width: 150px;"></td>
-                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" style="width: 150px;"></td>
+                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly ></td>
+                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" ></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
                             `);

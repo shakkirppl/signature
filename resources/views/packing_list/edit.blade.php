@@ -2,6 +2,40 @@
  @extends('layouts.layout')
 
 @section('content')
+<style>
+.table {
+    width: 100%; /* Ensures table fills the container */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
+}
+
+button.remove-row {
+    padding: 3px 8px;
+    font-size: 15px; 
+}
+.removeRow{
+    padding: 3px 8px;
+    font-size: 15px;   
+}
+
+
+</style>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin">
@@ -107,7 +141,7 @@
                                     <td><input type="text" name="products[{{ $index }}][packaging]" class="form-control" value="{{ $detail->packaging }}" required></td>
                                     <td><input type="text" name="products[{{ $index }}][weight]" class="form-control" value="{{ $detail->weight }}"></td>
                                     <td><input type="text" name="products[{{ $index }}][par]" class="form-control" value="{{ $detail->par }}"></td>
-                                    <td><input type="text" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}"  style="width: 200px;"></td>
+                                    <td><input type="text" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}"readonly  ></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
                                 @endforeach
@@ -150,17 +184,17 @@
         let newRow = `
             <tr>
                 <td>
-                    <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 150px;">
+                    <select name="products[${rowCount}][product_id]" class="form-control product-select" required >
                         <option value="">Select Product</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td><input type="text" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required style="width: 150px;"></td>
-                <td><input type="text" name="products[${rowCount}][weight]" class="form-control weight" step="any" style="width: 150px;"></td>
-                <td><input type="text" name="products[${rowCount}][par]" class="form-control" value="Pcs" style="width: 150px;"></td>
-                <td><input type="text" name="products[${rowCount}][total]" class="form-control total" step="any" style="width: 190px;" readonly></td>
+                <td><input type="text" name="products[${rowCount}][packaging]" class="form-control qty" step="0.01" required ></td>
+                <td><input type="text" name="products[${rowCount}][weight]" class="form-control weight" step="any" ></td>
+                <td><input type="text" name="products[${rowCount}][par]" class="form-control" value="Pcs" ></td>
+                <td><input type="text" name="products[${rowCount}][total]" class="form-control total" step="any"  readonly></td>
                 <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
             </tr>`;
 

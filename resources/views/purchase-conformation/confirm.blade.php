@@ -2,20 +2,40 @@
 @section('content')
 
 <style>
-    #shipment_id:disabled {
+.table {
+    width: 100%; /* Ensures table fills the container */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
+}
+
+button.remove-row {
+    padding: 3px 8px;
+    font-size: 12px;
+}
+
+#shipment_id:disabled {
     color: black !important; 
     background-color: #e9ecef !important; 
     opacity: 1 !important; 
     cursor: not-allowed;
 }
-.table {
-    border-collapse: collapse;
-    width: 40%;
-}
 
-button.remove-row {
-    padding: 5px 10px;
-}
 </style>
 
 <div class="main-panel">
@@ -78,13 +98,13 @@ button.remove-row {
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Product</th>
+                                    <th style="width: 5%;">Product</th>
                                   
-                                    <th>Quandity</th>
-                                    <th>Total Weight</th>
-                                    <th>Price/Kg</th>
-                                    <th>Transportation/Kg</th>
-                                    <th>Total</th>
+                                    <th style="width: 5%;">Quandity</th>
+                                    <th style="width: 5%;" > Weight</th>
+                                    <th style="width: 10%;">Price/Kg</th>
+                                    <th style="width: 10%;">Transportation/Kg</th>
+                                    <th style="width: 10%;">Total</th>
                                 </tr>
                             </thead>
                             <tbody id="product-details">                                 
@@ -102,13 +122,13 @@ button.remove-row {
                                                 </select>                                         
                                             </td>                                                                             
                                             <td>                                         
-                                                <input type="text" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 100px;">                                         
+                                                <input type="text" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 80px;">                                         
                                             </td>                                         
                                             <td>                                         
-                                                <input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 100px;">                                         
+                                                <input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 80px;">                                         
                                             </td>                                         
                                             <td>                                                     
-                                                <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                         
+                                                <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 100px;" id="formattedNumber" oninput="formatNumber(this)">                                         
                                             </td>                                         
                                             <td>                                                    
                                                 <input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 120px;" id="formattedNumber" oninput="formatNumber(this)">                                        

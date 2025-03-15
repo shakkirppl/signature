@@ -1,9 +1,35 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-    .wide-select {
-        width: 200px !important; 
-    }
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.table input {
+    width: 100px !important; 
+    font-size: 14px;
+    padding: 3px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+button.remove-row {
+    padding: 3px 6px;
+    font-size: 12px;
+}
+
+
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -238,11 +264,11 @@
                                     <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly></td>
                                     <td>
                                         <input type="hidden" name="sales_payment_id[]" value="${item.sales_payment_id}">
-                                        <input type="text" class="form-control" name="pi_no[]" value="${item.order_no}" readonly  style="width: 100px;">
+                                        <input type="text" class="form-control" name="pi_no[]" value="${item.order_no}" readonly  >
                                     </td>
-                                    <td><input type="text" class="form-control amount" name="amount[]" value="${item.grand_total}" readonly style="width: 200px;"></td>
-                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly style="width: 200px;" ></td>
-                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()"  style="width: 200px;"></td>
+                                    <td><input type="text" class="form-control amount" name="amount[]" value="${item.grand_total}" readonly ></td>
+                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly  ></td>
+                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()"  ></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
                             `);

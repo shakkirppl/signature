@@ -2,13 +2,34 @@
 @section('content')
 <style>
 .table {
+    width: 100%; /* Ensures table fills the container */
     border-collapse: collapse;
-    width: 80%;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
 }
 
 button.remove-row {
-    padding: 5px 10px;
+    padding: 3px 8px;
+    font-size: 12px;
 }
+
+
+
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -71,7 +92,7 @@ button.remove-row {
                                 @foreach ($salesOrder->details as $index => $detail)
                                     <tr>
                                         <td>
-                                            <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 200px;">
+                                            <select name="products[{{ $index }}][product_id]" class="form-control product-select" required >
                                                 <option value="">Select Product</option>
                                                 @foreach ($products as $product)
                                                     <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -80,9 +101,9 @@ button.remove-row {
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td><input type="text" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" step="0.01" required style="width: 200px;"></td>
-                                        <td><input type="text" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" style="width: 200px;"></td>
-                                        <td><input type="text" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly step="any" style="width: 200px;"></td>
+                                        <td><input type="text" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}" step="0.01" required ></td>
+                                        <td><input type="text" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" ></td>
+                                        <td><input type="text" name="products[{{ $index }}][total]" class="form-control total" value="{{ $detail->total }}" readonly step="any" ></td>
                                         <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                     </tr>
                                 @endforeach
@@ -131,16 +152,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = `
         <tr>
             <td>
-                <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 200px;">
+                <select name="products[${rowCount}][product_id]" class="form-control product-select" required >
                     <option value="">Select Product</option>
                     @foreach ($products as $product)
                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                     @endforeach
                 </select>
             </td>
-            <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required style="width: 200px;" ></td>
-            <td><input type="text" name="products[${rowCount}][rate]" class="form-control rate" step="any" style="width: 200px;"></td>
-            <td><input type="text" name="products[${rowCount}][total]" class="form-control total" readonly step="any" style="width: 200px;"></td>
+            <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="1" min="1" required  ></td>
+            <td><input type="text" name="products[${rowCount}][rate]" class="form-control rate" step="any" ></td>
+            <td><input type="text" name="products[${rowCount}][total]" class="form-control total" readonly step="any" ></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         </tr>`;
         productRows.insertAdjacentHTML('beforeend', newRow);

@@ -30,10 +30,10 @@
                             </div>
                         </div>
                     </form>
-
-                    <div class="table-responsive mt-4">
-                        <table class="table table-hover" id="report-table">
-                            <thead>
+<br>
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+              <thead style="background-color: #d6d6d6; color: #000;">
                                 <tr>
                                     <th>Inspection No</th>
                                     <th>Order No</th>
@@ -59,15 +59,15 @@
                                     </td>
                                     <td>
                                     @if($inspection->weight_status == 1)
-                                      <a href="{{ route('inspection.edit', $inspection->id) }}" class="btn btn-primary">Edit</a>
+                                      <a href="{{ route('inspection.edit', $inspection->id) }}" class="btn btn-primary btn-sm">Edit</a>
                                     @endif
 
 
-                                    <a href="{{ route('inspection.inspectionview', $inspection->id) }}" class="btn btn-info">View</a>
+                                    <a href="{{ route('inspection.inspectionview', $inspection->id) }}" class="btn btn-info btn-sm">View</a>
                                     <form action="{{ route('inspection.destroy', $inspection->id) }}" method="POST" style="display:inline;">
                                      @csrf
                                      @method('DELETE')
-                                     <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this inspection?');">Delete</button>
+                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this inspection?');">Delete</button>
                                     </form>
                                     </td>
                                 </tr>
@@ -80,4 +80,19 @@
         </div>
     </div>
 </div>
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 @endsection

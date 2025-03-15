@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Supplier Advance</h4>
                     <div class="col-md-6 heading">
-                        <a href=" {{ route('paymentvoucher.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        <a href=" {{ route('supplieradvance.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                     </div>
                     @if($errors->any())
                         <div class="alert alert-danger">

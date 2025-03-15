@@ -12,7 +12,7 @@
                             
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ url('supplier-payment/list') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                            <a href="{{ url('supplier-payment-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
 

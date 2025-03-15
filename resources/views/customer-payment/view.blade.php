@@ -11,7 +11,7 @@
                             <h4 class="card-title">Customer Payment Details</h4>
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ url('customer-payment/list') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                            <a href="{{ url('customer-payment-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
 

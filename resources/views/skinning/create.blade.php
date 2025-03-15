@@ -1,19 +1,35 @@
 @extends('layouts.layout')
 @section('content')
 <style>
-    /* Adjust spacing between table rows */
-    #componentTable tbody tr {
-        line-height: 1.2em;
-        margin-bottom: 0.3em;
-    }
-    .table {
+.table {
+    width: 100%; /* Ensures table fills the container */
     border-collapse: collapse;
-    width: 40%;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
 }
 
 button.remove-row {
-    padding: 5px 10px;
+    padding: 3px 8px;
+    font-size: 12px;
 }
+
+
+
 </style>
 <div class="main-panel">
     <div class="content-wrapper">
@@ -48,6 +64,10 @@ button.remove-row {
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" required>
                             </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Time:</label>
+                                <input type="time" class="form-control" name="time" value="" >
+                            </div>
                        
                         
                             <div class="col-md-4">
@@ -70,14 +90,14 @@ button.remove-row {
                                     <th>Product</th>
                                     <th>NO Of Skinning</th>
                                     <th>Damaged Skin</th>
-                                    <th>Skinning Percentage</th>
+                                    <th> Percentage</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody id="details">
                                 <tr>
                                     <td>
-                                    <select name="employees[]" class="form-control" required style="width: 200px;">
+                                    <select name="employees[]" class="form-control" required style="width: 140px;">
                                          <option value="">Select Employee</option>
                                              @foreach ($employees as $employee)
                                               <option value="{{ $employee->id }}">{{ $employee->name }}</option>
@@ -85,15 +105,15 @@ button.remove-row {
                                     </select>
                                     </td>
                                     <td>
-                                    <select name="products[]" class="form-control" required style="width: 200px;">
+                                    <select name="products[]" class="form-control" required style="width: 120px;">
                                        <option value="">Select Product</option>
                                           @foreach ($products as $product)
                                            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
                                         @endforeach
                                   </select>
                                     </td>
-                                    <td><input type="text" name="quandity[]" class="form-control skinning-quantity" required style="width: 150px;"></td>
-                                    <td><input type="text" name="damaged_quandity[]" class="form-control damaged-quantity" style="width: 150px;"></td>
+                                    <td><input type="text" name="quandity[]" class="form-control skinning-quantity" required ></td>
+                                    <td><input type="text" name="damaged_quandity[]" class="form-control damaged-quantity" ></td>
                                     <td><input type="text" name="skin_percentage[]" class="form-control skin-percentage" readonly></td>
                                     <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
                                 </tr>
@@ -181,11 +201,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const dateInput = document.getElementById('date');
-    let today = new Date().toISOString().split('T')[0];
-    dateInput.value = today;
-});
+    document.addEventListener("DOMContentLoaded", function() {
+        let dateInput = document.querySelector('input[name="date"]');
+        let timeInput = document.querySelector('input[name="time"]');
+
+        // Get current time in Tanzania timezone
+        function getTanzaniaTime() {
+            let options = { timeZone: "Africa/Dar_es_Salaam", hour12: false, hour: "2-digit", minute: "2-digit" };
+            return new Intl.DateTimeFormat("en-GB", options).format(new Date());
+        }
+
+        // Set the date field to the current date
+        let today = new Date().toISOString().split('T')[0]; 
+        dateInput.value = today;
+
+        // Set the time field to the current Tanzania time
+        timeInput.value = getTanzaniaTime();
+
+        // Update time on focus (if user clicks)
+        timeInput.addEventListener("focus", function() {
+            timeInput.value = getTanzaniaTime();
+        });
+    });
 </script>
 
 

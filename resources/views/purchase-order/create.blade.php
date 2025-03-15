@@ -2,13 +2,32 @@
 @section('content')
 <style>
 .table {
+    width: 100%; /* Ensures table fills the container */
     border-collapse: collapse;
-    width: 40%;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
 }
 
 button.remove-row {
-    padding: 5px 10px;
+    padding: 3px 8px;
+    font-size: 12px;
 }
+
 
 
 </style>
@@ -90,17 +109,17 @@ button.remove-row {
         <tbody id="product-rows">
             <tr>
                 <td>
-                    <select name="products[0][product_id]" class="form-control product-select" required style="width: 200px;">
+                    <select name="products[0][product_id]" class="form-control product-select" required >
                         <option value="">Select Product</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td><input type="text" name="products[0][qty]" class="form-control qty" value="0" min="1" required style="width: 200px;"></td>
-                <td><input type="text" name="products[0][male]" class="form-control male" value="0" min="1" required style="width: 200px;" readonly></td>
+                <td><input type="text" name="products[0][qty]" class="form-control qty" value="0" min="1" required ></td>
+                <td><input type="text" name="products[0][male]" class="form-control male" value="0" min="1" required readonly></td>
 
-                <td><input type="text" name="products[0][female]" class="form-control female" value="0" min="1" required style="width: 200px;" readonly></td>
+                <td><input type="text" name="products[0][female]" class="form-control female" value="0" min="1" required  readonly></td>
 
 
               
@@ -168,16 +187,16 @@ document.addEventListener('DOMContentLoaded', function () {
         const newRow = `
             <tr>
                 <td>
-                    <select name="products[${rowCount}][product_id]" class="form-control product-select" required style="width: 200px;">
+                    <select name="products[${rowCount}][product_id]" class="form-control product-select" required >
                         <option value="">Select Product</option>
                         @foreach ($products as $product)
                             <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
                         @endforeach
                     </select>
                 </td>
-                <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="0" min="1" required style="width: 200px;"></td>
-                <td><input type="text" name="products[${rowCount}][male]" class="form-control male" value="0" required style="width: 200px;" readonly></td>
-                <td><input type="text" name="products[${rowCount}][female]" class="form-control female" value="0" required style="width: 200px;" readonly></td>
+                <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="0" min="1" required ></td>
+                <td><input type="text" name="products[${rowCount}][male]" class="form-control male" value="0" required  readonly></td>
+                <td><input type="text" name="products[${rowCount}][female]" class="form-control female" value="0" required  readonly></td>
                 <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
             </tr>`;
 

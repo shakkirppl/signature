@@ -6,6 +6,37 @@
     color: red;
   }
 </style>
+<style>
+.table {
+    width: 100%; /* Ensures table fills the container */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
+}
+
+button.remove-row {
+    padding: 3px 8px;
+    font-size: 12px;
+}
+
+
+
+</style>
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin createtable">
@@ -70,11 +101,11 @@
             <thead>
                 <tr>
                     <th>Product Name</th>
-                    <th>Male Accepted Qty</th>
-                    <th>Female Accepted Qty</th>
+                    <th>Male Qty</th>
+                    <th>Female  Qty</th>
                     <th>Death Male Qty</th>
                     <th>Death Female Qty</th>
-                    <th>Total Death Qty</th>
+                    <th>Total Death </th>
                 </tr>
             </thead>
             <tbody id="product_details">

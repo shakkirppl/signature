@@ -37,9 +37,9 @@
                         </div>
                     </form>
 
-                    <div class="table-responsive mt-4">
-                        <table class="table table-hover" id="sales-report-table">
-                            <thead>
+                    <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+              <thead style="background-color: #d6d6d6; color: #000;">
                                 <tr>
                                     <th>Invoice No</th>
                                     
@@ -113,6 +113,20 @@ function exportTableToExcel(tableID, filename = '') {
 </script> -->
 
 
-
+<style>
+  .table-responsive {
+    overflow-x: auto;
+  }
+  .table th, .table td {
+    padding: 5px;
+    text-align: center;
+  }
+  .btn-sm {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+  .newicon i {
+    font-size: 30px;}
+</style>
 
 @endsection
