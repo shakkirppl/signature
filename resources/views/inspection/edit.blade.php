@@ -53,8 +53,8 @@
                                     <thead>
                                         <tr>
                                             <th>Product</th>
-                                            <th>Actual Quantity</th>
-                                            <th>Recived Quantity</th>
+                                            <th>Actual</th>
+                                            <th>Recived</th>
                                             <th>Male</th>
                                             <th> Female</th>
                                             <th>Rejected Male</th>
@@ -66,7 +66,7 @@
                                         @foreach($inspection->details as $detail)
                                             <tr>
                                                 <td>{{ $detail->product->product_name }}</td>
-                                                <td><input type="text" name="products[{{ $detail->id }}][qty]" class="form-control" value="{{ $detail->qty }}" readonly></td>
+                                                <td><input type="hidden" name="products[{{ $detail->id }}][qty]" class="form-control" value="{{ $detail->qty }}" readonly>{{ $detail->qty }}</td>
                                                 <td><input type="text" name="products[{{ $detail->id }}][received_qty]" class="form-control total-qty" value="{{ $detail->received_qty }}"></td>
                                                 <td><input type="text" name="products[{{ $detail->id }}][male_accepted_qty]" class="form-control male-input" value="{{ $detail->male_accepted_qty }}"></td>
                                                 <td><input type="text" name="products[{{ $detail->id }}][female_accepted_qty]" class="form-control female-input" value="{{ $detail->female_accepted_qty }}"></td>
