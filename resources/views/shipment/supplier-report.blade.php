@@ -1,6 +1,47 @@
 @extends('layouts.layout')
 
 @section('content')
+<style>
+    #report-table, 
+    #report-table th, 
+    #report-table td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    #report-table th {
+        background-color: lightgray; /* Light background for headers */
+        text-align: center;
+        font-weight: bold;
+    }
+
+    #report-table th, 
+    #report-table td {
+        padding: 8px;
+        text-align: center;
+    }
+
+    #report-table {
+        width: 100%;
+        border-spacing: 0;
+    }
+
+    .total-row td, 
+    .adv-arrears td, 
+    .balance td {
+        font-weight: bold;
+    }
+
+    .adv-arrears td {
+        color: red;
+    }
+
+    .balance td {
+        font-size: 16px;
+    }
+</style>
+
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-lg-12 grid-margin stretch-card">
@@ -55,11 +96,11 @@
                             </tr>
 
                             <tr>
-                                <td><strong>No</strong></td>
-                                <td><strong>Type</strong></td>
-                                <td><strong>Tot: Carcass Wt</strong></td>
-                                <td><strong>Price/KG</strong></td>
-                                <td><strong>Total Price</strong></td>
+                                <th><strong>No</strong></td>
+                                <th><strong>Type</strong></td>
+                                <th><strong>Tot: Carcass Wt</strong></td>
+                                <th><strong>Price/KG</strong></td>
+                                <th><strong>Total Price</strong></td>
                             </tr>
                             @php $totalAmount = 0; $totalWeight = 0; @endphp
                             @foreach($purchaseConformationDetail as $puDetail)
@@ -84,11 +125,11 @@
                             </tr>
 
                             <tr>
-                                <td><strong>No</strong></td>
-                                <td><strong>Type</strong></td>
-                                <td><strong>Meat Weight</strong></td>
-                                <td><strong>Support Amount</strong></td>
-                                <td><strong>Amount</strong></td>
+                                <th><strong>No</strong></td>
+                                <th><strong>Type</strong></td>
+                                <th><strong>Meat Weight</strong></td>
+                                <th><strong>Support Amount</strong></td>
+                                <th><strong>Amount</strong></td>
                             </tr>
                             @php $totalTransportAmount = 0; @endphp
                             @foreach($purchaseConformationDetail as $puDetail)
@@ -108,6 +149,7 @@
                                 <td><strong>{{ number_format($totalTransportAmount, 2) }}</strong></td>
                                
                             </tr>
+<br>
 
                             <tr>
                                
