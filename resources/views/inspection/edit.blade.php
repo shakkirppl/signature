@@ -1,6 +1,39 @@
 @extends('layouts.layout')
 
 @section('content')
+<style>
+    .table-responsive {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+.table {
+    width: 100%;
+    font-size: 12px; /* Reduce font size */
+}
+
+.table th, .table td {
+    padding: 4px; /* Reduce padding */
+    white-space: nowrap; /* Prevent text wrapping */
+}
+
+.table input, .table select {
+    width: 100%; /* Ensure full width */
+    font-size: 12px;
+    padding: 4px; /* Reduce padding */
+    height: 30px; /* Adjust input height */
+}
+
+@media screen and (max-width: 1024px) {
+    .table th, .table td {
+        font-size: 11px; /* Reduce font size for smaller screens */
+    }
+    .table input, .table select {
+        height: 28px; /* Reduce input height */
+    }
+}
+
+</style>
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-lg-12 grid-margin stretch-card">
@@ -49,17 +82,19 @@
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <label>Products</label>
-                                <table class="table">
+                                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                <table class="table table-bordered">
+
                                     <thead>
                                         <tr>
-                                            <th>Product</th>
-                                            <th>Actual</th>
-                                            <th>Recived</th>
-                                            <th>Male</th>
-                                            <th> Female</th>
-                                            <th>Rejected Male</th>
-                                            <th>Rejected Female</th>
-                                            <th>Rejected Reason</th>
+                                            <th width="15%">Product</th>
+                                            <th width="5%">Actual</th>
+                                            <th width="15%">Recived</th>
+                                            <th width="15%">Male</th>
+                                            <th width="15%"> Female</th>
+                                            <th width="15%">Rejected Male</th>
+                                            <th width="10%">Rejected Female</th>
+                                            <th width="10%">Rejected Reason</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -86,6 +121,7 @@
                                         @endforeach
                                     </tbody>
                                 </table>
+                            </div>
                             </div>
                         </div>
                         
