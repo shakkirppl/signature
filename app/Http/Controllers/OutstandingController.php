@@ -18,7 +18,23 @@ class OutstandingController extends Controller
             $outstandings = Outstanding::where('account_type', 'supplier')
                 ->whereBetween('date', [$request->from_date, $request->to_date])
                 ->where('account_id', $request->supplier_id) // Filtering by account_id since it stores supplier ID
+                ->where(function ($query) {
+                    $query->where('receipt', '>', 0)
+                          ->orWhere('payment', '>', 0);
+                })
+                ->orderBy('date', 'ASC')
                 ->get();
+
+                $totalPayment = $outstandings->sum('payment');
+                $totalReceipt = $outstandings->sum('receipt');
+        
+                // If payment > receipt → closing under payment
+                // If receipt > payment → closing under receipt
+                if ($totalPayment > $totalReceipt) {
+                    $closingAmount = $totalPayment - $totalReceipt;
+                } elseif ($totalReceipt > $totalPayment) {
+                    $closingAmount = $totalReceipt - $totalPayment;
+                }
         }
     
         return view('supplier-ledger.index', compact('outstandings', 'suppliers'));
@@ -32,6 +48,7 @@ class OutstandingController extends Controller
     {
         $outstandings = collect(); // Empty collection by default
         $customers = Customer::all();
+        $closingAmount = 0;
     
         if ($request->filled('from_date') && $request->filled('to_date') && $request->filled('customer_id')) {
             $outstandings = Outstanding::where('account_type', 'customer')
@@ -40,13 +57,26 @@ class OutstandingController extends Controller
                 ->where(function ($query) {
                     $query->where('receipt', '>', 0)
                           ->orWhere('payment', '>', 0);
-                }) // Ensuring only records where receipt or payment > 0 are included
+                })
                 ->orderBy('date', 'ASC')
                 ->get();
+    
+            // Calculate the closing balance
+            $totalPayment = $outstandings->sum('payment');
+            $totalReceipt = $outstandings->sum('receipt');
+    
+            // If payment > receipt → closing under payment
+            // If receipt > payment → closing under receipt
+            if ($totalPayment > $totalReceipt) {
+                $closingAmount = $totalPayment - $totalReceipt;
+            } elseif ($totalReceipt > $totalPayment) {
+                $closingAmount = $totalReceipt - $totalPayment;
+            }
         }
     
-        return view('customer-ledger.index', compact('outstandings', 'customers'));
+        return view('customer-ledger.index', compact('outstandings', 'customers', 'closingAmount'));
     }
+    
     
 
 
@@ -71,6 +101,13 @@ class OutstandingController extends Controller
 
     // Fetch supplier names
     $suppliers = Supplier::whereIn('id', $outstandings->pluck('account_id'))->pluck('name', 'id');
+    foreach ($outstandings as $outstanding) {
+        if ($outstanding->total_payment > $outstanding->total_receipt) {
+            $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+        } else {
+            $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+        }
+    }
 
     return view('supplier_outstanding.index', compact('outstandings', 'suppliers'));
 }
@@ -83,15 +120,25 @@ public function customerOutstanding()
             \DB::raw('SUM(payment) as total_payment'),
             \DB::raw('SUM(receipt) as total_receipt')
         )
-        ->where('account_type', 'customer') // Only customers
-        ->groupBy('account_id') // Group by customer
+        ->where('account_type', 'customer')
+        ->groupBy('account_id')
         ->get();
 
     // Fetch customer names
     $customers = Customer::whereIn('id', $outstandings->pluck('account_id'))->pluck('customer_name', 'id');
 
+    // Calculate outstanding balance dynamically
+    foreach ($outstandings as $outstanding) {
+        if ($outstanding->total_payment > $outstanding->total_receipt) {
+            $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+        } else {
+            $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+        }
+    }
+
     return view('customer_outstanding.index', compact('outstandings', 'customers'));
 }
+
 
     
 }

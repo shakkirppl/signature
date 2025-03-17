@@ -42,7 +42,7 @@
 
           <!-- Data Table -->
           <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
-            <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
+            <table id="supplierLedgerTable" class="table table-bordered table-striped table-sm" style="font-size: 12px;">
               <thead style="background-color: #d6d6d6; color: #000;">
                 <tr>
                   <th>No</th>
@@ -75,10 +75,16 @@
               <tfoot>
                 <tr>
                   <td colspan="3" class="text-right"><strong>Total:</strong></td>
-                  <td><span id="totalPayment">0.00</span></td>
-                  <td><span id="totalReceipt">0.00</span></td>
+                  <td><span id="totalPayment"></span></td>
+                  <td><span id="totalReceipt"></span></td>
                   <td colspan="4"></td>
                 </tr>
+                <tr>
+        <td colspan="3" class="text-right"><strong>Closing Amount:</strong></td>
+        <td id="closingPayment"></td>
+        <td id="closingReceipt"></td>
+        <td colspan="4"></td>
+    </tr>
               </tfoot>
             </table>
           </div>
@@ -108,14 +114,27 @@
   document.addEventListener("DOMContentLoaded", function () {
       let totalPayment = 0;
       let totalReceipt = 0;
-      document.querySelectorAll("#ledgerTable tbody tr").forEach(row => {
-          let payment = parseFloat(row.querySelector(".payment").textContent) || 0;
-          let receipt = parseFloat(row.querySelector(".receipt").textContent) || 0;
+      
+      document.querySelectorAll("#supplierLedgerTable tbody tr").forEach(row => {
+          let paymentElement = row.querySelector(".payment");
+          let receiptElement = row.querySelector(".receipt");
+
+          let payment = paymentElement ? parseFloat(paymentElement.textContent.trim()) || 0 : 0;
+          let receipt = receiptElement ? parseFloat(receiptElement.textContent.trim()) || 0 : 0;
+
           totalPayment += payment;
           totalReceipt += receipt;
       });
+
       document.getElementById("totalPayment").textContent = totalPayment.toFixed(2);
       document.getElementById("totalReceipt").textContent = totalReceipt.toFixed(2);
+
+      // Calculate closing balance
+      let closingPayment = totalPayment > totalReceipt ? (totalPayment - totalReceipt).toFixed(2) : "";
+      let closingReceipt = totalReceipt > totalPayment ? (totalReceipt - totalPayment).toFixed(2) : "";
+
+      document.getElementById("closingPayment").textContent = closingPayment;
+      document.getElementById("closingReceipt").textContent = closingReceipt;
   });
 </script>
 @endsection

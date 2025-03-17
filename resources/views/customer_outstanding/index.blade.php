@@ -25,8 +25,9 @@
                   <td>{{ $customers[$outstanding->account_id] ?? 'Unknown Customer' }}</td>
                   <td>{{ number_format($outstanding->total_payment, 2) }}</td>
                   <td>{{ number_format($outstanding->total_receipt, 2) }}</td>
-                  <td>{{ number_format($outstanding->total_payment - $outstanding->total_receipt, 2) }}</td>
-                </tr>
+                  <td class="{{ $outstanding->total_payment > $outstanding->total_receipt ? 'text-danger' : 'text-success' }}">
+                {{ number_format($outstanding->outstanding_balance, 2) }}
+            </td>                </tr>
                 @endforeach
               </tbody>
             </table>
