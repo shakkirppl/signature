@@ -27,18 +27,21 @@ class paymentvoucherController extends Controller
     public function create()
     {
         $banks = BankMaster::all();
-        $employees =Employee::all();
-        // Fetch accounts under "Expenses" and "Liabilities"
-        $coa = AccountHead::whereIn('parent_id', function ($query) {
-            $query->select('id')
-                  ->from('account_heads')
-                  ->whereIn('name', ['Expenses', 'Liabilities']);
-        })->get();
-        
+        $employees = Employee::all();
+    
+        // Fetch "Expenses" and "Liabilities" along with their subcategories
+        $coa = AccountHead::whereIn('name', ['Expenses', 'Liabilities'])
+            ->orWhereIn('parent_id', function ($query) {
+                $query->select('id')
+                      ->from('account_heads')
+                      ->whereIn('name', ['Expenses', 'Liabilities']);
+            })->get();
+    
         return view('paymentvoucher.create', [
             'invoice_no' => $this->invoice_no()
-        ], compact('banks', 'coa','employees'));
+        ], compact('banks', 'coa', 'employees'));
     }
+    
 
     public function invoice_no(){
         try {
