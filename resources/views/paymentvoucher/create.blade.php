@@ -41,15 +41,16 @@
                                     <input type="date" class="form-control" id="date" name="date" required>
                                 </div>
 
-                                 <div class="form-group">
-                                    <label for="coa_id" class="required"> (COA)</label>
-                                        <select class="form-control" name="coa_id" id="coa_id" required>
-                                         <option value="">Select Account</option>
-                                               @foreach ($coa as $account)
-                                                    <option value="{{ $account->id }}">{{ $account->name }}</option>
-                                                @endforeach
-                                        </select>
-                                  </div>
+                                <div class="form-group">
+    <label for="coa_id" class="required"> (COA)</label>
+    <select class="form-control" name="coa_id" id="coa_id" required>
+        <option value="">Select Account</option>
+        @foreach ($coa as $account)
+            <option value="{{ $account->id }}">{{ $account->name }}</option>
+        @endforeach
+    </select>
+</div>
+
 
                                
                                   <div class="form-group">

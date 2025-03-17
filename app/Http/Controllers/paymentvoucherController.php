@@ -29,19 +29,38 @@ class paymentvoucherController extends Controller
         $banks = BankMaster::all();
         $employees = Employee::all();
     
-        // Fetch "Expenses" and "Liabilities" along with their subcategories
-        $coa = AccountHead::whereIn('name', ['Expenses', 'Liabilities'])
-            ->orWhereIn('parent_id', function ($query) {
-                $query->select('id')
-                      ->from('account_heads')
-                      ->whereIn('name', ['Expenses', 'Liabilities']);
-            })->get();
+        // Get parent IDs of "Expenses" and "Liabilities"
+        $parentIds = AccountHead::whereIn('name', ['Expenses', 'Liabilities'])->pluck('id')->toArray();
+    
+        // Fetch all subcategories recursively
+        $coa = $this->getAllSubCategories($parentIds);
     
         return view('paymentvoucher.create', [
             'invoice_no' => $this->invoice_no()
         ], compact('banks', 'coa', 'employees'));
     }
     
+    /**
+     * Recursive function to fetch all subcategories of given parent IDs
+     */
+    private function getAllSubCategories($parentIds, $level = 0)
+    {
+        $subCategories = AccountHead::whereIn('parent_id', $parentIds)->get();
+    
+        if ($subCategories->isEmpty()) {
+            return collect(); // No more subcategories
+        }
+    
+        // Add indentation for hierarchical display
+        foreach ($subCategories as $subCategory) {
+            $subCategory->name = str_repeat('', $level) . ' ' . $subCategory->name;
+        }
+    
+        // Recursively fetch all deeper subcategories
+        return $subCategories->merge($this->getAllSubCategories($subCategories->pluck('id')->toArray(), $level + 1));
+    }
+    
+
 
     public function invoice_no(){
         try {
