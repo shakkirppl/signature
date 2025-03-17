@@ -11,6 +11,7 @@ use App\Models\SalesPayment;
 use Illuminate\Support\Facades\DB;
 use App\Models\SalesPaymentDetail;
 use App\Models\Customer;
+use App\Models\Outstanding;
 
 
 class SalesPaymentController extends Controller
@@ -233,7 +234,24 @@ public function printInvoice($order_no)
     return view('sales-payment.invoice-print', compact('order', 'products', 'total_amount', 'total_kg', ));
 }
 
+public function getOutstandingBalance($customerId)
+{
+    try {
+        $outstanding = Outstanding::where('account_id', $customerId)
+            ->selectRaw('SUM(payment) as total_payment, SUM(receipt) as total_receipt')
+            ->first();
 
+        if ($outstanding) {
+            $balance = $outstanding->total_payment - $outstanding->total_receipt;
+            return response()->json(['balance' => number_format($balance, 2)]);
+        } else {
+            return response()->json(['balance' => '0.00']);
+        }
+    } catch (\Exception $e) {
+        Log::error('Error fetching outstanding balance: ' . $e->getMessage());
+        return response()->json(['error' => 'Something went wrong'], 500);
+    }
+}
 
 
 }

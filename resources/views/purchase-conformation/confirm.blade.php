@@ -217,17 +217,43 @@ document.getElementById('total_expense').addEventListener('blur', function () {
 });
 
 function updateRowTotal(row) {
-    const totalWeight = parseFloat(row.querySelector('.weight').value) || 0;
-    const rate = parseFloat(row.querySelector('.rate').value.replace(/,/g, '')) || 0;
-    const transportationAmount = parseFloat(row.querySelector('.transport').value.replace(/,/g, '')) || 0;
-    
+    const qtyInput = row.querySelector('.qty');
+    const weightInput = row.querySelector('.weight');
+    const rateInput = row.querySelector('.rate');
+    const transportInput = row.querySelector('.transport');
+    const totalInput = row.querySelector('.total');
+
+    let qty = parseFloat(qtyInput.value) || 0;
+    let totalWeight = parseFloat(weightInput.value) || 0;
+    let rate = parseFloat(rateInput.value.replace(/,/g, '')) || 0;
+    let transportationAmount = parseFloat(transportInput.value.replace(/,/g, '')) || 0;
+
+    // If quantity is 0, reset weight, rate, and transportation amount to 0
+    if (qty === 0) {
+        weightInput.value = "0";
+        rateInput.value = "0";
+        transportInput.value = "0";
+    }
+
+    // Recalculate weight, rate, and transport fields
+    totalWeight = parseFloat(weightInput.value) || 0;
+    rate = parseFloat(rateInput.value.replace(/,/g, '')) || 0;
+    transportationAmount = parseFloat(transportInput.value.replace(/,/g, '')) || 0;
+
     // Updated formula: total = (total_weight × rate) + (total_weight × transportation_amount)
     const rowTotal = ((totalWeight * rate) + (totalWeight * transportationAmount)).toFixed(2);
     
-    row.querySelector('.total').value = Intl.NumberFormat('en-US').format(rowTotal); // Update row total
-    
-
+    totalInput.value = Intl.NumberFormat('en-US').format(rowTotal);
 }
+
+document.getElementById('product-details').addEventListener('input', function (event) {
+    const target = event.target;
+    if (target.classList.contains('qty') || target.classList.contains('rate') || target.classList.contains('weight') || target.classList.contains('transport')) {
+        updateRowTotal(target.closest('tr'));
+        calculateTotals(); // Update all totals whenever a row value changes
+    }
+});
+
 
 function calculateTotals(formatExpense = true) {
     let itemTotal = 0;

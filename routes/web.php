@@ -320,6 +320,8 @@ Route::post('sales_payment/{id}', [SalesPaymentController::class, 'update'])->na
 Route::get('/sales_payment/delete/{id}', [SalesPaymentController::class, 'destroy'])->name('sales_payment.destroy');
 Route::get('sales_payment-report', [SalesPaymentController::class, 'report'])->name('sales_payment.report');
 Route::get('/invoice-print/{order_no}', [SalesPaymentController::class, 'printInvoice'])->name('invoice.print');
+Route::get('/get-outstanding-balance/{customerId}', [SalesPaymentController::class, 'getOutstandingBalance'])->name('get.outstanding.balance');
+
 
 
 

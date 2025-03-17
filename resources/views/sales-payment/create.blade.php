@@ -140,6 +140,12 @@ button.remove-row {
                                 <label for="grand_total" class="form-label">Grand Total:(USD)</label>
                                 <input type="number" id="total" name="grand_total" class="form-control" readonly step="any">
                             </div>
+                            
+                            <div class="col-md-3">
+                               <label for="outstanding_balance" class="form-label">Outstanding Balance:</label>
+                               <input type="text" id="outstanding_balance" class="form-control" readonly>
+                               <small id="outstanding_error" class="text-danger" style="display:none;"></small> <!-- Error Message -->
+                            </div>
                         </div>
                         <div class="row mt-3">
                             <div class="col-md-3">
@@ -161,6 +167,40 @@ button.remove-row {
     </div>
 </div>
 @endsection
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#customer_id').change(function () {
+    var customerId = $(this).val();
+    $('#outstanding_error').hide();
+
+    if (customerId) {
+        $.ajax({
+            url: "{{ url('/get-outstanding-balance') }}/" + customerId, 
+            type: 'GET',
+            dataType: 'json',
+            success: function (response) {
+                if (response.balance !== undefined) {
+                    $('#outstanding_balance').val(response.balance);
+                } else {
+                    $('#outstanding_balance').val('0.00');
+                }
+            },
+            error: function () {
+                $('#outstanding_error').text('Failed to fetch balance.').show();
+                $('#outstanding_balance').val('0.00');
+            }
+        });
+    } else {
+        $('#outstanding_balance').val('0.00');
+    }
+});
+
+
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
