@@ -36,7 +36,12 @@ class OutstandingController extends Controller
         if ($request->filled('from_date') && $request->filled('to_date') && $request->filled('customer_id')) {
             $outstandings = Outstanding::where('account_type', 'customer')
                 ->whereBetween('date', [$request->from_date, $request->to_date])
-                ->where('account_id', $request->customer_id) // Filtering by account_id
+                ->where('account_id', $request->customer_id)
+                ->where(function ($query) {
+                    $query->where('receipt', '>', 0)
+                          ->orWhere('payment', '>', 0);
+                }) // Ensuring only records where receipt or payment > 0 are included
+                ->orderBy('in_date', 'ASC')
                 ->get();
         }
     

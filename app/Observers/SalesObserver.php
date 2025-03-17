@@ -31,6 +31,24 @@ class SalesObserver
             'user_id' => $salesPayment->user_id,
             'financial_year' => date('Y'),
         ]);
+if($salesPayment->advance_amount>0)
+{
+        Outstanding::create([
+            'date' => $salesPayment->date,
+            'time' => now()->format('H:i:s'),
+            'account_id' => $salesPayment->customer_id,
+            'receipt' => $salesPayment->advance_amount,
+            'payment' => 0,
+            'narration' => null,
+            'transaction_id' => $salesPayment->id,
+            'transaction_type' => 'sales ',
+            'description' => 'Sales Payment for Order No: ' . $salesPayment->order_no,
+            'account_type' => 'customer',
+            'store_id' => $salesPayment->store_id,
+            'user_id' => $salesPayment->user_id,
+            'financial_year' => date('Y'),
+        ]);
+    }
     }
 
     /**
