@@ -348,6 +348,8 @@ Route::get('slaughter-schedule/{id}/edit', [SlaughterScheduleController::class, 
 Route::post('slaughter-schedule/{id}/update', [SlaughterScheduleController::class, 'update'])->name('slaughter-schedule.update');
 Route::delete('slaughter-schedule/{id}', [SlaughterScheduleController::class, 'destroy'])->name('slaughter-schedule.destroy');
 Route::get('/slaughter-schedule/print/{id}', [SlaughterScheduleController::class, 'print'])->name('slaughter-schedule.print');
+Route::post('/upload-screenshot', [SlaughterScheduleController::class, 'uploadScreenshot'])->name('upload.screenshot');
+
 
 
 

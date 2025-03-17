@@ -9,6 +9,8 @@ use App\Models\InvoiceNumber;
 use App\Models\SlaughterSchedule;
 use App\Models\SlaughterScheduleDetail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class SlaughterScheduleController extends Controller
 {
@@ -216,7 +218,25 @@ public function print($id)
     return view('slaughter_schedule.print', compact('schedule'));
 }
 
+// public function uploadScreenshot(Request $request)
+// {
+//     try {
+//         if (!$request->hasFile('image')) {
+//             return response()->json(['error' => 'No image file received'], 400);
+//         }
 
+//         $path = $request->file('image')->store('screenshots', 'public');
+//         if (!$path) {
+//             return response()->json(['error' => 'File upload failed'], 500);
+//         }
+
+//         $url = asset('storage/' . $path);
+//         return response()->json(['url' => $url]);
+//     } catch (\Exception $e) {
+//         Log::error("Upload Error: " . $e->getMessage());
+//         return response()->json(['error' => 'Internal server error'], 500);
+//     }
+// }
 
 
 }

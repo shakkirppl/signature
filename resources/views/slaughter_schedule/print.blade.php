@@ -127,10 +127,49 @@
     </table>
 
     <div class="no-print">
-        <button onclick="window.print()" class="btn btn-primary">Print</button>
-        <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
-    </div>
+    <button onclick="captureAndDownload()" class="btn btn-success">Download </button>
+    <button onclick="window.print()" class="btn btn-primary">Print</button>
 </div>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+    function captureAndDownload() {
+        let container = document.querySelector(".container");
+        let buttons = document.querySelector(".no-print"); // Select buttons to hide
+
+        if (!container) {
+            alert("Error: Unable to find the content to capture.");
+            return;
+        }
+
+        // Hide buttons before capturing
+        if (buttons) buttons.style.visibility = "hidden";
+
+        setTimeout(() => {
+            html2canvas(container, { scale: 2 }).then(canvas => {
+                let image = canvas.toDataURL("image/png");
+
+                // Show buttons again after capturing
+                if (buttons) buttons.style.visibility = "visible";
+
+                // Create a download link
+                let downloadLink = document.createElement("a");
+                downloadLink.href = image;
+                downloadLink.download = "slaughter_schedule.png";
+                downloadLink.click();
+            }).catch(error => {
+                console.error("Capture Error:", error);
+                alert("Failed to capture the image. Try again.");
+                if (buttons) buttons.style.visibility = "visible"; // Show buttons on error
+            });
+        }, 500); // Small delay to ensure buttons are hidden
+    }
+</script>
+
+
+
 
 </body>
 </html>
