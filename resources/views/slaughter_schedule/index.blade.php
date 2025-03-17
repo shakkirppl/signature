@@ -69,6 +69,7 @@
     </a>
 
     <a href="{{ route('slaughter-schedule.edit', $schedule->id) }}" class="btn btn-warning btn-sm">Edit</a>
+    <a href="{{ route('slaughter-schedule.print', $schedule->id) }}" class="btn btn-primary btn-sm"> <i class="mdi mdi-printer"></i>Print </a>
 
 <form action="{{ url('slaughter-schedule/delete/'.$schedule->id) }}" method="POST" style="display:inline;">
     @csrf

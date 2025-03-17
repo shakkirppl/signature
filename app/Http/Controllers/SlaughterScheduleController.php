@@ -206,5 +206,13 @@ public function destroy($id)
     }
 }
 
+public function print($id)
+{
+    $schedule = SlaughterSchedule::with('details.products')->findOrFail($id);
+    return view('slaughter_schedule.print', compact('schedule'));
+}
+
+
+
 
 }

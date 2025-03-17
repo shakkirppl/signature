@@ -347,6 +347,10 @@ Route::get('/slaughter/{id}/products', [SlaughterScheduleController::class, 'vie
 Route::get('slaughter-schedule/{id}/edit', [SlaughterScheduleController::class, 'edit'])->name('slaughter-schedule.edit');
 Route::post('slaughter-schedule/{id}/update', [SlaughterScheduleController::class, 'update'])->name('slaughter-schedule.update');
 Route::delete('slaughter-schedule/{id}', [SlaughterScheduleController::class, 'destroy'])->name('slaughter-schedule.destroy');
+Route::get('/slaughter-schedule/print/{id}', [SlaughterScheduleController::class, 'print'])->name('slaughter-schedule.print');
+
+
+
 
 
 

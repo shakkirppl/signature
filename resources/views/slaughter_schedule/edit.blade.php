@@ -126,15 +126,21 @@
             <!-- Airline Name -->
             <div class="col-md-4">
                 <label for="airline_name">Airline Name:</label>
-                <input type="text" class="form-control" id="airline_name" name="airline_name"
-                    value="{{ old('airline_name', $schedule->airline_name) }}" >
+                <select class="form-control" id="airline_name" name="airline_name">
+        <option value="Qatar Airways" {{ $schedule->airline_name == 'Qatar Airways' ? 'selected' : '' }}>Qatar Airways</option>
+        <option value="Ethiopian Airlines" {{ $schedule->airline_name == 'Ethiopian Airlines' ? 'selected' : '' }}>Ethiopian Airlines</option>
+    </select>
+              
             </div>
 
             <!-- Airline Flight Number -->
             <div class="col-md-4">
                 <label for="airline_number">Flight Number:</label>
-                <input type="text" class="form-control" id="airline_number" name="airline_number"
-                    value="{{ old('airline_number', $schedule->airline_number) }}" >
+                <select class="form-control" id="airline_number" name="airline_number">
+                    <option value="QR 1476" {{ $schedule->airline_number == 'QR 1476' ? 'selected' : '' }}>QR 1476</option>
+                     <option value="ET 814" {{ $schedule->airline_number == 'ET 814' ? 'selected' : '' }}>ET 814</option>
+    </select>
+               
             </div>
         </div>
        

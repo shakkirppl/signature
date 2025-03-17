@@ -141,11 +141,17 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="airline_name">Airline Name:</label>
-                                        <input type="text" class="form-control" id="airline_name" name="airline_name" >
+                                        <select class="form-control" id="airline_name" name="airline_name">
+                                          <option value="Qatar Airways" selected>Qatar Airways</option>
+                                              <option value="Ethiopian Airlines">Ethiopian Airlines</option>
+                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="airline_number">Flight Number:</label>
-                                        <input type="text" class="form-control" id="airline_number" name="airline_number" >
+                                        <select class="form-control" id="airline_number" name="airline_number">
+                                          <option value="QR 1476" selected>QR 1476</option>
+                                              <option value="ET 814">ET 814</option>
+                                         </select>
                                     </div>
                                     </div>
                                     <div class="row"><br>
