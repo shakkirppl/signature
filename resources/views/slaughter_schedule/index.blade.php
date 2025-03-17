@@ -29,6 +29,7 @@
                                     <th>Loading End Time</th>
                                     <th>Transportation Date</th>
                                     <th>Transportation Time</th>
+                                  
                                     <th>Airport Time</th>
                                     <th>Airline</th>
                                     <th>Airline Number</th>
@@ -53,7 +54,7 @@
                                      
                                         <td>{{ $schedule->transportation_date }}</td>
                                         <td>{{ $schedule->transportation_time }}</td>
-                                        
+                                       
                                         <td>{{ $schedule->airport_time }}</td>
                                         <td>{{ $schedule->airline_name }}</td>
                                         <td>{{ $schedule->airline_number }}</td>

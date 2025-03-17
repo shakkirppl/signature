@@ -47,6 +47,7 @@ class SlaughterScheduleController extends Controller
         'loading_time' => 'nullable',
         'airport_time' => 'nullable',
         'airline_name' => 'nullable',
+       
         'airline_number' => 'nullable',
         'airline_date' => 'nullable|date',
         'airline_time' => 'nullable',
@@ -70,6 +71,7 @@ class SlaughterScheduleController extends Controller
             'loading_time' => $request->loading_time,
             'loading_end_time' => $request->loading_end_time,
             'airport_time' => $request->airport_time,
+            
             'airline_name' => $request->airline_name,
             'airline_number' => $request->airline_number,
             'airline_date' => $request->airline_date,
@@ -155,7 +157,9 @@ public function update(Request $request, $id)
             'loading_time' => $request->loading_time,
             'loading_end_time' => $request->loading_end_time,
             'airport_time' => $request->airport_time,
+           
             'airline_name' => $request->airline_name,
+            
             'airline_number' => $request->airline_number,
             'airline_date' => $request->airline_date,
             'airline_time' => $request->airline_time,

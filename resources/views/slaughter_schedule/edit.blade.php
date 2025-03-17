@@ -111,13 +111,9 @@
             </div>
             <div class="row">
            
-
+         
             <!-- Airport Time -->
-            <div class="col-md-4">
-                <label for="airport_time">Airport Cutoff Time:</label>
-                <input type="text" class="form-control timepicker" id="airport_time" name="airport_time"
-                    value="{{ old('airport_time', $schedule->airport_time) }}" >
-            </div>
+           
         </div>
 <br>
 <br>
@@ -158,7 +154,13 @@
                 <input type="text" class="form-control timepicker" id="airline_time" name="airline_time"
                     value="{{ old('airline_time', $schedule->airline_time) }}" >
             </div>
+           
         </div>
+        <div class="col-md-4">
+                <label for="airport_time">Airport Cutoff Time:</label>
+                <input type="text" class="form-control timepicker" id="airport_time" name="airport_time"
+                    value="{{ old('airport_time', $schedule->airport_time) }}" >
+            </div>
 <br>
 
 

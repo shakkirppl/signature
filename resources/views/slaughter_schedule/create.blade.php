@@ -125,10 +125,8 @@
                                     </div>
                                     <div class="row">
                                     
-                                    <div class="col-md-6">
-                                        <label for="airport_time">Airport Cutoff Time:</label>
-                                        <input type="text" class="form-control timepicker" id="airport_time" name="airport_time" >
-                                    </div>
+                                   
+                                   
                                    
                                 </div>
                             </div>
@@ -162,6 +160,10 @@
                                     <div class="col-md-6">
                                         <label for="airline_time">Time:</label>
                                         <input type="text" class="form-control timepicker" id="airline_time" name="airline_time" >
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="airport_time">Airport Cutoff Time:</label>
+                                        <input type="text" class="form-control timepicker" id="airport_time" name="airport_time" >
                                     </div>
                                 </div>
                             </div>
