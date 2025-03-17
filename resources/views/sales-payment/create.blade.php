@@ -168,38 +168,28 @@ button.remove-row {
 </div>
 @endsection
 
+<script>
+    // Preload customer outstanding balances
+    var customerOutstandingBalances = @json($customerOutstandingBalances);
+</script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 $(document).ready(function () {
     $('#customer_id').change(function () {
-    var customerId = $(this).val();
-    $('#outstanding_error').hide();
+        var customerId = $(this).val();
+        // Hide any error messages if using an error field
+        $('#outstanding_error').hide();
 
-    if (customerId) {
-        $.ajax({
-            url: "{{ url('/get-outstanding-balance') }}/" + customerId, 
-            type: 'GET',
-            dataType: 'json',
-            success: function (response) {
-                if (response.balance !== undefined) {
-                    $('#outstanding_balance').val(response.balance);
-                } else {
-                    $('#outstanding_balance').val('0.00');
-                }
-            },
-            error: function () {
-                $('#outstanding_error').text('Failed to fetch balance.').show();
-                $('#outstanding_balance').val('0.00');
-            }
-        });
-    } else {
-        $('#outstanding_balance').val('0.00');
-    }
+        if (customerId && customerOutstandingBalances[customerId] !== undefined) {
+            $('#outstanding_balance').val(customerOutstandingBalances[customerId]);
+        } else {
+            $('#outstanding_balance').val('0.00');
+        }
+    });
 });
 
-
-});
 </script>
 
 <script>

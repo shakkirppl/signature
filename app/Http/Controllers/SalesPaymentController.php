@@ -18,11 +18,19 @@ class SalesPaymentController extends Controller
 {
     public function create()
     {
+        $customerOutstandingBalances = Outstanding::where('account_type', 'customer')
+        ->select('account_id', DB::raw('SUM(payment) as total_payment, SUM(receipt) as total_receipt'))
+        ->groupBy('account_id')
+        ->get()
+        ->mapWithKeys(function($item) {
+            $balance = $item->total_payment - $item->total_receipt;
+            return [$item->account_id => number_format($balance, 2, '.', '')];
+        });
         $customers =Customer::all(); 
         $products = Product::all();
         $SalesOrders = SalesOrder::all();
        
-        return view('sales-payment.create',['invoice_no'=>$this->invoice_no()],compact('customers','products','SalesOrders'));
+        return view('sales-payment.create',['invoice_no'=>$this->invoice_no()],compact('customers','products','SalesOrders','customerOutstandingBalances'));
     }
 
     public function invoice_no(){
