@@ -41,7 +41,7 @@ class OutstandingController extends Controller
                     $query->where('receipt', '>', 0)
                           ->orWhere('payment', '>', 0);
                 }) // Ensuring only records where receipt or payment > 0 are included
-                ->orderBy('in_date', 'ASC')
+                ->orderBy('date', 'ASC')
                 ->get();
         }
     
