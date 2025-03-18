@@ -96,7 +96,6 @@
                 buttonContainer.innerHTML = `
                     <button class="btn btn-sm btn-primary new-btn">New</button>
                     <button class="btn btn-sm btn-warning edit-btn">Edit</button>
-                    <button class="btn btn-sm btn-danger delete-btn">Delete</button>
                 `;
                 parentDiv.appendChild(buttonContainer);
 

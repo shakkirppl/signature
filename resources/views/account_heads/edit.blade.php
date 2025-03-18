@@ -25,7 +25,9 @@
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" value="{{ $accountHead->name }}" required>
                         </div>
+                      
 
+                       
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
                 </div>

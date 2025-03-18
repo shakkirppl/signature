@@ -33,6 +33,8 @@ use App\Http\Controllers\AnteMortemReportController;
 use App\Http\Controllers\SupplierAdvanceController;
 use App\Http\Controllers\DeathAnimalController;
 use App\Http\Controllers\PackingListController;
+use App\Http\Controllers\AirlineController;
+use App\Http\Controllers\LedgerController;
 
 
 
@@ -79,7 +81,7 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class,'dashboard'])->name('dashboard');
 });
 
-
+Route::resource('ledger', 'App\Http\Controllers\LedgerController');
 
 Route::get('supplier-create', [SupplierController::class, 'create'])->name('supplier.create');
 Route::post('supplier-store', [SupplierController::class, 'store'])->name('supplier.store');
@@ -305,8 +307,10 @@ Route::get('/account-heads', [AccountHeadController::class, 'index'])->name('acc
 Route::get('/account-heads/new', [AccountHeadController::class, 'create'])->name('account-heads.new');
 Route::get('/account-heads/edit/{id}', [AccountHeadController::class, 'edit'])->name('account-heads.edit');
 Route::post('/account-heads/update/{id}', [AccountHeadController::class, 'update'])->name('account-heads.update');
-Route::delete('/account-heads/{id}', [AccountHeadController::class, 'destroy'])->name('account-heads.destroy');
+Route::get('/account-heads/{id}', [AccountHeadController::class, 'destroy'])->name('account-heads.destroy');
 Route::post('/account-heads/store', [AccountHeadController::class, 'store'])->name('account-heads.store');
+Route::get('account-heads/check-delete/{id}', [AccountHeadController::class, 'checkDelete']);
+
 
 
 
@@ -411,6 +415,15 @@ Route::get('packinglist-show/{id}', [PackingListController::class, 'show'])->nam
 Route::get('packinglist/{id}/edit', [PackingListController::class, 'edit'])->name('packinglist.edit');
 Route::post('packinglist/{id}', [PackingListController::class, 'update'])->name('packinglist.update');
 Route::get('packinglist-print/{id}', [PackingListController::class, 'packlistPrint'])->name('packinglist.print');
+
+
+
+Route::get('airline-create', [AirlineController::class, 'create'])->name('airline.create');
+Route::post('airline-store', [AirlineController::class,'store'])->name('airline.store');
+Route::get('airline-index', [AirlineController::class, 'index'])->name('airline.index');
+Route::get('airline-edit/{id}', [AirlineController::class, 'edit'])->name('airline.edit');
+Route::post('airline-update/{id}', [AirlineController::class, 'update'])->name('airline.update');
+Route::get('airline-delete/{id}', [AirlineController::class, 'destroy'])->name('airline.destroy');
 
 
 

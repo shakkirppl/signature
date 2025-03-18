@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AccountHead extends Model
 {
-    protected $fillable = ['name', 'parent_id'];
+    protected $fillable = ['name', 'parent_id','can_delete','opening_balance','dr_cr'];
 
     // Define relationship for parent
     public function parent()

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\AccountHead;
 use Illuminate\Http\Request;
+use App\Models\AccountTransactions;
+use Carbon\Carbon;
 
 class AccountHeadController extends Controller
 {
@@ -25,17 +27,37 @@ class AccountHeadController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'parent_id' => 'nullable|exists:account_heads,id',
+            'opening_balance' => 'nullable|numeric',
+            'dr_cr' => 'nullable|in:Dr,Cr',
+            
         ]);
     
         $accountHead = new AccountHead();
         $accountHead->name = $validated['name'];
         $accountHead->parent_id = $validated['parent_id'] ?? null;
+        $accountHead->opening_balance = $validated['opening_balance'] ?? 0; // Default to 0 if not provided
+        $accountHead->dr_cr = $validated['dr_cr'] ?? null;
+       
         $accountHead->save();
     
-        return redirect()->route('account-heads.index')
-        ->with('success');  
+        // Store transaction if opening balance > 0
+        if ($accountHead->opening_balance > 0) {
+            $group_no = AccountTransactions::orderBy('id','desc')->max('group_no');
+            $group_no+=1;
+            $accountHead->date = $request->date ? Carbon::parse($request->date)->toDateString() : Carbon::now()->toDateString();            if ($accountHead->dr_cr == 'Dr') {
+                 AccountTransactions::storeTransaction($group_no,$accountHead->date,"20",$accountHead->id,$accountHead->id,"Opening  No:".$accountHead->name,"OpeningBalance",$accountHead->opening_balance ,null);
+                 AccountTransactions::storeTransaction($group_no,$accountHead->date,$accountHead->id,$accountHead->id,"20","Opening  No:".$accountHead->name,"OpeningBalance",null,$accountHead->opening_balance);
+
+            } else {
+                 AccountTransactions::storeTransaction($group_no,$accountHead->date,"20",$accountHead->id,$accountHead->id,"Opening  No:".$accountHead->name,"OpeningBalance",null,$accountHead->opening_balance);
+                 AccountTransactions::storeTransaction($group_no,$accountHead->date,$accountHead->id,$accountHead->id,"20","Opening  No:".$accountHead->name,"OpeningBalance",$accountHead->opening_balance,null);
+            }
+        }
     
+        return redirect()->route('account-heads.index')->with('success', 'Account Head created successfully!');
     }
+    
+    
     public function edit($id)
     
     {
@@ -51,7 +73,8 @@ class AccountHeadController extends Controller
 
         $accountHead = AccountHead::findOrFail($id);
         $accountHead->update([
-            'name' => $validated['name'],
+            'name' => $request->name,
+            
         ]);
 
         return redirect()->route('account-heads.index')->with('success', 'Account Head updated successfully!');

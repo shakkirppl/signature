@@ -26,6 +26,22 @@
                             <label for="name">Name</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Enter account head name" required>
                         </div>
+                        <div class="form-group">
+                            <label for="opening_balance">Opening Balance</label>
+                            <input type="number" class="form-control" id="opening_balance" name="opening_balance" placeholder="Enter opening balance" >
+                        </div>
+
+                        <div class="form-group">
+                            <label>Type</label>
+                            <div>
+                                <label class="mr-3">
+                                    <input type="radio" name="dr_cr" value="Dr" > Dr
+                                </label>
+                                <label>
+                                    <input type="radio" name="dr_cr" value="Cr" > Cr
+                                </label>
+                            </div>
+                        </div>
 
                         <input type="hidden" id="parent_id" name="parent_id" value="{{ $parentId ?? '' }}">
 

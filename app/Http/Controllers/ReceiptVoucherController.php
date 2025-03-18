@@ -72,9 +72,15 @@ class ReceiptVoucherController extends Controller
                          $voucher->store_id = 1; 
                  
                          $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;
-                        InvoiceNumber::updateinvoiceNumber('receipt_voucher',1);
+                       
 
                          $voucher->save();
+                         InvoiceNumber::updateinvoiceNumber('receipt_voucher',1);
+                         $group_no = AccountTransactions::orderBy('id','desc')->max('group_no');
+                         $group_no+=1;
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,"20",$voucher->id,$voucher->coa_id,"Receipt Invoice No:".$voucher->code,"Recipt",$airline->amount ,null);
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,$voucher->coa_id,$voucher->id,"20","Receipt Invoice No:".$voucher->code,"Receipt",null,$voucher->amount);
+
                  
                          return redirect()->route('receiptvoucher.index')->with('success');
                      } catch (\Exception $e) {
