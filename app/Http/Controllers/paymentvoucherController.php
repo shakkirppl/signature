@@ -9,6 +9,7 @@ use App\Models\paymentVoucher;
 use App\Models\BankMaster;
 use App\Models\AccountHead;
 use App\Models\Employee;
+use App\Models\AccountTransactions;
 
 
 class paymentvoucherController extends Controller
@@ -99,14 +100,18 @@ class paymentvoucherController extends Controller
                          $voucher->amount = isset($request->amount) ? (float) str_replace(',', '', $request->amount) : 0.00;
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1; // Assuming a default store ID
-                         InvoiceNumber::updateinvoiceNumber('payment_voucher',1);
+                        
 
                          // Set the bank_id if type is 'bank'
                          $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;
 
                          // Save the voucher to the database
                          $voucher->save();
-                 
+                         InvoiceNumber::updateinvoiceNumber('payment_voucher',1);
+                         $group_no = AccountTransactions::orderBy('id','desc')->max('group_no');
+                         $group_no+=1;
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,"20",$voucher->id,$voucher->coa_id,"Payment Invoice No:".$voucher->code,"Payment" ,null,$voucher->amount);
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,$voucher->coa_id,$voucher->id,"20","Payment Invoice No:".$voucher->code,"Payment",$voucher->amount,null);
                          return redirect()->route('paymentvoucher.index')->with('success', 'Payment voucher created successfully!');
                      } catch (\Exception $e) {
                          // Log the error and redirect back with an error message

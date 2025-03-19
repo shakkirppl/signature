@@ -50,8 +50,8 @@ class BankMasterController extends Controller
             'currency' => $request->input('currency'),
             'type' =>$request->input('type'),
             'gl' => $request->input('gl'), 
-            'account_no' => $request->input('gl'), 
-            'account_name' => $request->input('gl'), 
+            'account_no' => $request->input('account_no'), 
+            'account_name' => $request->input('account_name'), 
             'store_id' => 1, 
             'user_id' => auth()->id(), 
         ]);

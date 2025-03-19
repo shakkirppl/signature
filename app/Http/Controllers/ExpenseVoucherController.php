@@ -10,6 +10,7 @@ use App\Models\BankMaster;
 use App\Models\Localcustomer;
 use App\Models\Shipment;
 use App\Models\AccountHead;
+use App\Models\AccountTransactions;
 
 class ExpenseVoucherController extends Controller
 {
@@ -34,13 +35,30 @@ class ExpenseVoucherController extends Controller
         $banks = BankMaster::all(); 
         $localcustomers = Localcustomer::all();
         $shipments = Shipment::where('shipment_status', 0)->get(); 
-        $coa = AccountHead::whereIn('parent_id', function ($query) {
-            $query->select('id')
-                  ->from('account_heads')
-                  ->whereIn('name', ['Expenses']);
-        })->get();
+        $parentIds = AccountHead::whereIn('name', ['Expenses'])->pluck('id')->toArray();
+    
+        // Fetch all subcategories recursively
+        $coa = $this->getAllSubCategories($parentIds);
+
 
         return view('expense-voucher.create',['invoice_no'=>$this->invoice_no()],compact('banks','localcustomers','shipments','coa'));
+    }
+
+    private function getAllSubCategories($parentIds, $level = 0)
+    {
+        $subCategories = AccountHead::whereIn('parent_id', $parentIds)->get();
+    
+        if ($subCategories->isEmpty()) {
+            return collect(); // No more subcategories
+        }
+    
+        // Add indentation for hierarchical display
+        foreach ($subCategories as $subCategory) {
+            $subCategory->name = str_repeat('', $level) . ' ' . $subCategory->name;
+        }
+    
+        // Recursively fetch all deeper subcategories
+        return $subCategories->merge($this->getAllSubCategories($subCategories->pluck('id')->toArray(), $level + 1));
     }
 
     public function invoice_no(){
@@ -86,9 +104,14 @@ class ExpenseVoucherController extends Controller
                         
                          $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;
                  
-                         InvoiceNumber::updateinvoiceNumber('expense_voucher',1);
+                       
 
                          $voucher->save();
+                         InvoiceNumber::updateinvoiceNumber('expense_voucher',1);
+                         $group_no = AccountTransactions::orderBy('id','desc')->max('group_no');
+                         $group_no+=1;
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,"20",$voucher->id,$voucher->coa_id,"Expense Invoice No:".$voucher->code,"Expense" ,null,$voucher->amount);
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,$voucher->coa_id,$voucher->id,"20","Expense Invoice No:".$voucher->code,"Expense",$voucher->amount,null);
                  
                          // Redirect with a success message
                          return redirect()->route('expensevoucher.index')->with('success', 'Expense voucher created successfully!');

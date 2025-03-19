@@ -12,7 +12,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Add voucher Voucher</h4>
+                    <h4 class="card-title">Add Receipt Voucher</h4>
                     <div class="col-md-6 heading">
                         <a href=" {{ route('receiptvoucher.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                     </div>

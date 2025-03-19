@@ -8,6 +8,7 @@ use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
 use App\Models\BankMaster;
 use App\Models\AccountHead;
+use App\Models\AccountTransactions;
 
 class ReceiptVoucherController extends Controller
 {
@@ -78,7 +79,7 @@ class ReceiptVoucherController extends Controller
                          InvoiceNumber::updateinvoiceNumber('receipt_voucher',1);
                          $group_no = AccountTransactions::orderBy('id','desc')->max('group_no');
                          $group_no+=1;
-                         AccountTransactions::storeTransaction($group_no,$voucher->date,"20",$voucher->id,$voucher->coa_id,"Receipt Invoice No:".$voucher->code,"Recipt",$airline->amount ,null);
+                         AccountTransactions::storeTransaction($group_no,$voucher->date,"20",$voucher->id,$voucher->coa_id,"Receipt Invoice No:".$voucher->code,"Recipt",$voucher->amount ,null);
                          AccountTransactions::storeTransaction($group_no,$voucher->date,$voucher->coa_id,$voucher->id,"20","Receipt Invoice No:".$voucher->code,"Receipt",null,$voucher->amount);
 
                  
