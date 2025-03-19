@@ -22,7 +22,8 @@ class SalesPayment extends Model
     'user_id',
     'paid_amount',
     'shipping_mode',
-    'shipping_agent',];
+    'shipping_agent',
+'shrinkage'];
 
     
     public function customer()

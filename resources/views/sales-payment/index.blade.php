@@ -22,6 +22,7 @@
                                     <th>Customer</th>
                                     <th>Sales No</th>
                                     <th>Grand Total</th>
+                                    <th>Shrinkage</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -33,6 +34,7 @@
                                         <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td>
                                         <td>{{ $sale->SalesOrder->order_no ?? 'N/A' }}</td>
                                         <td>{{ number_format($sale->grand_total, 2) }}</td>
+                                        <td>{{ $sale->shrinkage }}</td>
                                         <td>
                                             <a href="{{ route('sales_payment.view', $sale->id) }}" class="btn btn-info btn-sm">View</a>
                                             <a href="{{ route('sales_payment.edit', $sale->id) }}" class="btn btn-warning btn-sm">Edit</a>

@@ -95,13 +95,16 @@ button.remove-row {
                             </div>
 
                             <div class="col-md-4">
-    <label for="shipping_agent" class="form-label">Shipping Agent</label>
-    <select class="form-control" id="shipping_agent" name="shipping_agent">
-        <option value="Qatar Airways" selected>Qatar Airways</option>
-        <option value="Ethiopian Airlines">Ethiopian Airlines</option>
-    </select>
-</div>
-
+                             <label for="shipping_agent" class="form-label">Shipping Agent</label>
+                                    <select class="form-control" id="shipping_agent" name="shipping_agent">
+                                          <option value="Qatar Airways" selected>Qatar Airways</option>
+                                            <option value="Ethiopian Airlines">Ethiopian Airlines</option>
+                                    </select>
+                             </div>
+                             <div class="col-md-4">
+                                <label for="shrinkage" class="form-label">Shrinkage:</label>
+                                <input type="text" class="form-control" id="shrinkage" name="shrinkage" >
+                            </div>
                            
                         </div><br>
                         <div class="table-responsive">
@@ -197,6 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const productTable = document.querySelector('#productTable tbody');
     const addRowBtn = document.getElementById('addRow');
     const advanceAmountField = document.getElementById('advance_amount');
+    const shrinkageField = document.getElementById('shrinkage'); // Shrinkage field
 
     function calculateTotals() {
         let grandTotal = 0;
@@ -215,20 +219,29 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
+        // Apply shrinkage percentage if entered
+        const shrinkage = parseFloat(shrinkageField.value) || 0;
+        if (shrinkage > 0) {
+            const shrinkageAmount = (shrinkage / 100) * grandTotal;
+            grandTotal -= shrinkageAmount;
+        }
+
         document.getElementById('total').value = grandTotal.toFixed(2);
+        
+        // Calculate balance amount after advance payment
         const advanceAmount = parseFloat(advanceAmountField.value) || 0;
         document.getElementById('balance_amount').value = (grandTotal - advanceAmount).toFixed(2);
     }
 
-    // Event listener for input changes on quantity and rate fields
+    // Event listeners for quantity, rate, advance, and shrinkage changes
     productTable.addEventListener('input', function (e) {
         if (e.target.classList.contains('qty') || e.target.classList.contains('rate')) {
             calculateTotals();
         }
     });
 
-    // Event listener for advance amount field
     advanceAmountField.addEventListener('input', calculateTotals);
+    shrinkageField.addEventListener('input', calculateTotals); // Trigger calculation on shrinkage change
 
     // Add new row on button click
     addRowBtn.addEventListener('click', function () {
@@ -243,23 +256,23 @@ document.addEventListener('DOMContentLoaded', function () {
                     @endforeach
                 </select>
             </td>
-            <td><input type="text" name="products[${index}][qty]" class="form-control qty" value="1" min="1" required  ></td>
-            <td><input type="text" name="products[${index}][rate]" class="form-control rate"  step="any"></td>
-            <td><input type="text" name="products[${index}][total]" class="form-control total" readonly  step="any"></td>
+            <td><input type="text" name="products[${index}][qty]" class="form-control qty" value="1" required ></td>
+            <td><input type="text" name="products[${index}][rate]" class="form-control rate"></td>
+            <td><input type="text" name="products[${index}][total]" class="form-control total" readonly></td>
             <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
         `;
         productTable.appendChild(newRow);
     });
 
-    // Remove row event listener using event delegation
+    // Remove row event listener
     productTable.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-row')) {
             e.target.closest('tr').remove();
             calculateTotals();
         }
     });
-
 });
+
 </script>
 
 <script>

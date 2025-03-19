@@ -5,21 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commercial Invoice</title>
     <style>
-               @page {
-    size: A4;
-    margin: 15mm;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
 }
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            width: 210mm;
-            height: 297mm;
-            padding: 20px;
-            border: 1px solid #000;
-            box-sizing: border-box;
-        }
-        @media print {
+
+.a4-container {
+    width: 210mm; /* Standard A4 width */
+    height: 297mm; /* Standard A4 height */
+    margin: auto;
+    padding: 15px;  /* Increased padding slightly */
+    box-sizing: border-box;
+   
+    background-color: white;
+    overflow: hidden;
+}
+
+.packing-list {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px; /* Increased font size slightly */
+    border: 1px solid black;
+}
+
+.packing-list th, .packing-list td {
+    border: 1px solid black;
+    padding: 5px; /* Increased padding */
+    text-align: left;
+}
+
+.header {
+    font-size: 20px; /* Increased font size */
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    font-size: 14px; /* Increased text size */
+}
+
+.logo {
+    max-width: 130px; /* Slightly increased logo size */
+}
+
+.image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 400px; /* Increased width */
+    margin: 15px auto;
+    gap: 200px;/* Increased spacing between images */
+}
+
+.image-container img {
+    width: 70px;  
+    height: 70px; 
+}
+
+/* Ensure total row is visible and clear */
+.total-row td {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Prevent content from overflowing */
+@media print {
+    .a4-container {
+        page-break-after: always;
+    }
+}
+
+@media print {
+    
     button {
         display: none !important;
     margin: 20px auto;
@@ -30,152 +97,94 @@
     }
 }
 
-        .container {
-            width: 100%;
-        }
-        .header, .table-content {
-            width: 100%;
-        }
-        .header td {
-            padding: 5px;
-            vertical-align: top;
-        }
-        .invoice-title {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .invoice-number {
-            color: red;
-            font-size: 20px;
-            font-weight: bold;
-        }
-        .table-content, .table-content td, .table-content th {
-            border: 1px solid black;
-            padding: 5px;
-            text-align: left;
-        }
-        .table-content th {
-            background-color: #f2f2f2;
-        }
-        .bank-details {
-            border: 1px solid black;
-            padding: 10px;
-            margin-top: 5px;
-        }
-        .total-section {
-            font-size: 20px;
-            font-weight: bold;
-            text-align: center;
-            margin-top: 10px;
-        }
-        .total-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        .total-table th, .total-table td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: right;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .total-kg {
-            text-align: left;
-            background-color: #fef6db;
-            font-style: italic;
-        }
-        .total-usd {
-            text-align: left;
-            background-color: #e6f5e6;
-            font-style: italic;
-        }
-        .total-value {
-            text-align: right;
-        }
     </style>
 </head>
-
 <body>
-    <div class="container">
-        <table class="header">
-            <tr>
-                <td>
-                    <strong>Signature Trading Ltd</strong><br>
-                    P.O Box 1506, Plot No. 147<br>
-                    Fire Road, Arusha<br>
-                    United Republic Of Tanzania<br>
-                    <strong>Tel:</strong> +255 272 97 97 97 / 69 666 6606<br>
-                    <strong>Email:</strong> sales@signaturetz.com
-                </td>
-                <td align="right">
-                    <strong>Registration No:</strong> 157893564 <br>
-                    Tel: +255 272 97 97 97 <br>
-                    Tel: +255 69 666 6606 <br>
-                    <a href="https://www.signaturetz.com">www.signaturetz.com</a> <br>
-                    Email: <a href="mailto:info@signaturetz.com">info@signaturetz.com</a>
-                </td>
-            </tr>
-        </table>
+    <div class="a4-container">
+        <!-- <div class="row"> -->
+    
 
-        <h2 class="invoice-title">Commercial Invoice</h2>
+        <div class="company-header">
+    <div>
+        <img class="logo" src="{{ asset('public/image/signature-logo.png') }}" alt="Company Logo">
+    </div>
 
-        <table class="table-content">
-            <tr>
-                <th>Invoice No:</th>
-                <td>{{ $order->order_no }}</td>
-                <th>Invoice Date:</th>
-                <td>{{ date('d/m/Y', strtotime($order->date)) }}</td>
-            </tr>
-            <tr>
-                <th>Customer Id</th>
-                <td>{{ $order->customer_code }}</td>
-                <th>Page</th>
-                <td>1.00</td>
-            </tr>
-        </table>
+    <div class="company-info">
+        <strong>Signature Trading Ltd</strong><br>
+        P.O Box 1506, Plot No. 147<br>
+        Fire Road, Arusha<br>
+        <strong>   United Republic Of Tanzania</strong><br>
+    </div>
 
-        <table class="table-content">
+    <div class="company-info-right">
+        <strong>Registration No:</strong> 157893564 <br>
+        <strong>Tel:</strong> +255 272 97 97 97 <br>
+        <strong>Tel:</strong> +255 69 666 6606 <br>
+        <a href="https://www.signaturetz.com">www.signaturetz.com</a> <br>
+        <strong>Email:</strong> <a href="mailto:info@signaturetz.com">info@signaturetz.com</a>
+    </div>
+</div>
+
+       
+        <table class="packing-list">
             <tr>
-                <td colspan="2"><strong>SIGNATURE TRADING LIMITED</strong><br>
-                    P.O Box 1506, Plot No. 147, Fire Road <br>
-                    Arusha, Tanzania <br>
-                    Tel:+255 272 97 97 97 / 69 666 6606 <br>
-                    Email: sales@signaturetz.com
-                </td>
-                <td colspan="2"><strong>TAYBAT ALBAHR</strong><br>
-                    UMM AL DOOM STREET <br>
-                    MUAITHER P.O BOX - 96393, DOHA, QATAR <br>
-                    TEL: +974 31075459
+                <td class="header" colspan="2">Commercial Invoice</td>
+                <td colspan="4">
+                    <div class="invoice-container">
+                        <div class="row-invoice">
+                            <strong>Invoice:</strong> <span class="highlight" style="margin-left: 54px; color:red">{{$order->order_no }}</span> 
+                            <span   style="margin-left: 50px;" >Invoice Date: {{ date('d/m/Y', strtotime($order->date)) }}</span> 
+                        </div> 
+                        <br>
+                        <div class="row">
+                            <strong>Customer Id:</strong> <span   style="margin-left: 20px;" > {{ $order->customer_code }}</span>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <strong>Page:</strong> <span style="margin-left: 70px;">  1.00</span>
+                        </div>
+                    </div>
                 </td>
             </tr>
-            <tr>
-                <th>Shipping Mode</th>
-                <td>{{ $order->shipping_mode }}</td>
-                <th>Shipping Agent</th>
-                <td>{{ $order->shipping_agent }}</td>
-            </tr>
-            <tr>
-                <th>Terms of Delivery</th>
-                <td>C&F, DOHA, QATAR</td>
-                <th>Terms of Payment</th>
-                <td>100% after receiving</td>
-            </tr>
-            <tr>
-                <th>Currency</th>
-                <td>USD</td>
-            </tr>
-        </table>
 
-        <table class="table-content">
             <tr>
-                <th>Description</th>
-                <th>Packaging</th>
-                <th>Quantity (kg)</th>
-                <th>Price (USD)</th>
-                <th>Par</th>
-                <th>Total Amount $</th>
+                <td colspan="2">
+                    <strong>SIGNATURE TRADING LIMITED</strong><br>
+                    P.O Box 1506, Plot no.22, Block 7, Condo building<br>
+                    Arusha, Tanzania<br>
+                    Tel. +255 272 97 97 97 / 69 666 6606<br>
+                    Email: <strong>sales@signaturetz.com</strong>
+                </td>
+                <td colspan="4">
+                    <strong>TAYBAT ALBAHR</strong><br>
+                    UMM AL DOOM STREET, MUAITHER<br>
+                    P.O BOX: 96393, DOHA, QATAR<br>
+                    Tel. +974 31075459
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <strong><i>Shipping Mode:</i></strong> {{ $order->shipping_mode }}
+                    <br><br>
+                    <strong><i>Shipping Agent:</i></strong> {{ $order->shipping_agent }}
+                </td>
+                <td colspan="4">
+                    <strong><i>Terms of Delivery:</i></strong> <span class="small-text" style="margin-left: 69px;">C&F ,DOHA, QATAR</span>
+                    <br> <br>
+                    <strong><i>Terms of Payment:</i></strong> <span class="small-text" style="margin-left: 66px;">100% after receiving</span>
+                    <br><br>
+                    <strong><i>Currency:</i></strong> <span style="margin-left: 130px;" class="small-text">USD</span><br>
+                </td>
+            </tr>
+
+            <tr>
+                <th class="desc-col">Description</th>
+                <th class="pack-col">Packaging</th>
+                <th class="weight-col">Quantity(kg)</th>
+                <th class="price-col">Price (USD)</th>
+                <th class="par-col">Par</th>
+                <th class="total-col">Total</th>
             </tr>
             @foreach ($products as $product)
             <tr>
@@ -187,47 +196,85 @@
                 <td class="total_amount">{{ number_format($product->quantity * $product->price, 2) }}</td>
             </tr>
             @endforeach
-        </table>
 
-        <table class="table-content">
             <tr>
-                <td colspan="6" class="bold">Country of Origin: TANZANIA</td>
+           <td class="bold">  <strong>Country of Origin: TANZANIA <br>Country of Export: TANZANIA</strong></td>
+                <td colspan="6"></td>
+            </tr>
+
+            <tr>
+                <td class="bold" ><strong>Total</strong></td>
+                <td><strong>{{ number_format($totalPackaging, 2) }}</strong></td>
+                <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
+                <td class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>
+                <td></td>
+                <td><strong>{{ number_format($totalAmount, 2) }}</td>
             </tr>
             <tr>
-                <td colspan="6" class="bold">Country of Export: TANZANIA</td>
+                <td colspan="6"><strong>Shrinkage : {{ $order->shrinkage }} %</strong></td>
             </tr>
-        </table>
+            <tr class="subtotal">
+                <td><strong>Subtotal </strong></td>
+                <td><strong>{{ number_format($totalPackaging, 2) }}</strong></td>
+                <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
+                <td class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>
+                <td></td>
+                <td><strong>{{ number_format($totalAmount, 2) }}</td>
+            </tr>
 
-        
-
-        <div class="bank-details">
-            <h3>Bank Details:</h3>
+            <tr class="">
+                <td colspan="5" class="" style="text-align: left;">
+                <div class="row">
+                <h3>Bank Details:</h3>
             <p>
                 <strong>USD Account Code:</strong> 42710052781 (USD) <br>
                 <strong>Swift Code:</strong> NMIBTZTZ Branch Code: 016 <br>
                 <strong>Bank Account Owner:</strong> Signature Trading Limited <br>
                 <strong>Bank Name:</strong> NMB BANK PLC <br>
                 <strong>Bank Address:</strong> NMB Bank - Arusha Market Branch <br>
-                P.O BOX 11168, Arusha, Tanzania
-            </p>
-        </div>
-        <table class="total-table">
-            <tr>
-                <th class="total-kg">TOTAL KG</th>
-                <td class="total-value">{{ number_format($total_kg, 2) }}</td>
-                <th class="total-usd">TOTAL USD</th>
-                <td class="total-value">{{ number_format($total_amount, 2) }}</td>
+                P.O BOX
+                        </div>
+                </td>
+                
+        
+           
             </tr>
-        </table>
-        <div>
-            The deducted Withholding tax amounts remain payable to Signature Trading Limited until TRA Withholding Tax Certificate is presented as proof of payment.
-       </div>
-       <button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">
-    Print
-</button>
+           
+    
+            <tr class="total-row">
+    <td class="yellow-section bold">TOTAL KG</td>
+    <td>{{ number_format($total_kg, 2) }}</td>
+    <td  colspan="3"style=" text-align: right; border: 1px solid #000;">TOTAL USD</td>
+    <td style="text-align: center; border: 1px solid #000; font-weight: bold;">{{ number_format($totalAmount, 0) }}</td>
+</tr>
 
+<tr>
+    <td colspan="6">
+        <div style="text-align: center; font-size: 14px; padding: 10px;">
+            <i>The deducted Withholding tax amounts remain payable to Signature Trading Limited until TRA Withholding Tax Certificate 
+            is presented as proof of payment.</i>
+        </div>
+    </td>
+</tr>
+
+
+      
+        
+        </table>
+
+
+
+<div class="image-container">
+<img src="{{ asset('public/image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
+    <img src="{{ asset('public/image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
+    <img src="{{ asset('public/image/scanner.png') }}" alt="QR Scanner">
+</div>
+
+<button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">print</button>
 
 
     </div>
+    
+
 </body>
 </html>

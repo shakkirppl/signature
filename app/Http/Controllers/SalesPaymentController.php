@@ -58,13 +58,14 @@ public function store(Request $request)
         'date' => 'required|date',
         'sales_no' => 'required|exists:sales_order,id',
         'customer_id' => 'required|exists:customer,id',
-        'grand_total' => 'required|numeric|min:0',
-        'shipping_mode' => 'nullable|string|min:0',
-        'shipping_agent' => 'nullable|string|min:0',
+        'grand_total' => 'required|numeric',
+        'shipping_mode' => 'nullable|string',
+        'shipping_agent' => 'nullable|string',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
-        'products.*.qty' => 'required|numeric|min:0.01',
-        'products.*.rate' => 'required|numeric|min:0',
+        'products.*.qty' => 'required|numeric',
+        'products.*.rate' => 'required|numeric',
+        'shrinkage' =>'nullable|numeric',
     ]);
 
     DB::beginTransaction(); 
@@ -77,6 +78,7 @@ public function store(Request $request)
             'customer_id' => $request->customer_id,
             'shipping_agent' => $request->shipping_agent,
             'shipping_mode' => $request->shipping_mode,
+            'shrinkage' => $request->shrinkage,
             'grand_total' => $request->grand_total,
             'advance_amount' => $request->advance_amount ?? 0,
             'balance_amount' => ($request->grand_total - ($request->advance_amount ?? 0)),
@@ -127,13 +129,14 @@ public function update(Request $request, $id)
         'date' => 'required|date',
         'customer_id' => 'required|exists:customer,id', 
         'sales_no' => 'required|exists:sales_order,id',
-        'shipping_mode' => 'nullable|string|min:0',
-        'shipping_agent' => 'nullable|string|min:0',
+        'shipping_mode' => 'nullable|string',
+        'shipping_agent' => 'nullable|string',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
-        'products.*.qty' => 'required|numeric|min:0.01',
-        'products.*.rate' => 'required|numeric|min:0',
-        'grand_total' => 'required|numeric|min:0',
+        'products.*.qty' => 'required|numeric',
+        'products.*.rate' => 'required|numeric',
+        'grand_total' => 'required|numeric',
+        'shrinkage' =>'nullable|numeric',
        
     ]);
 
@@ -148,6 +151,7 @@ public function update(Request $request, $id)
             'sales_no' => $request->sales_no, 
             'customer_id' => $request->customer_id,
             'shipping_mode' => $request->shipping_mode ?? null, // Ensure null values are handled
+            'shrinkage' => $request->shrinkage ?? null,
             'shipping_agent' => $request->shipping_agent ?? null,
             'grand_total' => $request->grand_total,
             'advance_amount' => $request->advance_amount ?? 0,
@@ -232,14 +236,17 @@ public function printInvoice($order_no)
            
         )
         ->get();
-
-    $total_amount = $products->sum(function ($product) {
-        return $product->quantity * $product->price;
-    });
+        $totalPackaging = $order->details->sum('packaging');
+        $totalPrice = $products->sum('price');
+        $totalWeight = $order->details->sum('quantity');
+       
+        $totalAmount = $products->sum(fn($product) => $product->quantity * $product->price);
+   
+    
 
     $total_kg = $products->sum('quantity');
 
-    return view('sales-payment.invoice-print', compact('order', 'products', 'total_amount', 'total_kg', ));
+    return view('sales-payment.invoice-print', compact('order', 'products', 'totalPackaging', 'total_kg','totalWeight','totalAmount','totalPrice' ));
 }
 
 public function getOutstandingBalance($customerId)
