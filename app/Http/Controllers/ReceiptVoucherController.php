@@ -59,6 +59,7 @@ class ReceiptVoucherController extends Controller
                              'type' => 'required|string|in:cash,bank', 
                              'amount' => 'required',
                              'bank_id' => 'nullable|exists:bank_master,id', 
+                             'currency' => 'required',
                          ]);
                  
                          
@@ -71,7 +72,7 @@ class ReceiptVoucherController extends Controller
                          $voucher->amount = isset($request->amount) ? (float) str_replace(',', '', $request->amount) : 0.00;
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1; 
-                 
+                         $voucher->currency = $request->currency; 
                          $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;
                        
 
@@ -120,6 +121,7 @@ public function update(Request $request, $id)
         'type' => 'required|string',
         'amount' => 'required|numeric',
         'bank_name' => 'nullable|exists:bank_master,bank_name', 
+        'currency' => 'required',
     ]);
 
     $voucher = ReceiptVoucher::findOrFail($id);
@@ -127,6 +129,7 @@ public function update(Request $request, $id)
     $voucher->coa_id = $request->coa_id;
     $voucher->description = $request->description;
     $voucher->type = $request->type;
+    $voucher->currency = $request->currency;
     $voucher->amount = $request->amount;
 
     if ($request->type === 'bank') {

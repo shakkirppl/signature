@@ -37,7 +37,7 @@
               <thead style="background-color: #d6d6d6; color: #000;">
                                 <tr>
                                     <th>Invoice No</th>
-                                    <th>Order No</th>
+                                    <th>Weight No</th>
                                     <th>Date</th>
                                     <th>Supplier</th>
                                     <th>Grand Total</th>
@@ -51,7 +51,7 @@
                                 @foreach($conformations as $conformation)
                                 <tr>
                                     <td>{{ $conformation->invoice_number }}</td>
-                                    <td>{{ $conformation->order_no }}</td>
+                                    <td>{{ $conformation->weight_code }}</td>
                                     <td>{{ $conformation->date }}</td>
                                     <td>{{ $conformation->supplier->name }}</td>
                                     <td>{{ number_format($conformation->grand_total, 2) }}</td>
@@ -66,8 +66,9 @@
                                     </td>
                                     <td>
                                     <a href="{{ url('purchase-conformation/'.$conformation->id.'/view') }}" class="btn btn-warning btn-sm">View</a>
-                                    <!-- <a href="{{ route('purchase-conformation.edit', $conformation->id) }}" class="btn btn-primary">Edit</a> -->
-
+                                    @if(is_null($conformation->paid_amount))
+                                     <a href="{{ route('purchase-conformation.edit', $conformation->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                    @endif
                                     </td>
                                 </tr>
                                 @endforeach

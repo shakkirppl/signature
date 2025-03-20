@@ -28,7 +28,8 @@ class Airline extends Model
         'total_weight',
         'store_id',
         'user_id',
-        'type'
+        'type',
+        'currency'
     ];
 
     protected $dates = ['deleted_at']; 

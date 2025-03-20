@@ -114,7 +114,7 @@ class AnteMortemReportController extends Controller
         
                 DB::commit();
         
-                return redirect()->route('antemortem.create')->with('success', 'Antemortem report created successfully.');
+                return redirect()->route('antemortem.index')->with('success', 'Antemortem report created successfully.');
         
             } catch (\Exception $e) {
                 DB::rollBack();

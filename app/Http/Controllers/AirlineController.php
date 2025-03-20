@@ -103,6 +103,7 @@ class AirlineController extends Controller
                          $airline->description = $request->description;
                          $airline->user_id = Auth::id();
                          $airline->store_id = 1; 
+                         $airline->currency = 'USD'; 
                          $airline->save();
 
                          InvoiceNumber::updateinvoiceNumber('airline_payment',1);
@@ -157,6 +158,7 @@ class AirlineController extends Controller
                          'description' => 'nullable|string',
                          'total_weight' => 'nullable|numeric',
                          'type' => 'required|string',
+                         'currency'=>'required'
                      ]);
                  
                      // Debugging: Check what is being sent

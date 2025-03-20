@@ -9,7 +9,7 @@ class ReceiptVoucher extends Model
 {
     use HasFactory;
     protected $table = 'receipt_voucher';
-    protected $fillable = ['code', 'date','name','customer_id','type','amount','description','bank_id','store_id','user_id'];
+    protected $fillable = ['code', 'date','name','customer_id','type','amount','description','bank_id','store_id','user_id','currency'];
 
     
 

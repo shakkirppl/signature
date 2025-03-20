@@ -91,6 +91,14 @@
                                                 @endforeach
                                         </select>
                                  </div>
+                                 <div class="form-group ">
+                                    <label class=" required">Currency:</label>
+                                   
+                                        <select class="form-control" name="currency">
+                                            <option value="Shilling" selected>Shilling</option>
+                                            <option value="USD">USD</option>
+                                        </select>
+                                 </div>
                                 <div class="form-group">
                                     <label for="amount" class="required">Amount</label>
                                     <input type="text" class="form-control" id="amount" name="amount" placeholder="Enter Amount" required

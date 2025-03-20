@@ -86,6 +86,7 @@ class ExpenseVoucherController extends Controller
                             'description' => 'nullable|string',
                             'bank_id' => 'nullable|exists:bank_master,id',
                             'shipment_id' => 'nullable|exists:shipment,id',
+                            'currency' => 'required',
                          ]);
                  
                          // Create a new payment voucher instance
@@ -100,6 +101,8 @@ class ExpenseVoucherController extends Controller
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1;
                          $voucher->status = 1; 
+                         $voucher->currency = $request->currency;
+
                  
                         
                          $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;
@@ -147,6 +150,7 @@ class ExpenseVoucherController extends Controller
                          'description' => 'nullable|string',
                          'bank_id' => 'nullable|exists:bank_master,id',
                          'shipment_id' => 'nullable|exists:shipment,id',
+                         'currency' => 'required',
                      ]);
                  
                      $voucher = ExpenseVoucher::findOrFail($id);
@@ -156,6 +160,8 @@ class ExpenseVoucherController extends Controller
                      $voucher->type = $request->type;
                      $voucher->amount = $request->amount;
                      $voucher->shipment_id = $request->shipment_id;
+                     $voucher->currency = $request->currency;
+
                    
                      
                      $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;

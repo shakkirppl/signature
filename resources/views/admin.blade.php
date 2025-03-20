@@ -66,7 +66,7 @@
                   <div class="card card-dark-blue">
                     <div class="card-body">
                       <p class="mb-4">Animals Stock</p>
-                      <p class="fs-30 mb-2">{{$active}}</p>
+                      <p class="fs-30 mb-2">{{$totalProducts}}</p>
                       <!-- <p>22.00% (30 days)</p> -->
                     </div>
                   </div>
@@ -82,15 +82,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="col-md-6 stretch-card transparent">
+              
+                <a href="{{ route('supplier.outstanding') }}" class="col-md-6 stretch-card transparent" style="text-decoration: none;">
                   <div class="card card-light-danger">
                     <div class="card-body">
                       <p class="mb-4">Debit Amount</p>
-                      <p class="fs-30 mb-2">{{$due}}</p>
-                      <!-- <p>0.22% (30 days)</p> -->
+                        <p class="fs-30 mb-2">{{ number_format($debitamount,2)}}</p>
                     </div>
                   </div>
-                </div>
+                </a>
+              
               </div>
             </div>
           </div>

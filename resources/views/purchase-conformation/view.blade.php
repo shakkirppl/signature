@@ -47,8 +47,9 @@
                                     <tr>
                                         <td>{{ $detail->product->product_name }}</td>
                                         <td>{{ $detail->total_accepted_qty }}</td>
-                                        <td>{{ $detail->rate }}</td>
-                                        <td>{{ $detail->total }}</td>
+                                        
+                                        <td >{{ number_format($detail->rate,2) }}</td>
+                                        <td >{{ number_format($detail->total,2) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

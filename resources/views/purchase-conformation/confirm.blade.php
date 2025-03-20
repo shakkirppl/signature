@@ -172,11 +172,12 @@ button.remove-row {
     </div>
 
     <div class="row mb-3">
-        <div class="col-md-6">
-            <label for="advance_amount" class="form-label">Advanced Amount:</label>
-            <input type="text" id="advance_amount" name="advance_amount" class="form-control w-100" 
-                value="{{ $order->advance_amount ?? 0 }}" readonly step="any" oninput="formatNumber(this)">       
-        </div>
+    <div class="col-md-6">
+        <label for="advance_amount" class="form-label">Advanced Amount:</label>
+        <input type="text" id="advance_amount" name="advance_amount" class="form-control w-100" 
+            value="{{ number_format($order->advance_amount ?? 0, 2) }}" readonly>       
+    </div>  
+
         <div class="col-md-6">
             <label for="balance_amount" class="form-label">Balance Amount:</label>
             <input type="text" id="balance_amount" name="balance_amount" class="form-control w-100" 
@@ -312,7 +313,15 @@ function calculateTotals(formatExpense = true) {
         }
     </script>
 
-
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let advanceAmountField = document.getElementById('advance_amount');
+    if (advanceAmountField) {
+        let amount = parseFloat(advanceAmountField.value.replace(/,/g, '')) || 0;
+        advanceAmountField.value = amount.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    }
+});
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {

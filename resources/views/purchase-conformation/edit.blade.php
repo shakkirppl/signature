@@ -83,7 +83,7 @@
                                     @foreach ($purchaseConfirmation->details as $index => $detail)
                                         <tr>
                                             <td>
-                                                <select name="products[{{ $index }}][product_id]" class="form-control" required style="width: 100px;">
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select"  required style="width: 100px;">
                                                     <option value="">Select Product</option>
                                                     @foreach ($products as $product)
                                                         <option value="{{ $product->id }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -92,11 +92,11 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="products[{{ $index }}][total_accepted_qty]" class="form-control" value="{{ $detail->total_accepted_qty }}" min="1" style="width: 100px;"></td>
+                                            <td><input type="text" name="products[{{ $index }}][total_accepted_qty]"  class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1" style="width: 100px;"></td>
                                             <td><input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->total_weight }}" step="any" style="width: 100px;"></td>
                                             <td><input type="text" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" style="width: 100px;"></td>
                                             <td><input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" value="{{ $detail->transportation_amount }}" step="any" style="width: 100px;"></td>
-                                            <td><input type="text" name="products[{{ $index }}][total]" class="form-control" value="{{ $detail->total }}" step="any" readonly style="width: 100px;"></td>
+                                            <td><input type="text" name="products[{{ $index }}][total]"  class="form-control total" value="{{ $detail->total }}" step="any" readonly style="width: 100px;"></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -107,26 +107,26 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <label for="item_total" class="form-label">Item Amount:</label>
-                                <input type="text" name="item_total" class="form-control" value="{{ $purchaseConfirmation->item_total }}" readonly>
+                                <input type="text" id="item_total"  name="item_total" class="form-control" value="{{ $purchaseConfirmation->item_total }}" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label for="total_expense" class="form-label">Additional Expense:</label>
-                                <input type="text" name="total_expense" class="form-control" value="{{ $purchaseConfirmation->total_expense }}">
+                                <input type="text" name="total_expense" class="form-control" id="total_expense" value="{{ $purchaseConfirmation->total_expense }}">
                             </div>
                             <div class="col-md-4">
                                 <label for="grand_total" class="form-label">Grand Total:</label>
-                                <input type="text" name="grand_total" class="form-control" value="{{ $purchaseConfirmation->grand_total }}" readonly>
+                                <input type="text" name="grand_total" class="form-control"   id="grand_total" value="{{ $purchaseConfirmation->grand_total }}" readonly>
                             </div>
                         </div>
                         
                         <div class="row mt-3">
                             <div class="col-md-6">
                                 <label for="advance_amount" class="form-label">Advanced Amount:</label>
-                                <input type="text" name="advance_amount" class="form-control" value="{{ $purchaseConfirmation->advance_amount }}" readonly>
+                                <input type="text" name="advance_amount"  id="advance_amount" class="form-control" value="{{ $purchaseConfirmation->advance_amount }}" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label for="balance_amount" class="form-label">Balance Amount:</label>
-                                <input type="text" name="balance_amount" class="form-control" value="{{ $purchaseConfirmation->balance_amount }}" readonly>
+                                <input type="text" name="balance_amount"  id="balance_amount" class="form-control" value="{{ $purchaseConfirmation->balance_amount }}" readonly>
                             </div>
                         </div>
 
@@ -198,6 +198,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Format and display balance amount
         document.getElementById("balance_amount").value = new Intl.NumberFormat("en-US", { minimumFractionDigits: 2 }).format(balanceAmount);
+    }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let advanceAmountField = document.getElementById('advance_amount');
+    if (advanceAmountField) {
+        let amount = parseFloat(advanceAmountField.value.replace(/,/g, '')) || 0;
+        advanceAmountField.value = amount.toLocaleString('en-US', { minimumFractionDigits: 2 });
     }
 });
 </script>

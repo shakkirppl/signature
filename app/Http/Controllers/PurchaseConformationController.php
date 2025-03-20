@@ -215,50 +215,80 @@ public function edit($id)
     return view('purchase-conformation.edit', compact('purchaseConfirmation', 'products'));
 }
 
-
 public function update(Request $request, $id)
 {
-    $request->validate([
-        'supplier_id' => 'required|exists:suppliers,id',
+    $validatedData = $request->validate([
+        'weight_id' => 'required|exists:weight_calculator_master,id',
+        'weight_code' => 'required|string',
+        'purchaseOrder_id' => 'required',
+        'inspection_id' => 'required',
+        'invoice_number' => 'required|string',
+        'shipment_id' => 'required|exists:shipment,id',
         'date' => 'required|date',
-        'products.*.product_id' => 'required|exists:products,id',
-        'products.*.total_accepted_qty' => 'required|numeric|min:1',
-        'products.*.total_weight' => 'required|numeric|min:0',
-        'products.*.rate' => 'required|numeric|min:0',
-        'products.*.transportation_amount' => 'required|numeric|min:0',
-        'products.*.total' => 'required|numeric|min:0',
-        'total_expense' => 'nullable|numeric|min:0',
-        'advance_amount' => 'nullable|numeric|min:0',
+        'supplier_id' => 'required|exists:supplier,id',
+        'item_total' => 'required',
+        'total_expense' => 'required',
+        'grand_total' => 'required',
+        'advance_amount' => 'required',
+        'balance_amount' => 'required',
+        'products' => 'required|array',
+        'products.*.product_id' => 'required|exists:product,id',
+        'products.*.type' => 'nullable|string',
+        'products.*.total_accepted_qty' => 'required|string',
+        'products.*.total_weight' => 'required|string',
+        'products.*.transportation_amount' => 'required',
+        'products.*.rate' => 'required',
+        'products.*.total' => 'required',
     ]);
 
-    // Fetch the existing purchase confirmation record
-    $purchaseConfirmation = PurchaseConformation::findOrFail($id);
+    DB::beginTransaction();
+    try {
+        $purchaseConformation = PurchaseConformation::findOrFail($id);
 
-    // Update master record
-    $purchaseConfirmation->update([
-        'supplier_id' => $request->supplier_id,
-        'date' => $request->date,
-        'total_expense' => $request->total_expense ?? 0,
-        'advance_amount' => $request->advance_amount ?? 0,
-        'grand_total' => $request->grand_total ?? 0,
-    ]);
-
-    // Update purchase confirmation details
-    $purchaseConfirmation->details()->delete(); // Remove old details to reinsert
-
-    foreach ($request->products as $product) {
-        PurchaseConformationDetail::create([
-            'purchase_conformation_id' => $purchaseConfirmation->id,
-            'product_id' => $product['product_id'],
-            'total_accepted_qty' => $product['total_accepted_qty'],
-            'total_weight' => $product['total_weight'],
-            'rate' => $product['rate'],
-            'transportation_amount' => $product['transportation_amount'],
-            'total' => $product['total'],
+        $purchaseConformation->update([
+            'weight_id' => $validatedData['weight_id'],
+            'inspection_id' => $validatedData['inspection_id'],
+            'purchaseOrder_id' => $validatedData['purchaseOrder_id'],
+            'weight_code' => $validatedData['weight_code'],
+            'invoice_number' => $validatedData['invoice_number'],
+            'shipment_id' => $validatedData['shipment_id'],
+            'date' => $validatedData['date'],
+            'supplier_id' => $validatedData['supplier_id'],
+            'item_total' => (float) str_replace(',', '', $validatedData['item_total']),
+            'total_expense' => (float) str_replace(',', '', $validatedData['total_expense']),
+            'grand_total' => (float) str_replace(',', '', $validatedData['grand_total']),
+            'advance_amount' => (float) str_replace(',', '', $validatedData['advance_amount']),
+            'balance_amount' => (float) str_replace(',', '', $validatedData['balance_amount']),
+            'status' => 1,
+            'shipment_status' => 0,
+            'user_id' => auth()->id(),
         ]);
-    }
 
-    return redirect()->route('purchase-conformation.report')->with('success', 'Purchase Confirmation updated successfully.');
+        // Update purchase confirmation details
+        $purchaseConformation->details()->delete();
+        foreach ($validatedData['products'] as $product) {
+            PurchaseConformationDetail::create([
+                'conformation_id' => $purchaseConformation->id,
+                'product_id' => $product['product_id'],
+                'type' => null,
+                'mark' => null,
+                'total_accepted_qty' => $product['total_accepted_qty'],
+                'total_weight' => $product['total_weight'],
+                'transportation_amount' => (float) str_replace(',', '', $product['transportation_amount']),
+                'rate' => (float) str_replace(',', '', $product['rate']),
+                'total' => (float) str_replace(',', '', $product['total']),
+                'store_id' => 1,
+            ]);
+        }
+
+     
+        DB::commit();
+        return redirect()->route('purchase-confirmation.report')->with('success', 'Purchase Confirmation updated successfully!');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('PurchaseConformation update error: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Error updating data: ' . $e->getMessage());
+    }
 }
 
 

@@ -5,131 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Packing List</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-        }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+}
 
-        .a4-container {
-    width: 220mm; /* Increased width */
-    height: 297mm;
+.a4-container {
+    width: 210mm; /* Standard A4 width */
+    height: 297mm; /* Standard A4 height */
     margin: auto;
-    padding: 20px;  /* Increased padding for better spacing */
+    padding: 15px;  /* Increased padding slightly */
     box-sizing: border-box;
    
     background-color: white;
+    overflow: hidden;
 }
 
 .packing-list {
     width: 100%;
     border-collapse: collapse;
+    font-size: 14px; /* Increased font size slightly */
     border: 1px solid black;
-    margin: 10px auto;
 }
 
-        .packing-list th, .packing-list td {
-            border: 1px solid black;
-            padding: 5px; /* Adjusted padding */
-            text-align: left;
-        }
-
-        .header {
-           
-            font-size: 22px;
-            font-weight: bold;
-            text-align: center;
-            padding: 10px;
-          
-        }
-
-        .invoice-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .row-invoice {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .row strong {
-            min-width: 120px;
-        }
-
-        .desc-col { width: 40%; }
-        .pack-col { width: 15%; }
-        .weight-col { width: 15%; }
-        .par-col { width: 10%; }
-        .total-col { width: 20%; }
-
-        .highlight { font-weight: bold; color: red; }
-        .italic { font-style: italic; }
-        .bold { font-weight: bold; }
-        .small-text {
-    font-size: 14px; 
-        }
-
-      
-
-        /* Total section row */
-        .total-row td {
-            font-weight: bold;
-            text-align: center;
-        }
-        .company-header {
-    display: flex;
-    justify-content: space-between; /* Ensures space between logo and text */
-    align-items: center; /* Aligns items vertically */
-    margin-bottom: 2px;
-    padding: 10px;
-}
-
-.company-header > div:first-child {
-    flex-shrink: 0; /* Prevents the logo from shrinking */
-}
-
-.company-info, .company-info-right {
-    font-size: 14px;
-    line-height: 1.5;
+.packing-list th, .packing-list td {
+    border: 1px solid black;
+    padding: 5px; /* Increased padding */
     text-align: left;
 }
 
-.company-info-right {
-    text-align: right;
+.header {
+    font-size: 20px; /* Increased font size */
+    font-weight: bold;
+    text-align: center;
+    padding: 8px;
+}
+
+.company-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    font-size: 14px; /* Increased text size */
 }
 
 .logo {
-    max-width: 150px; /* Adjust as needed */
-    height: auto;
-    margin-left: 10px;
+    max-width: 130px; /* Slightly increased logo size */
 }
+
 .image-container {
     display: flex;
     align-items: center;
-    justify-content: center; /* Center images */
+    justify-content: center;
     width: 100%;
-    max-width: 400px;
-    margin: 20px auto;
-    gap: 200px; /* Adds space between images */
-    position: relative;
+    max-width: 400px; /* Increased width */
+    margin: 15px auto;
+    gap: 200px;/* Increased spacing between images */
 }
 
 .image-container img {
-    width: 80px;  
-    height: 80px; 
-    position: relative;
-    z-index: 10;
+    width: 70px;  
+    height: 70px; 
 }
 
+/* Ensure total row is visible and clear */
+.total-row td {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Prevent content from overflowing */
+@media print {
+    .a4-container {
+        page-break-after: always;
+    }
+}
 
 @media print {
-   
+    
     button {
         display: none !important;
     margin: 20px auto;
@@ -139,9 +96,6 @@
 
     }
 }
-
-
-
 
     </style>
 </head>
@@ -178,12 +132,12 @@
                 <td colspan="3">
                     <div class="invoice-container">
                         <div class="row-invoice">
-                            <strong>Invoice:</strong> <span class="highlight" >{{$packingList->packing_no }}</span> 
-                            Invoice Date: {{ date('d/m/Y', strtotime($packingList->date)) }}
+                            <strong>Invoice:</strong> <span class="highlight" style="margin-left: 20px; color:red">{{$packingList->packing_no }}</span> 
+                           <span style="margin-left: 50px;" >     Invoice Date: {{ date('d/m/Y', strtotime($packingList->date)) }}</span>
                         </div> 
                         <br>
                         <div class="row">
-                            <strong>Customer Id:</strong> {{ $packingList->customer_code }}
+                            <strong>Customer Id:</strong> {{ $packingList->customer_code }}</span>
                         </div>
                         <br>
                         <div class="row">
@@ -306,8 +260,8 @@
 
 
 <div class="image-container">
-<img src="{{ asset('public/image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width:300px">
-    <img src="{{ asset('public/image/dots.png') }}" alt="Dots Icon">
+<img src="{{ asset('public/image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
+    <img src="{{ asset('public/image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
     <img src="{{ asset('public/image/scanner.png') }}" alt="QR Scanner">
 </div>
 

@@ -79,7 +79,15 @@
                                               @endforeach
                                       </select>
                                        </div>
-
+                                       <div class="form-group ">
+                                    <label class=" required">Currency</label>
+                                   
+                                        <select class="form-control" name="currency">
+                                        <option value="Shilling" {{ $voucher->currency == 'Shilling' ? 'selected' : '' }}>Shilling</option>
+                                            <option value="USD" {{ $voucher->currency == 'USD' ? 'selected' : '' }}>USD</option>
+                                        </select>
+                                    
+                                </div>
                                 <div class="form-group">
                                     <label for="amount" class="required">Amount</label>
                                     <input type="number" class="form-control" id="amount" name="amount" value="{{ $voucher->amount }}" required>

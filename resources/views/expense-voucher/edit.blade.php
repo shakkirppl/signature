@@ -5,7 +5,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Vouchers Voucher</h4>
+                    <h4 class="card-title">Edit Expense Voucher</h4>
                     <div class="col-md-6 heading">
                         <a href="{{ route('expensevoucher.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                     </div>
@@ -80,7 +80,15 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                
+                                <div class="form-group ">
+                                    <label class=" required">Currency</label>
+                                   
+                                        <select class="form-control" name="currency">
+                                        <option value="Shilling" {{ $voucher->currency == 'Shilling' ? 'selected' : '' }}>Shilling</option>
+                                            <option value="USD" {{ $voucher->currency == 'USD' ? 'selected' : '' }}>USD</option>
+                                        </select>
+                                    
+                                </div>
                                 <div class="form-group">
                                     <label for="amount" class="required">Amount</label>
                                     <input type="number" class="form-control" id="amount" name="amount" value="{{ $voucher->amount }}" required>

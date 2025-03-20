@@ -86,6 +86,7 @@ class paymentvoucherController extends Controller
                              'amount' => 'required',
                              'bank_id' => 'nullable|exists:bank_master,id', 
                              'employee_id' => 'required|exists:employee,id',
+                             'currency' => 'required',
                             
                          ]);
                  
@@ -100,6 +101,7 @@ class paymentvoucherController extends Controller
                          $voucher->amount = isset($request->amount) ? (float) str_replace(',', '', $request->amount) : 0.00;
                          $voucher->user_id = Auth::id();
                          $voucher->store_id = 1; // Assuming a default store ID
+                         $voucher->currency = $request->currency;
                         
 
                          // Set the bank_id if type is 'bank'
@@ -148,6 +150,7 @@ public function update(Request $request, $id)
         'amount' => 'required|numeric',
         'bank_name' => 'nullable|exists:bank_master,bank_name', 
         'employee_id' => 'required|exists:employee,id',
+        'currency' => 'required',
     ]);
 
     $voucher = paymentVoucher::findOrFail($id);
@@ -158,6 +161,7 @@ public function update(Request $request, $id)
     $voucher->description = $request->description;
     $voucher->type = $request->type;
     $voucher->amount = $request->amount;
+    $voucher->currency = $request->currency;
 
     // If type is 'bank', store the bank_id
     if ($request->type === 'bank') {
