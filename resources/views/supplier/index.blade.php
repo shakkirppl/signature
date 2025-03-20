@@ -52,6 +52,13 @@
                        
                   <td>
                   <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                  <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST" style="display:inline;">
+                     @csrf
+                     @method('DELETE')
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">
+                    <i class="mdi mdi-delete"></i> Delete
+                   </button>
+                 </form>
 
                    
                  </td>

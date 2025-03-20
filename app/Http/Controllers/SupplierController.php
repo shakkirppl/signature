@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
 use App\Models\OpeningBalance;
+use Illuminate\Support\Facades\Validator;
 
 
 
@@ -46,13 +47,13 @@ class SupplierController extends Controller
         DB::beginTransaction();
     
         try {
-            $request->validate([
+            $validator = Validator::make($request->all(),[
                 'name' => 'required|string|max:255',
                 'email' => 'nullable|email|max:255',
-                'contact_number' => 'required|string|max:15',
+                'contact_number' => 'required|numeric',
                 'address' => 'nullable|string',
-                'credit_limit_days' => 'required|numeric|min:0',
-                'opening_balance' => 'nullable|numeric|min:0',
+                'credit_limit_days' => 'required|numeric',
+                'opening_balance' => 'nullable|numeric',
                 'dr_cr' => 'nullable|in:Dr,Cr',
                 'state' => 'nullable|string|max:255',
                 'country' => 'nullable|string|max:255',
@@ -62,6 +63,9 @@ class SupplierController extends Controller
                 'credit_limit_days.required' => 'Please select the credit limit days.',
                
             ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
     
     
             $supplier = Supplier::create([
@@ -79,6 +83,7 @@ class SupplierController extends Controller
                 'store_id' => 1,
                 'user_id' => auth()->id(),
             ]);
+
     
             if ($request->opening_balance > 0) {
                 $openingBalance = OpeningBalance::create([
@@ -100,7 +105,7 @@ class SupplierController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             \Log::error('Supplier  Error: ' . $e->getMessage(), ['exception' => $e]);
-            return redirect()->back()->with('error', 'Failed to create supplier: ' . $e->getMessage());
+            return redirect()->back()->withErrors($validator)->withInput();
         }
     }
 
@@ -118,17 +123,21 @@ public function update(Request $request, $id)
     DB::beginTransaction();
 
     try {
-        $validated = $request->validate([
+        $validator = Validator::make($request->all(),[
             'name' => 'required|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'contact_number' => 'required|string|max:15',
-            'address' => 'nullable|string|max:500',
-            'credit_limit_days' => 'nullable|numeric|min:0',
-            'opening_balance' => 'nullable|numeric|min:0',
-            'dr_cr' => 'nullable|in:Dr,Cr',
-            'state' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
+                'email' => 'nullable|email|max:255',
+                'contact_number' => 'required|numeric',
+                'address' => 'nullable|string',
+                'credit_limit_days' => 'required|numeric',
+                'opening_balance' => 'nullable|numeric',
+                'dr_cr' => 'nullable|in:Dr,Cr',
+                'state' => 'nullable|string|max:255',
+                'country' => 'nullable|string|max:255',
+           
         ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
         $supplier = Supplier::findOrFail($id);
 
@@ -163,14 +172,22 @@ public function update(Request $request, $id)
 
     } catch (\Exception $e) {
         DB::rollBack();
-        \Log::error('Supplier Update Error: ' . $e->getMessage(), ['exception' => $e]);
 
-        return redirect()->back()->with('error', 'Failed to update supplier: ' . $e->getMessage());
+        return redirect()->back()->withErrors($validator)->withInput();
     }
 }
 
 
-
+public function destroy($id)
+{
+    try {
+        $supplier = Supplier::findOrFail($id);
+        $supplier->delete();
+        return redirect()->route('supplier.index')->with('success');
+    } catch (\Exception $e) {
+        return redirect()->route('supplier.index')->with('error', 'Error deleting record: ' . $e->getMessage());
+    }
+}
 
 
 }

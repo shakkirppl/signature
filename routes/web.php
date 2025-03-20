@@ -88,7 +88,7 @@ Route::post('supplier-store', [SupplierController::class, 'store'])->name('suppl
 Route::get('supplier-index', [SupplierController::class, 'index'])->name('supplier.index');
 Route::get('supplier/{id}/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
 Route::post('supplier/{id}', [SupplierController::class, 'update'])->name('supplier.update');
-Route::get('supplier/delete/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
+Route::delete('supplier/delete/{id}', [SupplierController::class, 'destroy'])->name('supplier.destroy');
 
 
 

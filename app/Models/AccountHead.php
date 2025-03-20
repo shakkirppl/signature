@@ -3,10 +3,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 
 class AccountHead extends Model
 {
+    use HasFactory ,SoftDeletes;
     protected $fillable = ['name', 'parent_id','can_delete','opening_balance','dr_cr'];
+    protected $dates = ['deleted_at']; 
 
     // Define relationship for parent
     public function parent()

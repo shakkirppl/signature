@@ -81,7 +81,7 @@
                         <div class="form-group row">
                           <label class="col-sm-2 col-form-label required"> Contact No</label>
                           <div class="col-sm-9">
-                            <input type="text" class="form-control" placeholder="Contact No" name="contact_number"  required="true" value="{{old('contact_number')}}"  />
+                            <input type="number" class="form-control" placeholder="Contact No" name="contact_number"  required="true" value="{{old('contact_number')}}"  />
                             @error('contact_number')
                            <span class="text-danger">{{ $message }}</span>
                             @enderror
