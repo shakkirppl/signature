@@ -35,6 +35,7 @@ use App\Http\Controllers\DeathAnimalController;
 use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\AirlineController;
 use App\Http\Controllers\LedgerController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -424,6 +425,17 @@ Route::get('airline-index', [AirlineController::class, 'index'])->name('airline.
 Route::get('airline-edit/{id}', [AirlineController::class, 'edit'])->name('airline.edit');
 Route::post('airline-update/{id}', [AirlineController::class, 'update'])->name('airline.update');
 Route::get('airline-delete/{id}', [AirlineController::class, 'destroy'])->name('airline.destroy');
+
+
+
+
+Route::get('users-create', [UserController::class, 'create'])->name('users.create');
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+Route::get('users-index', [UserController::class, 'index'])->name('users.index');
+Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
+
+
 
 
 

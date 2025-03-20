@@ -6,7 +6,13 @@
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
-
+          <li class="nav-item">
+  <a class="nav-link" href="{{URL::to('users-index')}}">
+  <i class="mdi mdi-group menu-icon"></i> 
+  <span class="menu-title">Users</span>
+  </a>
+</li> 
+      
 
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#masters" aria-expanded="false" aria-controls="charts">
