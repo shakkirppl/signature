@@ -99,6 +99,7 @@ class SupplierController extends Controller
             return redirect()->route('supplier.index')->with('success', 'Supplier created successfully.');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Supplier  Error: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()->with('error', 'Failed to create supplier: ' . $e->getMessage());
         }
     }

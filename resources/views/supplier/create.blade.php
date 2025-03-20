@@ -44,6 +44,7 @@
 @endif
 
 
+
           
         </div>
                   <form class="form-sample"  action="{{ route('supplier.store') }}" method="post" enctype="multipart/form-data"  >
@@ -118,7 +119,7 @@
                         <div class="form-group row">
                           <label class="col-sm-2 col-form-label required"> Credit Limit Days</label>
                           <div class="col-sm-9">
-                          <input type="text" class="form-control"  name="credit_limit_days"  required="true" value="{{old('credit_limit_days')}}"  required="true"  />
+                          <input type="number" class="form-control"  name="credit_limit_days"  required="true" value="{{old('credit_limit_days')}}"  required="true"  />
                           @error('credit_limit_days')
                         <span class="text-danger">{{ $message }}</span>
                          @enderror
