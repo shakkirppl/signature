@@ -95,23 +95,24 @@ button.remove-row {
                            
                         </div>
                         <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead>
+                        <table class="table table-bordered" id="productTable">
+                            <thead class="table-light">
                                 <tr>
-                                    <th style="width: 5%;">Product</th>
+                                <tr>
+                                    <th style="width: 20%;">Product</th>
                                   
                                     <th style="width: 5%;">Quandity</th>
-                                    <th style="width: 5%;" > Weight</th>
-                                    <th style="width: 10%;">Price/Kg</th>
-                                    <th style="width: 10%;">Transportation/Kg</th>
-                                    <th style="width: 10%;">Total</th>
+                                    <th style="width: 15%;" > Weight</th>
+                                    <th style="width: 15%;">Price/Kg</th>
+                                    <th style="width: 15%;">Transportation/Kg</th>
+                                    <th style="width: 20%;">Total</th>
                                 </tr>
                             </thead>
                             <tbody id="product-details">                                 
                                     @foreach ($WeightCalculatorMaster->details as $index => $detail)                                     
                                         <tr class="product-row">                                         
                                             <td>                                           
-                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required  style="width: 120px;">                                               
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required >                                               
                                                     <option value="">Select Product</option>                                                   
                                                     @foreach ($products as $product)                                                     
                                                         <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" 
@@ -122,19 +123,19 @@ button.remove-row {
                                                 </select>                                         
                                             </td>                                                                             
                                             <td>                                         
-                                                <input type="text" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  style="width: 80px;">                                         
+                                                <input type="text" name="products[{{ $index }}][total_accepted_qty]" class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1"  >                                         
                                             </td>                                         
                                             <td>                                         
-                                                <input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  style="width: 80px;">                                         
+                                                <input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->weight }}" step="any"  >                                         
                                             </td>                                         
                                             <td>                                                     
-                                                <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"  style="width: 100px;" id="formattedNumber" oninput="formatNumber(this)">                                         
+                                                <input type="text" name="products[{{ $index }}][rate]" class="form-control rate" step="any"   id="formattedNumber" oninput="formatNumber(this)">                                         
                                             </td>                                         
                                             <td>                                                    
-                                                <input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  style="width: 120px;" id="formattedNumber" oninput="formatNumber(this)">                                        
+                                                <input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" step="any"  id="formattedNumber" oninput="formatNumber(this)">                                        
                                             </td>                                         
                                             <td>                                         
-                                                <input type="text" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  style="width: 150px;" id="formattedNumber" oninput="formatNumber(this)">                                          
+                                                <input type="text" name="products[{{ $index }}][total]" class="form-control total" step="any" readonly  id="formattedNumber" oninput="formatNumber(this)">                                          
                                             </td>                                                                                                                                           
                                         </tr>                                 
                                     @endforeach                             

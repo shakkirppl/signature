@@ -1,17 +1,40 @@
 @extends('layouts.layout')
 @section('content')
-
 <style>
-    #shipment_id:disabled {
-        color: black !important;
-        background-color: #e9ecef !important;
-        opacity: 1 !important;
-        cursor: not-allowed;
-    }
-    .table {
-        border-collapse: collapse;
-        width: 40%;
-    }
+.table {
+    width: 100%; /* Ensures table fills the container */
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    padding: 5px;
+    text-align: left;
+    font-size: 14px; /* Adjust font size for better visibility */
+}
+
+input[type="text"], select {
+    width: 100%; /* Makes inputs fully responsive */
+    padding: 5px;
+    font-size: 14px;
+}
+
+.table-responsive {
+    overflow-x: auto; /* Allows horizontal scrolling if needed */
+    max-width: 100%;
+}
+
+button.remove-row {
+    padding: 3px 8px;
+    font-size: 12px;
+}
+
+#shipment_id:disabled {
+    color: black !important; 
+    background-color: #e9ecef !important; 
+    opacity: 1 !important; 
+    cursor: not-allowed;
+}
+
 </style>
 
 <div class="main-panel">
@@ -68,22 +91,22 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-bordered">
-                                <thead>
+                        <table class="table table-bordered" id="productTable">
+                            <thead class="table-light">
                                     <tr>
-                                        <th>Product</th>
-                                        <th>Quantity</th>
-                                        <th>Total Weight</th>
-                                        <th>Price/Kg</th>
-                                        <th>Transportation/Kg</th>
-                                        <th>Total</th>
-                                    </tr>
+                                    <th style="width: 20%;">Product</th>
+                                  
+                                  <th style="width: 5%;">Quandity</th>
+                                  <th style="width: 15%;" > Weight</th>
+                                  <th style="width: 15%;">Price/Kg</th>
+                                  <th style="width: 15%;">Transportation/Kg</th>
+                                  <th style="width: 20%;">Total</th>
                                 </thead>
                                 <tbody id="product-details">
                                     @foreach ($purchaseConfirmation->details as $index => $detail)
                                         <tr>
                                             <td>
-                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select"  required style="width: 100px;">
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select"  required >
                                                     <option value="">Select Product</option>
                                                     @foreach ($products as $product)
                                                         <option value="{{ $product->id }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
@@ -92,11 +115,11 @@
                                                     @endforeach
                                                 </select>
                                             </td>
-                                            <td><input type="text" name="products[{{ $index }}][total_accepted_qty]"  class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1" style="width: 100px;"></td>
-                                            <td><input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->total_weight }}" step="any" style="width: 100px;"></td>
-                                            <td><input type="text" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" style="width: 100px;"></td>
-                                            <td><input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" value="{{ $detail->transportation_amount }}" step="any" style="width: 100px;"></td>
-                                            <td><input type="text" name="products[{{ $index }}][total]"  class="form-control total" value="{{ $detail->total }}" step="any" readonly style="width: 100px;"></td>
+                                            <td><input type="text" name="products[{{ $index }}][total_accepted_qty]"  class="form-control qty" value="{{ $detail->total_accepted_qty }}" min="1" ></td>
+                                            <td><input type="text" name="products[{{ $index }}][total_weight]" class="form-control weight" value="{{ $detail->total_weight }}" step="any" ></td>
+                                            <td><input type="text" name="products[{{ $index }}][rate]" class="form-control rate" value="{{ $detail->rate }}" step="any" ></td>
+                                            <td><input type="text" name="products[{{ $index }}][transportation_amount]" class="form-control transport" value="{{ $detail->transportation_amount }}" step="any" ></td>
+                                            <td><input type="text" name="products[{{ $index }}][total]"  class="form-control total" value="{{ $detail->total }}" step="any" readonly ></td>
                                         </tr>
                                     @endforeach
                                 </tbody>
