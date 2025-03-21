@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -32,7 +35,9 @@
                   <td>{{ $postmortem->inspection_date }}</td>
                        
                   <td>
+                  @if($user->designation_id == 1)
                   <a href="{{ route('postmortem.edit', $postmortem->id) }}" class="btn btn-warning">Edit</a>
+                  @endif
                   <a href="{{ route('postmortem.print', $postmortem->id) }}" target="_blank" class="btn btn-primary">
                    Print 
                     </a>

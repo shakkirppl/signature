@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -35,12 +38,14 @@
                                         <td>{{ number_format($sale->grand_total, 2) }}</td>
                                         <td>
                                             <a href="{{ route('offal-sales.view', $sale->id) }}" class="btn btn-info btn-sm">View</a>
+                                            @if($user->designation_id == 1)
                                             <a href="{{ route('offal-sales.edit', $sale->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                             <a href="{{ route('offal-sales.destroy',  $sale->id) }}" 
                                                     class="btn btn-danger btn-sm" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                      Delete
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

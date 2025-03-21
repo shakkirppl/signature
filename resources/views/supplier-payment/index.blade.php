@@ -1,7 +1,9 @@
 
 @extends('layouts.layout')
 @section('content')
-
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
      <div class="content-wrapper">
          <div class="col-lg-12 grid-margin stretch-card">
@@ -55,11 +57,13 @@
                                         <td>
                                        
                                         <a href="{{ route('supplier-payment.view', $payment->id) }}" class="btn btn-info btn-sm">View</a>
+                                        @if($user->designation_id == 1)
                                             <a href="{{ route('supplier-payment.destroy',  $payment->id) }}" 
                                                     class="btn btn-danger btn-sm" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                      Delete
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

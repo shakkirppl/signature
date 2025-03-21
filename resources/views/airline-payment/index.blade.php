@@ -1,6 +1,8 @@
 @extends('layouts.layout')
 @section('content')
-
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-lg-12 grid-margin stretch-card">
@@ -51,7 +53,7 @@
                                         <td>{{ $payment->documents_charge }}</td>
                                         <td>{{ number_format($payment->amount, 2) }}</td>
                                         <td>
-                                           
+                                        @if($user->designation_id == 1)
                                             <a href="{{ route('airline.edit', $payment->id) }}" class="btn btn-warning btn-sm">
                                                 <i class="mdi mdi-pencil"></i> Edit
                                             </a>
@@ -62,6 +64,7 @@
                                                     <i class="mdi mdi-delete"></i> Delete
                                                 </button>
                                             </form>
+                                            @endif
                                         </td>
                                         </tr> 
                                 @endforeach

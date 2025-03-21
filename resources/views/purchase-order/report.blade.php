@@ -48,7 +48,7 @@
                                 <tr>
                                     <td>{{ $order->order_no }}</td>
                                     <td>{{ $order->date }}</td>
-                                    <td>{{ $order->supplier->name }}</td>
+                                    <td>{{ $order->supplier ? $order->supplier->name : 'N/A' }}</td>
                                     <td>{{ number_format($order->grand_total, 2) }}</td>
                                     <td>
                                         @if($order->status == 1)

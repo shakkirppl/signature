@@ -1,6 +1,8 @@
 @extends('layouts.layout')
 @section('content')
-
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin createtable">
@@ -32,12 +34,13 @@
                                     <td>{{ $deathAnimal->inspection ? $deathAnimal->inspection->inspection_no : 'N/A' }}</td>
                                     <td>
                                     <a href="{{ route('deathanimal.show', $deathAnimal->id) }}" class="btn btn-info btn-sm">View</a>
-
+                                    @if($user->designation_id == 1)
                                         <form action="{{ route('deathanimal.destroy', $deathAnimal->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Are you sure?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

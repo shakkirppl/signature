@@ -1,6 +1,9 @@
 
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -38,6 +41,7 @@
                        
                   <td>
                   <a href="{{ route('skinning.view', $record->id) }}" class="btn btn-info btn-sm">View</a>
+                  @if($user->designation_id == 1)
 
                   <a href="{{ route('skinning.edit', $record->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                        
@@ -47,7 +51,7 @@
                        Delete
                  </a>
 
-
+                 @endif
 
                    
                  </td>

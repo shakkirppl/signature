@@ -1,3 +1,7 @@
+@php
+    $user = Auth::user();
+@endphp
+
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
@@ -6,6 +10,7 @@
               <span class="menu-title">Dashboard</span>
             </a>
           </li>
+          @if($user->designation_id == 1)
           <li class="nav-item">
   <a class="nav-link" href="{{URL::to('users-index')}}">
   <i class="mdi mdi-group menu-icon"></i> 
@@ -35,9 +40,17 @@
             
           </li>
 
+          <li class="nav-item">
+  <a class="nav-link" href="{{URL::to('shipment-index')}}">
+  <i class="mdi mdi-group menu-icon"></i> 
+  <span class="menu-title">Shipment</span>
+  </a>
+</li> 
 
 
 
+@endif
+@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 10)
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#sales" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -46,24 +59,24 @@
             </a>
             <div class="collapse" id="sales">
               <ul class="nav flex-column sub-menu">
+              @if($user->designation_id == 1 || $user->designation_id == 3)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order-index')}}">Sales order</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales_payment-index')}}">Sales</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-index')}}">Offal Sales</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('packinglist-index')}}">Packing List</a></li>
+              @endif
+              @if($user->designation_id == 1 || $user->designation_id == 10)
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-index')}}">Offal Sales</a></li>
+              @endif
+              
 
               
 
               </ul>
             </div>
           </li>
-          
-<li class="nav-item">
-  <a class="nav-link" href="{{URL::to('shipment-index')}}">
-  <i class="mdi mdi-group menu-icon"></i> 
-  <span class="menu-title">Shipment</span>
-  </a>
-</li> 
-          
+         @endif 
+
+@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5|| $user->designation_id == 6|| $user->designation_id == 7)
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#animal-purchase-order" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -72,27 +85,29 @@
             </a>
             <div class="collapse" id="animal-purchase-order">
               <ul class="nav flex-column sub-menu">
+              @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-order-index')}}">Purchase order</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li>
+              @endif 
+              @if($user->designation_id == 1 || $user->designation_id == 6)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection </a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/deathanimal')}}">Death Animal</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('postmortem-report-index')}}">Postmortem Report</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('antemortem-report-index')}}">Antemortem Report</a></li> 
-
-
-
-
+            @endif
+            @if($user->designation_id == 1 || $user->designation_id == 7)
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('postmortem-report-index')}}">Postmortem Report</a></li> 
+             @endif
               </ul>
             </div>
           </li>
 
-
+          @endif
 
 
 
            
-
+          @if($user->designation_id == 1 || $user->designation_id == 2|| $user->designation_id == 8)
       <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#production" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -101,8 +116,12 @@
             </a>
             <div class="collapse" id="production">
               <ul class="nav flex-column sub-menu">
+              @if($user->designation_id == 1 || $user->designation_id == 2)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('skinning-index')}}">Skinning</a></li> 
+              @endif
+              @if($user->designation_id == 1 || $user->designation_id == 8)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/weight-calculator')}}">Weight Calculator</a></li> 
+              @endif
 
 
              
@@ -110,16 +129,18 @@
             </div>
           </li>
 
-   
+   @endif
 
 </li> 
+@if($user->designation_id == 1 || $user->designation_id == 2)
 <li class="nav-item">
   <a class="nav-link" href="{{URL::to('slaughter-schedules-index')}}">
   <i class="mdi mdi-group menu-icon"></i> 
   <span class="menu-title">Slaughter Schedule</span>
   </a>
 </li> 
-
+@endif
+@if($user->designation_id == 1 || $user->designation_id == 3)
 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#accounts" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -143,8 +164,8 @@
             </div>
       </li>   
 
-
- 
+@endif
+@if($user->designation_id == 1 || $user->designation_id == 3)
 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#report" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -153,7 +174,7 @@
             </a>
             <div class="collapse" id="report">
               <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('shipment-report')}}"> Shipment Report  </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('shipment-report')}}"> Shipment Report</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-calculator-report')}}">Weight Calculator</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-conformation-report')}}">Purchase Confirmation </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-report')}}">Inspection </a></li>
@@ -172,26 +193,11 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-outstanding')}}"> Supplier Outstanding  </a></li>
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-outstanding')}}"> Customer Outstanding  </a></li>
-
-
-
-
-
-
-
-
-              
-
-             
-
-          
-
-             
               </ul>
             </div>
       </li>    
 
-          
+     @endif     
            
 
          

@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin">
@@ -48,15 +51,18 @@
                                     <td>{{ $packing->gross_weight }}</td>
                                     <td>
                                         <a href="{{ route('packinglist.show', $packing->id) }}" class="btn btn-info btn-sm">View</a>
-                                        <a href="{{ route('packinglist.edit', $packing->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                         <a href="{{ route('packinglist.print', $packing->id) }}" class="btn btn-primary btn-sm">
                                          <i class="mdi mdi-printer"></i> Print
                                         </a>
+                                        @if($user->designation_id == 1)
+                                        <a href="{{ route('packinglist.edit', $packing->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        
                                         <form action="{{ route('packinglist.destroy', $packing->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                         </form>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach

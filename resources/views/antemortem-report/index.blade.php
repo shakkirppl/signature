@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 
 <div class="main-panel">
     <div class="content-wrapper">
@@ -32,10 +35,13 @@
                                     <td>{{ $report->id }}</td>
                                     <td>{{ $report->antemortem_no }}</td>
                                     <td>{{ $report->inspection_date }}</td>
+                                    @if($user->designation_id == 1)
                                     <td>
+
                                         <a href="{{ route('antemortem.edit', $report->id) }}" class="btn btn-warning">Edit</a>
                                         
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -37,15 +40,18 @@
                                         <td>{{ $sale->shrinkage }}</td>
                                         <td>
                                             <a href="{{ route('sales_payment.view', $sale->id) }}" class="btn btn-info btn-sm">View</a>
-                                            <a href="{{ route('sales_payment.edit', $sale->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                             <a href="{{ route('invoice.print', $sale->order_no) }}" target="_blank" class="btn btn-primary btn-sm">
                                             <i class="mdi mdi-printer"></i> Print
                                             </a> 
+                                            @if($user->designation_id == 1)
+                                            <a href="{{ route('sales_payment.edit', $sale->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                           
                                             <a href="{{ route('sales_payment.destroy',  $sale->id) }}" 
                                                     class="btn btn-danger btn-sm" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                      Delete
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

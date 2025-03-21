@@ -1,6 +1,8 @@
 @extends('layouts.layout')
 @section('content')
-
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
      <div class="content-wrapper">
          <div class="col-lg-12 grid-margin stretch-card">
@@ -46,6 +48,7 @@
                                        
                                         <td>{{ $bank->gl ?? 'N/A' }}</td>
                                         <td>
+                                        @if($user->designation_id == 1)
                                        
                                             <a class="btn btn-warning btn-sm" href="{{ route('bank-master.edit', $bank->id) }}">
                                                 Edit
@@ -55,6 +58,7 @@
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                      Delete
                                             </a>
+                                            @endif
                                         </td>
                                     </tr>
                                 @empty

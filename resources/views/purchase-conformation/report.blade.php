@@ -1,6 +1,9 @@
 @extends('layouts.layout')
 
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-lg-12 grid-margin stretch-card">
@@ -53,7 +56,8 @@
                                     <td>{{ $conformation->invoice_number }}</td>
                                     <td>{{ $conformation->weight_code }}</td>
                                     <td>{{ $conformation->date }}</td>
-                                    <td>{{ $conformation->supplier->name }}</td>
+                                    <td>{{ $conformation->supplier ? $conformation->supplier->name : 'N/A' }}</td>
+
                                     <td>{{ number_format($conformation->grand_total, 2) }}</td>
                                     <td>{{ number_format($conformation->advance_amount, 2) }}</td>
                                     <td>{{ number_format($conformation->balance_amount, 2) }}</td>
@@ -66,8 +70,10 @@
                                     </td>
                                     <td>
                                     <a href="{{ url('purchase-conformation/'.$conformation->id.'/view') }}" class="btn btn-warning btn-sm">View</a>
+                                    @if($user->designation_id == 1)
                                     @if(is_null($conformation->paid_amount))
                                      <a href="{{ route('purchase-conformation.edit', $conformation->id) }}" class="btn btn-primary btn-sm">Edit</a>
+                                     @endif
                                     @endif
                                     </td>
                                 </tr>

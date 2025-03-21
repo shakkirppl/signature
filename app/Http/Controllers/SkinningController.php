@@ -22,7 +22,7 @@ class SkinningController extends Controller
     {
         
         $shipments = Shipment::where('shipment_status', 0)->get();
-        $employees = Employee::where('designation_id', '1')->get();
+        $employees = Employee::where('designation_id', '2')->get();
         $products = Product::all();
 
         return view('skinning.create',['invoice_no'=>$this->invoice_no()], compact('shipments', 'employees', 'products'));

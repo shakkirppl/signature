@@ -39,7 +39,7 @@ class UserController extends Controller
             'designation_id' => $request->designation_id,
         ]);
 
-        return redirect()->route('users.create')->with('success', 'User created successfully.');
+        return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     public function edit($id)

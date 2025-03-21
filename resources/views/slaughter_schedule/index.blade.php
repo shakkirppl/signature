@@ -2,7 +2,9 @@
                       
 @extends('layouts.layout')
 @section('content')
-
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
      <div class="content-wrapper">
          <div class="col-lg-12 grid-margin stretch-card">
@@ -68,15 +70,17 @@
     <a href="{{ route('slaughter.view-products', $schedule->id) }}" class="btn btn-info btn-sm">
         View 
     </a>
-
-    <a href="{{ route('slaughter-schedule.edit', $schedule->id) }}" class="btn btn-warning btn-sm">Edit</a>
     <a href="{{ route('slaughter-schedule.print', $schedule->id) }}" class="btn btn-primary btn-sm"> <i class="mdi mdi-printer"></i>Print </a>
+
+    @if($user->designation_id == 1)
+    <a href="{{ route('slaughter-schedule.edit', $schedule->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
 <form action="{{ url('slaughter-schedule/delete/'.$schedule->id) }}" method="POST" style="display:inline;">
     @csrf
     @method('DELETE')
     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this schedule?');">Delete</button>
 </form>
+@endif
 </td>
 
                                     </tr>
