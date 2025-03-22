@@ -183,12 +183,15 @@ public function store(Request $request)
     public function destroy($id)
     {
         try {
-            $customerPayment = CustomerPayment::findOrFail($id);
-            $customerPayment->delete();
-            return redirect()->route('customer-payment.index')->with('success');
+             $customerPayment = CustomerPayment::findOrFail($id);
+             $customerPayment->details()->delete();
+             $customerPayment->delete();
+    
+            return redirect()->route('customer-payment.index')->with('success', 'Customer payment deleted successfully.');
         } catch (\Exception $e) {
             return redirect()->route('customer-payment.index')->with('error', 'Error deleting record: ' . $e->getMessage());
         }
     }
+    
 
 }

@@ -317,14 +317,18 @@ public function inspectionview($id)
 
 public function destroy($id)
 {
-    // Find the inspection record
-    $inspection = Inspection::findOrFail($id);
+    try {
+        
+        $inspection = Inspection::findOrFail($id);
+        $inspection->details()->delete();
+         $inspection->update(['status' => 0]);
 
-    // Change status from 1 to 0 instead of deleting
-    $inspection->update(['status' => 0]);
-
-    return redirect()->route('inspection.report')->with('success', 'Inspection status changed successfully.');
+        return redirect()->route('inspection.report')->with('success', 'Inspection status changed successfully and related details deleted.');
+    } catch (\Exception $e) {
+        return redirect()->route('inspection.report')->with('error', 'Error updating record: ' . $e->getMessage());
+    }
 }
+
 
 
 }

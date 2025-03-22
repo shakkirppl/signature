@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Inspection extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'inspection';
     protected $fillable = ['purchaseOrder_id','order_no', 'date', 'supplier_id','store_id','user_id','status','purchase_status','shipment_id','inspection_no','total_death_qty','weight_status'];
 
-
+    protected $dates = ['deleted_at']; 
     public function details()
     {
-        return $this->hasMany(InspectionDetail::class);
+        return $this->hasMany(InspectionDetail::class, 'inspection_id');
     }
+    
 
     public function supplier()
     {

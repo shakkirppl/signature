@@ -149,13 +149,16 @@ class SupplierPaymentController extends Controller
 public function destroy($id)
 {
     try {
-        $SupplierPaymentMaster = SupplierPaymentMaster::findOrFail($id);
-        $SupplierPaymentMaster->delete();
-        return redirect()->route('supplier-payment.index')->with('success');
+        $supplierPaymentMaster = SupplierPaymentMaster::findOrFail($id);
+        $supplierPaymentMaster->details()->delete();
+        $supplierPaymentMaster->delete();
+
+        return redirect()->route('supplier-payment.index')->with('success', 'Supplier payment deleted successfully.');
     } catch (\Exception $e) {
         return redirect()->route('supplier-payment.index')->with('error', 'Error deleting record: ' . $e->getMessage());
     }
 }
+
 
 
 

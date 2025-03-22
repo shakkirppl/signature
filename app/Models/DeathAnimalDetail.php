@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DeathAnimalDetail extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'death_animal_detail';
     protected $fillable = ['death_animal_master_id', 'product_id', 'death_male_qty', 'death_female_qty', 'total_death_qty'];
@@ -20,5 +21,7 @@ class DeathAnimalDetail extends Model
 {
     return $this->belongsTo(Product::class, 'product_id');
 }
+
+protected $dates = ['deleted_at']; 
 
 }
