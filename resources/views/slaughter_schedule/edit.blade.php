@@ -6,6 +6,9 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Edit Slaughter Schedule</h4>
+                    <div class="col-6 text-end">
+                            <a href="{{ url('slaughter-schedules-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        </div>
 
                     @if ($errors->any())
                         <div class="alert alert-danger">

@@ -7,6 +7,9 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Edit Employee</h4>
+          <div class="col-md-6 heading text-end" >
+              <a href="{{ route('employee.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+            </div>
 
           @if ($errors->any())
             <div class="alert alert-danger">

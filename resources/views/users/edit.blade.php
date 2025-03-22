@@ -16,7 +16,7 @@
               <h4 class="card-title">Add Users</h4>
             </div>
             <div class="col-md-6 heading">
-              <a href="{{ route('customer.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+              <a href="{{ route('users.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
             </div>
           </div>
           <div class="row">

@@ -41,7 +41,7 @@ button.remove-row {
                             <h4 class="card-title">Sales Order</h4>
                         </div>
                         <div class="col-6 col-md-6 col-sm-6 col-xs-12 heading" style="text-align:end;">
-                            <a href="{{ url('goodsout-order-create') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                            <a href="{{ url('goodsout-order-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
                     @if ($errors->any())

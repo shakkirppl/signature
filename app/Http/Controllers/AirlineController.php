@@ -134,12 +134,16 @@ class AirlineController extends Controller
                      $airline = Airline::findOrFail($id);
                      $shipments = Shipment::where('shipment_status', 0)->get(); 
                      $customers = Customer::all();
-                     $parentIds = AccountHead::whereIn('name', ['AIRLINES PAYMENT'])->pluck('id')->toArray();
-    
-                     // Fetch all subcategories recursively
-                     $coa = $this->getAllSubCategories($parentIds);
+                     $airlinesParent = AccountHead::where('name', 'AIRLINES')->first();
+                     $agentsParent = AccountHead::where('name', 'AIRLINES AGENT')->first();
                  
-                     return view('airline-payment.edit', compact('airline', 'shipments', 'customers', 'coa'));
+                     // Fetch subcategories (child accounts) under "AIRLINES" and "AIRLINES AGENT"
+                     $airlinesCOA = $airlinesParent ? AccountHead::where('parent_id', $airlinesParent->id)->get() : [];
+                     $agentsCOA = $agentsParent ? AccountHead::where('parent_id', $agentsParent->id)->get() : [];
+                     
+                   
+                 
+                     return view('airline-payment.edit', compact('airlinesCOA', 'shipments', 'customers', 'agentsCOA','airline'));
                  }
                  public function update(Request $request, $id)
                  {
@@ -158,7 +162,7 @@ class AirlineController extends Controller
                          'description' => 'nullable|string',
                          'total_weight' => 'nullable|numeric',
                          'type' => 'required|string',
-                         'currency'=>'required'
+                        
                      ]);
                  
                      // Debugging: Check what is being sent

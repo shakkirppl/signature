@@ -36,6 +36,7 @@ use App\Http\Controllers\PackingListController;
 use App\Http\Controllers\AirlineController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OffalReceiveController;
 
 
 
@@ -434,6 +435,9 @@ Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::get('users-index', [UserController::class, 'index'])->name('users.index');
 Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
 Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
+
+
+Route::get('offal-receive-create', [OffalReceiveController::class, 'create'])->name('offal-receive.create');
 
 
 

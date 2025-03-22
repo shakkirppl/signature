@@ -46,7 +46,7 @@
                             <h4 class="card-title">Bank Master</h4>
                         </div>
                         <div class="col-6 text-end">
-                            <a href="{{ url('bank-master-create') }}" class="backicon">
+                            <a href="{{ url('bank-master-index') }}" class="backicon">
                                 <i class="mdi mdi-backburger"></i>
                             </a>
                         </div>

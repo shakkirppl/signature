@@ -7,6 +7,9 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Sales Packing List Details</h4>
+                    <div class="col-md-6 text-right">
+                        <a href="{{ route('packinglist.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                    </div>
 
                     <div class="row">
                         <div class="col-md-6">

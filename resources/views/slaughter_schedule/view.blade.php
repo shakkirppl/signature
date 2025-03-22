@@ -11,7 +11,9 @@
                             <h4 class="card-title">Slaughter Schedule Details</h4>
                         </div>
                     </div>
-
+                    <div class="col-6 text-end">
+                            <a href="{{ url('slaughter-schedules-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        </div>
                     <div class="row mt-3">
                         @if($schedules->isNotEmpty())
                             @foreach ($schedules as $schedule)

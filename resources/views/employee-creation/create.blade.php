@@ -16,7 +16,7 @@
               <h4 class="card-title">New Employee</h4>
             </div>
             <div class="col-md-6 heading">
-              <a href="" class="backicon"><i class="mdi mdi-backburger"></i></a>
+              <a href="{{ route('employee.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
             </div>
           </div>
           <div class="row">

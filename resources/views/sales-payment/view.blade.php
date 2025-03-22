@@ -11,7 +11,7 @@
                             <h4 class="card-title">Sales  Details</h4>
                         </div>
                         <div class="col-md-6 text-right">
-                        <a href="{{ url('sales-payment-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        <a href="{{ route('sales_payment.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
 

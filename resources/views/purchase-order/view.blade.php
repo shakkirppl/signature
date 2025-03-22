@@ -10,7 +10,7 @@
                             <h4 class="card-title">Purchase Order Details</h4>
                         </div>
                         <div class="col-6 col-md-6 col-sm-6 col-xs-12 heading" style="text-align:end;">
-                            <a href="{{ url('purchase-orders') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                            <a href="{{ url('purchase-order-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
                     <div class="row mb-3">
