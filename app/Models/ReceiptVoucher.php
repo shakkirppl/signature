@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReceiptVoucher extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'receipt_voucher';
     protected $fillable = ['code', 'date','name','customer_id','type','amount','description','bank_id','store_id','user_id','currency'];
 
@@ -28,5 +29,6 @@ public function account()
     {
         return $this->belongsTo(AccountHead::class, 'coa_id');
     }  
+    protected $dates = ['deleted_at']; 
 
 }

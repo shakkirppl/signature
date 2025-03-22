@@ -180,6 +180,15 @@ public function store(Request $request)
         return view('customer-payment.view', compact('customerPayment'));
     }
     
- 
+    public function destroy($id)
+    {
+        try {
+            $customerPayment = CustomerPayment::findOrFail($id);
+            $customerPayment->delete();
+            return redirect()->route('customer-payment.index')->with('success');
+        } catch (\Exception $e) {
+            return redirect()->route('customer-payment.index')->with('error', 'Error deleting record: ' . $e->getMessage());
+        }
+    }
 
 }

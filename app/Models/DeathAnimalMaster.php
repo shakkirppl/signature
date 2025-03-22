@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class DeathAnimalMaster extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
       
     protected $table = 'death_animal_master';
@@ -31,5 +32,7 @@ class DeathAnimalMaster extends Model
     {
         return $this->belongsTo(Inspection::class, 'inspection_id');
     }
+
+    protected $dates = ['deleted_at']; 
     
 }
