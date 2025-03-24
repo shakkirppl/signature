@@ -41,7 +41,7 @@ button.remove-row {
                             <h4 class="card-title">Offal Receive</h4>
                         </div>
                         <div class="col-6 col-md-6 col-sm-6 col-xs-12 heading" style="text-align:end;">
-                            <a href="{{ url('offa-receive-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                            <a href="{{ url('/offal-receive-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
                     </div>
                     @if ($errors->any())
@@ -53,12 +53,12 @@ button.remove-row {
                             </ul>
                         </div><br />
                     @endif
-                    <form action="{{ route('purchase-order.store') }}" method="POST">
+                    <form action="{{ route('offal-receive.store') }}" method="POST">
                         @csrf
                         <div class="row mb-3">
                             <div class="col-md-4">
                                 <label for="code" class="form-label">Order No:</label>
-                                <input type="text" class="form-control" id="code" name="order_no" value="OFR001" readonly>
+                                <input type="text" class="form-control" id="code" name="order_no" value="{{$invoice_no}}" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label for="date" class="form-label">Date:</label>
@@ -91,24 +91,19 @@ button.remove-row {
                                     </thead>
                              <tbody id="product-rows">
                              <tr>
-                <td>
-                <select name="products[0][product_id]" class="form-control product-select" required>
-                   <option value="">Select Product</option>
-                     @foreach ($products as $product)
-                    <option value="{{ $product->id }}">{{ $product->product_name }}</option>
-                      @endforeach
-               </select>
+    <td>
+        <select name="product_id[]" class="form-control product-select" required>
+            <option value="">Select Product</option>
+            @foreach ($products as $product)
+                <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+            @endforeach
+        </select>
+    </td>
+    <td><input type="text" name="qty[]" class="form-control qty" required></td>
+    <td><input type="text" name="good_offal[]" class="form-control good_offal"></td>
+    <td><input type="text" name="damaged_offal[]" class="form-control damaged_offal"></td>
+</tr>
 
-                </td>
-                <td><input type="text" name="products[0][qty]" class="form-control qty" value="0" min="1" required ></td>
-                <td><input type="text" name="products[0][male]" class="form-control male" value="0" min="1" required ></td>
-
-                <td><input type="text" name="products[0][female]" class="form-control female" value="0" min="1" required  ></td>
-
-
-              
-                <!-- <td><button type="button" class="btn btn-danger remove-row" >Remove</button></td> -->
-            </tr>
         </tbody>
     </table>
 </div>
@@ -132,57 +127,7 @@ button.remove-row {
 <script>
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const addRowBtn = document.getElementById('add-row');
-    const productRows = document.getElementById('product-rows');
 
-    // Function to update male and female fields based on quantity
-    function updateGenderDistribution(row) {
-        const qtyField = row.querySelector('.qty');
-        const maleField = row.querySelector('.male');
-        const femaleField = row.querySelector('.female');
-
-        let qty = parseInt(qtyField.value) || 0;
-        maleField.value = Math.floor(qty * 0.75); // 75% of quantity
-        femaleField.value = qty - maleField.value; // Remaining 25%
-    }
-
-    // Event listener for quantity input
-    productRows.addEventListener('input', function (e) {
-        if (e.target.classList.contains('qty')) {
-            updateGenderDistribution(e.target.closest('tr'));
-        }
-    });
-
-    // Add new row functionality
-    addRowBtn.addEventListener('click', function () {
-        const rowCount = productRows.children.length;
-        const newRow = `
-            <tr>
-                <td>
-                    <select name="products[${rowCount}][product_id]" class="form-control product-select" required >
-                        <option value="">Select Product</option>
-                        @foreach ($products as $product)
-                            <option value="{{ $product->id }}" data-rate="{{ $product->rate }}">{{ $product->product_name }}</option>
-                        @endforeach
-                    </select>
-                </td>
-                <td><input type="text" name="products[${rowCount}][qty]" class="form-control qty" value="0" min="1" required ></td>
-                <td><input type="text" name="products[${rowCount}][male]" class="form-control male" value="0" required  readonly></td>
-                <td><input type="text" name="products[${rowCount}][female]" class="form-control female" value="0" required  readonly></td>
-                <td><button type="button" class="btn btn-danger remove-row">Remove</button></td>
-            </tr>`;
-
-        productRows.insertAdjacentHTML('beforeend', newRow);
-    });
-
-    // Remove row event listener
-    productRows.addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-row')) {
-            e.target.closest('tr').remove();
-        }
-    });
-});
 
 </script>
 

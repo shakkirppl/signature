@@ -437,7 +437,13 @@ Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edi
 Route::post('/users/{id}', [UserController::class, 'update'])->name('users.update');
 
 
-Route::get('offal-receive-create', [OffalReceiveController::class, 'create'])->name('offal-receive.create');
+
+Route::get('/offal-receive-index', [OffalReceiveController::class, 'index'])->name('offal-receive.index');
+Route::get('/offal-receive-create', [OffalReceiveController::class, 'create'])->name('offal-receive.create');
+Route::post('/offal-receive-store', [OffalReceiveController::class, 'store'])->name('offal-receive.store');
+Route::get('/offal-receive-edit/{id}', [OffalReceiveController::class, 'edit'])->name('offal-receive.edit');
+Route::post('/offal-receive-update/{id}', [OffalReceiveController::class, 'update'])->name('offal-receive.update');
+Route::delete('/offal-receive-delete/{id}', [OffalReceiveController::class, 'destroy'])->name('offal-receive.destroy');
 
 
 
