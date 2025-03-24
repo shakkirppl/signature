@@ -75,11 +75,11 @@
     @if($user->designation_id == 1)
     <a href="{{ route('slaughter-schedule.edit', $schedule->id) }}" class="btn btn-warning btn-sm">Edit</a>
 
-<form action="{{ url('slaughter-schedule/delete/'.$schedule->id) }}" method="POST" style="display:inline;">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this schedule?');">Delete</button>
-</form>
+    <a href="{{ route('slaughter-schedule.destroy',  $schedule->id) }}" 
+                                                    class="btn btn-danger btn-sm" 
+                                                    onclick="return confirm('Are you sure you want to delete this record?')">
+                                                     Delete
+                                            </a>
 @endif
 </td>
 

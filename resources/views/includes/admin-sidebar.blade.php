@@ -66,7 +66,7 @@
               @endif
               @if($user->designation_id == 1 || $user->designation_id == 10)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-index')}}">Offal Sales</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-receive-create')}}">Offal Receive</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-receive-index')}}">Offal Receive</a></li>
               @endif
               
 

@@ -189,16 +189,22 @@ public function view($id)
     return view('sales-payment.view', compact('SalesPayment'));
 }
 
-public function destroy($id)
-{
+public function destroy($id) {
     try {
         $SalesPayment = SalesPayment::findOrFail($id);
+
+       
+        SalesPaymentDetail::where('sales_payment_id', $id)->delete();
+
+        
         $SalesPayment->delete();
-        return redirect()->route('sales_payment.index')->with('success');
+
+        return redirect()->route('sales_payment.index')->with('success', 'Record deleted successfully');
     } catch (\Exception $e) {
         return redirect()->route('sales_payment.index')->with('error', 'Error deleting record: ' . $e->getMessage());
     }
 }
+
 
 
 public function report(Request $request)

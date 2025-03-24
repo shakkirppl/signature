@@ -92,11 +92,21 @@ public function show($id)
 
 public function destroy($id)
 {
-    $packing = PackingListMaster::findOrFail($id);
-    $packing->delete();
-    
-    return redirect()->route('packinglist.index')->with('success', 'Packing list deleted successfully.');
+    try {
+        $packing = PackingListMaster::findOrFail($id);
+
+        
+        $packing->details()->delete();
+
+        
+        $packing->delete();
+
+        return redirect()->route('packinglist.index')->with('success', 'Packing list deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('packinglist.index')->with('error', 'Error deleting packing list: ' . $e->getMessage());
+    }
 }
+
 
 
 public function edit($id)

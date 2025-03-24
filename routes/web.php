@@ -352,7 +352,7 @@ Route::get('slaughter-schedules-index', [SlaughterScheduleController::class, 'in
 Route::get('/slaughter/{id}/products', [SlaughterScheduleController::class, 'viewProducts'])->name('slaughter.view-products');
 Route::get('slaughter-schedule/{id}/edit', [SlaughterScheduleController::class, 'edit'])->name('slaughter-schedule.edit');
 Route::post('slaughter-schedule/{id}/update', [SlaughterScheduleController::class, 'update'])->name('slaughter-schedule.update');
-Route::delete('slaughter-schedule/{id}', [SlaughterScheduleController::class, 'destroy'])->name('slaughter-schedule.destroy');
+Route::get('slaughter-schedule/{id}', [SlaughterScheduleController::class, 'destroy'])->name('slaughter-schedule.destroy');
 Route::get('/slaughter-schedule/print/{id}', [SlaughterScheduleController::class, 'print'])->name('slaughter-schedule.print');
 Route::post('/upload-screenshot', [SlaughterScheduleController::class, 'uploadScreenshot'])->name('upload.screenshot');
 
@@ -412,7 +412,7 @@ Route::get('deathanimal/{id}', [DeathAnimalController::class, 'show'])->name('de
 Route::get('packinglist-create', [PackingListController::class, 'create'])->name('packinglist.create');
 Route::get('packinglist-index', [PackingListController::class, 'index'])->name('packinglist.index');
 Route::post('packinglist-store', [PackingListController::class, 'store'])->name('packinglist.store');
-Route::get('packinglist-destroy/{id}', [PackingListController::class, 'destroy'])->name('packinglist.destroy');
+Route::delete('packinglist-destroy/{id}', [PackingListController::class, 'destroy'])->name('packinglist.destroy');
 Route::get('packinglist-show/{id}', [PackingListController::class, 'show'])->name('packinglist.show');
 Route::get('packinglist/{id}/edit', [PackingListController::class, 'edit'])->name('packinglist.edit');
 Route::post('packinglist/{id}', [PackingListController::class, 'update'])->name('packinglist.update');

@@ -40,12 +40,14 @@
                                         <td>{{ $offalReceive->good_offal }}</td>
                                         <td>{{ $offalReceive->damaged_offal }}</td>
                                         <td>
+                                        @if($user->designation_id == 1)
                                             <a href="{{ route('offal-receive.edit', $offalReceive->id) }}" class="btn btn-sm btn-warning">Edit</a>
                                             <form action="{{ route('offal-receive.destroy', $offalReceive->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?');">Delete</button>
                                             </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

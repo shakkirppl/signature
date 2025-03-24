@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SalesPayment extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'sales_payment_master';
     protected $fillable = [ 
     'order_no',
@@ -24,6 +25,7 @@ class SalesPayment extends Model
     'shipping_mode',
     'shipping_agent',
 'shrinkage'];
+protected $dates = ['deleted_at'];
 
     
     public function customer()

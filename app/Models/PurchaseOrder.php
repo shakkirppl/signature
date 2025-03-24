@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PurchaseOrder extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'purchase_order';
     protected $fillable = [ 
@@ -25,7 +26,7 @@ class PurchaseOrder extends Model
     'SalesOrder_id'
 ];
 
-
+protected $dates = ['deleted_at'];
   
 
 

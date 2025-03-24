@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class OffalSales extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     protected $table = 'offal_sales_master';
     protected $fillable = [ 
     'order_no',
@@ -20,6 +21,8 @@ class OffalSales extends Model
     'status',
     'store_id',
     'user_id',];
+
+    protected $dates = ['deleted_at'];
 
     
     public function localcustomer()

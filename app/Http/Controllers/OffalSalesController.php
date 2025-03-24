@@ -174,7 +174,9 @@ public function destroy($id)
 {
     try {
         $offalSale = OffalSales::findOrFail($id);
+        $offalSale->details()->delete();
         $offalSale->delete();
+
         return redirect()->route('offal-sales.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('offal-sales.index')->with('error', 'Error deleting record: ' . $e->getMessage());

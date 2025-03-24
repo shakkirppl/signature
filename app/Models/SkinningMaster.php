@@ -4,13 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SkinningMaster extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'skinning_master';
     protected $fillable = ['id', 'date','time','skinning_code','shipment_id','user_id','store_id','status'];
+    protected $dates = ['deleted_at']; 
     
     public function product()
     {

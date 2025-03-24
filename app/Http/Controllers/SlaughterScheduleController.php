@@ -192,25 +192,27 @@ public function update(Request $request, $id)
     }
 }
 
+
 public function destroy($id)
 {
     try {
-        DB::beginTransaction();
+        $slaughterSchedule = SlaughterSchedule::findOrFail($id);
 
-        
-        SlaughterScheduleDetail::where('slaughter_master_id', $id)->delete();
-        
-       
-        SlaughterSchedule::findOrFail($id)->delete();
+        // Delete related details first
+        $slaughterSchedule->details()->delete();
 
-        DB::commit();
+        // Delete the main record
+        $slaughterSchedule->delete();
 
-        return redirect()->route('slaughter-schedule.index')->with('success', 'Slaughter schedule deleted successfully!');
+        return redirect()->route('slaughter.index')->with('success', 'Packing list deleted successfully.');
     } catch (\Exception $e) {
-        DB::rollback();
-        return redirect()->back()->with('error', 'Error deleting schedule: ' . $e->getMessage());
+        return redirect()->route('slaughter.index')->with('error', 'Error deleting packing list: ' . $e->getMessage());
     }
 }
+
+
+
+
 
 public function print($id)
 {

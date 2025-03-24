@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SalesOrder extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
 
     protected $table = 'sales_order';
     protected $fillable = [ 
@@ -21,7 +22,7 @@ class SalesOrder extends Model
     'user_id',];
 
 
-    
+    protected $dates = ['deleted_at']; 
 
 
     public function customer()

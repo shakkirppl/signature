@@ -4,14 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SkinningDetail extends Model
 {
-    use HasFactory;
+    use HasFactory,SoftDeletes;
     
 
     protected $table = 'skinning_detail';
     protected $fillable = ['id', 'skinning_id','employee_id','product_id','quandity','skin_percentage','store_id','damaged_quandity'];
+    protected $dates = ['deleted_at'];
 
 
     public function product()
