@@ -37,6 +37,8 @@ use App\Http\Controllers\AirlineController;
 use App\Http\Controllers\LedgerController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OffalReceiveController;
+use App\Http\Controllers\UsdToShillingController;
+use App\Http\Controllers\ShipmentProfitController;
 
 
 
@@ -241,6 +243,8 @@ Route::get('shipment-suppllier-final-payment-report-detail', [ShipmentController
 
 
 
+
+
 Route::get('offal-sales-create', [OffalSalesController::class, 'create'])->name('offal-sales.create');
 Route::post('offal-sales-store', [OffalSalesController::class,'store'])->name('offal-sales.store');
 Route::get('offal-sales-index', [OffalSalesController::class, 'index'])->name('offal-sales.index');
@@ -327,6 +331,10 @@ Route::get('/sales_payment/delete/{id}', [SalesPaymentController::class, 'destro
 Route::get('sales_payment-report', [SalesPaymentController::class, 'report'])->name('sales_payment.report');
 Route::get('/invoice-print/{order_no}', [SalesPaymentController::class, 'printInvoice'])->name('invoice.print');
 Route::get('/get-outstanding/{customerId}', [SalesPaymentController::class, 'getOutstandingBalance']);
+Route::get('/get-shipment-by-sales-no', [SalesPaymentController::class, 'getShipmentBySalesNo'])->name('get.shipment');
+Route::get('/get-shipment-by-sales-no', [SalesPaymentController::class, 'getShipmentBySalesNo'])->name('getShipmentBySalesNo');
+
+
 
 
 
@@ -444,6 +452,16 @@ Route::post('/offal-receive-store', [OffalReceiveController::class, 'store'])->n
 Route::get('/offal-receive-edit/{id}', [OffalReceiveController::class, 'edit'])->name('offal-receive.edit');
 Route::post('/offal-receive-update/{id}', [OffalReceiveController::class, 'update'])->name('offal-receive.update');
 Route::delete('/offal-receive-delete/{id}', [OffalReceiveController::class, 'destroy'])->name('offal-receive.destroy');
+
+
+Route::get('/usd-to-shilling', [UsdToShillingController::class, 'index'])->name('usd_to_shilling.index');
+Route::get('/usd-to-shilling/{id}/edit', [UsdToShillingController::class, 'edit'])->name('usd_to_shilling.edit');
+Route::post('/usd-to-shilling/{id}', [UsdToShillingController::class, 'update'])->name('usd_to_shilling.update');
+
+
+Route::get('shipment-profit/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
+Route::get('shipment-/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
+
 
 
 

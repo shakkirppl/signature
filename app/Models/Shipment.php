@@ -19,5 +19,16 @@ class Shipment extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
+
+    public function shipment()
+    {
+        return $this->belongsTo(Shipment::class, 'shipment_id');
+    }
+
+    public function weightCalculatorMaster()
+{
+    return $this->hasMany(WeightCalculatorMaster::class, 'shipment_id', 'id');
+}
+
     
 }

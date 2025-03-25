@@ -77,5 +77,11 @@ protected $dates = ['deleted_at'];
     {
         return $this->belongsTo(Shipment::class, 'shipment_id');
     }
+
+    public function salesPayment()
+{
+    return $this->hasOne(SalesPayment::class, 'sales_no', 'SalesOrder_id');
+}
+
     
 }

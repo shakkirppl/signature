@@ -66,13 +66,15 @@ button.remove-row {
                             </div>
                             <div class="col-md-4">
                                 <label for="sales_no" class="form-label">Sales No:</label>
-                                <select name="sales_no" id="sales_no" class="form-control" required>
-                                 <option value="">Select sales no</option>
-                                    @foreach ($SalesOrders as $SalesOrder)
-                                    <option value="{{ $SalesOrder->id }}">{{ $SalesOrder->order_no }}</option>
-                                    @endforeach
-                               </select>
+                                <select name="sales_no" id="sales_no" class="form-control">
+                                  <option value="">Select Sales Order</option>
+                                        @foreach($SalesOrders as $order)
+                                    <option value="{{ $order->id }}">{{ $order->order_no }}</option>
+                                     @endforeach
+                            </select>
+
                           </div>
+                         
                         </div>
 
                         <div class="row mb-3">
@@ -101,6 +103,15 @@ button.remove-row {
                                             <option value="Ethiopian Airlines">Ethiopian Airlines</option>
                                     </select>
                              </div>
+                             <div class="col-md-4">
+    <label for="shipment_no">Shipment No</label>
+    <input type="text" id="shipment_no" class="form-control"  readonly>
+    <input type="hidden" name="shipment_id" id="shipment_id">
+</div>
+
+
+
+                           
                              <div class="col-md-4">
                                 <label for="shrinkage" class="form-label">Shrinkage:</label>
                                 <input type="text" class="form-control" id="shrinkage" name="shrinkage" >
@@ -282,4 +293,34 @@ document.addEventListener('DOMContentLoaded', function () {
     dateInput.value = today;
 });
 </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('#sales_no').change(function() {
+        var salesNo = $(this).val();
+
+        if (salesNo) {
+            $.ajax({
+                url: "{{ route('getShipmentBySalesNo') }}", // Adjust route if necessary
+                type: "GET",
+                data: { sales_no: salesNo },
+                success: function(response) {
+                    if (response.shipment_no) {
+                        $('#shipment_no').val(response.shipment_no); // Display Shipment No
+                        $('#shipment_id').val(response.shipment_id); // Store Shipment ID
+                    } else {
+                        $('#shipment_no').val('');
+                        $('#shipment_id').val('');
+                    }
+                }
+            });
+        } else {
+            $('#shipment_no').val('');
+            $('#shipment_id').val('');
+        }
+    });
+});
+</script>
+
+
 

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\SalesPaymentDetail;
 use App\Models\Customer;
 use App\Models\Outstanding;
+use App\Models\PurchaseOrder;
 
 
 class SalesPaymentController extends Controller
@@ -29,9 +30,25 @@ class SalesPaymentController extends Controller
         $customers =Customer::all(); 
         $products = Product::all();
         $SalesOrders = SalesOrder::all();
+        
+
        
         return view('sales-payment.create',['invoice_no'=>$this->invoice_no()],compact('customers','products','SalesOrders','customerOutstandingBalances'));
     }
+    public function getShipmentBySalesNo(Request $request)
+    {
+        $salesNo = $request->sales_no;
+    
+        // Find the Purchase Order that matches the Sales Order ID
+        $purchaseOrder = PurchaseOrder::where('SalesOrder_id', $salesNo)->first();
+    
+        return response()->json([
+            'shipment_no' => $purchaseOrder && $purchaseOrder->shipment ? $purchaseOrder->shipment->shipment_no : null,
+            'shipment_id' => $purchaseOrder ? $purchaseOrder->shipment_id : null,
+        ]);
+    }
+    
+
 
     public function invoice_no(){
         try {
@@ -53,6 +70,7 @@ class SalesPaymentController extends Controller
 
 public function store(Request $request)
 {
+    // return $request->all();
     $request->validate([
         'order_no' => 'required',
         'date' => 'required|date',
@@ -66,6 +84,7 @@ public function store(Request $request)
         'products.*.qty' => 'required|numeric',
         'products.*.rate' => 'required|numeric',
         'shrinkage' =>'nullable|numeric',
+        'shipment_id' => 'required',
     ]);
 
     DB::beginTransaction(); 
@@ -85,6 +104,7 @@ public function store(Request $request)
             'store_id' => 1, 
             'user_id' => auth()->id(), 
             'status' => 1,
+            'shipment_id' => $request->shipment_id,
         ]);
 
         foreach ($request->products as $product) {

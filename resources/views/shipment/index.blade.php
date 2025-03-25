@@ -33,12 +33,19 @@
                                     <td>{{ $shipment->date }}</td>
                                     <td>{{ $shipment->time }}</td>
                                     <td>
-                                    <form action="{{ route('shipment.destroy', $shipment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this shipment?');">
-                                    @csrf
-                                    @method('DELETE')
-                                   <button type="submit" class="btn btn-danger btn-sm"><i class="mdi mdi-delete"></i> Remove</button>
-                                  </form>
-                                    </td>
+    <a href="{{ route('shipmentprofit.report', $shipment->id) }}" class="btn btn-info btn-sm" style="display: inline-block;">
+        <i class="mdi mdi-file-document"></i> Report
+    </a>
+    
+    <form action="{{ route('shipment.destroy', $shipment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this shipment?');" style="display: inline-block; margin-left: 5px;">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm">
+            <i class="mdi mdi-delete"></i> Remove
+        </button>
+    </form>
+</td>
+
                                 </tr>
                @endforeach
                

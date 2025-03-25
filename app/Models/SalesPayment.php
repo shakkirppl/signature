@@ -14,6 +14,7 @@ class SalesPayment extends Model
     'order_no',
     'date',
     'sales_no',
+    'shipment_id',
     'customer_id',
     'grand_total',
     'advance_amount',
