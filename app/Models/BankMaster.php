@@ -21,7 +21,8 @@ class BankMaster extends Model
         'store_id',
         'user_id',
         'account_no',
-        'account_name'
+        'account_name',
+        'account_head_id'
     ];
     protected $dates = ['deleted_at']; 
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\BankMaster;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\AccountHead;
 class BankMasterController extends Controller
 {
     public function index()
@@ -43,7 +43,14 @@ class BankMasterController extends Controller
             'type' => 'nullable|string|max:255', 
         ]);
     
-       
+        $accountHead = AccountHead::create([
+            'name' => $request->bank_name,
+            'parent_id' => '151', 
+            'opening_balance' => null,
+            'dr_cr' => null,
+            'can_delete' => 1, 
+        ]);
+
         BankMaster::create([
             'code' => $request->input('code'),
             'bank_name' => $request->input('bank_name'),
@@ -54,6 +61,7 @@ class BankMasterController extends Controller
             'account_name' => $request->input('account_name'), 
             'store_id' => 1, 
             'user_id' => auth()->id(), 
+            'account_head_id' => $accountHead->id,
         ]);
     
         return redirect()->route('bank-master.index')->with('success', 'Bank Master record created successfully.');
