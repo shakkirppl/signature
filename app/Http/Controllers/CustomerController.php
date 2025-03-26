@@ -38,7 +38,7 @@ class CustomerController extends Controller
             ]);
             $accountHead = AccountHead::create([
                 'name' => $request->customer_name,
-                'parent_id' => '151', 
+                'parent_id' => '150', 
                 'opening_balance' => $request->opening_balance ?? 0,
                 'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
                 'can_delete' => '1', 

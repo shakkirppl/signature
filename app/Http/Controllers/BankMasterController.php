@@ -45,7 +45,7 @@ class BankMasterController extends Controller
     
         $accountHead = AccountHead::create([
             'name' => $request->bank_name,
-            'parent_id' => '151', 
+            'parent_id' => '152', 
             'opening_balance' => null,
             'dr_cr' => null,
             'can_delete' => 1, 
