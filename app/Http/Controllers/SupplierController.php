@@ -9,6 +9,7 @@ use App\Models\Supplier;
 use Illuminate\Support\Facades\DB;
 use App\Models\OpeningBalance;
 use Illuminate\Support\Facades\Validator;
+use App\Models\AccountHead;
 
 
 
@@ -66,7 +67,14 @@ class SupplierController extends Controller
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
             }
-    
+            $accountHead = AccountHead::create([
+                'name' => $request->name,
+                'parent_id' => '151', 
+                'opening_balance' => $request->opening_balance ?? 0,
+                'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
+                'can_delete' => '1', 
+            ]);
+
     
             $supplier = Supplier::create([
                 'code' => $request->code,
@@ -82,8 +90,9 @@ class SupplierController extends Controller
                 'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
                 'store_id' => 1,
                 'user_id' => auth()->id(),
+                'account_head_id' => $accountHead->id,
             ]);
-
+          
     
             if ($request->opening_balance > 0) {
                 $openingBalance = OpeningBalance::create([
