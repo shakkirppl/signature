@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\OpeningBalance;
 use Illuminate\Support\Facades\DB;
+use App\Models\AccountHead;
 
 
 class CustomerController extends Controller
@@ -32,12 +33,23 @@ class CustomerController extends Controller
                 'credit_limit_days' => 'required|numeric|min:0',
                 'opening_balance' => 'nullable|numeric|min:0',
                 'dr_cr' => 'nullable|in:Dr,Cr',
+                'account_head_id' => 'required|numeric',
+            ]);
+            $accountHead = AccountHead::create([
+                'name' => $request->customer_name,
+                'parent_id' => '151', 
+                'opening_balance' => $request->opening_balance ?? 0,
+                'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
+                'can_delete' => '1', 
             ]);
     
             $validated['opening_balance'] = $request->opening_balance ?? 0;
             $validated['dr_cr'] = $request->opening_balance ? $request->dr_cr : null;
             $validated['user_id'] = auth()->id();
             $validated['store_id'] = 1;
+            $validated['account_head_id'] = $accountHead->id;
+
+           
     
           
             $customer = Customer::create($validated);
