@@ -72,7 +72,7 @@ class SupplierController extends Controller
                 'parent_id' => '151', 
                 'opening_balance' => $request->opening_balance ?? 0,
                 'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
-                'can_delete' => '1', 
+                'can_delete' => 1, 
             ]);
 
     

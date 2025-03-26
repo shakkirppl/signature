@@ -20,6 +20,7 @@ class CustomerController extends Controller
 
     public function store(Request $request)
     {
+        // return $request->all();
         DB::beginTransaction();
     
         try {
@@ -33,7 +34,7 @@ class CustomerController extends Controller
                 'credit_limit_days' => 'required|numeric|min:0',
                 'opening_balance' => 'nullable|numeric|min:0',
                 'dr_cr' => 'nullable|in:Dr,Cr',
-                'account_head_id' => 'required|numeric',
+              
             ]);
             $accountHead = AccountHead::create([
                 'name' => $request->customer_name,
@@ -43,16 +44,24 @@ class CustomerController extends Controller
                 'can_delete' => '1', 
             ]);
     
-            $validated['opening_balance'] = $request->opening_balance ?? 0;
-            $validated['dr_cr'] = $request->opening_balance ? $request->dr_cr : null;
-            $validated['user_id'] = auth()->id();
-            $validated['store_id'] = 1;
-            $validated['account_head_id'] = $accountHead->id;
+            $customer = Customer::create([
+                'customer_code' => $request->customer_code,
+                'customer_name' => $request->customer_name,
+                'email' => $request->email,
+                'address' => $request->address,
+                'state' => $request->state,
+                'country' => $request->country,
+                'credit_limit_days' => $request->credit_limit_days,
+                'opening_balance' => $request->opening_balance ?? 0,
+                'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
+                'account_head_id' => $accountHead->id,
+                'user_id' => auth()->id(),
+                'store_id' => 1,
+            ]);
 
            
     
-          
-            $customer = Customer::create($validated);
+        
     
             
             if ($request->opening_balance > 0) {
