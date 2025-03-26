@@ -17,30 +17,7 @@
   <span class="menu-title">Users</span>
   </a>
 </li> 
-      
-
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#masters" aria-expanded="false" aria-controls="charts">
-            <i class="mdi mdi-group menu-icon"></i> 
-              <span class="menu-title">Masters </span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="masters">
-              <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-index')}}">Suppliers</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-index')}}">Customers</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('localcustomer-index')}}">Local Customers</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('category-index')}}">Category</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('product-index')}}">Products</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('employee-index')}}">Employees</a></li>
-
-        
-              </ul>
-            </div>
-            
-          </li>
-
-          <li class="nav-item">
+<li class="nav-item">
   <a class="nav-link" href="{{URL::to('shipment-index')}}">
   <i class="mdi mdi-group menu-icon"></i> 
   <span class="menu-title">Shipment</span>
@@ -53,10 +30,39 @@
   <span class="menu-title">Currency Update</span>
   </a>
 </li> 
-
-
-
 @endif
+      
+       @if($user->designation_id == 1 || $user->designation_id == 3)
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#masters" aria-expanded="false" aria-controls="charts">
+            <i class="mdi mdi-group menu-icon"></i> 
+              <span class="menu-title">Masters </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="masters">
+              <ul class="nav flex-column sub-menu">
+             
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-index')}}">Suppliers</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-index')}}">Customers</a></li>
+              
+              
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('localcustomer-index')}}">Local Customers</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('category-index')}}">Category</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('product-index')}}">Products</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('employee-index')}}">Employees</a></li>
+
+        
+              </ul>
+            </div>
+            
+          </li>
+          @endif
+
+ 
+
+
+
+
 @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 10)
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#sales" aria-expanded="false" aria-controls="charts">
