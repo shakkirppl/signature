@@ -34,6 +34,7 @@ class CustomerController extends Controller
                 'credit_limit_days' => 'required|numeric|min:0',
                 'opening_balance' => 'nullable|numeric|min:0',
                 'dr_cr' => 'nullable|in:Dr,Cr',
+                'contact_number'=>'required|numeric',
               
             ]);
             $accountHead = AccountHead::create([
@@ -49,6 +50,7 @@ class CustomerController extends Controller
                 'customer_name' => $request->customer_name,
                 'email' => $request->email,
                 'address' => $request->address,
+                'contact_number' => $request->contact_number,
                 'state' => $request->state,
                 'country' => $request->country,
                 'credit_limit_days' => $request->credit_limit_days,
@@ -121,6 +123,7 @@ public function update(Request $request, $id)
             'credit_limit_days' => 'nullable|numeric',
             'opening_balance' => 'nullable|numeric',
             'dr_cr' =>'nullable|in:Dr,Cr', 
+            'contact_number'=>'required|numeric',
         ]);
 
         $customer = Customer::findOrFail($id);

@@ -69,6 +69,14 @@
                   </div>
                 </div>
               </div>
+              <div class="col-md-12">
+                        <div class="form-group row">
+                          <label class="col-sm-2 col-form-label required"> Contact No</label>
+                          <div class="col-sm-9">
+                            <input type="text" class="form-control" placeholder="Contact No" name="contact_number"  required="true" value="{{ $customer->contact_number }}"  />
+                          </div>
+                        </div>
+                      </div>
               <!-- <div class="col-md-12">
                 <div class="form-group row">
                   <label class="col-sm-2 col-form-label required">State</label>
