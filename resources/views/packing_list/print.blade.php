@@ -5,56 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Packing List</title>
     <style>
-body {
+   
+   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
     display: flex;
     justify-content: center;
+    font-size: 11px; /* Reduce overall font size */
 }
 
 .a4-container {
-    width: 210mm; /* Standard A4 width */
-    height: 297mm; /* Standard A4 height */
-    margin: auto;
-    padding: 15px;  /* Increased padding slightly */
+    width: 210mm;
+    height: 297mm;
+    padding: 8px; /* Reduce padding */
+    margin: 0 auto;
     box-sizing: border-box;
-   
     background-color: white;
     overflow: hidden;
+    background-image: url("{{ asset('public/image/back.jpg') }}");
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .packing-list {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px; /* Increased font size slightly */
+    font-size: 11px; /* Slightly reduced */
     border: 1px solid black;
 }
 
 .packing-list th, .packing-list td {
-    border: 1px solid black;
-    padding: 5px; /* Increased padding */
+    border: 1px solid #333; /* Dark border for normal rows */
+    padding: 5px;
     text-align: left;
+    height: 16px;
+    vertical-align: middle;
 }
 
+/* Light shadow border for .null-td rows */
+.null-td {
+   
+}
+
+
 .header {
-    font-size: 20px; /* Increased font size */
+    font-size: 18px; /* Reduce size */
     font-weight: bold;
     text-align: center;
-    padding: 8px;
+    padding: 6px;
 }
 
 .company-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px;
-    font-size: 14px; /* Increased text size */
+    padding: 6px;
+    font-size: 11px; /* Reduced font size */
 }
 
 .logo {
-    max-width: 130px; /* Slightly increased logo size */
+    max-width: 100px; /* Reduce logo size */
 }
 
 .image-container {
@@ -62,14 +74,14 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 400px; /* Increased width */
-    margin: 15px auto;
-    gap: 200px;/* Increased spacing between images */
+    max-width: 350px; /* Reduce width */
+    margin: 10px auto;
+    gap: 100px; /* Reduce spacing */
 }
 
 .image-container img {
-    width: 70px;  
-    height: 70px; 
+    width: 50px; /* Reduce image sizes */
+    height: 50px;
 }
 
 /* Ensure total row is visible and clear */
@@ -78,24 +90,29 @@ body {
     text-align: center;
 }
 
-/* Prevent content from overflowing */
+/* Prevent content from overflowing and ensure single-page print */
 @media print {
+    * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
     .a4-container {
-        page-break-after: always;
+        transform: scale(0.85); /* Scale down slightly */
+        transform-origin: top;
+        page-break-inside: avoid; /* Avoid breaking tables across pages */
     }
-}
 
-@media print {
-    
     button {
-        display: none !important;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-
+        display: none !important; /* Hide print button */
     }
 }
+
+@page {
+    size: A4;
+    margin: 2mm; /* Reduce margins for more space */
+}
+
 
     </style>
 </head>
@@ -196,10 +213,61 @@ body {
     </tr>
     @endforeach
 
-            <tr>
-                <td class="bold">Country of Origin: TANZANIA<br>Country of Export: TANZANIA</td>
-                <td colspan="4"></td>
+    <tr>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                
             </tr>
+            <tr>
+                
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+             
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+          
+            <tr>
+           <td class="bold">  <strong>Country of Origin: TANZANIA </strong></td>
+           <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+            <td><strong>Country of Export: TANZANIA</strong></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+            <td class="null-td"></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+         
+
 
             <tr>
                 <td class="bold">Total</td>
@@ -218,21 +286,43 @@ body {
                 <td></td>
                 <td>{{ number_format($totalAmount, 2) }}</td>
             </tr>
-
-            <tr class="">
-                <td colspan="4" class="" style="text-align: right;">
-                <div class="row">
-                            Net Weight:<span style="margin-left: 15px;"> {{ number_format($packingList->net_weight, 2) }}</span>
-                        </div>
-                        <br>
-                        <div class="row">
-                            Gross Weight:<span style="margin-left: 15px;"> {{ number_format($packingList->gross_weight, 2) }}</span>
-                        </div>
-                </td>
-                
-        
-           
             </tr>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            </tr>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"> Net Weight:</td>
+                <td class="null-td">{{ number_format($packingList->net_weight, 2) }}</td>
+                <td class="null-td"></td>
+            </tr>
+            </tr>
+            <td class="null-td"></td>
+            <td class="null-td"></td>
+                <td class="null-td"> Gross Weight:</td>
+                <td class="null-td">{{ number_format($packingList->gross_weight, 2) }}</td>
+                <td class="null-td"></td>
+               
+            </tr>
+            <tr>
+            <td class="null-td"></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+            <td class="null-td"></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+          
            
     
             <tr class="total-row">
@@ -251,11 +341,7 @@ body {
         </div>
     </td>
 </tr>
-
-
-      
-        
-        </table>
+</table>
 
 
 

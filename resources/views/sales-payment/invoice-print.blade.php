@@ -5,71 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commercial Invoice</title>
     <style>
-body {
+   
+   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f5f5f5;
     display: flex;
     justify-content: center;
+    font-size: 11px; /* Reduce overall font size */
 }
-
-/* .a4-container {
-    width: 210mm; 
-    height: 297mm; 
-    margin: auto;
-    padding: 15px;  
-    box-sizing: border-box;
-   
-    background-color: white;
-    overflow: hidden;
-} */
 
 .a4-container {
     width: 210mm;
     height: 297mm;
-    margin: auto;
-    padding: 15px;
+    padding: 8px; /* Reduce padding */
+    margin: 0 auto;
     box-sizing: border-box;
     background-color: white;
     overflow: hidden;
-    background-image: url("{{ asset('public/image/invoice-bg.png') }}");
+    background-image: url("{{ asset('public/image/back.jpg') }}");
     background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
 }
 
-
 .packing-list {
     width: 100%;
     border-collapse: collapse;
-    font-size: 14px; /* Increased font size slightly */
+    font-size: 11px; /* Slightly reduced */
     border: 1px solid black;
 }
 
 .packing-list th, .packing-list td {
-    border: 1px solid black;
-    padding: 5px; /* Increased padding */
+    border: 1px solid #333; /* Dark border for normal rows */
+    padding: 5px;
     text-align: left;
+    height: 18px;
+    vertical-align: middle;
 }
 
+/* Light shadow border for .null-td rows */
+.null-td {
+   
+}
+
+
 .header {
-    font-size: 20px; /* Increased font size */
+    font-size: 18px; /* Reduce size */
     font-weight: bold;
     text-align: center;
-    padding: 8px;
+    padding: 6px;
 }
 
 .company-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px;
-    font-size: 14px; /* Increased text size */
+    padding: 6px;
+    font-size: 11px; /* Reduced font size */
 }
 
 .logo {
-    max-width: 130px; /* Slightly increased logo size */
+    max-width: 100px; /* Reduce logo size */
 }
 
 .image-container {
@@ -77,14 +74,14 @@ body {
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 400px; /* Increased width */
-    margin: 15px auto;
-    gap: 200px;/* Increased spacing between images */
+    max-width: 350px; /* Reduce width */
+    margin: 10px auto;
+    gap: 100px; /* Reduce spacing */
 }
 
 .image-container img {
-    width: 70px;  
-    height: 70px; 
+    width: 50px; /* Reduce image sizes */
+    height: 50px;
 }
 
 /* Ensure total row is visible and clear */
@@ -93,34 +90,32 @@ body {
     text-align: center;
 }
 
-/* Prevent content from overflowing */
-/* @media print {
-    .a4-container {
-        page-break-after: always;
-    }
-} */
-
+/* Prevent content from overflowing and ensure single-page print */
 @media print {
-    .a4-container {
+    * {
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
-}
 
+    .a4-container {
+        transform: scale(0.85); /* Scale down slightly */
+        transform-origin: top;
+        page-break-inside: avoid; /* Avoid breaking tables across pages */
+    }
 
-@media print {
-    
     button {
-        display: none !important;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-
+        display: none !important; /* Hide print button */
     }
 }
 
+@page {
+    size: A4;
+    margin: 2mm; /* Reduce margins for more space */
+}
+
+
     </style>
+
 </head>
 <body>
     <div class="a4-container">
@@ -219,11 +214,62 @@ body {
                 <td class="total_amount">{{ number_format($product->quantity * $product->price, 2) }}</td>
             </tr>
             @endforeach
-
             <tr>
-           <td class="bold">  <strong>Country of Origin: TANZANIA <br>Country of Export: TANZANIA</strong></td>
-                <td colspan="6"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
             </tr>
+            <tr>
+                <td></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+          
+            <tr>
+           <td class="bold">  <strong>Country of Origin: TANZANIA </strong></td>
+           <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
+            <td><strong>Country of Export: TANZANIA</strong></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <td class="null-td"></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <td class="null-td"></td>
+            <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+         
 
             <tr>
                 <td class="bold" ><strong>Total</strong></td>
