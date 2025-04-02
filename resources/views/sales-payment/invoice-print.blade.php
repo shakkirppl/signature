@@ -14,16 +14,31 @@ body {
     justify-content: center;
 }
 
-.a4-container {
-    width: 210mm; /* Standard A4 width */
-    height: 297mm; /* Standard A4 height */
+/* .a4-container {
+    width: 210mm; 
+    height: 297mm; 
     margin: auto;
-    padding: 15px;  /* Increased padding slightly */
+    padding: 15px;  
     box-sizing: border-box;
    
     background-color: white;
     overflow: hidden;
+} */
+
+.a4-container {
+    width: 210mm;
+    height: 297mm;
+    margin: auto;
+    padding: 15px;
+    box-sizing: border-box;
+    background-color: white;
+    overflow: hidden;
+    background-image: url("{{ asset('public/image/invoice-bg.png') }}");
+    background-size: cover; 
+    background-position: center;
+    background-repeat: no-repeat;
 }
+
 
 .packing-list {
     width: 100%;
@@ -79,11 +94,19 @@ body {
 }
 
 /* Prevent content from overflowing */
-@media print {
+/* @media print {
     .a4-container {
         page-break-after: always;
     }
+} */
+
+@media print {
+    .a4-container {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
 }
+
 
 @media print {
     

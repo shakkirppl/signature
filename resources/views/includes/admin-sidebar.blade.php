@@ -99,15 +99,18 @@
             </a>
             <div class="collapse" id="animal-purchase-order">
               <ul class="nav flex-column sub-menu">
-              @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5)
+              @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5 || $user->designation_id == 4)
+
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-order-index')}}">Purchase order</a></li> 
+              @endif 
+              @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5)
+
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li>
               @endif 
-              @if($user->designation_id == 1 || $user->designation_id == 6 || $user->designation_id == 4)
+              @if($user->designation_id == 1 || $user->designation_id == 6 )
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection </a></li> 
-               @endif
-              @if($user->designation_id == 1 || $user->designation_id == 6 )
+            
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/deathanimal')}}">Death Animal</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li>
@@ -170,7 +173,8 @@
            
               @if($user->designation_id == 1 || $user->designation_id == 3 )
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('bank-master-index')}}">Bank Master</a></li>
-              
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-payment-index')}}">Supplier Payment</a></li>
+
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-payment-index')}}">Customer Payment</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher-index')}}">payment Voucher </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('airline-index')}}">Airline Payment</a></li>
@@ -180,7 +184,6 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('ledger')}}"> Ledger </a></li>
               @endif
               @if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 4)
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-payment-index')}}">Supplier Payment</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-advance-index')}}">Supplier Advance </a></li>
               @endif
 

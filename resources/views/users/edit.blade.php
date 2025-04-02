@@ -46,6 +46,17 @@
             <label for="email" class="form-label">Email</label>
             <input type="email" name="email" class="form-control" value="{{ $user->email }}" required>
         </div>
+        
+        <div class="col-md-6">
+            <label for="password" class="form-label required">Password</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <div class="col-md-6">
+            <label for="password_confirmation" class="form-label required" >Confirm Password</label>
+            <input type="password" name="password_confirmation" class="form-control" required>
+        </div>
+
 
         <div class="col-md-6">
             <label for="designation_id" class="form-label">Designation</label>

@@ -11,6 +11,8 @@ use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\SupplierAdvance;
+use App\Models\AccountTransactions;
+
 
 
 class SupplierAdvanceController extends Controller
@@ -99,6 +101,14 @@ public function store(Request $request)
 
     DB::beginTransaction();
     try {
+        $user = Auth::user();
+        $accountHeadId = $user->account_head_id; 
+        $supplier = Supplier::find($request->supplier_id);
+
+
+if (!$supplier) {
+return redirect()->back()->withErrors(['error' => 'Supplier not found.'])->withInput();
+}
         // Store supplier advance
         $supplierAdvance = SupplierAdvance::create([
             'code' => $this->invoice_no(),
@@ -116,7 +126,32 @@ public function store(Request $request)
             'description' => $request->description,
         ]);
         InvoiceNumber::updateinvoiceNumber('supplier_advance',1);
-        // Fetch purchase confirmation entry
+
+        $group_no = AccountTransactions::orderBy('id', 'desc')->max('group_no') + 1;
+
+        AccountTransactions::storeTransaction(
+            $group_no,
+            $supplierAdvance->date,
+            $accountHeadId, 
+            $supplierAdvance->id,
+            $supplier->account_head_id,  
+            "supplier advance Invoice No: " . $supplierAdvance->code,
+            "supplier advance",
+            null,
+            $supplierAdvance->advance_amount, 
+        );
+
+        AccountTransactions::storeTransaction(
+            $group_no,
+            $supplierAdvance->date,
+            $supplier->account_head_id, 
+            $supplierAdvance->id,
+            $accountHeadId, 
+            "supplier advance  Invoice No: " . $supplierAdvance->code,
+            "supplier advance",
+            $supplierAdvance->advance_amount, 
+            null
+        );
       
         
 
