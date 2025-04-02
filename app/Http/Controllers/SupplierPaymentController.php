@@ -78,6 +78,11 @@ class SupplierPaymentController extends Controller
                     $accountHeadId = $user->account_head_id; // Get logged-in user's account_head_id
                     $supplierId = $validatedData['payment_to']; // Assuming payment_to is supplier_id
                     $totalPaidAmount = $validatedData['total_paidAmount'];
+                    $supplier = Supplier::find($validatedData['payment_to']);
+
+if (!$supplier) {
+    return redirect()->back()->withErrors(['error' => 'Supplier not found.'])->withInput();
+}
 
 
                     $supplierPayment = SupplierPaymentMaster::create([
@@ -107,7 +112,7 @@ class SupplierPaymentController extends Controller
                         $supplierPayment->payment_date,
                         $accountHeadId, 
                         $supplierPayment->id,
-                        $supplierId, 
+                        $supplier->account_head_id,  
                         "supplier Invoice No: " . $supplierPayment->id,
                         "supplierpayment",
                         null,
@@ -117,7 +122,7 @@ class SupplierPaymentController extends Controller
                     AccountTransactions::storeTransaction(
                         $group_no,
                         $supplierPayment->payment_date,
-                        $supplierId, 
+                        $supplier->account_head_id, 
                         $supplierPayment->id,
                         $accountHeadId, 
                         "supplier Invoice No: " . $supplierPayment->id,
