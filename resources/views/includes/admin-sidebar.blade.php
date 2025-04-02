@@ -90,7 +90,7 @@
           </li>
          @endif 
 
-@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5|| $user->designation_id == 6|| $user->designation_id == 7)
+@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5|| $user->designation_id == 6|| $user->designation_id == 7|| $user->designation_id == 4)
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#animal-purchase-order" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -103,8 +103,12 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-order-index')}}">Purchase order</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li>
               @endif 
-              @if($user->designation_id == 1 || $user->designation_id == 6)
+              @if($user->designation_id == 1 || $user->designation_id == 6 || $user->designation_id == 4)
+
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection </a></li> 
+               @endif
+              @if($user->designation_id == 1 || $user->designation_id == 6 )
+
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/deathanimal')}}">Death Animal</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('antemortem-report-index')}}">Antemortem Report</a></li> 
@@ -154,7 +158,7 @@
   </a>
 </li> 
 @endif
-@if($user->designation_id == 1 || $user->designation_id == 3)
+@if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 4)
 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#accounts" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -163,16 +167,22 @@
             </a>
             <div class="collapse" id="accounts">
               <ul class="nav flex-column sub-menu">
+           
+              @if($user->designation_id == 1 || $user->designation_id == 3 )
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('bank-master-index')}}">Bank Master</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-payment-index')}}">Supplier Payment</a></li>
+              
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-payment-index')}}">Customer Payment</a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-advance-index')}}">Supplier Advance </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher-index')}}">payment Voucher </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('airline-index')}}">Airline Payment</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('receiptvoucher-index')}}">Receipt Voucher </a></li>  
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('expensevoucher-index')}}">Expense Voucher </a></li>  
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/account-heads')}}">COA </a></li>  
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('ledger')}}"> Ledger </a></li>
+              @endif
+              @if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 4)
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-payment-index')}}">Supplier Payment</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-advance-index')}}">Supplier Advance </a></li>
+              @endif
 
               </ul>
             </div>

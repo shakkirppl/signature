@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Models\AccountHead;
 
 
 class UserController extends Controller
@@ -31,12 +32,21 @@ class UserController extends Controller
             'password' => 'required|string|min:6|confirmed',
             'designation_id' => 'required|exists:employees_designation,id',
         ]);
+        $accountHead = AccountHead::create([
+            'name' => $request->name,
+            'parent_id' => '200', 
+            'opening_balance' => $request->opening_balance ?? 0,
+            'dr_cr' => $request->opening_balance ? $request->dr_cr : null,
+            'can_delete' => 1, 
+        ]);
+
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'designation_id' => $request->designation_id,
+            'account_head_id' => $accountHead->id,
         ]);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
@@ -45,7 +55,7 @@ class UserController extends Controller
     public function edit($id)
 {
     $user = User::findOrFail($id);
-    $designations = Designation::all(); // Fetch all designations for the dropdown
+    $designations = Designation::all();
     return view('users.edit', compact('user', 'designations'));
 }
 

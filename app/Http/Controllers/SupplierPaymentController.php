@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\PurchaseConformation;
 use App\Models\Shipment;
+use App\Models\AccountTransactions;
 
 
 
@@ -73,6 +74,12 @@ class SupplierPaymentController extends Controller
                 }
             
                 try {
+                    $user = Auth::user();
+                    $accountHeadId = $user->account_head_id; // Get logged-in user's account_head_id
+                    $supplierId = $validatedData['payment_to']; // Assuming payment_to is supplier_id
+                    $totalPaidAmount = $validatedData['total_paidAmount'];
+
+
                     $supplierPayment = SupplierPaymentMaster::create([
                         'payment_date' => $validatedData['payment_date'] ,
                         'shipment_id' => $validatedData['shipment_id'] ,
@@ -93,6 +100,32 @@ class SupplierPaymentController extends Controller
                         'total_balance' => $validatedData['total_balance'],
                 
                     ]);
+                    $group_no = AccountTransactions::orderBy('id', 'desc')->max('group_no') + 1;
+
+                    AccountTransactions::storeTransaction(
+                        $group_no,
+                        $supplierPayment->payment_date,
+                        $accountHeadId, 
+                        $supplierPayment->id,
+                        $supplierId, 
+                        "supplier Invoice No: " . $supplierPayment->id,
+                        "supplierpayment",
+                        null,
+                        $totalPaidAmount 
+                    );
+            
+                    AccountTransactions::storeTransaction(
+                        $group_no,
+                        $supplierPayment->payment_date,
+                        $supplierId, 
+                        $supplierPayment->id,
+                        $accountHeadId, 
+                        "supplier Invoice No: " . $supplierPayment->id,
+                        "supplierpayment",
+                        $totalPaidAmount, 
+                        null
+                    );
+            
             
                     foreach ($validatedData['conformation_id'] as $index => $conformationId) {
                         $paidAmount = $validatedData['paid'][$index] ?? 0;

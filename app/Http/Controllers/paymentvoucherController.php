@@ -30,16 +30,24 @@ class paymentvoucherController extends Controller
         $banks = BankMaster::all();
         $employees = Employee::all();
     
-        // Get parent IDs of "Expenses" and "Liabilities"
         $parentIds = AccountHead::whereIn('name', ['Expenses', 'Liabilities'])->pluck('id')->toArray();
     
-        // Fetch all subcategories recursively
         $coa = $this->getAllSubCategories($parentIds);
+    
+        $id20Account = AccountHead::where('id', 20)->first();
+    
+        $additionalParents = AccountHead::whereIn('parent_id', [151,150,200])->get(); 
+
+        $coa = $coa->merge($additionalParents);
+        if ($id20Account) {
+            $coa->push($id20Account);
+        }
     
         return view('paymentvoucher.create', [
             'invoice_no' => $this->invoice_no()
         ], compact('banks', 'coa', 'employees'));
     }
+    
     
     /**
      * Recursive function to fetch all subcategories of given parent IDs
