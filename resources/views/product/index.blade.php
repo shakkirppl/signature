@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -39,13 +42,14 @@
                          @else
                          No Image
                          @endif
-                  
+                         @if($user->designation_id == 1) 
                     <a href="{{ route('product.edit', $product->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <a href="{{ route('product.destroy', $product->id) }}" 
                                                     class="btn btn-danger btn-sm delete-btn" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                     <i class="mdi mdi-delete"></i> Delete
                                             </a>
+                                            @endif
                  </td>
                  
                 </tr>

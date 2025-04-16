@@ -65,6 +65,8 @@
                                     <select class="form-control" id="type" name="type" required>
                                         <option value="cash" {{ $voucher->type === 'cash' ? 'selected' : '' }}>Cash</option>
                                         <option value="bank" {{ $voucher->type === 'bank' ? 'selected' : '' }}>Bank</option>
+                                        <option value="bank" {{ $voucher->type === 'mobilemoney' ? 'selected' : '' }}>Mobile Money</option>
+
                                     </select>
                                 </div>
 

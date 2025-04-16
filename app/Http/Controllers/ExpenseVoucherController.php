@@ -81,7 +81,7 @@ class ExpenseVoucherController extends Controller
                          $validated = $request->validate([
                             'date' => 'required|date',
                             'coa_id' => 'required|exists:account_heads,id',
-                            'type' => 'required|string|in:cash,bank',
+                            'type' => 'required|string',
                             'amount' => 'required',
                             'description' => 'nullable|string',
                             'bank_id' => 'nullable|exists:bank_master,id',

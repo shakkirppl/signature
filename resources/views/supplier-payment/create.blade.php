@@ -365,6 +365,28 @@ document.addEventListener('DOMContentLoaded', function () {
     dateInput.value = today;
 });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const paymentType = document.getElementById("payment_type");
+    const chequeFields = document.getElementById("cheque_fields");
+    const transferFields = document.getElementById("transfer_fields");
+    const bankField = document.getElementById("bank_field");
+
+    function toggleFields() {
+        const selectedValue = paymentType.value;
+
+        chequeFields.style.display = selectedValue === "Cheque" ? "block" : "none";
+        transferFields.style.display = selectedValue === "Transfer" ? "block" : "none";
+        bankField.style.display = (selectedValue === "Cheque" || selectedValue === "Transfer") ? "block" : "none";
+    }
+
+    paymentType.addEventListener("change", toggleFields);
+
+    // Initial call in case the form is loaded with a preselected value
+    toggleFields();
+});
+</script>
+
 
 @endsection
 

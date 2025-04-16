@@ -57,13 +57,14 @@
                                 <div class="form-group">
                                     <label for="type" class="required">Type</label>
                                     <select class="form-control" id="type" name="type" required>
+                                       <option value="bank">Bank</option>
                                         <option value="cash">Cash</option>
-                                        <option value="bank">Bank</option>
+                                        <option value="mobilemoney">Mobile Money</option>
                                     </select>
                                 </div>
 
                                 
-                                <div id="bankNameField" class="form-group" style="display: none;">
+                                <div id="bankNameField" class="form-group" style="">
                                      <label for="bank_id" class="required">Bank Name</label>
                                         <select class="form-control" name="bank_id">
                                            <option value="">Select Bank</option>

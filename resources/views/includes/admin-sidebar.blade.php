@@ -128,7 +128,7 @@
 
 
            
-          @if($user->designation_id == 1 || $user->designation_id == 2|| $user->designation_id == 8)
+          @if($user->designation_id == 1 || $user->designation_id == 2|| $user->designation_id == 8 || $user->designation_id == 5)
       <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#production" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -137,10 +137,10 @@
             </a>
             <div class="collapse" id="production">
               <ul class="nav flex-column sub-menu">
-              @if($user->designation_id == 1 || $user->designation_id == 2)
+              @if($user->designation_id == 1 || $user->designation_id == 2 || $user->designation_id == 5)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('skinning-index')}}">Skinning</a></li> 
               @endif
-              @if($user->designation_id == 1 || $user->designation_id == 8)
+              @if($user->designation_id == 1 || $user->designation_id == 8 || $user->designation_id == 5)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/weight-calculator')}}">Weight Calculator</a></li> 
               @endif
 
@@ -192,7 +192,7 @@
       </li>   
 
 @endif
-@if($user->designation_id == 1 || $user->designation_id == 3)
+@if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 5 || $user->designation_id == 4)
 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#report" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -201,7 +201,7 @@
             </a>
             <div class="collapse" id="report">
               <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('shipment-report')}}"> Shipment Report</a></li>
+              @if($user->designation_id == 1 || $user->designation_id == 3 )
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('shipment-profit')}}"> Shipment Profit Report</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-calculator-report')}}">Weight Calculator</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchase-conformation-report')}}">Purchase Confirmation </a></li>
@@ -215,12 +215,15 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-payment-report')}}">Supplier Payment </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-payment-report')}}">Customer Payment  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('skinning-report')}}"> Skinning  </a></li>
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-ledger')}}"> Supplier Ledger  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-ledger')}}"> Customer Ledger  </a></li>
-
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-outstanding')}}"> Supplier Outstanding  </a></li>
-
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-outstanding')}}"> Customer Outstanding  </a></li>
+              @endif  
+              @if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 5 || $user->designation_id == 4)             
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-outstanding')}}"> Supplier Outstanding  </a></li>
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-ledger')}}"> Supplier Ledger  </a></li>
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('shipment-report')}}"> Shipment Report</a></li>
+
+              @endif 
               </ul>
             </div>
       </li>    

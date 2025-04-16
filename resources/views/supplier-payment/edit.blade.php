@@ -235,23 +235,24 @@
     });
 </script>
 <script>
-    function togglePaymentFields() {
-        const paymentType = document.getElementById('payment_type').value;
-        const transferReference = document.getElementById('transfer_reference');
-        const chequeDetails = document.getElementById('cheque_details');
+document.addEventListener("DOMContentLoaded", function () {
+    const paymentType = document.getElementById("payment_type");
+    const chequeFields = document.getElementById("cheque_fields");
+    const transferFields = document.getElementById("transfer_fields");
+    const bankField = document.getElementById("bank_field");
 
-        transferReference.classList.add('d-none');
-        chequeDetails.classList.add('d-none');
+    function toggleFields() {
+        const selectedValue = paymentType.value;
 
-        if (paymentType === 'Transfer') {
-            transferReference.classList.remove('d-none');
-        } else if (paymentType === 'Cheque') {
-            chequeDetails.classList.remove('d-none');
-        }
+        chequeFields.style.display = selectedValue === "Cheque" ? "block" : "none";
+        transferFields.style.display = selectedValue === "Transfer" ? "block" : "none";
+        bankField.style.display = (selectedValue === "Cheque" || selectedValue === "Transfer") ? "block" : "none";
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        togglePaymentFields();
-    });
+    paymentType.addEventListener("change", toggleFields);
+
+    // Initial call in case the form is loaded with a preselected value
+    toggleFields();
+});
 </script>
 @endsection

@@ -1,8 +1,9 @@
 
-
-
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -49,7 +50,7 @@
             <td>{{ $supplier->credit_limit_days }}</td>
             <td>{{ $supplier->opening_balance }}</td>
             <td>{{ $supplier->dr_cr }}</td>
-                       
+            @if($user->designation_id == 1)      
                   <td>
                   <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-warning btn-sm">Edit</a>
                   <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST" style="display:inline;">
@@ -62,6 +63,7 @@
 
                    
                  </td>
+                 @endif
                  
                 </tr>
                 @endforeach

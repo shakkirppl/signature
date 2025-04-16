@@ -49,7 +49,7 @@ class paymentvoucherController extends Controller
     }
     
     
-    /**
+    /**employees
      * Recursive function to fetch all subcategories of given parent IDs
      */
     private function getAllSubCategories($parentIds, $level = 0)
@@ -90,7 +90,7 @@ class paymentvoucherController extends Controller
                          $validated = $request->validate([
                              'date' => 'required|date',
                              'coa_id' => 'required|exists:account_heads,id',
-                             'type' => 'required|string|in:cash,bank', // Ensure only valid types are allowed
+                             'type' => 'required|string', // Ensure only valid types are allowed
                              'amount' => 'required',
                              'bank_id' => 'nullable|exists:bank_master,id', 
                              'employee_id' => 'required|exists:employee,id',

@@ -56,7 +56,7 @@ class ReceiptVoucherController extends Controller
                          $validated = $request->validate([
                              'date' => 'required|date',
                              'coa_id' => 'required|string',
-                             'type' => 'required|string|in:cash,bank', 
+                             'type' => 'required|string', 
                              'amount' => 'required',
                              'bank_id' => 'nullable|exists:bank_master,id', 
                              'currency' => 'required',

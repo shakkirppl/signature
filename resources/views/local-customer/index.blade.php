@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -38,6 +41,7 @@
                   <td>{{ $localcustomer->state }}</td>
                   <td>{{ $localcustomer->country }}</td>
                   <td>
+                  @if($user->designation_id == 1) 
                   <a href="{{ route('localcustomer.edit', $localcustomer->id) }}" class="btn btn-warning btn-sm">
                       <i class="mdi mdi-pencil"></i> Edit
                     </a>
@@ -47,7 +51,9 @@
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                     <i class="mdi mdi-delete"></i> Delete
                                             </a>
+                                            @endif
                   </td>
+
                 </tr>
                 @endforeach
               </tbody>

@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -36,12 +39,14 @@
                   <td>{{ $employee->contact_number }}</td>
                   <td>{{ $employee->designation->designation ?? 'N/A' }}</td>
                   <td>
+                  @if($user->designation_id == 1) 
                     <a href="{{ route('employee.edit', $employee->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <a href="{{ route('employee.destroy',  $employee->id) }}" 
                                                     class="btn btn-danger btn-sm" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                      Delete
                                             </a>
+                  @endif
                   </td>
                 </tr>
                 @endforeach
