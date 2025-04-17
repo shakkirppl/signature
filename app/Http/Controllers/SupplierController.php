@@ -191,12 +191,25 @@ public function destroy($id)
 {
     try {
         $supplier = Supplier::findOrFail($id);
+        $hasRelations =
+        $supplier->purchaseConfirmations()->exists() ||
+        $supplier->purchaseOrders()->exists() ||
+        $supplier->outstanding()->exists(); 
+
+
+
+    if ($hasRelations) {
+        return redirect()->route('supplier.index')->with('error', 'Cannot delete supplier. It is being used in other records.');
+    }
         $supplier->delete();
         return redirect()->route('supplier.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('supplier.index')->with('error', 'Error deleting record: ' . $e->getMessage());
     }
 }
+
+
+
 
 
 }

@@ -16,4 +16,9 @@ class Customer extends Model
 ];
 protected $dates = ['deleted_at'];
 
+public function outstanding()
+{
+    return $this->hasMany(Outstanding::class, 'account_id', 'id');
+}
+
 }

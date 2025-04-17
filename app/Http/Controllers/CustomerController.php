@@ -168,6 +168,11 @@ public function destroy($id)
 {
     try {
         $customer = Customer::findOrFail($id);
+    //     $hasRelations =
+    //     $customer->outstanding()->exists(); 
+    // if ($hasRelations) {
+    //     return redirect()->route('customer.index')->with('error', 'Cannot delete customer. It is being used in other records.');
+    // }
         $customer->delete();
         return redirect()->route('customer.index')->with('success');
     } catch (\Exception $e) {

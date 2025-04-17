@@ -30,4 +30,9 @@ public function inspection()
         return $this->hasMany(Inspection::class, 'supplier_id', 'id');
     }
 
+    
+public function outstanding()
+{
+    return $this->hasMany(Outstanding::class, 'account_id', 'id');
+}
 }

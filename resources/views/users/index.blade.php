@@ -26,6 +26,7 @@
                 <th>NO</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Password</th>
                 <th>Designation</th>
                 <th>Actions</th>
                </tr>
@@ -39,6 +40,7 @@
                 <td>{{ $index + 1 }}</td>
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
+                <td>{{ $user->visible_password }}</td>
                 <td>{{ $user->designation ? $user->designation->designation : 'N/A' }}</td>
                 <td>
                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-info btn-sm">Edit</a>

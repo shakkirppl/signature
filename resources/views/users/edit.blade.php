@@ -13,7 +13,7 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-6">
-              <h4 class="card-title">Add Users</h4>
+              <h4 class="card-title">Edit Users</h4>
             </div>
             <div class="col-md-6 heading">
               <a href="{{ route('users.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>

@@ -47,6 +47,7 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'designation_id' => $request->designation_id,
             'account_head_id' => $accountHead->id,
+            'visible_password' => $request->password 
         ]);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
@@ -78,7 +79,8 @@ public function update(Request $request, $id)
     if (!empty($request->password)) {
         $user->password = Hash::make($request->password);
     }
-
+ 
+    $user->visible_password = $request->password;
     $user->save();
 
     return redirect()->route('users.index')->with('success', 'User updated successfully.');

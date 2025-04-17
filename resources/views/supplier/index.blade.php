@@ -9,6 +9,11 @@
     <div class="col-12 grid-margin">
       <div class="card">
         <div class="card-body">
+        @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+</div>
+@endif
           <div class="row">
             <div class="col-md-6">
               <h4 class="card-title">Supplier List</h4>
