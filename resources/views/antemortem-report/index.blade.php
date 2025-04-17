@@ -13,9 +13,10 @@
                         <div class="col-md-6">
                             <h2 class="card-title">Antemortem Reports</h2>
                         </div>
-                        <div class="col-md-6 text-end">
-                            <a href="{{ route('antemortem.create') }}" class="btn btn-primary">Add New Report</a>
-                        </div>
+                       
+                        <div class="col-md-6 text-right">
+            <a href="{{ route('antemortem.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
+            </div>
                     </div>
 
                     <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">

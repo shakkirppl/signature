@@ -72,80 +72,81 @@ table textarea {
 
                         <!-- Animals Table -->
                         <h4>AnteMortem Information</h4>
-                        <table border="1" style="width: 80%; text-align: center;">
-                            <thead>
-                                <tr>
-                                        <th>Animals Types Inspected</th>
-                                        <th>Quantity Pass</th>
-                                        <th>Quantity Held</th>
-                                        <th>Qty. Condemned on Ante-Mortem</th>
-                                        <th>Vet. Contacted</th>
-                                        <th>Manager Contacted</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-    @php
-        $animalTypes = ['Goats', 'Sheep'];
-    @endphp
-    @foreach ($animalTypes as $index => $animal)
+<table border="1" style="width: 80%; text-align: center;">
+    <thead>
         <tr>
-            <td>
-                <input type="text" name="animal_type[]" value="{{ $animal }}" class="form-control">
-            </td>
-            <td>
-                <textarea name="quantity_pass[]" rows="2" class="form-control">{{ $report->animals[$index]->quantity_pass ?? '' }}</textarea>
-            </td>
-            <td>
-                <textarea name="quantity_held[]" rows="2" class="form-control">{{ $report->animals[$index]->quantity_held ?? '' }}</textarea>
-            </td>
-            <td>
-                <textarea name="quantity_condemned[]" rows="2" class="form-control">{{ $report->animals[$index]->quantity_condemned ?? '' }}</textarea>
-            </td>
-            <td>
-                <textarea name="vet_contacted[]" rows="2" class="form-control">{{ $report->animals[$index]->vet_contacted ?? '' }}</textarea>
-            </td>
-            <td>
-                <textarea name="manager_contacted[]" rows="2" class="form-control">{{ $report->animals[$index]->manager_contacted ?? '' }}</textarea>
-            </td>
+            <th>Animals Types Inspected</th>
+            <th>Quantity Pass</th>
+            <th>Quantity Held</th>
+            <th>Qty. Condemned on Ante-Mortem</th>
+            <th>Vet. Contacted</th>
+            <th>Manager Contacted</th>
         </tr>
-    @endforeach
-</tbody>
-
-                        </table>
+    </thead>
+    <tbody>
+        @foreach ($report->animal as $animal)
+            <tr>
+            
+                <td>
+                    <input type="text" name="animal_type[]" value="{{ $animal->animal_type }}" class="form-control">
+                </td>
+                <td>
+                    <textarea name="quantity_pass[]" rows="2" class="form-control">{{ $animal->quantity_pass }}</textarea>
+                </td>
+                <td>
+                    <textarea name="quantity_held[]" rows="2" class="form-control">{{ $animal->quantity_held }}</textarea>
+                </td>
+                <td>
+                    <textarea name="quantity_condemned[]" rows="2" class="form-control">{{ $animal->quantity_condemned }}</textarea>
+                </td>
+                <td>
+                    <textarea name="vet_contacted[]" rows="2" class="form-control">{{ $animal->vet_contacted }}</textarea>
+                </td>
+                <td>
+                    <textarea name="manager_contacted[]" rows="2" class="form-control">{{ $animal->manager_contacted }}</textarea>
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
                         <!-- Organs Table -->
                         <h4>General Conditions</h4>
-                        <table border="1" style="width: 80%; text-align: center;">
-                            <thead>
-                                <tr>
-                                    <th>General Conditions</th>
-                                        <th>Suspect</th>
-                                        <th>Not Suspect</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $condition_type = ['Reportable diseases: visual suspicion of BSE, Foot and Mouth, etc.', 'health_risk', 'unfit_consumption', 'antibiotics', 'contamination','welfare','feeding'];
-                                @endphp
-                                @foreach ($condition_type as $index => $condition)
-                                    <tr>
-                                        <td>
-                                            <input type="text" name="condition_type[]" value="{{ $condition }}"  class="form-control">
-                                        </td>
-                                        <td>
-                                            <textarea name="suspect[]" rows="2" class="form-control">
-                                                {{ $report->condition[$index]->suspect ?? '' }}
-                                            </textarea>
-                                        </td>
-                                        <td>
-                                            <textarea name="not_suspect[]" rows="2" class="form-control">
-                                                {{ $report->condition[$index]->not_suspect ?? '' }}
-                                            </textarea>
-                                        </td>
-                                                                          </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                        @php
+    $conditions = [
+        'reportable_diseases' => 'Reportable diseases: visual suspicion of BSE, Foot and Mouth, etc.',
+        'health_risk' => 'Other health risk to staff: visual suspicion of ringworm, enraged animal, etc.',
+        'unfit_consumption' => 'Unfit for consumption: visual suspicion for emaciation, multiple abscess, etc.',
+        'antibiotics' => 'Antibiotics: visual evidence of needle marks, down animals, cull animals.',
+        'contamination' => 'Heavy contamination: visual evidence of excessively contaminated animals.',
+        'welfare' => 'Animal welfare: evidence of abuse, improper conditions, etc.',
+        'feeding' => 'Feeding: evidence that animals have not been taken off feed prior to slaughter.',
+    ];
+@endphp
+
+<table border="1" style="width: 80%; text-align: center;">
+    <thead>
+        <tr>
+            <th>General Conditions</th>
+            <th>Suspect</th>
+            <th>Not Suspect</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($conditions as $key => $description)
+            @php
+                $entry = $generalConditions->where('condition_type', 'LIKE', "%$key%")->first();
+            @endphp
+            <tr>
+                <td><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $description }}</td>
+                <td><input type="text" name="suspect[{{ $key }}]" value="{{ $entry->suspect ?? '' }}"></td>
+                <td><input type="text" name="not_suspect[{{ $key }}]" value="{{ $entry->not_suspect ?? '' }}"></td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+
+
 
                         <!-- Sample Submission Table -->
                         <h4>Sample Submission</h4>
@@ -160,7 +161,7 @@ table textarea {
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($report->sampleTypes as $sample)
+                                @foreach ($report->sampleType as $sample)
                                     <tr>
                                         <td>
                                             <textarea name="sample_identification_type[]" rows="2" class="form-control">

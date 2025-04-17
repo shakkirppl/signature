@@ -37,6 +37,7 @@
                         <div class="col-6 text-end">
                             <a href="{{ url('antemortem-report-index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>
+                 
                     </div>
 
                     @if ($errors->any())
@@ -68,8 +69,8 @@
                         <br>
                         <div class="table-responsive">
                        
-                            <table class="table table-bordered">
-                                <thead>
+                        <table border="1" style="width: 80%; text-align: center; border-collapse: collapse;">
+                        <thead>
                                     <tr>
                                         <th>Animals Types Inspected</th>
                                         <th>Quantity Pass</th>
@@ -80,27 +81,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Goats</td>
-                                        <td><input type="text" name="quantity_pass[goats]"></td>
-                                        <td><input type="text" name="quantity_held[goats]"></td>
-                                        <td><input type="text" name="quantity_condemned[goats]"></td>
-                                        <td><input type="text" name="vet_contacted[goats]"></td>
-                                        <td><input type="text" name="manager_contacted[goats]"></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sheep</td>
-                                        <td><input type="text" name="quantity_pass[sheep]"></td>
-                                        <td><input type="text" name="quantity_held[sheep]"></td>
-                                        <td><input type="text" name="quantity_condemned[sheep]"></td>
-                                        <td><input type="text" name="vet_contacted[sheep]"></td>
-                                        <td><input type="text" name="manager_contacted[sheep]"></td>
-                                    </tr>
+                                <tr>
+    <td>
+        Goats
+        <input type="hidden" name="animal_type[]" value="Goats">
+    </td>
+    <td><input type="text" name="quantity_pass[Goats]"></td>
+    <td><input type="text" name="quantity_held[Goats]"></td>
+    <td><input type="text" name="quantity_condemned[Goats]"></td>
+    <td><input type="text" name="vet_contacted[Goats]"></td>
+    <td><input type="text" name="manager_contacted[Goats]"></td>
+</tr>
+<tr>
+    <td>
+        Sheep
+        <input type="hidden" name="animal_type[]" value="Sheep">
+    </td>
+    <td><input type="text" name="quantity_pass[Sheep]"></td>
+    <td><input type="text" name="quantity_held[Sheep]"></td>
+    <td><input type="text" name="quantity_condemned[Sheep]"></td>
+    <td><input type="text" name="vet_contacted[Sheep]"></td>
+    <td><input type="text" name="manager_contacted[Sheep]"></td>
+</tr>
+
                                 </tbody>
                             </table>
 
-                            <table class="table table-bordered">
-                                <thead>
+                            <table border="1" style="width: 80%; text-align: center; border-collapse: collapse;">
+                            <thead>
                                     <tr>
                                         <th>General Conditions</th>
                                         <th>Suspect</th>
@@ -110,36 +118,45 @@
                                 <tbody>
                                     <tr>
                                         <td><strong>Reportable diseases:</strong> visual suspicion of BSE, Foot and Mouth, etc.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="reportable_diseases"> -->
+
                                         <td><input type="text" name="suspect[reportable_diseases]"></td>
                                         <td><input type="text" name="not_suspect[reportable_diseases]"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Other health risk to staff: </strong>visual suspicion of ringworm, enraged animal, etc.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="health_risk"> -->
+
                                         <td><input type="text" name="suspect[health_risk]"></td>
                                         <td><input type="text" name="not_suspect[health_risk]"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Unfit for consumption:</strong> visual suspicion for emaciation, multiple abscess, etc.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="unfit_consumption"> -->
                                         <td><input type="text" name="suspect[unfit_consumption]"></td>
                                         <td><input type="text" name="not_suspect[unfit_consumption]"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Antibiotics:</strong> visual evidence of needle marks, down animals, cull animals.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="antibiotics"> -->
                                         <td><input type="text" name="suspect[antibiotics]"></td>
                                         <td><input type="text" name="not_suspect[antibiotics]"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Heavy contamination:</strong> visual evidence of excessively contaminated animals.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="contamination"> -->
                                         <td><input type="text" name="suspect[contamination]"></td>
                                         <td><input type="text" name="not_suspect[contamination]"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Animal welfare:</strong> evidence of abuse, improper conditions, etc.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="welfare"> -->
                                         <td><input type="text" name="suspect[welfare]"></td>
                                         <td><input type="text" name="not_suspect[welfare]"></td>
                                     </tr>
                                     <tr>
                                         <td><strong>Feeding:</strong> evidence that animals have not been taken off feed prior to slaughter.</td>
+                                        <!-- <input type="hidden" name="condition_type[]" value="feeding"> -->
                                         <td><input type="text" name="suspect[feeding]"></td>
                                         <td><input type="text" name="not_suspect[feeding]"></td>
                                     </tr>
@@ -175,7 +192,7 @@
         @for ($i = 0; $i < 6; $i++)  
         <tr>
             <td>
-                <input type="text" name="comments[]" rows="1" style="width: 100%; border: none; outline: none; resize: none;">
+                <input type="text" name="comment_text[]" rows="1" style="width: 100%; border: none; outline: none; resize: none;">
             </td>
         </tr>
         @endfor
