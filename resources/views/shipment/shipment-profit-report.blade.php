@@ -36,7 +36,7 @@
         <tr>
             <td></td>
             <td>Meat purchase kilo rate</td>
-            <td>{{$purchaseSummary->qty}}</td>
+            <td>{{ collect($productSummary)->sum('total_weight') }}</td>  
             <td>{{ number_format($purchaseSummary->total_item_cost, 2) }}</td>
             <td>{{ number_format($purchaseSummary->qty * $purchaseSummary->total_item_cost, 2) }}</td>
             <td>   @if($rate > 0)

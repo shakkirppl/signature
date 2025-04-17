@@ -133,16 +133,21 @@ table textarea {
         </tr>
     </thead>
     <tbody>
-        @foreach ($conditions as $key => $description)
-            @php
-                $entry = $generalConditions->where('condition_type', 'LIKE', "%$key%")->first();
-            @endphp
-            <tr>
-                <td><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $description }}</td>
-                <td><input type="text" name="suspect[{{ $key }}]" value="{{ $entry->suspect ?? '' }}"></td>
-                <td><input type="text" name="not_suspect[{{ $key }}]" value="{{ $entry->not_suspect ?? '' }}"></td>
-            </tr>
-        @endforeach
+    @foreach ($generalConditions as $key => $condition)
+    <tr>
+        <td><strong>{{ $condition->condition_type }}</strong></td>
+        
+            <input type="hidden" name="conditions[{{ $key }}][condition_type]" value="{{ $condition->condition_type }}">
+        
+        <td>
+            <input type="text" name="conditions[{{ $key }}][suspect]" value="{{ $condition->suspect }}">
+        </td>
+        <td>
+            <input type="text" name="conditions[{{ $key }}][not_suspect]" value="{{ $condition->not_suspect }}">
+        </td>
+    </tr>
+@endforeach
+
     </tbody>
 </table>
 
@@ -152,68 +157,41 @@ table textarea {
                         <h4>Sample Submission</h4>
 
                         <table border="1" style="width: 80%; text-align: center;">
-                            <thead>
-                                <tr>
-                                    <th>Sample Identification Type</th>
-                                    <th>Sample Location</th>
-                                    <th>Hold Tag</th>
-                                    <th>Date Submitted</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($report->sampleType as $sample)
-                                    <tr>
-                                        <td>
-                                            <textarea name="sample_identification_type[]" rows="2" class="form-control">
-                                                {{ $sample->sample_identification_type }}
-                                            </textarea>
-                                        </td>
-                                        <td>
-                                            <textarea name="sample_location[]" rows="2" class="form-control">
-                                                {{ $sample->sample_location }}
-                                            </textarea>
-                                        </td>
-                                        <td>
-                                            <textarea name="hold_tag[]" rows="2" class="form-control">
-                                                {{ $sample->hold_tag }}
-                                            </textarea>
-                                        </td>
-                                        <td>
-                                            <input type="date" name="date_submitted[]" value="{{ $sample->date_submitted }}" class="form-control">
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                        <!-- <table border="1" style="width: 80%; text-align: center;">
-                            <thead>
-                                <tr>
-                                    <th>Sample Identification Type</th>
-                                    <th>Sample Location</th>
-                                    <th>Hold Tag</th>
-                                    <th>Date Submitted</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-    @foreach ($report->sampleTypes ?? [] as $sample)
+    <thead>
         <tr>
-            <td><textarea name="sample_identification_type[]" rows="2" class="form-control">{{ $sample->sample_identification_type }}</textarea></td>
-            <td><textarea name="sample_location[]" rows="2" class="form-control">{{ $sample->sample_location }}</textarea></td>
-            <td><textarea name="hold_tag[]" rows="2" class="form-control">{{ $sample->hold_tag }}</textarea></td>
-            <td><input type="date" name="date_submitted[]" value="{{ $sample->date_submitted }}" class="form-control"></td>
+            <th>Sample Identification Type</th>
+            <th>Sample Location</th>
+            <th>Hold Tag</th>
+            <th>Date Submitted</th>
         </tr>
-    @endforeach
-</tbody>
+    </thead>
+    <tbody>
+        @foreach ($report->sampleType as $sample)
+            <tr>
+                <td>
+                    <input type="text" name="sample_identification_type[]" value="{{ $sample->sample_identification_type }}" class="form-control">
+                </td>
+                <td>
+                    <input type="text" name="sample_location[]" value="{{ $sample->sample_location }}" class="form-control">
+                </td>
+                <td>
+                    <input type="text" name="hold_tag[]" value="{{ $sample->hold_tag }}" class="form-control">
+                </td>
+                <td>
+                    <input type="date" name="date_submitted[]" value="{{ $sample->date_submitted }}" class="form-control">
+                </td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 
-                        </table> -->
-
-                       
+                      
                         <h4>Comments</h4>
                      <table border="1" style="width: 80%; text-align: center;">
                      <tbody>
-    @foreach ($report->comments ?? [] as $comment)
+    @foreach ($report->comment  as $comt)
         <tr>
-            <td><textarea name="comment_text[]" rows="2" class="form-control">{{ $comment->comment }}</textarea></td>
+            <td><textarea name="comment_text[]" rows="2" class="form-control">{{ $comt->comment_text }}</textarea></td>
         </tr>
     @endforeach
     <tr>

@@ -111,16 +111,18 @@ class AnteMortemReportController extends Controller
                     }
                 }
         
-                if (!empty($request->comments)) {
-                    foreach ($request->comments as $commentText) {
+                if (!empty($request->comment_text)) {
+                    // Loop through each comment and insert it if not empty
+                    foreach ($request->comment_text as $commentText) {
                         if (!empty($commentText)) {
                             AntemortemComment::create([
-                                'report_id' => $report->id,
+                                'report_id' =>  $report->id,  
                                 'comment_text' => $commentText,
                             ]);
                         }
                     }
                 }
+            
         
                 DB::commit();
         
@@ -178,25 +180,27 @@ class AnteMortemReportController extends Controller
                         AntemortemAnimalInspection::create([
                             'report_id' => $report->id,
                             'animal_type' => $animal,
-                            'quantity_pass' => $request->quantity_pass[$index] ?? null,
-                            'quantity_held' => $request->quantity_held[$index] ?? null,
-                            'quantity_condemned' => $request->quantity_condemned[$index] ?? null,
+                            'quantity_pass' => $request->quantity_pass[$index] ?? 0,
+                            'quantity_held' => $request->quantity_held[$index] ?? 0,
+                            'quantity_condemned' => $request->quantity_condemned[$index] ?? 0,
                             'vet_contacted' => $request->vet_contacted[$index] ?? null,
                             'manager_contacted' => $request->manager_contacted[$index] ?? null,
                         ]);
                     }
                 }
         
-                // Update General Conditions
-                AntemortemGeneralCondition::where('report_id', $report->id)->delete();
-                if (!empty($request->condition_type)) {
-                    foreach ($request->condition_type as $index => $condition) {
-                        AntemortemGeneralCondition::create([
-                            'report_id' => $report->id,
-                            'condition_type' => $description,
-                            'suspect' => $request->suspect[$key] ?? null,
-                            'not_suspect' => $request->not_suspect[$key] ?? null,
-                        ]);
+                if (!empty($request->conditions)) {
+                    foreach ($request->conditions as $key => $condition) {
+                        $generalCondition = AntemortemGeneralCondition::where('report_id', $report->id)
+                            ->where('condition_type', $condition['condition_type'])
+                            ->first();
+            
+                        if ($generalCondition) {
+                            $generalCondition->update([
+                                'suspect' => $condition['suspect'],
+                                'not_suspect' => $condition['not_suspect'],
+                            ]);
+                        }
                     }
                 }
         
@@ -216,8 +220,8 @@ class AnteMortemReportController extends Controller
         
                 // Update Comments
                 AntemortemComment::where('report_id', $report->id)->delete();
-                if (!empty($request->comments)) {
-                    foreach ($request->comments as $commentText) {
+                if (!empty($request->comment_text)) {
+                    foreach ($request->comment_text as $commentText) {
                         if (!empty($commentText)) {
                             AntemortemComment::create([
                                 'report_id' => $report->id,
@@ -237,6 +241,54 @@ class AnteMortemReportController extends Controller
                 return redirect()->back()->with('error', 'Failed to update data. Error: ' . $e->getMessage());
             }
         }
+        
+        
+        
+        public function deleteAllData($id)
+{
+    try {
+        DB::beginTransaction();
+
+        $report = AntemortemMaster::findOrFail($id);
+
+        AntemortemGeneralCondition::where('report_id', $report->id)->delete();
+        AntemortemAnimalInspection::where('report_id', $report->id)->delete();
+        AntemortemSampleSubmission::where('report_id', $report->id)->delete();
+        AntemortemComment::where('report_id', $report->id)->delete();
+
+        // Optionally delete the report itself (if needed)
+        $report->delete();
+
+        DB::commit();
+
+        return redirect()->route('antemortem.index')->with('success', 'All data for this report has been deleted successfully.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Error deleting data for report ID ' . $id . ': ' . $e->getMessage());
+
+        return redirect()->back()->with('error', 'Failed to delete data. Error: ' . $e->getMessage());
+    }
+}
+
+        
+public function view($id)
+{
+    $report = AntemortemMaster::with(['animal',  'sampleType', 'comment'])->findOrFail($id);
+    $generalConditions = AntemortemGeneralCondition::where('report_id', $report->id)->get();
+
+    return view('antemortem-report.view', compact('report', 'generalConditions'));
+}
+
+public function print($id)
+{
+    $report = AntemortemMaster::with(['animal', 'sampleType', 'comment'])->findOrFail($id);
+    $generalConditions = AntemortemGeneralCondition::where('report_id', $report->id)->get();
+
+    return view('antemortem-report.print', compact('report', 'generalConditions'));
+}
+
+     
+        
         
         
 

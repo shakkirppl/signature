@@ -96,7 +96,7 @@ button.remove-row {
 <div class="col-md-4">
     <label for="shipping_mode" class="form-label">Shipping Mode</label>
     <select class="form-control" id="shipping_mode" name="shipping_mode">
-        <option value="Buyer" {{ $SalesPayment->shipping_mode == 'Buyer' ? 'selected' : '' }}>Buyer</option>
+        <option value="Buy Air" {{ $SalesPayment->shipping_mode == 'Buy Air' ? 'selected' : '' }}>Buy Air</option>
         <option value="By Sea" {{ $SalesPayment->shipping_mode == 'By Sea' ? 'selected' : '' }}>By Sea</option>
         <option value="By Road" {{ $SalesPayment->shipping_mode == 'By Road' ? 'selected' : '' }}>By Road</option>
     </select>

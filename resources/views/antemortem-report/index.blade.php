@@ -38,10 +38,19 @@
                                     <td>{{ $report->inspection_date }}</td>
                                     @if($user->designation_id == 1)
                                     <td>
+                                    <a href="{{ route('antemortem.view', $report->id) }}" class="btn btn-info btn-sm">View</a>
+                                    <a href="{{ route('antemortem.print', $report->id) }}" target="_blank" class="btn btn-sm btn-primary">
+                                   🖨️ Print
+                                    </a>
 
-                                        <a href="{{ route('antemortem.edit', $report->id) }}" class="btn btn-warning">Edit</a>
-                                        
-                                    </td>
+    <a href="{{ route('antemortem.edit', $report->id) }}" class="btn btn-warning d-inline-block me-2 btn-sm">Edit</a>
+    <form action="{{ route('antemortem.delete', $report->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete all data for this report?');" class="d-inline-block ">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+    </form>
+</td>
+
                                     @endif
                                 </tr>
                             @endforeach

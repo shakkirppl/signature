@@ -393,6 +393,12 @@ Route::post('antemortem-store', [AnteMortemReportController::class, 'store'])->n
 Route::get('antemortem-report-index', [AnteMortemReportController::class, 'index'])->name('antemortem.index');
 Route::get('/antemortem/edit/{id}', [AnteMortemReportController::class, 'edit'])->name('antemortem.edit');
 Route::post('/antemortem/update/{id}', [AnteMortemReportController::class, 'update'])->name('antemortem.update');
+Route::delete('/antemortem/{id}/delete', [AnteMortemReportController::class, 'deleteAllData'])->name('antemortem.delete');
+Route::get('antemortem-report-view/{id}', [AnteMortemReportController::class, 'view'])->name('antemortem.view');
+Route::get('antemortem-report-print/{id}', [AnteMortemReportController::class, 'print'])->name('antemortem.print');
+
+
+
 
 
 

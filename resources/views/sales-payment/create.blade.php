@@ -90,7 +90,7 @@ button.remove-row {
                             <div class="col-md-4">
                              <label for="shipping_mode" class="form-label">Shipping Mode</label>
                                <select class="form-control" id="shipping_mode" name="shipping_mode">
-                                 <option value="Buyer" selected>Buyer</option>
+                                 <option value="Buy Air" selected>Buy Air</option>
                                       <option value="By Sea">By Sea</option>
                                       <option value="By Road">By Road</option>
                                </select>
