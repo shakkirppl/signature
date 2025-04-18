@@ -54,9 +54,44 @@ class ShipmentProfitController extends Controller
 
     $salesPayment = SalesPayment::where('shipment_id', $id)->first();
     $shrinkageValue = $salesPayment ? $salesPayment->shrinkage : 0; 
+    $packagingValue = $salesPayment ? $salesPayment->packaging : 0;
+
+    $sellingPriceUSD = 6.80;
+
+$shipmentCostTZS = $purchaseSummary->total_item_cost 
+    + $expenseVouchers->sum('amount') 
+    + $packagingValue 
+    + $shrinkageValue;
+
+$offalIncomeTZS = $offalsales ? $offalsales->total : 0;
+
+// Total weight (assuming 8kg average per item)
+$totalQty = $purchaseSummary->qty ?? 1;
+$totalWeight = $totalQty * 8;
+
+$netShipmentCostTZS = $shipmentCostTZS - $offalIncomeTZS;
+
+// Cost per kg in TZS
+$perKgShilling = $totalWeight > 0 ? ($netShipmentCostTZS / $totalWeight) : 0;
+
+// Selling price per kg in TZS
+$sellingPriceTZS = $sellingPriceUSD * $rate;
+
+// Shrinkage per kg in TZS
+$shrinkagePerKg = $totalWeight > 0 ? ($shrinkageValue / $totalWeight) : 0;
+
+// Profit per kg
+$perKgUSD = $totalWeight > 0 && $rate > 0 ? ($netShipmentCostTZS / $totalWeight / $rate) : 0;
+
+// Final profit
+$profit1Shipment = $perKgUSD * $totalWeight;
+$investorProfit = 0.30;
+
 
     
-        return view('shipment.shipment-profit-report', compact('shipment','productSummary','purchaseSummary','rate','offalsales','expenseVouchers','shrinkageValue'));
+        return view('shipment.shipment-profit-report', compact('shipment','productSummary',
+        'purchaseSummary','rate','offalsales','expenseVouchers','shrinkageValue',
+        'packagingValue','profit1Shipment','perKgUSD','investorProfit'));
     }
 
 

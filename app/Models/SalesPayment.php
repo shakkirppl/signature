@@ -25,7 +25,8 @@ class SalesPayment extends Model
     'paid_amount',
     'shipping_mode',
     'shipping_agent',
-'shrinkage'];
+'shrinkage',
+'packaging'];
 protected $dates = ['deleted_at'];
 
     
@@ -44,5 +45,8 @@ protected $dates = ['deleted_at'];
     public function salesOrder()
 {
     return $this->belongsTo(SalesOrder::class, 'sales_no');
+}
+public function shipment() {
+    return $this->belongsTo(Shipment::class, 'shipment_id'); 
 }
 }

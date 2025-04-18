@@ -22,10 +22,12 @@
                                 <tr>
                                     <th>Order No</th>
                                     <th>Date</th>
+                                    <th>Shipment</th>
                                     <th>Customer</th>
                                     <th>Sales No</th>
                                     <th>Grand Total</th>
                                     <th>Shrinkage</th>
+                                    <th>Packaging</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -34,10 +36,13 @@
                                     <tr>
                                         <td>{{ $sale->order_no }}</td>
                                         <td>{{ $sale->date }}</td>
+                                        <td>{{ $sale->shipment ? $sale->shipment->shipment_no : 'N/A' }}</td>
+
                                         <td>{{ $sale->customer->customer_name ?? 'N/A' }}</td>
                                         <td>{{ $sale->SalesOrder->order_no ?? 'N/A' }}</td>
                                         <td>{{ number_format($sale->grand_total, 2) }}</td>
                                         <td>{{ $sale->shrinkage }}</td>
+                                        <td>{{ $sale->packaging }}</td>
                                         <td>
                                             <a href="{{ route('sales_payment.view', $sale->id) }}" class="btn btn-info btn-sm">View</a>
                                             <a href="{{ route('invoice.print', $sale->order_no) }}" target="_blank" class="btn btn-primary btn-sm">

@@ -115,4 +115,30 @@ class ShipmentController extends Controller
         return view('shipment.supplier-report', compact('shipments','supplier','purchaseConformationDetail','PurchaseOrder'));
     }
 
+    public function print(Request $request)
+    {
+        $supplier = Supplier::find($request->supplier_id);
+        $shipments = Shipment::find($request->shipment_id);
+    
+        $PurchaseOrder = PurchaseOrder::where('supplier_id', $request->supplier_id)
+                                      ->where('shipment_id', $request->shipment_id)
+                                      ->get();
+    
+        $purchaseConformationDetail = PurchaseConformationDetail::with('product','purchaseConformation.shipment')
+            ->whereHas('purchaseConformation', function ($query) use ($request) {
+                $query->where('shipment_id', $request->shipment_id)
+                      ->where('supplier_id', $request->supplier_id);
+            })
+            ->get();
+            
+    
+        return view('shipment.supplier-report-print', compact('supplier', 'shipments', 'PurchaseOrder', 'purchaseConformationDetail'));
+    }
+    
+    
+    
+    
+    
+
+
 }

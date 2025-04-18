@@ -39,6 +39,20 @@
     .balance td {
         font-size: 16px;
     }
+
+    @media print {
+    .btn, form, select {
+        display: none !important;
+    }
+
+    body {
+        margin: 0;
+    }
+
+    #report-table {
+        margin-top: 20px;
+    }
+}
 </style>
 
 
@@ -50,16 +64,36 @@
                     <h4 class="card-title">Supplier Final Payment Report</h4>
 
                     <form method="GET" action="{{ route('shipment-suppllier-final-payment-report-detail') }}">
+                    
+                        
                         @csrf
+                        <div class="col-md-12 text-right">
+    @if(request('supplier_id'))
+    <a 
+        href="{{ route('supplier-final-payment-print', ['supplier_id' => request('supplier_id'), 'shipment_id' => $shipments->id]) }}" 
+        target="_blank" 
+        class="btn btn-success">
+        Print Report
+    </a>
+    @endif
+</div>
+
                         <div class="row">
                             <div class="col-md-3">
-                                <select class="form-control" name="supplier_id">
-                                    <option value="">Select Supplier</option>
-                                    @foreach($supplier as $supplie)
-                                        <option value="{{ $supplie->id }}">{{ $supplie->name }}</option>
-                                    @endforeach
-                                </select>
+                            <select class="form-control" name="supplier_id">
+    <option value="">Select Supplier</option>
+    @foreach($supplier as $supplie)
+        <option value="{{ $supplie->id }}" 
+            {{ request('supplier_id') == $supplie->id ? 'selected' : '' }}>
+            {{ $supplie->name }}
+        </option>
+    @endforeach
+</select>
+
                             </div>
+      
+
+                          
                             <input type="hidden" name="shipment_id" value="{{$shipments->id}}">
                             <div class="col-md-1">
                                 <button type="submit" class="btn btn-primary">Get</button>

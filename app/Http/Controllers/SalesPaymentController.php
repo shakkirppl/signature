@@ -105,6 +105,9 @@ public function store(Request $request)
             'user_id' => auth()->id(), 
             'status' => 1,
             'shipment_id' => $request->shipment_id,
+            'packaging' => $request->packaging,
+
+            
         ]);
 
         foreach ($request->products as $product) {
@@ -179,6 +182,7 @@ public function update(Request $request, $id)
             'store_id' => 1,
             'user_id' => auth()->id(),
             'status' => 1,
+            'packaging' => $request->packaging,
         ]);
 
         $SalesPayment->details()->delete();

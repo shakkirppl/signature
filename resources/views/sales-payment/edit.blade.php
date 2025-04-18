@@ -114,6 +114,10 @@ button.remove-row {
  <label for="shrinkage" class="form-label">Shrinkage:</label>
 <input type="text" class="form-control" id="shrinkage" name="shrinkage" value="{{ $SalesPayment->shrinkage }}" >
  </div>
+ <div class="col-md-4">
+                                <label for="packaging" class="form-label">Packaging:</label>
+                                <input type="text" class="form-control" id="packaging" name="packaging"  value="{{ $SalesPayment->packaging }}" >
+                            </div>
 
                         </div><br>
                         <div class="table-responsive">

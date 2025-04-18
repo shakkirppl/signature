@@ -242,6 +242,10 @@ Route::get('shipment-suppllier-final-payment-report/{id}', [ShipmentController::
 Route::get('shipment-suppllier-final-payment-report-detail', [ShipmentController::class,'shipment_suppllier_final_payment_report_detail'])->name('shipment-suppllier-final-payment-report-detail');
 
 
+Route::get('/supplier-final-payment-print', [ShipmentController::class, 'print'])->name('supplier-final-payment-print');
+
+
+
 
 
 
