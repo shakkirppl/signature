@@ -85,7 +85,7 @@ $perKgUSD = $totalWeight > 0 && $rate > 0 ? ($netShipmentCostTZS / $totalWeight 
 
 // Final profit
 $profit1Shipment = $perKgUSD * $totalWeight;
-$investorProfit = 0.30;
+$investorProfit = 0.00;
 
 
     
