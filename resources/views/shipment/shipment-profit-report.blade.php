@@ -249,10 +249,13 @@ document.addEventListener("DOMContentLoaded", function () {
 <!-- Script: Financial Calculation -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    function formatMillions(value) {
+        return value >= 1_000_000 ? (value / 1_000_000).toFixed(2) + 'M' : value.toLocaleString(undefined, { minimumFractionDigits: 2 });
+    }
+
     let sumTZS = 0;
     let offalAmount = 0;
 
-    // Step 1: Sum Amount TZS excluding Offals
     document.querySelectorAll("#myTable tbody tr").forEach(row => {
         let label = row.querySelector("td:nth-child(2)");
         let amountCell = row.querySelector("td:nth-child(5)");
@@ -277,12 +280,11 @@ document.addEventListener("DOMContentLoaded", function () {
     let perKgUSD = totalWeight > 0 && exchangeRate > 0 ? (totalShipmentCost / totalWeight / exchangeRate) : 0;
 
     let profitPerKgUSD = shrinkagePrice - perKgUSD;
-    let investorProfit = 0.00;
+    let investorProfit = 0.30;
     let netProfit = {{ $netProfit ?? 0 }};
     let totalQty = {{ $purchaseSummary->qty ?? 1 }};
     let profitShipment = netProfit * totalQty;
 
-    // Step 3: Display
     document.querySelectorAll("#myTable tbody tr").forEach(row => {
         let label = row.querySelector("td:nth-child(2)");
         if (label) {
@@ -305,13 +307,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     row.querySelector("td:nth-child(4)").textContent = investorProfit.toFixed(2);
                     break;
                 case "Profit 1 shipment":
-                    row.querySelector("td:nth-child(5)").textContent = profitShipment.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                    row.querySelector("td:nth-child(5)").textContent = formatMillions(profitShipment);
                     break;
             }
         }
     });
 });
 </script>
+
 
 
 
