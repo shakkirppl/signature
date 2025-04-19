@@ -96,6 +96,11 @@ button.remove-row {
             <input type="hidden" name="inspection_id" id="inspection_id">
         </div>
 
+        <div class="mb-3">
+            <label for="note" class="form-label">Note : (Add the reasons for death) </label>
+            <textarea type="text" class="form-control" name="note" id="note" > </textarea>
+        </div>
+
         <h4>Product Details</h4>
         <table class="table">
             <thead>

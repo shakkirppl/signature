@@ -12,7 +12,7 @@ class DeathAnimalMaster extends Model
 
       
     protected $table = 'death_animal_master';
-    protected $fillable = ['date', 'shipment_id', 'supplier_id', 'inspection_id','store_id','user_id'];
+    protected $fillable = ['date', 'shipment_id', 'supplier_id', 'inspection_id','store_id','user_id','note'];
 
     public function details()
     {

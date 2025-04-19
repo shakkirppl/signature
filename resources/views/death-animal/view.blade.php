@@ -32,6 +32,11 @@
                                 <th>Inspection No:</th>
                                 <td>{{ $deathAnimal->inspection ? $deathAnimal->inspection->inspection_no : 'N/A' }}</td>
                             </tr>
+
+                            <tr>
+                                <th>Note</th>
+                                <td>{{ $deathAnimal->note ?? 'N/A' }}</td>
+                            </tr>
                         </tbody>
                     </table>
 

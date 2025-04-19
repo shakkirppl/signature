@@ -35,8 +35,10 @@
           <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card tale-bg">
+                <br>
+              <h3>Next Slaughter Schedule</h3>
                 <div class="card-people mt-auto">
-                  <img src="images/dashboard/people.svg" alt="people">
+                  
                   <div class="weather-info">
                     <div class="d-flex">
                       <div>

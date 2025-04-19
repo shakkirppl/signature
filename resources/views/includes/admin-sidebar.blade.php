@@ -18,13 +18,19 @@
   </a>
 </li> 
 
-
+ 
 <li class="nav-item">
   <a class="nav-link" href="{{URL::to('/usd-to-shilling')}}">
   <i class="mdi mdi-group menu-icon"></i> 
   <span class="menu-title">Currency Update</span>
   </a>
 </li> 
+<li class="nav-item">
+  <a class="nav-link" href="{{URL::to('index-new-scheduletime')}}">
+  <i class="mdi mdi-group menu-icon"></i> 
+  <span class="menu-title">Schedule Slaughter Time</span>
+  </a>
+</li>
 
 <li class="nav-item">
   <a class="nav-link" href="{{URL::to('shipment-index')}}">

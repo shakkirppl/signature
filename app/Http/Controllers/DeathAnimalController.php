@@ -67,8 +67,9 @@ class DeathAnimalController extends Controller
             'supplier_id' => 'required|exists:supplier,id',
             'inspection_id' => 'required|exists:inspection,id',
             'products' => 'required|array',
-            'products.*.death_male_qty' => 'nullable|integer|min:0',
-            'products.*.death_female_qty' => 'nullable|integer|min:0',
+            'products.*.death_male_qty' => 'nullable|integer',
+            'products.*.death_female_qty' => 'nullable|integer',
+            'note' => 'nullable',
         ]);
     
         // Store Death Animal Master record
@@ -77,6 +78,8 @@ class DeathAnimalController extends Controller
             'shipment_id' => $validated['shipment_no'],
             'supplier_id' => $validated['supplier_id'],
             'inspection_id' => $validated['inspection_id'],
+            'note' => $validated['note'],
+
             'user_id' => Auth::id(),
             'store_id' => 1,
         ]);

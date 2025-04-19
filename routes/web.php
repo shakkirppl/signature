@@ -39,6 +39,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OffalReceiveController;
 use App\Http\Controllers\UsdToShillingController;
 use App\Http\Controllers\ShipmentProfitController;
+use App\Http\Controllers\ScheSchedulenewSlaughter;
 
 
 
@@ -471,6 +472,15 @@ Route::post('/usd-to-shilling/{id}', [UsdToShillingController::class, 'update'])
 
 Route::get('shipment-profit/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
 Route::get('shipment-/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
+
+
+Route::get('create-new-scheduletime', [ScheSchedulenewSlaughter::class, 'create'])->name('new.schedule');
+Route::post('store-new-scheduletime', [ScheSchedulenewSlaughter::class, 'store'])->name('store.schedule');
+Route::get('index-new-scheduletime', [ScheSchedulenewSlaughter::class, 'index'])->name('index.schedule');
+
+
+
+
 
 
 
