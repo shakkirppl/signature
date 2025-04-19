@@ -18,15 +18,17 @@
 .a4-container {
     width: 210mm;
     height: 297mm;
-    padding: 8px; /* Reduce padding */
+    padding: 8px;
     margin: 0 auto;
     box-sizing: border-box;
     background-color: white;
     overflow: hidden;
-    background-image:url("{{ url('image/back.jpg') }}"); 
-    background-size: cover; 
-    background-position: center;
+    background-image: url("{{ asset('image/Back.jpg') }}");
+    background-size: cover;
+    background-position: center top;
     background-repeat: no-repeat;
+    position: relative;
+    padding-top: 110px; /* Push content downward */
 }
 
 .packing-list {
