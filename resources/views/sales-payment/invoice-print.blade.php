@@ -340,7 +340,7 @@
 
 
 <div class="image-container">
-<img src="{{ url('image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
+<img src="{{ url('Image\stamp.jpg') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
     <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
     <img src="{{url('image/scanner.png') }}" alt="QR Scanner">
 </div>
