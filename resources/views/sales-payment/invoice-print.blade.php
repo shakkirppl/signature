@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commercial Invoice</title>
     <style>
- body {
+   
+   body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -104,8 +105,7 @@
         height: 297mm;
         max-height: 297mm;
         overflow: hidden;
-        padding: 1mm !important; /* Decrease padding */
-    }
+        padding: 0.5mm !important;    }
 
     button {
         display: none !important;
@@ -116,7 +116,6 @@
     size: A4;
     margin: 2mm; /* Was previously 2mm, keep or decrease to 0 if needed */
 }
-
 
     </style>
 
