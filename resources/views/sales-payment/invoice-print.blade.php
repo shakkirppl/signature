@@ -13,6 +13,7 @@
     display: flex;
     justify-content: center;
     font-size: 11px; /* Reduce overall font size */
+    padding-top: 70px;
 }
 
 .a4-container {
