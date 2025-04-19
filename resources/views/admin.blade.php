@@ -33,26 +33,68 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6 grid-margin stretch-card">
-              <div class="card tale-bg">
-                <br>
-              <h3>Next Slaughter Schedule</h3>
-                <div class="card-people mt-auto">
-                  
-                  <div class="weather-info">
+          <div class="col-md-6 grid-margin stretch-card">
+    <a href="{{ url('slaughter-schedules-index') }}" class="text-decoration-none text-dark w-100">
+        <div class="card tale-bg position-relative">
+            <br>
+            <h3>Next Slaughter Schedule</h3>
+
+            @if($nextSchedule)
+                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($nextSchedule->date)->format('d-m-Y') }}</p>
+                <p><strong>Time:</strong> {{ \Carbon\Carbon::parse($nextSchedule->time)->format('h:i A') }}</p>
+
+                <h3 id="countdown" class="text-danger"></h3>
+
+                @php
+                    $scheduleDateTime = \Carbon\Carbon::parse($nextSchedule->date . ' ' . $nextSchedule->time)->format('Y-m-d H:i:s');
+                @endphp
+
+                <script>
+    let countDownDate = new Date("{{ $scheduleDateTime }}").getTime();
+
+    let x = setInterval(function () {
+        let now = new Date().getTime();
+        let distance = countDownDate - now;
+
+        if (distance > 0) {
+            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            let countdownStr = "";
+            if (days > 0) {
+                countdownStr += days + "d ";
+            }
+            countdownStr += hours + "h " + minutes + "m " + seconds + "s ";
+
+            document.getElementById("countdown").innerHTML = countdownStr;
+        } else {
+            document.getElementById("countdown").innerHTML = "Scheduled time passed.";
+            clearInterval(x);
+        }
+    }, 1000);
+</script>
+
+            @else
+                <p>No upcoming slaughter schedules found.</p>
+            @endif
+
+            <!-- This makes the entire card clickable -->
+            <span class="stretched-link"></span>
+
+            <div class="card-people mt-auto">
+                <div class="weather-info">
                     <div class="d-flex">
-                      <div>
-                        <!-- <h2 class="mb-0 font-weight-normal"><i class="icon-sun mr-2"></i>31<sup>C</sup></h2> -->
-                      </div>
-                      <div class="ml-2">
-                        <!-- <h4 class="location font-weight-normal">Bangalore</h4> -->
-                        <!-- <h6 class="font-weight-normal">India</h6> -->
-                      </div>
+                        <div></div>
+                        <div class="ml-2"></div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
+        </div>
+    </a>
+</div>
+
             <div class="col-md-6 grid-margin transparent">
               <div class="row">
                 <div class="col-md-6 mb-4 stretch-card transparent">
@@ -419,7 +461,7 @@
         <!-- partial:partials/_footer.html -->
         <footer class="footer">
           <div class="d-sm-flex justify-content-center justify-content-sm-between">
-            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="#" target="_blank"></a> from Mobiz Technologies LLC. All rights reserved.</span>
+            <span class="text-muted text-center text-sm-left d-block d-sm-inline-block">Copyright © 2024 <a href="#" target="_blank"></a> from Signature Trading Ltd. All rights reserved.</span>
             <!-- <span class="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">Hand-crafted & made with <i class="ti-heart text-danger ml-1"></i></span> -->
           </div>
    
@@ -449,4 +491,5 @@
       </script>
 @endsection
 @section('script')
+
 @endsection

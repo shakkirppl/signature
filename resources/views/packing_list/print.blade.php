@@ -23,7 +23,7 @@
     box-sizing: border-box;
     background-color: white;
     overflow: hidden;
-    background-image: url("{{ asset('public/image/back.jpg') }}");
+    background-image: url("{{ asset('image/Back.jpg') }}");
     background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
@@ -123,7 +123,7 @@
 
         <div class="company-header">
     <div>
-        <img class="logo" src="{{ asset('public/image/signature-logo.png') }}" alt="Company Logo">
+        <img class="logo" src="{{ url('image/signature-logo.png') }}" alt="Company Logo">
     </div>
 
     <div class="company-info">
@@ -346,9 +346,9 @@
 
 
 <div class="image-container">
-<img src="{{ asset('public/image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
-    <img src="{{ asset('public/image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
-    <img src="{{ asset('public/image/scanner.png') }}" alt="QR Scanner">
+<img src="{{ url('image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
+    <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
+    <img src="{{ url('image/scanner.png') }}" alt="QR Scanner">
 </div>
 
 <button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">print</button>
