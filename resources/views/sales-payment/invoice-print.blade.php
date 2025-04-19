@@ -64,11 +64,15 @@
     justify-content: space-between;
     align-items: center;
     padding: 6px;
-    font-size: 11px; /* Reduced font size */
+    font-size: 14px; /* Reduced font size */
 }
 
 .logo {
-    max-width: 150px; /* Reduce logo size */
+    max-width: 160px;
+    display: block;
+    margin: 5px auto 0 auto; /* Centered, with space from the top */
+    position: relative;
+    z-index: 2; 
 }
 
 .image-container {
@@ -78,7 +82,7 @@
     width: 100%;
     max-width: 350px; /* Reduce width */
     margin: 10px auto;
-    gap: 100px; /* Reduce spacing */
+    gap: 70px; /* Reduce spacing */
 }
 
 .image-container img {
