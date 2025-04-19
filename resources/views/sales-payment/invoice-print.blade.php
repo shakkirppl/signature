@@ -104,7 +104,7 @@
         height: 297mm;
         max-height: 297mm;
         overflow: hidden;
-        padding: 2mm !important; /* Decrease padding */
+        padding: 1mm !important; /* Decrease padding */
     }
 
     button {
