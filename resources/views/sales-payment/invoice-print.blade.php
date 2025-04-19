@@ -29,7 +29,7 @@
     background-position: center top;
     background-repeat: no-repeat;
     position: relative;
-    padding-top: 40px; /* Push content downward */
+    padding-top: 20px; /* Push content downward */
 }
 
 .packing-list {
