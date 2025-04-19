@@ -5,21 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Commercial Invoice</title>
     <style>
-   
-   body {
+ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    font-size: 11px; /* Reduce overall font size */
-   
+    font-size: 11px;
 }
 
 .a4-container {
     width: 210mm;
     height: 297mm;
-    padding: 8px;
+    padding: 2mm; /* Decreased from 8mm */
     margin: 0 auto;
     box-sizing: border-box;
     background-color: white;
@@ -27,35 +25,28 @@
     background-image: url("{{ asset('image/Back.jpg') }}");
     background-size: cover;
     background-position: center top;
-    background-repeat: no-repeat; /* Prevent repeating */
+    background-repeat: no-repeat;
     position: relative;
-    page-break-after: always; /* Force page break after this if printing */
+    page-break-after: always;
 }
-
 
 .packing-list {
     width: 100%;
     border-collapse: collapse;
-    font-size: 11px; /* Slightly reduced */
+    font-size: 11px;
     border: 1px solid black;
 }
 
 .packing-list th, .packing-list td {
-    border: 1px solid #333; /* Dark border for normal rows */
+    border: 1px solid #333;
     padding: 5px;
     text-align: left;
     height: 18px;
     vertical-align: middle;
 }
 
-/* Light shadow border for .null-td rows */
-.null-td {
-   
-}
-
-
 .header {
-    font-size: 18px; /* Reduce size */
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
     padding: 6px;
@@ -66,13 +57,13 @@
     justify-content: space-between;
     align-items: center;
     padding: 6px;
-    font-size: 14px; /* Reduced font size */
+    font-size: 14px;
 }
 
 .logo {
     max-width: 160px;
     display: block;
-    margin: 5px auto 0 auto; /* Centered, with space from the top */
+    margin: 5px auto 0 auto;
     position: relative;
     z-index: 2; 
 }
@@ -82,23 +73,21 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 350px; /* Reduce width */
+    max-width: 350px;
     margin: 10px auto;
-    gap: 70px; /* Reduce spacing */
+    gap: 70px;
 }
 
 .image-container img {
-    width: 50px; /* Reduce image sizes */
+    width: 50px;
     height: 50px;
 }
 
-/* Ensure total row is visible and clear */
 .total-row td {
     font-weight: bold;
     text-align: center;
 }
 
-/* Prevent content from overflowing and ensure single-page print */
 @media print {
     * {
         -webkit-print-color-adjust: exact;
@@ -106,25 +95,26 @@
     }
     html, body {
         overflow: hidden;
+        margin: 0;
         height: 297mm;
     }
 
     .a4-container {
-       
         page-break-inside: avoid;
         height: 297mm;
-       max-height: 297mm;
-       overflow: hidden;
+        max-height: 297mm;
+        overflow: hidden;
+        padding: 2mm !important; /* Decrease padding */
     }
 
     button {
-        display: none !important; /* Hide print button */
+        display: none !important;
     }
 }
 
 @page {
     size: A4;
-    margin: 2mm; /* Reduce margins for more space */
+    margin: 2mm; /* Was previously 2mm, keep or decrease to 0 if needed */
 }
 
 
