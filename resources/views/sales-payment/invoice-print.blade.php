@@ -23,7 +23,7 @@
     box-sizing: border-box;
     background-color: white;
     overflow: hidden;
-    background-image: url("{{ url('image/back.jpg') }}");
+    background-image: url('{{ asset('image/back.jpg') }}');
     background-size: cover; 
     background-position: center;
     background-repeat: no-repeat;
