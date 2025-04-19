@@ -13,7 +13,7 @@
     display: flex;
     justify-content: center;
     font-size: 11px; /* Reduce overall font size */
-    padding-top: 40px;
+    padding-top: 20px;
 }
 
 .a4-container {
@@ -29,7 +29,7 @@
     background-position: center top;
     background-repeat: no-repeat;
     position: relative;
-    padding-top: 70px; /* Push content downward */
+    padding-top: 40px; /* Push content downward */
 }
 
 .packing-list {
