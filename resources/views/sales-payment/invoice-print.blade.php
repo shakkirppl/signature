@@ -13,7 +13,7 @@
     display: flex;
     justify-content: center;
     font-size: 11px; /* Reduce overall font size */
-    padding-top: 10px;
+    padding-top: 5px;
 }
 
 .a4-container {
@@ -104,11 +104,17 @@
         -webkit-print-color-adjust: exact;
         print-color-adjust: exact;
     }
+    html, body {
+        overflow: hidden;
+        height: 297mm;
+    }
 
     .a4-container {
-        transform: scale(0.85); /* Scale down slightly */
-        transform-origin: top;
-        page-break-inside: avoid; /* Avoid breaking tables across pages */
+       
+        page-break-inside: avoid;
+        height: 297mm;
+       max-height: 297mm;
+       overflow: hidden;
     }
 
     button {
