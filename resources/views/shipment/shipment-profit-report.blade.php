@@ -194,7 +194,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td>{{ number_format($profitShipment, 2) }}</td>
+            <td><td>{{ number_format($profitShipment, 2, '.', ',') }}</td></td>
         </tr>
         <tr>
             <td></td>
@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let perKgUSD = totalWeight > 0 && exchangeRate > 0 ? (totalShipmentCost / totalWeight / exchangeRate) : 0;
 
     let profitPerKgUSD = shrinkagePrice - perKgUSD;
-    let investorProfit = 0.30;
+    let investorProfit = 0.00;
     let netProfit = {{ $netProfit ?? 0 }};
     let totalQty = {{ $purchaseSummary->qty ?? 1 }};
     let profitShipment = netProfit * totalQty;
