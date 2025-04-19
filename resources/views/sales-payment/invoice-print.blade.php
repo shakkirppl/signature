@@ -27,10 +27,11 @@
     background-image: url("{{ asset('image/Back.jpg') }}");
     background-size: cover;
     background-position: center top;
-    background-repeat: no-repeat;
+    background-repeat: no-repeat; /* Prevent repeating */
     position: relative;
-    padding-top: 20px; /* Push content downward */
+    page-break-after: always; /* Force page break after this if printing */
 }
+
 
 .packing-list {
     width: 100%;
