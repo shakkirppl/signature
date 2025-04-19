@@ -68,7 +68,7 @@
 }
 
 .logo {
-    max-width: 200px; /* Reduce logo size */
+    max-width: 150px; /* Reduce logo size */
 }
 
 .image-container {
