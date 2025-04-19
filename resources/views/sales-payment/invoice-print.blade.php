@@ -18,7 +18,7 @@
 .a4-container {
     width: 210mm;
     height: 297mm;
-    padding: 0.5mm; 
+    padding: 0.5mm; /* Decreased from 8mm */
     margin: 0 auto;
     box-sizing: border-box;
     background-color: white;
@@ -62,12 +62,15 @@
 }
 
 .logo {
+    height: 100px; /* or any height you want */
     max-width: 160px;
     display: block;
     margin: 5px auto 0 auto;
     position: relative;
-    z-index: 2; 
+    z-index: 2;
+    object-fit: contain; /* Optional: keeps image from stretching */
 }
+
 
 .image-container {
     display: flex;
@@ -105,7 +108,7 @@
         height: 297mm;
         max-height: 297mm;
         overflow: hidden;
-        padding: 0.5mm !important;    }
+  padding: 0.5mm !important;    }
 
     button {
         display: none !important;
