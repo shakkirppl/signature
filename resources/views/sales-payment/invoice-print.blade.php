@@ -130,7 +130,7 @@
 
         <div class="company-header">
     <div>
-        <img class="logo" src="{{ url('image/signature-logo.png') }}" alt="Company Logo">
+        <img class="logo" src="{{ url('image/signature-logo.jpg') }}" alt="Company Logo">
     </div>
 
     <div class="company-info">

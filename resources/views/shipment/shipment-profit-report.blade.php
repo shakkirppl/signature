@@ -5,34 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shipment Profit Calculation</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <style>
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                font-size: 12px;
+            }
+
+            .container {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+            }
+
+            .btn, .text-end, .bi {
+                display: none !important;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            th, td {
+                padding: 4px;
+                font-size: 11px;
+            }
+
+            h4 {
+                text-align: center;
+                margin-bottom: 20px;
+                font-size: 16px;
+            }
+
+            .table-bordered th,
+            .table-bordered td {
+                border: 1px solid #000 !important;
+            }
+        }
+
+        /* Optional: improve spacing on screen view as well */
+        th, td {
+            vertical-align: middle;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-4">
-    <h4 class="card-title">Shipment Report - {{ $shipment->shipment_no }}</h4>
+        <h4 class="card-title">Shipment Report - {{ $shipment->shipment_no }}</h4>
+        <div class="mb-3 text-end no-print">
+            <button onclick="window.print()" class="btn btn-primary">
+                <i class="bi bi-printer"></i> Print Report
+            </button>
+        </div>
         <table class="table table-bordered" id="myTable">
-    <thead>
-    
-            @foreach ($productSummary as $product => $summary)
-    <tr>
-        <th></th>
-        <th>
-            {{ $shipment->shipment_no }} - {{ $summary['total_number'] }} {{ $product }} 
-            (avg weight {{ $summary['total_weight'] }} kg)
-        </th>
-    </tr>
-@endforeach
+            <thead>
+                @foreach ($productSummary as $product => $summary)
+                <tr>
+                    <th></th>
+                    <th colspan="5">
+                        {{ $shipment->shipment_no }} - {{ $summary['total_number'] }} {{ $product }}
+                        (avg weight {{ $summary['total_weight'] }} kg)
+                    </th>
+                </tr>
+                @endforeach
 
-          
-        <tr>
-            <th></th>
-            <th></th>
-            <th>Qty</th>
-            <th>Price TZS</th>
-            <th>Amount TZS</th>
-            <th>Amount USD</th>
-        </tr>
-    </thead>
-    <tbody>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th>Qty</th>
+                    <th>Price TZS</th>
+                    <th>Amount TZS</th>
+                    <th>Amount USD</th>
+                </tr>
+            </thead>
+            <tbody>
+    
     <tr>
                 <td></td>
                 <td>Meat purchase kilo rate</td>
@@ -194,7 +249,7 @@
             <td></td>
             <td></td>
             <td></td>
-            <td><td>{{ number_format($profitShipment, 2, '.', ',') }}</td></td>
+            <td>{{ number_format($profitShipment, 2, '.', ',') }}</td>
         </tr>
         <tr>
             <td></td>
@@ -224,100 +279,94 @@
 
        
     </tbody>
-</table>
-
+    </table>
     </div>
+
+    <!-- JavaScript logic stays the same -->
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    let rows = document.querySelectorAll("#myTable tbody tr");
-    let slNo = 1;
-    for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const labelCell = row.querySelector("td:nth-child(2)");
-        if (labelCell) {
-            const text = labelCell.textContent.trim();
-            if (text === "Offals") {
-                break; // stop numbering when Offals is reached
+        document.addEventListener("DOMContentLoaded", function () {
+            let rows = document.querySelectorAll("#myTable tbody tr");
+            let slNo = 1;
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const labelCell = row.querySelector("td:nth-child(2)");
+                if (labelCell) {
+                    const text = labelCell.textContent.trim();
+                    if (text === "Offals") {
+                        break; // stop numbering when Offals is reached
+                    }
+                    row.querySelector("td:nth-child(1)").textContent = slNo++;
+                }
             }
-            row.querySelector("td:nth-child(1)").textContent = slNo++;
-        }
-    }
-});
-</script>
+        });
+    </script>
 
-
-<!-- Script: Financial Calculation -->
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    function formatMillions(value) {
-        return value >= 1_000_000 ? (value / 1_000_000).toFixed(2) + 'M' : value.toLocaleString(undefined, { minimumFractionDigits: 2 });
-    }
-
-    let sumTZS = 0;
-    let offalAmount = 0;
-
-    document.querySelectorAll("#myTable tbody tr").forEach(row => {
-        let label = row.querySelector("td:nth-child(2)");
-        let amountCell = row.querySelector("td:nth-child(5)");
-        if (label && amountCell) {
-            let labelText = label.textContent.trim();
-            let amount = parseFloat(amountCell.textContent.replace(/,/g, '')) || 0;
-            if (labelText === "Offals") {
-                offalAmount = amount;
-            } else {
-                sumTZS += amount;
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            function formatMillions(value) {
+                return value >= 1_000_000 ? (value / 1_000_000).toFixed(2) + 'M' : value.toLocaleString(undefined, { minimumFractionDigits: 2 });
             }
-        }
-    });
 
-    let exchangeRate = {{ $rate }};
-    let totalWeight = {{ collect($productSummary)->sum('total_weight') }};
-    let shrinkagePrice = 6.80;
+            let sumTZS = 0;
+            let offalAmount = 0;
 
-    let totalShipmentCost = sumTZS - offalAmount;
-    let sumUSD = exchangeRate > 0 ? (totalShipmentCost / exchangeRate) : 0;
-    let perKgShilling = totalWeight > 0 ? (totalShipmentCost / totalWeight) : 0;
-    let perKgUSD = totalWeight > 0 && exchangeRate > 0 ? (totalShipmentCost / totalWeight / exchangeRate) : 0;
+            document.querySelectorAll("#myTable tbody tr").forEach(row => {
+                let label = row.querySelector("td:nth-child(2)");
+                let amountCell = row.querySelector("td:nth-child(5)");
+                if (label && amountCell) {
+                    let labelText = label.textContent.trim();
+                    let amount = parseFloat(amountCell.textContent.replace(/,/g, '')) || 0;
+                    if (labelText === "Offals") {
+                        offalAmount = amount;
+                    } else {
+                        sumTZS += amount;
+                    }
+                }
+            });
 
-    let profitPerKgUSD = shrinkagePrice - perKgUSD;
-    let investorProfit = 0.00;
-    let netProfit = {{ $netProfit ?? 0 }};
-    let totalQty = {{ $purchaseSummary->qty ?? 1 }};
-    let profitShipment = netProfit * totalQty;
+            let exchangeRate = {{ $rate }};
+            let totalWeight = {{ collect($productSummary)->sum('total_weight') }};
+            let shrinkagePrice = 6.80;
 
-    document.querySelectorAll("#myTable tbody tr").forEach(row => {
-        let label = row.querySelector("td:nth-child(2)");
-        if (label) {
-            let labelText = label.textContent.trim();
-            switch (labelText) {
-                case "Total Shipment Cost":
-                    row.querySelector("td:nth-child(5)").textContent = totalShipmentCost.toLocaleString(undefined, { minimumFractionDigits: 2 });
-                    row.querySelector("td:nth-child(6)").textContent = sumUSD.toLocaleString(undefined, { minimumFractionDigits: 2 });
-                    break;
-                case "Per kg in shilling":
-                    row.querySelector("td:nth-child(5)").textContent = perKgShilling.toFixed(2);
-                    break;
-                case "Per kg in USD":
-                    row.querySelector("td:nth-child(5)").textContent = perKgUSD.toFixed(2);
-                    break;
-                case "Profit 1 kg in USD":
-                    row.querySelector("td:nth-child(5)").textContent = profitPerKgUSD.toFixed(2);
-                    break;
-                case "Investor Profit":
-                    row.querySelector("td:nth-child(4)").textContent = investorProfit.toFixed(2);
-                    break;
-                case "Profit 1 shipment":
-                    row.querySelector("td:nth-child(5)").textContent = formatMillions(profitShipment);
-                    break;
-            }
-        }
-    });
-});
-</script>
+            let totalShipmentCost = sumTZS - offalAmount;
+            let sumUSD = exchangeRate > 0 ? (totalShipmentCost / exchangeRate) : 0;
+            let perKgShilling = totalWeight > 0 ? (totalShipmentCost / totalWeight) : 0;
+            let perKgUSD = totalWeight > 0 && exchangeRate > 0 ? (totalShipmentCost / totalWeight / exchangeRate) : 0;
 
+            let profitPerKgUSD = shrinkagePrice - perKgUSD;
+            let investorProfit = 0.00;
+            let netProfit = {{ $netProfit ?? 0 }};
+            let totalQty = {{ $purchaseSummary->qty ?? 1 }};
+            let profitShipment = netProfit * totalQty;
 
-
-
-
+            document.querySelectorAll("#myTable tbody tr").forEach(row => {
+                let label = row.querySelector("td:nth-child(2)");
+                if (label) {
+                    let labelText = label.textContent.trim();
+                    switch (labelText) {
+                        case "Total Shipment Cost":
+                            row.querySelector("td:nth-child(5)").textContent = totalShipmentCost.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                            row.querySelector("td:nth-child(6)").textContent = sumUSD.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                            break;
+                        case "Per kg in shilling":
+                            row.querySelector("td:nth-child(5)").textContent = perKgShilling.toFixed(2);
+                            break;
+                        case "Per kg in USD":
+                            row.querySelector("td:nth-child(5)").textContent = perKgUSD.toFixed(2);
+                            break;
+                        case "Profit 1 kg in USD":
+                            row.querySelector("td:nth-child(5)").textContent = profitPerKgUSD.toFixed(2);
+                            break;
+                        case "Investor Profit":
+                            row.querySelector("td:nth-child(4)").textContent = investorProfit.toFixed(2);
+                            break;
+                        case "Profit 1 shipment":
+                            row.querySelector("td:nth-child(5)").textContent = formatMillions(profitShipment);
+                            break;
+                    }
+                }
+            });
+        });
+    </script>
 </body>
 </html>
