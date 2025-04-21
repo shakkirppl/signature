@@ -40,6 +40,10 @@ class ShipmentProfitController extends Controller
         ->selectRaw('SUM(purchase_conformation.item_total) as total_item_cost, SUM(purchase_conformation_detail.total_accepted_qty) as qty')
         ->first();
 
+        $purchaseSummaryTotal = PurchaseConformation::where('shipment_id', $id)
+        ->sum('item_total');
+        
+
         $exchangeRate = UsdToShilling::latest()->first();
         $rate = $exchangeRate ? $exchangeRate->shilling : 1; // Default to 1 if no rate found
 
@@ -64,7 +68,7 @@ class ShipmentProfitController extends Controller
 
     $sellingPriceUSD = 6.80;
 
- $shipmentCostTZS = $purchaseSummary->total_item_cost;
+ $shipmentCostTZS = $purchaseSummaryTotal;
  $expenseTotal=$expenseVouchers->sum('amount'); 
     // + $packagingValue 
     // + $shrinkageValue;
@@ -110,7 +114,7 @@ $investorProfit = 0.00;
         return view('shipment.shipment-profit-report', compact('shipment','productSummary',
         'purchaseSummary','rate','offalsales','expenseVouchers','shrinkageValue',
         'packagingValue','profitShipment','perKgUSD','investorProfit','netProfitUsd','netProfitShilling','netShipmentCostTZS','exchangeRateShilling',
-    'totalWeight','salesAmount'));
+    'totalWeight','salesAmount','purchaseSummaryTotal'));
     }
 
 

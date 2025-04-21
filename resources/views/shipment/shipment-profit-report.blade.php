@@ -92,10 +92,10 @@
                 <td></td>
                 <td>Meat purchase kilo rate</td>
                 <td>{{ $totalWeight }}</td>  
-                <td>{{ number_format($purchaseSummary->total_item_cost/$totalWeight, 2) }}</td>
-                <td>{{ number_format($purchaseSummary->total_item_cost, 2) }}</td>
+                <td>{{ number_format($purchaseSummaryTotal/$totalWeight, 2) }}</td>
+                <td>{{ number_format($purchaseSummaryTotal, 2) }}</td>
                 <td>
-                {{ number_format($purchaseSummary->total_item_cost/$exchangeRateShilling, 2) }}
+                {{ number_format($purchaseSummaryTotal/$exchangeRateShilling, 2) }}
                 </td>
             </tr>
         <!-- <tr>
