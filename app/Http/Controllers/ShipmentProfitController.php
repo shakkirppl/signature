@@ -17,7 +17,7 @@ class ShipmentProfitController extends Controller
         $shipment = Shipment::with(['weightCalculatorMaster.details.product'])
         ->findOrFail($id);
         $productSummary = [];
-
+        $calculatedweight=0;
         foreach ($shipment->weightCalculatorMaster as $weightCalculator) {
             foreach ($weightCalculator->details as $detail) {
                 $productName = $detail->product->product_name; // 
@@ -32,6 +32,7 @@ class ShipmentProfitController extends Controller
                
                 $productSummary[$productName]['total_number'] += $detail->total_accepted_qty;
                 $productSummary[$productName]['total_weight'] += $detail->weight;
+                $calculatedweight+= $detail->weight;
             }
         }
         $purchaseSummary = PurchaseConformation::where('shipment_id', $id)
@@ -41,11 +42,16 @@ class ShipmentProfitController extends Controller
 
         $exchangeRate = UsdToShilling::latest()->first();
         $rate = $exchangeRate ? $exchangeRate->shilling : 1; // Default to 1 if no rate found
-         
+
         $offalsales = OffalSales::where('shipment_id', $id)
         ->join('offal_sales_detail', 'offal_sales_detail.offal_sales_id', '=', 'offal_sales_master.id')
         ->selectRaw('SUM(offal_sales_detail.total) as total, SUM(offal_sales_detail.qty) as qty')
         ->first();
+    
+
+        $offalsalesTotal = OffalSales::where('shipment_id', $id)
+        ->sum('grand_total');
+
 
         $expenseVouchers = ExpenseVoucher::where('shipment_id', $id)
     ->join('account_heads', 'expense_voucher.coa_id', '=', 'account_heads.id')
@@ -58,18 +64,25 @@ class ShipmentProfitController extends Controller
 
     $sellingPriceUSD = 6.80;
 
-$shipmentCostTZS = $purchaseSummary->total_item_cost 
-    + $expenseVouchers->sum('amount') 
-    + $packagingValue 
-    + $shrinkageValue;
+ $shipmentCostTZS = $purchaseSummary->total_item_cost;
+ $expenseTotal=$expenseVouchers->sum('amount'); 
+    // + $packagingValue 
+    // + $shrinkageValue;
 
-$offalIncomeTZS = $offalsales ? $offalsales->total : 0;
+$offalIncomeTZS = $offalsalesTotal ? $offalsalesTotal : 0;
 
 // Total weight (assuming 8kg average per item)
 $totalQty = $purchaseSummary->qty ?? 1;
-$totalWeight = $totalQty * 8;
+$totalWeight = $calculatedweight;
+$netShipmentCostTZS = ($shipmentCostTZS+$expenseTotal)-$offalIncomeTZS;
 
-$netShipmentCostTZS = $shipmentCostTZS - $offalIncomeTZS;
+$usdShipmentCost=$netShipmentCostTZS/$exchangeRate->shilling;
+
+$shillingSalesAmount=$salesPayment->grand_total*$exchangeRate->shilling;
+$exchangeRateShilling=$exchangeRate->shilling;
+
+$netProfitUsd=$salesPayment->grand_total-$usdShipmentCost;
+$netProfitShilling=$shillingSalesAmount-$netShipmentCostTZS;
 
 // Cost per kg in TZS
 $perKgShilling = $totalWeight > 0 ? ($netShipmentCostTZS / $totalWeight) : 0;
@@ -77,21 +90,25 @@ $perKgShilling = $totalWeight > 0 ? ($netShipmentCostTZS / $totalWeight) : 0;
 // Selling price per kg in TZS
 $sellingPriceTZS = $sellingPriceUSD * $rate;
 
+
 // Shrinkage per kg in TZS
 $shrinkagePerKg = $totalWeight > 0 ? ($shrinkageValue / $totalWeight) : 0;
 
 // Profit per kg
-$perKgUSD = $totalWeight > 0 && $rate > 0 ? ($netShipmentCostTZS / $totalWeight / $rate) : 0;
+// $perKgUSD = $totalWeight > 0 && $rate > 0 ? ($netShipmentCostTZS / $totalWeight / $rate) : 0;
+$perKgUSD = $netProfitUsd / $totalWeight;
+
 
 // Final profit
-$profit1Shipment = $perKgUSD * $totalWeight;
+$profitShipment = $netProfitUsd;
 $investorProfit = 0.00;
 
 
     
         return view('shipment.shipment-profit-report', compact('shipment','productSummary',
         'purchaseSummary','rate','offalsales','expenseVouchers','shrinkageValue',
-        'packagingValue','profit1Shipment','perKgUSD','investorProfit'));
+        'packagingValue','profitShipment','perKgUSD','investorProfit','netProfitUsd','netProfitShilling','netShipmentCostTZS','exchangeRateShilling',
+    'totalWeight'));
     }
 
 
