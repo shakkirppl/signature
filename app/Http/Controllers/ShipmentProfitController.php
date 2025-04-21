@@ -81,6 +81,8 @@ $usdShipmentCost=$netShipmentCostTZS/$exchangeRate->shilling;
 $shillingSalesAmount=$salesPayment->grand_total*$exchangeRate->shilling;
 $exchangeRateShilling=$exchangeRate->shilling;
 
+$salesAmount=$salesPayment->grand_total;
+
 $netProfitUsd=$salesPayment->grand_total-$usdShipmentCost;
 $netProfitShilling=$shillingSalesAmount-$netShipmentCostTZS;
 
@@ -108,7 +110,7 @@ $investorProfit = 0.00;
         return view('shipment.shipment-profit-report', compact('shipment','productSummary',
         'purchaseSummary','rate','offalsales','expenseVouchers','shrinkageValue',
         'packagingValue','profitShipment','perKgUSD','investorProfit','netProfitUsd','netProfitShilling','netShipmentCostTZS','exchangeRateShilling',
-    'totalWeight'));
+    'totalWeight','salesAmount'));
     }
 
 

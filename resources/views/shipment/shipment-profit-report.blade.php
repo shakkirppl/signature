@@ -175,14 +175,21 @@
             <td>{{($netShipmentCostTZS/$totalWeight)/$exchangeRateShilling}}</td>
             <td></td>
         </tr>
-
+        <tr>
+    <td></td>
+    <td><strong> Sales Amount </strong></td>
+    <td></td>
+    <td>{{ number_format($salesAmount, 2) }}</td>
+    <td>{{ number_format($salesAmount * $exchangeRateShilling, 2) }}</td>
+    <td></td>
+</tr>
         <tr>
     <td></td>
     <td><strong> Selling price in USD</strong></td>
     <td></td>
+    <td></td>
     <td>{{ number_format($packagingValue, 2) }}</td>
     <td>{{ number_format(($packagingValue * ($shrinkageValue / 100)), 2) }}</td>
-    <td></td>
 </tr>
 
         <tr> <td></td>
