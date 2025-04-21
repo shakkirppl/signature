@@ -152,8 +152,8 @@
             <td><strong>Total Shipment Cost </strong></td>
             <td></td>
             <td ></td>
-            <td><strong>{{$netShipmentCostTZS}}</strong></td>
-            <td>{{$netShipmentCostTZS/$exchangeRateShilling}}</td>
+            <td><strong>{{ number_format($netShipmentCostTZS, 2) }} {{$}}</strong></td>
+            <td>{{ number_format($netShipmentCostTZS / $exchangeRateShilling, 2) }}</td>
         </tr>
 
         <tr>
