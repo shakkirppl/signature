@@ -17,8 +17,8 @@
 
 .a4-container {
     width: 210mm;
-    height: 297mm;
-    padding: 0.5mm; /* Decreased from 8mm */
+    /* height: 295mm; */
+    padding: 0.5mm;
     margin: 0 auto;
     box-sizing: border-box;
     background-color: white;
@@ -62,7 +62,7 @@
 }
 
 .logo {
-    height: 100px; /* or any height you want */
+    height: 90px; /* or any height you want */
     max-width: 160px;
     display: block;
     margin: 5px auto 0 auto;
@@ -92,23 +92,62 @@
     text-align: center;
 }
 
+.packing-list th {
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important; /* BLACK bottom border */
+    border-left: 1px solid black !important;
+    border-right: 1px solid black !important;
+  
+    text-align: left;
+  
+    vertical-align: middle;
+}
+
+.null-td {
+    border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+   
+    text-align: left;
+ 
+    vertical-align: middle;
+   
+}
+
+.no-border-row td {
+ border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+ 
+    text-align: left;
+  
+    vertical-align: middle;
+
+}
+
+
+
 @media print {
-    * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-    html, body {
-        overflow: hidden;
-        margin: 0;
-        height: 297mm;
+    body, .a4-container {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background-image: url("{{ asset('image/Back.jpg') }}") !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+        background-position: top center !important;
     }
 
-    .a4-container {
-        page-break-inside: avoid;
-        height: 297mm;
-        max-height: 297mm;
-        overflow: hidden;
-  padding: 0.5mm !important;    }
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
+    }
+
+   
+
+
 
     button {
         display: none !important;
@@ -117,7 +156,7 @@
 
 @page {
     size: A4;
-    margin: 2mm; /* Was previously 2mm, keep or decrease to 0 if needed */
+    margin: 3mm; /* Was previously 2mm, keep or decrease to 0 if needed */
 }
 
     </style>
@@ -130,7 +169,7 @@
 
         <div class="company-header">
     <div>
-        <img class="logo" src="{{ url('image/signature-logo.jpg') }}" alt="Company Logo">
+        <img class="logo" src="{{ url('public/image/signature-logo.png') }}" alt="Company Logo">
     </div>
 
     <div class="company-info">
@@ -145,7 +184,7 @@
         <strong>Tel:</strong> +255 272 97 97 97 <br>
         <strong>Tel:</strong> +255 69 666 6606 <br>
         <a href="https://www.signaturetz.com">www.signaturetz.com</a> <br>
-        <strong>Email:</strong> <a href="mailto:info@signaturetz.com">info@signaturetz.com</a>
+        <strong>Email:</strong> <a href="sales@signaturetz.com">sales@signaturetz.com</a>
     </div>
 </div>
 
@@ -174,8 +213,8 @@
             <tr>
                 <td colspan="2">
                     <strong>SIGNATURE TRADING LIMITED</strong><br>
-                    P.O Box 1506, Plot no.22, Block 7, Condo building<br>
-                    Arusha, Tanzania<br>
+                    P.O Box 1506, Plot no.147<br>
+                    Fire Road, Arusha<br>
                     Tel. +255 272 97 97 97 / 69 666 6606<br>
                     Email: <strong>sales@signaturetz.com</strong>
                 </td>
@@ -183,7 +222,7 @@
                     <strong>TAYBAT ALBAHR</strong><br>
                     UMM AL DOOM STREET, MUAITHER<br>
                     P.O BOX: 96393, DOHA, QATAR<br>
-                    Tel. +974 31075459
+                    Tel. +974 30691279
                 </td>
             </tr>
 
@@ -202,16 +241,17 @@
                 </td>
             </tr>
 
-            <tr>
-                <th class="desc-col">Description</th>
+            <tr >
+                <th class="desc-col" >Description</th>
                 <th class="pack-col">Packaging</th>
                 <th class="weight-col">Quantity(kg)</th>
                 <th class="price-col">Price (USD)</th>
                 <th class="par-col">Par</th>
                 <th class="total-col">Total</th>
+                
             </tr>
             @foreach ($products as $product)
-            <tr>
+            <tr class="no-border-row">
                 <td>{{ $product->description }} <br>{{ $product->hsn_code }}</td>
                 <td class="packaging">0.00</td>
                 <td class="quantity">{{ number_format($product->quantity, 2) }}</td>
@@ -221,6 +261,14 @@
             </tr>
             @endforeach
             <tr>
+                <td  class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+                <td class="null-td"></td>
+            </tr>
+            <tr>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
@@ -229,15 +277,7 @@
                 <td class="null-td"></td>
             </tr>
             <tr>
-                <td></td>
                 <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
-            <tr>
-                <td></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
@@ -246,7 +286,7 @@
             </tr>
           
             <tr>
-           <td class="bold">  <strong>Country of Origin: TANZANIA </strong></td>
+           <td class="bold null-td">  <strong>Country of Origin: TANZANIA </strong></td>
            <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
@@ -254,7 +294,7 @@
                 <td class="null-td"></td>
             </tr>
             <tr>
-            <td><strong>Country of Export: TANZANIA</strong></td>
+            <td class="null-td"><strong>Country of Export: TANZANIA</strong></td>
             <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
@@ -285,29 +325,39 @@
                 <td></td>
                 <td><strong>{{ number_format($totalAmount, 2) }}</td>
             </tr>
-            <tr>
-                <td colspan="6"><strong>Shrinkage : {{ $order->shrinkage }} %</strong></td>
-            </tr>
-            <tr class="subtotal">
-                <td><strong>Subtotal </strong></td>
-                <td><strong>{{ number_format($totalPackaging, 2) }}</strong></td>
-                <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
-                <td class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>
-                <td></td>
-                <td><strong>{{ number_format($totalAmount, 2) }}</td>
-            </tr>
+            @php
+    $shrinkagePercent = floatval($order->shrinkage);
+    $shrinkageAmount = ($shrinkagePercent > 0) ? ($totalAmount * $shrinkagePercent / 100) : 0;
+    $adjustedTotalAmount = $totalAmount - $shrinkageAmount;
+@endphp
+
+<tr>
+    <td colspan="5"><strong>Shrinkage : {{ $order->shrinkage }} %</strong></td>
+    <td ><strong>{{ number_format($shrinkageAmount, 2) }}</strong></td>
+</tr>
+
+<tr class="subtotal">
+    <td><strong>Subtotal (After Shrinkage)</strong></td>
+    <td><strong>{{ number_format($totalPackaging, 2) }}</strong></td>
+    <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
+    <td colspan="2" class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>
+   
+    <td><strong>{{ number_format($adjustedTotalAmount, 2) }}</strong></td>
+</tr>
+
+
 
             <tr class="">
                 <td colspan="5" class="" style="text-align: left;">
                 <div class="row">
                 <h3>Bank Details:</h3>
             <p>
-                <strong>USD Account Code:</strong> 42710052781 (USD) <br>
-                <strong>Swift Code:</strong> NMIBTZTZ Branch Code: 016 <br>
-                <strong>Bank Account Owner:</strong> Signature Trading Limited <br>
-                <strong>Bank Name:</strong> NMB BANK PLC <br>
+                <strong>USD Account Code: 42710052781 (USD) </strong> <br>
+                Swift Code:<strong> NMIBTZTZ </strong> Branch Code: 016 <br>
+                Bank Account Owner: Signature Trading Limited <br>
+                Bank Name:<strong> NMB BANK PLC </strong><br>
                 <strong>Bank Address:</strong> NMB Bank - Arusha Market Branch <br>
-                P.O BOX
+                P.O BOX :11168,Arusha,Tanzania
                         </div>
                 </td>
                 
@@ -320,14 +370,13 @@
     <td class="yellow-section bold">TOTAL KG</td>
     <td>{{ number_format($total_kg, 2) }}</td>
     <td  colspan="3"style=" text-align: right; border: 1px solid #000;">TOTAL USD</td>
-    <td style="text-align: center; border: 1px solid #000; font-weight: bold;">{{ number_format($totalAmount, 0) }}</td>
+    <td style="text-align: center; border: 1px solid #000; font-weight: bold;">{{ number_format($adjustedTotalAmount, 2) }}</td>
 </tr>
 
 <tr>
     <td colspan="6">
-        <div style="text-align: center; font-size: 14px; padding: 10px;">
-            <i>The deducted Withholding tax amounts remain payable to Signature Trading Limited until TRA Withholding Tax Certificate 
-            is presented as proof of payment.</i>
+        <div style="text-align: center; font-size: 14px; padding: 10px;  color: green;">
+            <i>YOUR TRUSTED PARTNER IN MEAT EXPORTS,<strong> SIGNATURE TRADING LTD</strong>: QATAR, TANZANIA AND ETHIOPIA.</i>
         </div>
     </td>
 </tr>
@@ -339,10 +388,10 @@
 
 
 
-<div class="image-container">
-<img src="{{ url('image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
+<div class="image-container" style="display: flex; justify-content: space-between; align-items: center;">
+<img src="{{ url('public/image/stamp1.png') }}" alt="Company Stamp" class="stamp" style="width: 200px;height: 150px;margin-left: -240px; margin-top: -30px;">
     <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
-    <img src="{{url('image/scanner.png') }}" alt="QR Scanner">
+    <img src="{{url('public/image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
 </div>
 
 <button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">print</button>
