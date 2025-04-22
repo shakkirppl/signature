@@ -169,7 +169,7 @@
 
         <div class="company-header">
     <div>
-        <img class="logo" src="{{ url('public/image/signature-logo.png') }}" alt="Company Logo">
+        <img class="logo" src="{{ url('image/signature-logo.png') }}" alt="Company Logo">
     </div>
 
     <div class="company-info">
@@ -389,9 +389,9 @@
 
 
 <div class="image-container" style="display: flex; justify-content: space-between; align-items: center;">
-<img src="{{ url('public/image/stamp1.png') }}" alt="Company Stamp" class="stamp" style="width: 200px;height: 150px;margin-left: -240px; margin-top: -30px;">
+<img src="{{ url('image/stamp1.png') }}" alt="Company Stamp" class="stamp" style="width: 200px;height: 150px;margin-left: -240px; margin-top: -30px;">
     <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
-    <img src="{{url('public/image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
+    <img src="{{url('image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
 </div>
 
 <button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">print</button>
