@@ -32,12 +32,7 @@
   </a>
 </li>
 
-<li class="nav-item">
-  <a class="nav-link" href="{{URL::to('shipment-index')}}">
-  <i class="mdi mdi-group menu-icon"></i> 
-  <span class="menu-title">Shipment</span>
-  </a>
-</li> 
+
 
 
 @endif
@@ -66,6 +61,13 @@
             </div>
             
           </li>
+
+          <li class="nav-item">
+  <a class="nav-link" href="{{URL::to('shipment-index')}}">
+  <i class="mdi mdi-group menu-icon"></i> 
+  <span class="menu-title">Shipment</span>
+  </a>
+</li> 
           @endif
 
  
@@ -124,7 +126,7 @@
 <!--  -->
 
 
-@if($user->designation_id == 1 || $user->designation_id == 2|| $user->designation_id == 8 || $user->designation_id == 5)
+@if($user->designation_id == 1 || $user->designation_id == 2|| $user->designation_id == 8 || $user->designation_id == 5 || $user->designation_id == 3)
       <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#production" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -133,10 +135,10 @@
             </a>
             <div class="collapse" id="production">
               <ul class="nav flex-column sub-menu">
-              @if($user->designation_id == 1 || $user->designation_id == 2 || $user->designation_id == 5)
+              @if($user->designation_id == 1 || $user->designation_id == 2 || $user->designation_id == 5|| $user->designation_id == 3)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('skinning-index')}}">Skinning</a></li> 
               @endif
-              @if($user->designation_id == 1 || $user->designation_id == 8 || $user->designation_id == 5)
+              @if($user->designation_id == 1 || $user->designation_id == 8 || $user->designation_id == 5|| $user->designation_id == 3)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/weight-calculator')}}">Weight Calculator</a></li> 
               @endif
 

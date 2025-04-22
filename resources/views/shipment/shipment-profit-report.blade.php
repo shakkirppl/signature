@@ -221,30 +221,8 @@
             <td>{{ number_format($netProfitUsd*$exchangeRateShilling, 2, '.', ',') }}</td>
             <td>{{ number_format($netProfitUsd, 2, '.', ',') }}</td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><strong>1 shipment expecting profit 10,000 * 0.97 cent</strong></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><strong>Monthly expecting shipment 8</strong></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+       
+       
        
 
        

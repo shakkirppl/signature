@@ -1,6 +1,9 @@
 
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -36,7 +39,7 @@
     <a href="{{ route('shipmentprofit.report', $shipment->id) }}" class="btn btn-info btn-sm" style="display: inline-block;">
         <i class="mdi mdi-file-document"></i> Report
     </a>
-    
+    @if($user->designation_id == 1)
     <form action="{{ route('shipment.destroy', $shipment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to remove this shipment?');" style="display: inline-block; margin-left: 5px;">
         @csrf
         @method('DELETE')
@@ -44,6 +47,7 @@
             <i class="mdi mdi-delete"></i> Remove
         </button>
     </form>
+    @endif
 </td>
 
                                 </tr>
