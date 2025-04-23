@@ -59,12 +59,14 @@ class ShipmentProfitController extends Controller
 
 
         $expenseVouchers = ExpenseVoucher::where('shipment_id', $id)
-    ->join('account_heads', 'expense_voucher.coa_id', '=', 'account_heads.id')
-    ->select('account_heads.name', 'expense_voucher.amount')
-    ->get();
+        ->join('account_heads', 'expense_voucher.coa_id', '=', 'account_heads.id')
+        ->select('account_heads.name', 'expense_voucher.amount', 'expense_voucher.coa_id')
+        ->get();
+    
 
-    $investorProfit = $expenseVouchers->firstWhere('name', 'Investor Profit');
-$investorProfitAmount = $investorProfit ? $investorProfit->amount : 0;
+        $investorProfitRow = $expenseVouchers->firstWhere('coa_id', 200);
+        $investorProfitAmount = $investorProfitRow ? $investorProfitRow->amount : 0;
+        
 
     $salesPayment = SalesPayment::where('shipment_id', $id)->first();
     $salesPaymentId = $salesPayment ? $salesPayment->id : null;

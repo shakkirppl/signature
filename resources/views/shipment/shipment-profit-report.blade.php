@@ -225,9 +225,7 @@
             <td></td>
             <td><strong>Investor Profit</strong></td>
             <td></td>
-            @if($investorProfitAmount > 0)
-    <td>{{ number_format($investorProfitAmount, 2) }}</td>
-@endif
+            <td>{{ number_format($investorProfitAmount, 2) }}</td>
                    <td>  {{ number_format(($netProfitUsd / $totalWeight) - $investorProfitAmount, 2) }}</td>
 
             
