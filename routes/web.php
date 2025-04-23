@@ -381,6 +381,7 @@ Route::get('supplier-ledger', [OutstandingController::class, 'supplierLedger'])-
 Route::get('customer-ledger', [OutstandingController::class, 'customerLedger'])->name('customer.ledger');
 Route::get('supplier-outstanding', [OutstandingController::class, 'supplierOutstanding'])->name('supplier.outstanding');
 Route::get('customer-outstanding', [OutstandingController::class, 'customerOutstanding'])->name('customer.outstanding');
+Route::get('/supplier-outstanding/print', [OutstandingController::class, 'supplierOutstandingPrint'])->name('supplier.outstanding.print');
 
 
 

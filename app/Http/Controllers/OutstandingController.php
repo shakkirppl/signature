@@ -139,6 +139,30 @@ public function customerOutstanding()
     return view('customer_outstanding.index', compact('outstandings', 'customers'));
 }
 
+public function supplierOutstandingPrint()
+{
+    $outstandings = Outstanding::select(
+            'account_id',
+            \DB::raw('SUM(payment) as total_payment'),
+            \DB::raw('SUM(receipt) as total_receipt')
+        )
+        ->where('account_type', 'supplier')
+        ->groupBy('account_id')
+        ->get();
+
+    $suppliers = Supplier::whereIn('id', $outstandings->pluck('account_id'))->pluck('name', 'id');
+
+    foreach ($outstandings as $outstanding) {
+        if ($outstanding->total_payment > $outstanding->total_receipt) {
+            $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+        } else {
+            $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+        }
+    }
+
+    return view('supplier_outstanding.print', compact('outstandings', 'suppliers'));
+}
+
 
     
 }

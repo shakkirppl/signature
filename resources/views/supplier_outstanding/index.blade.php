@@ -5,8 +5,12 @@
     <div class="col-12 grid-margin">
       <div class="card">
         <div class="card-body">
+
           <h4 class="card-title">Supplier Outstanding</h4>
           <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+          <a href="{{ route('supplier.outstanding.print') }}" target="_blank" class="btn btn-primary btn-sm mb-3">
+  <i class="mdi mdi-printer"></i> Print
+</a>
             <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
               <thead style="background-color: #d6d6d6; color: #000;">
                 <tr>

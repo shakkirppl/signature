@@ -49,16 +49,35 @@
             .table-bordered td {
                 border: 1px solid #000 !important;
             }
+            .print-logo {
+        display: block !important;
+        position: absolute;
+        top: 10mm;
+        left: 0mm;
+        padding-left: 5mm;
+    }
+
+    body {
+        margin-left: 20mm; /* leave room for the logo */
+        margin-top: 30mm; 
+    }
         }
 
         /* Optional: improve spacing on screen view as well */
         th, td {
             vertical-align: middle;
         }
+        .print-logo {
+    display: none;
+}
     </style>
 </head>
 <body>
     <div class="container mt-4">
+    <div class="print-logo text-center">
+    <img src="{{ url('image/signature-logo.png') }}" class="logo">
+
+        </div>
         <h4 class="card-title">Shipment Report - {{ $shipment->shipment_no }}</h4>
         <div class="mb-3 text-end no-print">
             <button onclick="window.print()" class="btn btn-primary">
@@ -87,12 +106,12 @@
                 </tr>
             </thead>
             <tbody>
-    
+            @php $slno = 1; @endphp
     <tr>
-                <td></td>
+                <td>{{ $slno++ }}</td>
                 <td>Meat purchase kilo rate</td>
                 <td>{{ $totalWeight }}</td>  
-                <td>{{ number_format($purchaseSummaryTotal/$totalWeight, 2) }}</td>
+                <td> {{ $totalWeight != 0 ? number_format($purchaseSummaryTotal / $totalWeight, 2) : '0.00' }}</td>
                 <td>{{ number_format($purchaseSummaryTotal, 2) }}</td>
                 <td>
                 {{ number_format($purchaseSummaryTotal/$exchangeRateShilling, 2) }}
@@ -108,7 +127,7 @@
         </tr> -->
         @foreach($expenseVouchers as $expense)
 <tr>
-    <td></td>
+    <td>{{ $slno++ }}</td>
     <td>{{ $expense->name }}</td> 
     <td></td> 
     <td>{{ number_format($expense->amount/$totalWeight, 2) }}</td>
@@ -130,7 +149,7 @@
     <td></td>
     <td>Offals</td>
     <td>{{ $offalsales->qty ?? 0 }}</td>
-    <td>{{ number_format($offalsales->total/$offalsales->qty ?? 0, 2) }}</td>
+    <td>{{ $offalsales->qty != 0 ? number_format($offalsales->total / $offalsales->qty, 2) : '0.00' }}</td>
     <td>{{ number_format(($offalsales->total ?? 0), 2) }}</td>
     <td>{{ number_format(($offalsales->total/$exchangeRateShilling ?? 0), 2) }}
     </td>
@@ -162,7 +181,7 @@
             <td><strong>Per kg in shilling</strong></td>
             <td></td>
             <td></td>
-            <td><strong>{{$netShipmentCostTZS/$totalWeight}}</strong></td>
+            <td><strong>{{ $totalWeight != 0 ? number_format($netShipmentCostTZS / $totalWeight, 2) : '0.00' }}</strong></td>
             <td></td>
         </tr>
        
@@ -187,9 +206,10 @@
     <td></td>
     <td><strong> Selling price in USD</strong></td>
     <td></td>
+    <td>{{ $averageRateFormatted }}</td>
+    <td>{{ number_format(($averageRateFormatted * ($shrinkageValue / 100)), 2) }}</td>
     <td></td>
-    <td>{{ number_format($packagingValue, 2) }}</td>
-    <td>{{ number_format(($packagingValue * ($shrinkageValue / 100)), 2) }}</td>
+    
 </tr>
 
         <tr> <td></td>
@@ -205,8 +225,10 @@
             <td></td>
             <td><strong>Investor Profit</strong></td>
             <td></td>
-             <td>{{ number_format($investorProfit, 2) }}</td>
-                   <td></td>
+            @if($investorProfitAmount > 0)
+    <td>{{ number_format($investorProfitAmount, 2) }}</td>
+@endif
+                   <td>  {{ number_format(($netProfitUsd / $totalWeight) - $investorProfitAmount, 2) }}</td>
 
             
             <td></td>

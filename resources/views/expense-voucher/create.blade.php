@@ -137,19 +137,26 @@
    
 </script>
 <script>
-        function formatNumber(input) {
-            // Remove any existing formatting
-            let value = input.value.replace(/,/g, '');
-            
-            // Convert to a number
-            let number = parseFloat(value);
-            
-            // Format with commas
-            if (!isNaN(number)) {
-                input.value = new Intl.NumberFormat('en-US').format(number);
-            }
-        }
-    </script>
+function formatNumber(input) {
+    let value = input.value;
+
+    // Remove any character except digits and decimal point
+    value = value.replace(/[^0-9.]/g, '');
+
+    // Allow only one decimal point
+    const parts = value.split('.');
+    if (parts.length > 2) {
+        value = parts[0] + '.' + parts[1]; // Keep only the first decimal
+    }
+
+    // Format the number part before the decimal with commas
+    const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+    // Combine with decimal part if exists
+    input.value = parts.length > 1 ? `${integerPart}.${parts[1]}` : integerPart;
+}
+</script>
+
     <script>
 document.addEventListener('DOMContentLoaded', function () {
     const dateInput = document.getElementById('date');

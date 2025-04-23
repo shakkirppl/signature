@@ -9,6 +9,7 @@ use App\Models\UsdToShilling;
 use App\Models\OffalSales;
 use App\Models\ExpenseVoucher;
 use App\Models\SalesPayment;
+use App\Models\SalesPaymentDetail;
 class ShipmentProfitController extends Controller
 {
     public function shipmentprofit($id)
@@ -62,9 +63,18 @@ class ShipmentProfitController extends Controller
     ->select('account_heads.name', 'expense_voucher.amount')
     ->get();
 
+    $investorProfit = $expenseVouchers->firstWhere('name', 'Investor Profit');
+$investorProfitAmount = $investorProfit ? $investorProfit->amount : 0;
+
     $salesPayment = SalesPayment::where('shipment_id', $id)->first();
+    $salesPaymentId = $salesPayment ? $salesPayment->id : null;
+
     $shrinkageValue = $salesPayment ? $salesPayment->shrinkage : 0; 
     $packagingValue = $salesPayment ? $salesPayment->packaging : 0;
+    $averageRate = $salesPaymentId 
+    ? SalesPaymentDetail::where('sales_payment_id', $salesPaymentId)->avg('rate') 
+    : 0;
+    $averageRateFormatted = number_format($averageRate, 2);
 
     $sellingPriceUSD = 6.80;
 
@@ -102,7 +112,10 @@ $shrinkagePerKg = $totalWeight > 0 ? ($shrinkageValue / $totalWeight) : 0;
 
 // Profit per kg
 // $perKgUSD = $totalWeight > 0 && $rate > 0 ? ($netShipmentCostTZS / $totalWeight / $rate) : 0;
-$perKgUSD = $netProfitUsd / $totalWeight;
+// $perKgUSD = $netProfitUsd / $totalWeight;
+$perKgUSD = $totalWeight != 0 ? $netProfitUsd / $totalWeight : null;
+
+
 
 
 // Final profit
@@ -114,7 +127,7 @@ $investorProfit = 0.00;
         return view('shipment.shipment-profit-report', compact('shipment','productSummary',
         'purchaseSummary','rate','offalsales','expenseVouchers','shrinkageValue',
         'packagingValue','profitShipment','perKgUSD','investorProfit','netProfitUsd','netProfitShilling','netShipmentCostTZS','exchangeRateShilling',
-    'totalWeight','salesAmount','purchaseSummaryTotal'));
+    'totalWeight','salesAmount','purchaseSummaryTotal','investorProfitAmount','averageRateFormatted'));
     }
 
 
