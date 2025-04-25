@@ -5,53 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Packing List</title>
     <style>
-   
+   /*  */
    body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-    font-size: 11px; /* Reduce overall font size */
+    font-size: 11px;
 }
 
 .a4-container {
     width: 210mm;
-    height: 297mm;
-    padding: 8px; /* Reduce padding */
+    /* height: 295mm; */
+    padding: 0.5mm;
     margin: 0 auto;
     box-sizing: border-box;
     background-color: white;
     overflow: hidden;
     background-image: url("{{ asset('image/Back.jpg') }}");
-    background-size: cover; 
-    background-position: center;
+    background-size: cover;
+    background-position: center top;
     background-repeat: no-repeat;
+    position: relative;
+    page-break-after: always;
 }
 
 .packing-list {
     width: 100%;
     border-collapse: collapse;
-    font-size: 11px; /* Slightly reduced */
+    font-size: 11px;
     border: 1px solid black;
 }
 
 .packing-list th, .packing-list td {
-    border: 1px solid #333; /* Dark border for normal rows */
+    border: 1px solid #333;
     padding: 5px;
     text-align: left;
-    height: 16px;
+    height: 18px;
     vertical-align: middle;
 }
 
-/* Light shadow border for .null-td rows */
-.null-td {
-   
-}
-
-
 .header {
-    font-size: 18px; /* Reduce size */
+    font-size: 18px;
     font-weight: bold;
     text-align: center;
     padding: 6px;
@@ -62,55 +58,105 @@
     justify-content: space-between;
     align-items: center;
     padding: 6px;
-    font-size: 11px; /* Reduced font size */
+    font-size: 14px;
 }
 
 .logo {
-    max-width: 100px; /* Reduce logo size */
+    height: 90px; /* or any height you want */
+    max-width: 160px;
+    display: block;
+    margin: 5px auto 0 auto;
+    position: relative;
+    z-index: 2;
+    object-fit: contain; /* Optional: keeps image from stretching */
 }
+
 
 .image-container {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 350px; /* Reduce width */
+    max-width: 350px;
     margin: 10px auto;
-    gap: 100px; /* Reduce spacing */
+    gap: 70px;
 }
 
 .image-container img {
-    width: 50px; /* Reduce image sizes */
+    width: 50px;
     height: 50px;
 }
 
-/* Ensure total row is visible and clear */
 .total-row td {
     font-weight: bold;
     text-align: center;
 }
 
-/* Prevent content from overflowing and ensure single-page print */
+.packing-list th {
+    border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important; /* BLACK bottom border */
+    border-left: 1px solid black !important;
+    border-right: 1px solid black !important;
+  
+    text-align: left;
+  
+    vertical-align: middle;
+}
+
+.null-td {
+    border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+   
+    text-align: left;
+ 
+    vertical-align: middle;
+   
+}
+
+.no-border-row td {
+ border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+ 
+    text-align: left;
+  
+    vertical-align: middle;
+
+}
+
+
+
 @media print {
-    * {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+    body, .a4-container {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        background-image: url("{{ asset('image/Back.jpg') }}") !important;
+        background-size: cover !important;
+        background-repeat: no-repeat !important;
+        background-position: top center !important;
     }
 
-    .a4-container {
-        transform: scale(0.85); /* Scale down slightly */
-        transform-origin: top;
-        page-break-inside: avoid; /* Avoid breaking tables across pages */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 100% !important;
     }
+
+   
+
+
 
     button {
-        display: none !important; /* Hide print button */
+        display: none !important;
     }
 }
 
 @page {
     size: A4;
-    margin: 2mm; /* Reduce margins for more space */
+    margin: 3mm; /* Was previously 2mm, keep or decrease to 0 if needed */
 }
 
 
@@ -239,14 +285,14 @@
             </tr>
           
             <tr>
-           <td class="bold">  <strong>Country of Origin: TANZANIA </strong></td>
+           <td class="bold null-td" >  <strong>Country of Origin: TANZANIA </strong></td>
            <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
             </tr>
             <tr>
-            <td><strong>Country of Export: TANZANIA</strong></td>
+            <td class="null-td"><strong>Country of Export: TANZANIA</strong></td>
             <td class="null-td"></td>
                 <td class="null-td"></td>
                 <td class="null-td"></td>
@@ -270,7 +316,7 @@
 
 
             <tr>
-                <td class="bold">Total</td>
+                <td class="bold ">Total</td>
                 <td>{{ number_format($totalPackaging, 2) }}</td>
                 <td>{{ number_format($totalWeight, 2) }}</td>
                 <td></td>
@@ -345,10 +391,11 @@
 
 
 
-<div class="image-container">
-<img src="{{ url('image/stamp.png') }}" alt="Company Stamp" class="stamp" style="width: 400px;height: 100px;">
+
+<div class="image-container" style="display: flex; justify-content: space-between; align-items: center;">
+<img src="{{ url('image/stamp1.png') }}" alt="Company Stamp" class="stamp" style="width: 250px;height: 160px;margin-left: -240px; margin-top: -20px;">
     <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px;">
-    <img src="{{ url('image/scanner.png') }}" alt="QR Scanner">
+    <img src="{{url('image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
 </div>
 
 <button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">print</button>
