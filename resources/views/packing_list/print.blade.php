@@ -147,6 +147,11 @@
 
    
 
+    .packing-list {
+   
+   border: 1px solid black;
+}
+
 
 
     button {
@@ -305,13 +310,7 @@
                 <td class="null-td"></td>
                 <td class="null-td"></td>
             </tr>
-            <tr>
-            <td class="null-td"></td>
-            <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
+           
          
 
 
