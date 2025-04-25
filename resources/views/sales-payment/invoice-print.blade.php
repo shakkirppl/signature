@@ -365,7 +365,7 @@
 
 <tr>
     <td colspan="6">
-        <div style="text-align: center; font-size: 13px;  color: green;">
+        <div style="text-align: center; font-size: 11px;  color: green;">
             <i>YOUR TRUSTED PARTNER IN MEAT EXPORTS,<strong> SIGNATURE TRADING LTD</strong>: QATAR, TANZANIA AND ETHIOPIA.</i>
         </div>
     </td>
