@@ -42,7 +42,7 @@
     border: 1px solid #333;
     padding: 5px;
     text-align: left;
-    height: 18px;
+    height: 17px;
     vertical-align: middle;
 }
 
