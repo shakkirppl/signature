@@ -47,10 +47,11 @@
 }
 
 .header {
-    font-size: 18px;
+    font-size: 35px;
     font-weight: bold;
-    text-align: center;
-    padding: 6px;
+   
+    padding: 10px;
+    margin-right: -70px;
 }
 
 .company-header {
@@ -359,13 +360,7 @@
                 <td class="null-td"></td>
                 <td class="null-td"></td>
             </tr>
-            <tr>
-            <td class="null-td"></td>
-            <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
+           
           
            
     

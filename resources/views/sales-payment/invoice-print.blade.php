@@ -46,11 +46,13 @@
     vertical-align: middle;
 }
 
+
 .header {
-    font-size: 18px;
+    font-size: 35px;
     font-weight: bold;
-    text-align: center;
-    padding: 6px;
+   
+    padding: 10px;
+    margin-right: -70px;
 }
 
 .company-header {
