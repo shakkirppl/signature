@@ -176,7 +176,7 @@
         <strong>Signature Trading Ltd</strong><br>
         P.O Box 1506, Plot No. 147<br>
         Fire Road, Arusha<br>
-        United Republic Of Tanzania<br>
+        <strong>   United Republic Of Tanzania</strong><br>
     </div>
 
     <div class="company-info-right">
@@ -184,7 +184,7 @@
         <strong>Tel:</strong> +255 272 97 97 97 <br>
         <strong>Tel:</strong> +255 69 666 6606 <br>
         <a href="https://www.signaturetz.com">www.signaturetz.com</a> <br>
-        <strong>Email:</strong> <a href="mailto:info@signaturetz.com">info@signaturetz.com</a>
+        <strong>Email:</strong> <a href="sales@signaturetz.com">sales@signaturetz.com</a>    
     </div>
 </div>
 
@@ -380,10 +380,9 @@
 </tr>
 
 <tr>
-    <td colspan="5">
-        <div style="text-align: center; font-size: 14px; padding: 10px;">
-            <i>The deducted Withholding tax amounts remain payable to Signature Trading Limited until TRA Withholding Tax Certificate 
-            is presented as proof of payment.</i>
+    <td colspan="6">
+        <div style="text-align: center; font-size: 14px; padding: 10px;  color: green;">
+            <i>YOUR TRUSTED PARTNER IN MEAT EXPORTS,<strong> SIGNATURE TRADING LTD</strong>: QATAR, TANZANIA AND ETHIOPIA.</i>
         </div>
     </td>
 </tr>
