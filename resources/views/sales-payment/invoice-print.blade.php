@@ -42,7 +42,7 @@
     border: 1px solid #333;
     padding: 5px;
     text-align: left;
-    height: 18px;
+    height: 15px;
     vertical-align: middle;
 }
 
@@ -268,22 +268,7 @@
                 <td class="null-td"></td>
                 <td class="null-td"></td>
             </tr>
-            <tr>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
-            <tr>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
+           
           
             <tr>
            <td class="bold null-td">  <strong>Country of Origin: TANZANIA </strong></td>
@@ -301,20 +286,7 @@
                 <td class="null-td"></td>
                 <td class="null-td"></td>
             </tr>
-            <td class="null-td"></td>
-            <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
-            <td class="null-td"></td>
-            <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
+          
          
 
             <tr>
