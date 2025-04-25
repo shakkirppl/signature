@@ -42,7 +42,7 @@
     border: 1px solid #333;
     padding: 5px;
     text-align: left;
-    height: 16px;
+    height: 17px;
     vertical-align: middle;
 }
 
@@ -389,7 +389,7 @@
         <div class="image-container" style="display: flex; justify-content: space-between; align-items: flex-start;">
     <img src="{{ url('image/stamp1.png') }}" alt="Company Stamp" class="stamp" style="width: 230px;height: 160px;margin-left: -220px; margin-top: -20px;">
     
-    <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px; margin-top: 100px;">
+    <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px; margin-top: 80px;">
     
     <img src="{{ url('image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
 </div>

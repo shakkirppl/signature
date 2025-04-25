@@ -379,7 +379,7 @@
 
 <tr>
     <td colspan="6">
-        <div style="text-align: center; font-size: 11px;  color: green;">
+        <div style="text-align: center; font-size: 13px;  color: green;">
             <i>YOUR TRUSTED PARTNER IN MEAT EXPORTS,<strong> SIGNATURE TRADING LTD</strong>: QATAR, TANZANIA AND ETHIOPIA.</i>
         </div>
     </td>
@@ -393,7 +393,7 @@
 <div class="image-container" style="display: flex; justify-content: space-between; align-items: flex-start;">
     <img src="{{ url('image/stamp1.png') }}" alt="Company Stamp" class="stamp" style="width: 230px;height: 160px;margin-left: -220px; margin-top: -20px;">
     
-    <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px; margin-top: 100px;">
+    <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px; margin-top: 80px;">
     
     <img src="{{ url('image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
 </div>
