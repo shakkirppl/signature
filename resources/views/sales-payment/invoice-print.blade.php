@@ -391,7 +391,7 @@
     
     <img src="{{ url('image/dots.png') }}" alt="Dots Icon" style="width: 80px;height: 50px; margin-top: 80px;">
     
-    <img src="{{ url('image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px;">
+    <img src="{{ url('image/QR.png') }}" alt="QR Scanner" style="width: 110px;height: 100px;margin-right: -150px; margin-top: 20px;">
 </div>
 
 
