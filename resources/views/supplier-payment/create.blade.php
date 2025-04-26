@@ -73,16 +73,16 @@ button.remove-row {
                                     <label class="col-sm-3 col-form-label">Payment Type</label>
                                     <div class="col-sm-9">
                                         <select class="form-control" name="payment_type" id="payment_type" required>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Cheque">Cheque</option>
-                                            <option value="Transfer">Transfer</option>
+                                           <option value="cash">Cash</option>
+                                           <option value="bank">Bank</option>
+                                           <option value="mobilemoney">Mobile Money</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div id="cheque_fields" style="display: none;">
+                        <!-- <div id="cheque_fields" style="display: none;">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
@@ -91,8 +91,8 @@ button.remove-row {
                                             <input type="date" class="form-control" name="cheque_date">
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
+                                </div> -->
+                                <!-- <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label">Cheque No</label>
                                         <div class="col-sm-9">
@@ -101,9 +101,9 @@ button.remove-row {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div id="transfer_fields" style="display: none;">
+                        <!-- <div id="transfer_fields" style="display: none;">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
@@ -114,7 +114,7 @@ button.remove-row {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div id="bank_field" style="display: none;">
                        
                             <div class="col-md-6">
@@ -230,6 +230,28 @@ button.remove-row {
 @section('script')
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function () {
+    function toggleBankField() {
+        var type = $('#payment_type').val();
+        if (type === 'bank') {
+            $('#bank_field').show();
+            $('#bank_name').attr('required', true);
+        } else {
+            $('#bank_field').hide();
+            $('#bank_name').removeAttr('required');
+        }
+    }
+
+    // Call on load
+    toggleBankField();
+
+    // Call on change
+    $('#payment_type').on('change', function () {
+        toggleBankField();
+    });
+});
+</script>
 
 <script>
 $(document).ready(function () {

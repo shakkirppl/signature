@@ -39,7 +39,7 @@
 }
 
 .packing-list th, .packing-list td {
-    border: 1px solid #333;
+    border: 1px solid black;
     padding: 5px;
     text-align: left;
     height: 17px;
@@ -48,12 +48,22 @@
 
 
 .header {
-    font-size: 35px;
-    font-weight: bold;
-   
-    padding: 10px;
-    margin-right: -70px;
+  height: 150px; /* Set height as needed */
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
 }
+
+.header-text {
+  font-size: 35px;
+ 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 
 .company-header {
     display: flex;
@@ -197,8 +207,11 @@
        
         <table class="packing-list">
             <tr>
-                <td class="header" colspan="2">Commercial Invoice</td>
-                <td colspan="4">
+            <td class="header" colspan="2">
+      <div class="header-text">
+        Commercial<br><span>Invoice</span>
+      </div>
+    </td>                <td colspan="4">
                     <div class="invoice-container">
                         <div class="row-invoice">
                             <strong>Invoice:</strong> <span class="highlight" style="margin-left: 54px; color:red">{{$order->order_no }}</span> 
@@ -259,7 +272,7 @@
             @foreach ($products as $product)
             <tr class="no-border-row">
                 <td>{{ $product->description }} <br>{{ $product->hsn_code }}</td>
-                <td class="packaging">0.00</td>
+                <td class="packaging">{{ number_format($product->packaging, 2) }}</td>
                 <td class="quantity">{{ number_format($product->quantity, 2) }}</td>
                 <td class="price">{{ number_format($product->price, 2) }}</td>
                 <td>pcs</td>
@@ -306,19 +319,12 @@
                 <td class="null-td"></td>
                 <td class="null-td"></td>
             </tr>
-            <tr>
-                
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-                <td class="null-td"></td>
-            </tr>
+           
           
          
 
             <tr>
-                <td class="bold" ><strong>Total</strong></td>
+                <td class="bold " ><strong>Total</strong></td>
                 <td><strong>{{ number_format($totalPackaging, 2) }}</strong></td>
                 <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
                 <td class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>

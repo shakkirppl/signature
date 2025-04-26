@@ -149,7 +149,20 @@ class SupplierPaymentController extends Controller
 public function destroy($id)
 {
     try {
-        $supplierPaymentMaster = SupplierPaymentMaster::findOrFail($id);
+        $supplierPaymentMaster = SupplierPaymentMaster::with('details')->findOrFail($id);
+
+        foreach ($supplierPaymentMaster->details as $detail) {
+            $purchaseConformation = PurchaseConformation::find($detail->conformation_id);
+
+            if ($purchaseConformation) {
+                $purchaseConformation->update([
+                    'paid_amount' => max(0, $purchaseConformation->paid_amount - $detail->paid),
+                    'balance_amount' => $purchaseConformation->balance_amount + $detail->paid,
+                ]);
+            }
+        }
+
+        // Delete details and master
         $supplierPaymentMaster->details()->delete();
         $supplierPaymentMaster->delete();
 
@@ -158,6 +171,7 @@ public function destroy($id)
         return redirect()->route('supplier-payment.index')->with('error', 'Error deleting record: ' . $e->getMessage());
     }
 }
+
 
 
 

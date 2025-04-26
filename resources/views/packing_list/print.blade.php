@@ -47,12 +47,22 @@
 }
 
 .header {
-    font-size: 35px;
-    font-weight: bold;
-   
-    padding: 10px;
-    margin-right: -70px;
+  height: 150px; /* Set height as needed */
+  text-align: center;
+  vertical-align: middle;
+  padding: 0;
 }
+
+.header-text {
+  font-size: 35px;
+  font: weight 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
 
 .company-header {
     display: flex;
@@ -197,7 +207,12 @@
        
         <table class="packing-list">
             <tr>
-                <td class="header" colspan="2">PACKING LIST</td>
+              
+                <td class="header" colspan="2">
+      <div class="header-text">
+      PACKING LIST
+      </div>
+    </td>  
                 <td colspan="3">
                     <div class="invoice-container">
                         <div class="row-invoice">

@@ -57,8 +57,12 @@ class SupplierPaymentObserver
      */
     public function deleted(SupplierPaymentMaster $supplierPayment)
     {
-        //
+        // Delete the related outstanding record
+        Outstanding::where('transaction_id', $supplierPayment->id)
+            ->where('transaction_type', 'Supplier Payment')
+            ->delete();
     }
+    
 
     /**
      * Handle the SupplierPaymentMaster "restored" event.
