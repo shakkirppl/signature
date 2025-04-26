@@ -168,6 +168,9 @@
     button {
         display: none !important;
     }
+    .back {
+        display: none !important;
+    }
 }
 
 @page {
@@ -179,9 +182,13 @@
 
 </head>
 <body>
+
     <div class="a4-container">
         <!-- <div class="row"> -->
-    
+        <div class="col-6 col-md-6 col-sm-6 col-xs-12 heading back" style="text-align:end;  font-size: 18px;">
+                            <a href="{{ url('sales_payment-index') }}" class="backicon">Back<i class="mdi mdi-backburger"></i></a>
+                        </div>
+    <div class="a4-container">
 
         <div class="company-header">
     <div>

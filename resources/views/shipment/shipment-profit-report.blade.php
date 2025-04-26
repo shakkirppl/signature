@@ -182,9 +182,9 @@
             <td></td>
             <td></td>
             <td><strong>{{ $totalWeight != 0 ? number_format($netShipmentCostTZS / $totalWeight, 2) : '0.00' }}</strong></td>
-            <td></td>
+            <td>{{($netShipmentCostTZS/$totalWeight)/$exchangeRateShilling}}</td>
         </tr>
-       
+<!--        
         <tr>
            
             <td></td>
@@ -193,7 +193,7 @@
             <td></td>
             <td>{{($netShipmentCostTZS/$totalWeight)/$exchangeRateShilling}}</td>
             <td></td>
-        </tr>
+        </tr> -->
         <tr>
     <td></td>
     <td><strong> Sales Amount </strong></td>

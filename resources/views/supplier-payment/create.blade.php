@@ -233,7 +233,7 @@ button.remove-row {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-    function formatNumber(num) {
+function formatNumber(num) {
     if (isNaN(num)) num = 0;
     return Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -242,28 +242,8 @@ function parseFormattedNumber(str) {
     if (!str) return 0;
     return parseFloat(str.toString().replace(/,/g, '')) || 0;
 }
-function formatPaidAmount(element) {
-    let rawValue = element.value.replace(/,/g, '');
-    if (rawValue) {
-        let formattedValue = parseFloat(rawValue).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        element.value = formattedValue;
-    }
-    updateTotals(); // After formatting, recalculate totals
-}
-
 
 $(document).ready(function () {
-
-    function formatNumber(num) {
-        return parseFloat(num).toLocaleString('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
-    }
-
-    function parseFormattedNumber(num) {
-        return parseFloat(num.replace(/,/g, '')) || 0;
-    }
 
     function toggleBankField() {
         var type = $('#payment_type').val();
@@ -324,21 +304,7 @@ $(document).ready(function () {
                     } else {
                         $.each(response, function (index, item) {
                             outstandingAmount += parseFloat(item.balance_amount || 0);
-
-                            $('#paymentTableBody').append(`
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly></td>
-                                    <td>
-                                        <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
-                                        <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly>
-                                    </td>
-                                    <td><input type="text" class="form-control amount" name="amount[]" value="${formatNumber(item.total_amount)}" readonly style="width: 180px;"></td>
-                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${formatNumber(item.balance_amount)}" readonly></td>
-                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.0" value="0.00" oninput="updateTotals()" onblur="formatPaidAmount(this)" autocomplete="off" ></td>
-                                    <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
-                                </tr>
-                            `);
+                            $('#paymentTableBody').append(appendRow(index, item));
                         });
                     }
 
@@ -359,43 +325,59 @@ $(document).ready(function () {
     });
 
     $(document).on('input', '.paid', function () {
-        let val = parseFormattedNumber($(this).val());
-        $(this).val(formatNumber(val));
+        let inputVal = $(this).val();
+
+        // Allow only numbers and decimal points
+        inputVal = inputVal.replace(/[^0-9.]/g, '');
+
+        // Handle multiple decimals (keep only first one)
+        let parts = inputVal.split('.');
+        if (parts.length > 2) {
+            inputVal = parts[0] + '.' + parts.slice(1).join('');
+        }
+
+        $(this).val(inputVal);
+
+        let numericVal = parseFloat(inputVal) || 0;
+
+        // Show formatted value below input
+        let formattedValue = formatNumber(numericVal);
+        $(this).next('.formatted-display').text(formattedValue + ' ₹');
+
         updateTotals();
     });
 
     function updateTotals() {
-    let totalPaid = 0, totalAmount = 0, totalBalance = 0;
+        let totalPaid = 0, totalAmount = 0, totalBalance = 0;
 
-    $('.paid').each(function () {
-        totalPaid += parseFormattedNumber($(this).val());
-    });
+        $('.paid').each(function () {
+            totalPaid += parseFormattedNumber($(this).val());
+        });
 
-    $('.amount').each(function () {
-        totalAmount += parseFormattedNumber($(this).val());
-    });
+        $('.amount').each(function () {
+            totalAmount += parseFormattedNumber($(this).val());
+        });
 
-    $('.balance_amount').each(function () {
-        totalBalance += parseFormattedNumber($(this).val());
-    });
+        $('.balance_amount').each(function () {
+            totalBalance += parseFormattedNumber($(this).val());
+        });
 
-    let outstandingAmount = parseFormattedNumber($('#outstanding_amount').val());
-    let balance = outstandingAmount - totalPaid;
+        let outstandingAmount = parseFormattedNumber($('#outstanding_amount').val());
+        let balance = outstandingAmount - totalPaid;
 
-    // Set formatted values into inputs
-    $('#allocated_amount').val(formatNumber(totalPaid));
-    $('#balance').val(formatNumber(balance));
+        // **Allocate amount must be equal to total paid**
+        $('#allocated_amount').val(totalPaid.toFixed(2));
 
-    // If you show total amounts elsewhere also
-    $('#total_amount').text(formatNumber(totalAmount));
-    $('#total_balance').text(formatNumber(totalBalance));
-    $('#total_paid').text(formatNumber(totalPaid));
+        $('#balance').val(formatNumber(balance));
+        $('#total_amount').text(formatNumber(totalAmount));
+        $('#total_balance').text(formatNumber(totalBalance));
+        $('#total_paid').text(formatNumber(totalPaid));
 
-    // Hidden values if required
-    $('#total_amount_input').val(totalAmount.toFixed(2));
-    $('#total_balance_input').val(totalBalance.toFixed(2));
-    $('#total_paidAmount').val(totalPaid.toFixed(2));
-}
+        // Hidden values if required
+        $('#total_amount_input').val(totalAmount.toFixed(2));
+        $('#total_balance_input').val(totalBalance.toFixed(2));
+        $('#total_paidAmount').val(totalPaid.toFixed(2));
+    }
 
     // Set today's date by default
     const dateInput = document.getElementById('payment_date');
@@ -403,8 +385,44 @@ $(document).ready(function () {
     dateInput.value = today;
 
 });
+$('form').on('submit', function () {
+    $('.amount, .balance_amount, .paid').each(function () {
+        let plainValue = parseFormattedNumber($(this).val()).toFixed(2);
+        $(this).val(plainValue);
+    });
+
+    // Also allocated_amount needs plain value
+    let allocPlain = parseFormattedNumber($('#allocated_amount').val()).toFixed(2);
+    $('#allocated_amount').val(allocPlain);
+});
+
+
+// Function to return dynamic table row
+function appendRow(index, item) {
+    return `
+        <tr>
+            <td>${index + 1}</td>
+            <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly></td>
+            <td>
+                <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
+                <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly>
+            </td>
+            <td><input type="text" class="form-control amount" name="amount[]" value="${formatNumber(item.total_amount)}" readonly style="width: 180px;"></td>
+            <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${formatNumber(item.balance_amount)}" readonly></td>
+            <td>
+                <input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00">
+                <div class="formatted-display text-muted" style="font-size: 12px; margin-top: 2px;">0.00 ₹</div>
+            </td>
+            <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
+        </tr>
+    `;
+}
 </script>
 
 @endsection
+
+
+
+
 
 
