@@ -10,6 +10,8 @@ use App\Models\Shipment;
 use App\Models\InspectionDetail;
 use App\Models\PurchaseConformation;
 use App\Models\NewSlaughterTime;
+use App\Models\Outstanding; // add this
+use App\Models\Supplier;     
 class DashboardController extends Controller
 {
     //
@@ -34,9 +36,25 @@ class DashboardController extends Controller
             $nextSchedule = NewSlaughterTime::orderBy('date', 'desc')
             ->orderBy('time', 'desc')
             ->first();
+            $outstandings = Outstanding::select(
+                'account_id',
+                \DB::raw('SUM(payment) as total_payment'),
+                \DB::raw('SUM(receipt) as total_receipt')
+            )
+            ->where('account_type', 'supplier')
+            ->groupBy('account_id')
+            ->get();
+
+        $sumGreen = 0;
+
+        foreach ($outstandings as $outstanding) {
+            if ($outstanding->total_payment < $outstanding->total_receipt) {
+                $sumGreen += ($outstanding->total_receipt - $outstanding->total_payment);
+            }
+        }
 
             return view('admin',['now' => Carbon::now()->toDateString(),'name' => $name,'total' => $total,'active'=>$active,'deactive'=>$deactive,'due'=>$due,
-            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule]);
+            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,]);
  
     } catch (\Exception $e) {
         return $e->getMessage();

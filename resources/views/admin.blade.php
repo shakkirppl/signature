@@ -131,7 +131,10 @@
                   <div class="card card-light-danger">
                     <div class="card-body">
                       <p class="mb-4">Debit Amount</p>
-                        <p class="fs-30 mb-2">{{ number_format($debitamount,2)}}</p>
+                        <!-- <p class="fs-30 mb-2">{{ number_format($debitamount,2)}}</p> -->
+                         <p class="fs-30 mb-2"> {{ number_format($sumGreen, 2) }}</p> 
+
+                       
                     </div>
                   </div>
                 </a>

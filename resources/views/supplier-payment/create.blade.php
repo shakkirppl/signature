@@ -164,7 +164,7 @@ button.remove-row {
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Balance Amount</label>
                                     <div class="col-sm-9">
-                                        <input type="number" class="form-control" id="balance" name="balance" readonly>
+                                        <input type="text" class="form-control" id="balance" name="balance" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -172,7 +172,7 @@ button.remove-row {
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Outstanding Amount</label>
                                     <div class="col-sm-9">
-                                        <input type="number" class="form-control" id="outstanding_amount" name="outstanding_amount" readonly>
+                                        <input type="text" class="form-control" id="outstanding_amount" name="outstanding_amount" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +180,7 @@ button.remove-row {
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Allocated Amount</label>
                                     <div class="col-sm-9">
-                                        <input type="number" class="form-control" id="allocated_amount" name="allocated_amount" readonly>
+                                        <input type="text" class="form-control" id="allocated_amount" name="allocated_amount" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -227,11 +227,44 @@ button.remove-row {
 
 @endsection
 
+
 @section('script')
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
+    function formatNumber(num) {
+    if (isNaN(num)) num = 0;
+    return Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function parseFormattedNumber(str) {
+    if (!str) return 0;
+    return parseFloat(str.toString().replace(/,/g, '')) || 0;
+}
+function formatPaidAmount(element) {
+    let rawValue = element.value.replace(/,/g, '');
+    if (rawValue) {
+        let formattedValue = parseFloat(rawValue).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        element.value = formattedValue;
+    }
+    updateTotals(); // After formatting, recalculate totals
+}
+
+
 $(document).ready(function () {
+
+    function formatNumber(num) {
+        return parseFloat(num).toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function parseFormattedNumber(num) {
+        return parseFloat(num.replace(/,/g, '')) || 0;
+    }
+
     function toggleBankField() {
         var type = $('#payment_type').val();
         if (type === 'bank') {
@@ -243,19 +276,12 @@ $(document).ready(function () {
         }
     }
 
-    // Call on load
     toggleBankField();
 
-    // Call on change
     $('#payment_type').on('change', function () {
         toggleBankField();
     });
-});
-</script>
 
-<script>
-$(document).ready(function () {
-    // Fetch suppliers when a shipment is selected
     $('#shipment').change(function () {
         var shipmentId = $(this).val();
         var supplierDropdown = $('#payment_to');
@@ -268,7 +294,6 @@ $(document).ready(function () {
                 data: { shipment_id: shipmentId },
                 dataType: 'json',
                 success: function (response) {
-                    // console.log(response);
                     $.each(response, function (index, supplier) {
                         supplierDropdown.append(`<option value="${supplier.id}">${supplier.name}</option>`);
                     });
@@ -280,7 +305,6 @@ $(document).ready(function () {
         }
     });
 
-    // Fetch supplier payment details when supplier is selected
     $('#payment_to').change(function () {
         var supplierId = $(this).val();
         var baseUrl = "{{ url('get-supplier-conformations') }}";
@@ -304,14 +328,14 @@ $(document).ready(function () {
                             $('#paymentTableBody').append(`
                                 <tr>
                                     <td>${index + 1}</td>
-                                    <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly ></td>
+                                    <td><input type="date" class="form-control" name="date[]" value="${item.date}" readonly></td>
                                     <td>
                                         <input type="hidden" name="conformation_id[]" value="${item.conformation_id}">
-                                        <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly >
+                                        <input type="text" class="form-control" name="pi_no[]" value="${item.invoice_number}" readonly>
                                     </td>
-                                    <td><input type="text" class="form-control amount" name="amount[]" value="${item.total_amount}" readonly style="width: 180px;"></td>
-                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${item.balance_amount}" readonly ></td>
-                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00" oninput="updateTotals()" ></td>
+                                    <td><input type="text" class="form-control amount" name="amount[]" value="${formatNumber(item.total_amount)}" readonly style="width: 180px;"></td>
+                                    <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${formatNumber(item.balance_amount)}" readonly></td>
+                                    <td><input type="text" class="form-control paid" name="paid[]" min="0" step="0.0" value="0.00" oninput="updateTotals()" onblur="formatPaidAmount(this)" autocomplete="off" ></td>
                                     <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
                                 </tr>
                             `);
@@ -329,86 +353,58 @@ $(document).ready(function () {
         }
     });
 
-    // Remove row and update totals
     $(document).on('click', '.removeRow', function () {
         $(this).closest('tr').remove();
         updateTotals();
     });
 
-    // Update total amounts dynamically
     $(document).on('input', '.paid', function () {
+        let val = parseFormattedNumber($(this).val());
+        $(this).val(formatNumber(val));
         updateTotals();
     });
 
     function updateTotals() {
-        let totalPaid = 0, totalAmount = 0, totalBalance = 0;
+    let totalPaid = 0, totalAmount = 0, totalBalance = 0;
 
-        $('.paid').each(function () {
-            let paidValue = parseFloat($(this).val()) || 0;
-            totalPaid += paidValue;
-        });
+    $('.paid').each(function () {
+        totalPaid += parseFormattedNumber($(this).val());
+    });
 
-        $('.amount').each(function () {
-            let amountValue = parseFloat($(this).val()) || 0;
-            totalAmount += amountValue;
-        });
+    $('.amount').each(function () {
+        totalAmount += parseFormattedNumber($(this).val());
+    });
 
-        $('.balance_amount').each(function () {
-            let balanceValue = parseFloat($(this).val()) || 0;
-            totalBalance += balanceValue;
-        });
+    $('.balance_amount').each(function () {
+        totalBalance += parseFormattedNumber($(this).val());
+    });
 
-        let outstandingAmount = parseFloat($('#outstanding_amount').val()) || 0;
-        let balance = outstandingAmount - totalPaid;
+    let outstandingAmount = parseFormattedNumber($('#outstanding_amount').val());
+    let balance = outstandingAmount - totalPaid;
 
-        // Update the fields
-        $('#allocated_amount').val(totalPaid.toFixed(2));
-        $('#balance').val(balance.toFixed(2));
+    // Set formatted values into inputs
+    $('#allocated_amount').val(formatNumber(totalPaid));
+    $('#balance').val(formatNumber(balance));
 
-        // Update the footer totals
-        $('#total_amount').text(totalAmount.toFixed(2));
-        $('#total_balance').text(totalBalance.toFixed(2));
-        $('#total_paid').text(totalPaid.toFixed(2));
+    // If you show total amounts elsewhere also
+    $('#total_amount').text(formatNumber(totalAmount));
+    $('#total_balance').text(formatNumber(totalBalance));
+    $('#total_paid').text(formatNumber(totalPaid));
 
-        // Update the hidden input fields
-        $('#total_amount_input').val(totalAmount.toFixed(2));
-        $('#total_balance_input').val(totalBalance.toFixed(2));
-        $('#total_paidAmount').val(totalPaid.toFixed(2));
-    }
-});
+    // Hidden values if required
+    $('#total_amount_input').val(totalAmount.toFixed(2));
+    $('#total_balance_input').val(totalBalance.toFixed(2));
+    $('#total_paidAmount').val(totalPaid.toFixed(2));
+}
 
-
-
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
+    // Set today's date by default
     const dateInput = document.getElementById('payment_date');
     let today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
+
 });
 </script>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-    const paymentType = document.getElementById("payment_type");
-    const chequeFields = document.getElementById("cheque_fields");
-    const transferFields = document.getElementById("transfer_fields");
-    const bankField = document.getElementById("bank_field");
-
-    function toggleFields() {
-        const selectedValue = paymentType.value;
-
-        chequeFields.style.display = selectedValue === "Cheque" ? "block" : "none";
-        transferFields.style.display = selectedValue === "Transfer" ? "block" : "none";
-        bankField.style.display = (selectedValue === "Cheque" || selectedValue === "Transfer") ? "block" : "none";
-    }
-
-    paymentType.addEventListener("change", toggleFields);
-
-    // Initial call in case the form is loaded with a preselected value
-    toggleFields();
-});
-</script>
-
 
 @endsection
+
 

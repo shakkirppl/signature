@@ -50,6 +50,11 @@ button.remove-row {
                             </ul>
                         </div><br />
                     @endif
+                    @if(session('error'))
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
+@endif
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Purchase Confirmation</h4>
@@ -176,7 +181,7 @@ button.remove-row {
     <div class="col-md-6">
         <label for="advance_amount" class="form-label">Advanced Amount:</label>
         <input type="text" id="advance_amount" name="advance_amount" class="form-control w-100" 
-            value="{{ number_format($order->advance_amount ?? 0, 2) }}" readonly>       
+            value="{{ number_format($totalAdvanceAmount, 2) }}" readonly>       
     </div>  
 
         <div class="col-md-6">
