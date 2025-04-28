@@ -185,9 +185,7 @@
 
     <div class="a4-container">
         <!-- <div class="row"> -->
-        <div class="col-6 col-md-6 col-sm-6 col-xs-12 heading back" style="text-align:end;  font-size: 18px;">
-                            <a href="{{ url('sales_payment-index') }}" class="backicon">Back<i class="mdi mdi-backburger"></i></a>
-                        </div>
+       
     <div class="a4-container">
 
         <div class="company-header">
@@ -410,7 +408,17 @@
 </div>
 
 
-<button onclick="window.print()" style="display: block; margin: 10px auto; padding: 5px 10px; font-size: 14px; cursor: pointer;">print</button>
+<div style="display: flex; justify-content: center; gap: 10px; margin: 10px 0;">
+    <button onclick="window.print()" style="padding: 5px 10px; font-size: 14px; cursor: pointer;">Print</button>
+
+    <button style=" font-size: 14px; cursor: pointer;">
+        <a href="{{ url('sales_payment-index') }}" class="backicon" style="text-decoration: none; color: inherit;">
+            Back <i class="mdi mdi-backburger"></i>
+        </a>
+    </button>
+</div>
+
+                       
 
 
     </div>
