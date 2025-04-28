@@ -144,7 +144,7 @@
     body, .a4-container {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        background-image: url("{{ asset('image/Back.jpg') }}") !important;
+        background-image: url("{{ asset('image/Back2.jpg') }}") !important;
         background-size: cover !important;
         background-repeat: no-repeat !important;
         background-position: top center !important;
