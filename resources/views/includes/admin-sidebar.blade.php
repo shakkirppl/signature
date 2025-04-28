@@ -75,7 +75,7 @@
 
         <!--  -->
 
-        @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5|| $user->designation_id == 6|| $user->designation_id == 7|| $user->designation_id == 4)
+        @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5|| $user->designation_id == 6|| $user->designation_id == 7|| $user->designation_id == 4 || $user->designation_id == 9)
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#animal-purchase-order" aria-expanded="false" aria-controls="charts">
             <i class="mdi mdi-group menu-icon"></i> 
@@ -92,7 +92,7 @@
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('purchade-conformation-index')}}">Purchase Confirmation</a></li>
               @endif 
-              @if($user->designation_id == 1 || $user->designation_id == 6 )
+              @if($user->designation_id == 1 || $user->designation_id == 6 || $user->designation_id == 9 )
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection </a></li> 
             
@@ -101,7 +101,7 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/rejected-animal-report')}}">Rejected Animal Report</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('antemortem-report-index')}}">Antemortem Report</a></li> 
             @endif
-            @if($user->designation_id == 1 || $user->designation_id == 7)
+            @if($user->designation_id == 1 || $user->designation_id == 7 || $user->designation_id == 9)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('postmortem-report-index')}}">Postmortem Report</a></li> 
              @endif
               </ul>
