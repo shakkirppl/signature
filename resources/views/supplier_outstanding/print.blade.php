@@ -22,6 +22,14 @@
     }
     .text-success { color: green; }
     .text-danger { color: red; }
+
+    
+@media print {
+  
+    .back {
+        display: none !important;
+    }
+}
   </style>
 </head>
 <body onload="window.print()">
@@ -88,6 +96,13 @@
     </tr>
   </tfoot>
 </table>
-
+<br>
+<center>
+<button style=" font-size: 14px; cursor: pointer; text-align" class="back">
+        <a href="{{ url('supplier-outstanding') }}" class="backicon" style="text-decoration: none; color: inherit;">
+            Back <i class="mdi mdi-backburger"></i>
+        </a>
+    </button>
+    </center>
 </body>
 </html>

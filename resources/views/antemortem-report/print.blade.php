@@ -71,6 +71,11 @@
 
     <div class="print-button">
         <button onclick="window.print()">🖨️ Print</button>
+        <button style=" font-size: 14px; cursor: pointer; text-align" class="back">
+        <a href="{{ url('antemortem-report-index') }}" class="backicon" style="text-decoration: none; color: inherit;">
+            Back <i class="mdi mdi-backburger"></i>
+        </a>
+    </button>
     </div>
 
     <table class="header-table no-border">

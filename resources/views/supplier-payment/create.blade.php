@@ -82,39 +82,7 @@ button.remove-row {
                             </div>
                         </div>
 
-                        <!-- <div id="cheque_fields" style="display: none;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Cheque Date</label>
-                                        <div class="col-sm-9">
-                                            <input type="date" class="form-control" name="cheque_date">
-                                        </div>
-                                    </div>
-                                </div> -->
-                                <!-- <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Cheque No</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="cheque_no">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <!-- <div id="transfer_fields" style="display: none;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Transfer ID</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="transfer_id">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> -->
+                      
                         <div id="bank_field" style="display: none;">
                        
                             <div class="col-md-6">
@@ -182,6 +150,16 @@ button.remove-row {
                                     <div class="col-sm-9">
                                         <input type="text" class="form-control" id="allocated_amount" name="allocated_amount" readonly>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                <label for="payment_status">Payment Status <span class="text-danger">*</span></label>
+                                <div class="col-sm-9">
+                                <select name="payment_status" id="payment_status" class="form-control" required>
+        <option value="active">Active</option>
+        <option value="cancelled">Cancelled</option>
+    </select>                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -342,7 +320,7 @@ $(document).ready(function () {
 
         // Show formatted value below input
         let formattedValue = formatNumber(numericVal);
-        $(this).next('.formatted-display').text(formattedValue + ' ₹');
+        $(this).next('.formatted-display').text(formattedValue);
 
         updateTotals();
     });
@@ -411,7 +389,7 @@ function appendRow(index, item) {
             <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${formatNumber(item.balance_amount)}" readonly></td>
             <td>
                 <input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00">
-                <div class="formatted-display text-muted" style="font-size: 12px; margin-top: 2px;">0.00 ₹</div>
+                <div class="formatted-display text-muted" style="font-size: 12px; margin-top: 2px;">0.00 </div>
             </td>
             <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
         </tr>

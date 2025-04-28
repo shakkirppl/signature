@@ -37,6 +37,118 @@ class SupplierPaymentController extends Controller
         return response()->json($suppliers);
     }
     
+
+
+
+// public function store(Request $request)
+// {
+//     $validatedData = $request->validate([
+//         'payment_date' => 'required|date',
+//         'shipment_id' => 'required',
+//         'payment_type' => 'required|string',
+//         'bank_name' => 'nullable|string',
+//         'outstanding_amount' => 'required',
+//         'allocated_amount' => 'required',
+//         'total_paidAmount' => 'required',
+//         'total_amount' => 'required',
+//         'total_balance' => 'required',
+//         'balance' => 'nullable',
+//         'payment_to' => 'required|integer',
+//         'notes' => 'nullable|string',
+//         'trans_reference' => 'nullable|string',
+//         'cheque_no' => 'nullable|string',
+//         'cheque_date' => 'nullable|date',
+//         'payment_status' => 'required|string', // <-- added
+//         'conformation_id.*' => 'required|exists:purchase_conformation,id',
+//         'pi_no.*' => 'required|string',
+//         'amount.*' => 'required',
+//         'balance_amount.*' => 'required',
+//         'paid.*' => 'required',
+//         'payment_status' => 'required',
+//     ]);
+
+//     if ($validatedData['allocated_amount'] != $validatedData['total_paidAmount']) {
+//         return redirect()->back()
+//             ->withErrors(['error' => 'Allocated amount must be equal to the total paid amount.'])
+//             ->withInput();
+//     }
+
+//     DB::beginTransaction();
+
+//     try {
+//         $paymentStatus = $validatedData['payment_status'];
+
+//         // Master record
+//         $supplierPayment = SupplierPaymentMaster::create([
+//             'payment_date' => $validatedData['payment_date'],
+//             'shipment_id' => $validatedData['shipment_id'],
+//             'payment_type' => $validatedData['payment_type'],
+//             'bank_name' => $validatedData['bank_name'] ?? null,
+//             'outstanding_amount' => $validatedData['outstanding_amount'],
+//             'payment_status'=> $validatedData['payment_status'],
+//             'allocated_amount' => $paymentStatus == 'cancelled' 
+//                 ? -abs($validatedData['allocated_amount']) 
+//                 : $validatedData['allocated_amount'],
+//             'balance' => $validatedData['balance'] ?? 0,
+//             'payment_to' => $validatedData['payment_to'],
+//             'notes' => $validatedData['notes'] ?? null,
+//             'trans_reference' => $validatedData['trans_reference'] ?? null,
+//             'cheque_no' => $validatedData['cheque_no'] ?? null,
+//             'cheque_date' => $validatedData['cheque_date'] ?? null,
+//             'user_id' => Auth::id(),
+//             'store_id' => 1,
+//             'total_paid' => $paymentStatus == 'cancelled'
+//                 ? -abs($validatedData['total_paidAmount'])
+//                 : $validatedData['total_paidAmount'],
+//             'total_amount' => $validatedData['total_amount'],
+//             'total_balance' => $validatedData['total_balance'],
+//             'payment_status' => $paymentStatus, // Save status
+//         ]);
+
+//         foreach ($validatedData['conformation_id'] as $index => $conformationId) {
+//             $paidAmount = $validatedData['paid'][$index] ?? 0;
+
+//             SupplierPaymentDetail::create([
+//                 'master_id' => $supplierPayment->id,
+//                 'conformation_id' => $conformationId,
+//                 'pi_no' => $validatedData['pi_no'][$index],
+//                 'amount' => $validatedData['amount'][$index],
+//                 'balance_amount' => $validatedData['balance_amount'][$index],
+//                 'paid' => $paymentStatus == 'cancelled' 
+//                     ? -abs($paidAmount)
+//                     : $paidAmount,
+//                 'user_id' => Auth::id(),
+//                 'store_id' => 1,
+//             ]);
+
+//             $purchaseConformation = PurchaseConformation::find($conformationId);
+//             if ($purchaseConformation && $purchaseConformation->status != 'Cancelled') {
+//                 // Update Purchase Conformation only if NOT Cancelled
+//                 $newPaidAmount = $purchaseConformation->paid_amount + (
+//                     $paymentStatus == 'cancelled' ? -abs($paidAmount) : $paidAmount
+//                 );
+//                 $newBalance = max(0, $purchaseConformation->balance_amount - (
+//                     $paymentStatus == 'cancelled' ? -abs($paidAmount) : $paidAmount
+//                 ));
+
+//                 $purchaseConformation->update([
+//                     'paid_amount' => $newPaidAmount,
+//                     'balance_amount' => $newBalance,
+//                 ]);
+//             }
+//         }
+
+//         DB::commit();
+
+//         return redirect()->route('supplier-payment.index')->with('success', 'Supplier Payment Saved Successfully.');
+//     } catch (\Exception $e) {
+//         DB::rollBack();
+//         return redirect()->back()
+//             ->withErrors(['error' => 'Something went wrong! ' . $e->getMessage()])
+//             ->withInput();
+//     }
+// }
+
             // return $request->all();
             public function store(Request $request)
             {
@@ -63,6 +175,8 @@ class SupplierPaymentController extends Controller
                     'amount.*' => 'required',
                     'balance_amount.*' => 'required',
                     'paid.*' => 'required',
+        'payment_status' => 'required',
+
                 ]);
               
                 
@@ -79,6 +193,8 @@ class SupplierPaymentController extends Controller
                         'payment_type' => $validatedData['payment_type'],
                         'bank_name' => $validatedData['bank_name'] ?? null,
                         'outstanding_amount' => $validatedData['outstanding_amount'],
+        'payment_status'=> $validatedData['payment_status'],
+
                         'allocated_amount' => $validatedData['allocated_amount'],
                         'balance' => $validatedData['balance'] ?? 0,
                         'payment_to' => $validatedData['payment_to'],

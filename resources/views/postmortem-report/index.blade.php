@@ -36,9 +36,9 @@
                        
                   <td>
                   @if($user->designation_id == 1)
-                  <a href="{{ route('postmortem.edit', $postmortem->id) }}" class="btn btn-warning">Edit</a>
+                  <a href="{{ route('postmortem.edit', $postmortem->id) }}" class="btn btn-warning btn-sm">Edit</a>
                   @endif
-                  <a href="{{ route('postmortem.print', $postmortem->id) }}" target="_blank" class="btn btn-primary">
+                  <a href="{{ route('postmortem.print', $postmortem->id) }}" target="_blank" class="btn btn-primary btn-sm">
                    Print 
                     </a>
 

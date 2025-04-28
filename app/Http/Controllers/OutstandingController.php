@@ -139,6 +139,7 @@ public function customerOutstanding()
     return view('customer_outstanding.index', compact('outstandings', 'customers'));
 }
 
+
 public function supplierOutstandingPrint()
 {
     $outstandings = Outstanding::select(

@@ -19,24 +19,28 @@ class SupplierPaymentObserver
      * @return void
      */
     public function created(SupplierPaymentMaster $supplierPayment)
-    {
-        Outstanding::create([
-            'date' => $supplierPayment->payment_date,
-            'time' => now()->format('H:i:s'),
-            'account_id' => $supplierPayment->payment_to, 
-            'receipt' => null, 
-            'payment' => $supplierPayment->total_paid, 
-            'narration' => null,
-            'transaction_id' => $supplierPayment->id,
-            'transaction_type' => 'Supplier Payment', 
-            'description' => $supplierPayment->notes ?? 'Payment made to supplier',
-            'account_type' => 'supplier', 
-            'store_id' => $supplierPayment->store_id,
-            'user_id' => $supplierPayment->user_id,
-            'financial_year' => date('Y'), 
-        ]);
-    
-    }
+{
+    // Check if the payment is cancelled
+    $paymentAmount = $supplierPayment->payment_status === 'cancelled'
+        ? -abs($supplierPayment->total_paid) // store as negative
+        : $supplierPayment->total_paid; // store normally if not cancelled
+
+    Outstanding::create([
+        'date' => $supplierPayment->payment_date,
+        'time' => now()->format('H:i:s'),
+        'account_id' => $supplierPayment->payment_to, 
+        'receipt' => null, 
+        'payment' => $paymentAmount, // use adjusted amount
+        'narration' => null,
+        'transaction_id' => $supplierPayment->id,
+        'transaction_type' => 'Supplier Payment', 
+        'description' => $supplierPayment->notes ?? 'Payment made to supplier',
+        'account_type' => 'supplier', 
+        'store_id' => $supplierPayment->store_id,
+        'user_id' => $supplierPayment->user_id,
+        'financial_year' => date('Y'), 
+    ]);
+}
 
     /**
      * Handle the SupplierPaymentMaster "updated" event.
