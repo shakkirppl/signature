@@ -152,16 +152,7 @@ button.remove-row {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                <label for="payment_status">Payment Status <span class="text-danger">*</span></label>
-                                <div class="col-sm-9">
-                                <select name="payment_status" id="payment_status" class="form-control" required>
-        <option value="active">Active</option>
-        <option value="cancelled">Cancelled</option>
-    </select>                                    </div>
-                                </div>
-                            </div>
+                           
                         </div>
 
                         <div class="table-responsive mt-4">
@@ -369,10 +360,13 @@ $('form').on('submit', function () {
         $(this).val(plainValue);
     });
 
-    // Also allocated_amount needs plain value
     let allocPlain = parseFormattedNumber($('#allocated_amount').val()).toFixed(2);
     $('#allocated_amount').val(allocPlain);
+
+    let balancePlain = parseFormattedNumber($('#balance').val()).toFixed(2);
+    $('#balance').val(balancePlain);
 });
+
 
 
 // Function to return dynamic table row

@@ -210,6 +210,8 @@
               @endif
               @if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 4)
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-advance-index')}}">Supplier Advance </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('return-payment-index')}}">Return Payment </a></li>
+
               @endif
 
               </ul>

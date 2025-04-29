@@ -40,6 +40,7 @@ use App\Http\Controllers\OffalReceiveController;
 use App\Http\Controllers\UsdToShillingController;
 use App\Http\Controllers\ShipmentProfitController;
 use App\Http\Controllers\ScheSchedulenewSlaughter;
+use App\Http\Controllers\ReturnAmountController;
 
 
 
@@ -480,6 +481,17 @@ Route::get('shipment-/{id}', [ShipmentProfitController::class, 'shipmentprofit']
 Route::get('create-new-scheduletime', [ScheSchedulenewSlaughter::class, 'create'])->name('new.schedule');
 Route::post('store-new-scheduletime', [ScheSchedulenewSlaughter::class, 'store'])->name('store.schedule');
 Route::get('index-new-scheduletime', [ScheSchedulenewSlaughter::class, 'index'])->name('index.schedule');
+
+
+Route::get('return-payment-create', [ReturnAmountController::class, 'create'])->name('return-payment.create');
+Route::post('return-payment-store', [ReturnAmountController::class, 'store'])->name('return-payment.store');
+Route::get('/get-supplier-outstanding', [ReturnAmountController::class, 'getSupplierOutstanding'])->name('get.supplier.outstanding');
+Route::get('/get-suppliers-by-shipment', [ReturnAmountController::class, 'getSuppliersByShipment'])->name('get.suppliers.by.shipment');
+Route::get('/get-supplier-outstanding', [ReturnAmountController::class, 'getSupplierOutstanding'])->name('get.supplier.outstanding');
+Route::get('return-payment-index', [ReturnAmountController::class, 'index'])->name('return-payment.index');
+Route::delete('/return-payment/{id}', [ReturnAmountController::class, 'destroy'])->name('return-payment.destroy');
+
+
 
 
 
