@@ -3,6 +3,10 @@
 @php
     $user = Auth::user();
 @endphp
+<style>
+     .newicon i {
+        font-size: 30px;}
+</style>
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
@@ -39,11 +43,13 @@
                                         <td>{{ $payment->supplier->name ?? 'N/A' }}</td>
                                         <td>{{ number_format($payment->retrun_amount, 2) }}</td>
                                         <td>
+                                        @if($user->designation_id == 1)
                                             <form action="{{ route('return-payment.destroy', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this return payment?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-danger btn-sm">Delete</button>
                                             </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
