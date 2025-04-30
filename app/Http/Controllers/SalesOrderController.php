@@ -57,14 +57,14 @@ class SalesOrderController extends Controller
                          $customer = Customer::find($request->customer_id);
                  
                          // Calculate the credit limit expiration date
-                         if ($customer->credit_limit_days > 0) {
-                             $credit_limit_date = Carbon::parse($customer->created_at)->addDays($customer->credit_limit_days);
+                        //  if ($customer->credit_limit_days > 0) {
+                        //      $credit_limit_date = Carbon::parse($customer->created_at)->addDays($customer->credit_limit_days);
                  
-                             // Check if the sales order date exceeds the credit limit date
-                             if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
-                                 return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this customer.']);
-                             }
-                         }
+                        //      // Check if the sales order date exceeds the credit limit date
+                        //      if (Carbon::parse($request->date)->greaterThan($credit_limit_date)) {
+                        //          return redirect()->back()->withErrors(['error' => 'Credit limit days have expired for this customer.']);
+                        //      }
+                        //  }
                  
                          // Store the sales order
                          $salesOrder = SalesOrder::create([
