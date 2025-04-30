@@ -53,8 +53,12 @@ class CustomerPaymentObserver
      */
     public function deleted(CustomerPayment $customerPayment)
     {
-        //
+        // Delete related outstanding records
+        Outstanding::where('transaction_id', $customerPayment->id)
+            ->where('transaction_type', 'Customer Payment')
+            ->delete();
     }
+    
 
     /**
      * Handle the CustomerPayment "restored" event.

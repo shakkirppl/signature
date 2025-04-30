@@ -184,6 +184,15 @@ public function store(Request $request)
     {
         try {
              $customerPayment = CustomerPayment::findOrFail($id);
+             foreach ($customerPayment->details as $detail) {
+                $salesPayment = SalesPayment::find($detail->sales_payment_id);
+                if ($salesPayment) {
+                    $salesPayment->update([
+                        'paid_amount' => max(0, $salesPayment->paid_amount - $detail->paid),
+                        'balance_amount' => $salesPayment->balance_amount + $detail->paid,
+                    ]);
+                }
+            }
              $customerPayment->details()->delete();
              $customerPayment->delete();
     

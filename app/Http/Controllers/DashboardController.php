@@ -52,9 +52,15 @@ class DashboardController extends Controller
                 $sumGreen += ($outstanding->total_receipt - $outstanding->total_payment);
             }
         }
+        $totalPositive = Outstanding::select(
+            \DB::raw('SUM(receipt - payment) as positive_outstanding')
+        )
+        ->where('account_type', 'customer')
+        ->whereRaw('receipt > payment')
+        ->value('positive_outstanding');
 
             return view('admin',['now' => Carbon::now()->toDateString(),'name' => $name,'total' => $total,'active'=>$active,'deactive'=>$deactive,'due'=>$due,
-            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,]);
+            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,'totalPositive'=>$totalPositive]);
  
     } catch (\Exception $e) {
         return $e->getMessage();
