@@ -1,4 +1,7 @@
 @extends('layouts.layout')
+@php
+    $user = Auth::user();
+@endphp
 <link href="{{url('admin/css/owl.carousel.min.css')}}" rel="stylesheet">
         <script src="{{url('admin/js/jquery.min.js')}}"></script>
   <script src="{{url('admin/js/owl.carousel.min.js')}}"></script>
@@ -116,6 +119,7 @@
                   </div>
                 </div>
               </div>
+              @if($user->designation_id == 1||$user->designation_id == 3||$user->designation_id == 4||$user->designation_id == 5 )   
               <div class="row">
                 <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
                   <div class="card card-light-blue">
@@ -138,7 +142,7 @@
                     </div>
                   </div>
                 </a>
-              
+              @endif
               </div>
             </div>
           </div>
