@@ -48,10 +48,10 @@
                                <div class="form-group">
                                       <label for="coa_id" class="required"> COA</label>
                                         <select class="form-control" name="coa_id" id="coa_id" required>
-                                            <option value="">Select Account</option>
-                                                 @foreach ($coa as $account)
-                                            <option value="{{ $account->id }}"  {{ $voucher->coa_id == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
-                                                  @endforeach
+                                        <option value="">Select Account</option>
+        @foreach ($coa as $account)
+            <option value="{{ $account->id }}"  {{ $voucher->coa_id == $account->id ? 'selected' : '' }}>{{ $account->name }}</option>
+        @endforeach
                                         </select>
                               </div>
                                <div class="form-group">

@@ -129,6 +129,11 @@
     <div class="no-print">
     <button onclick="captureAndDownload()" class="btn btn-success">Download </button>
     <button onclick="window.print()" class="btn btn-primary">Print</button>
+    <button style=" font-size: 14px; cursor: pointer;">
+        <a href="{{ url('slaughter-schedules-index') }}" class="backicon" style="text-decoration: none; color: inherit;">
+            Back <i class="mdi mdi-backburger"></i>
+        </a>
+    </button>
 </div>
 
 </div>

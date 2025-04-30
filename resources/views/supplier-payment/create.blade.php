@@ -90,10 +90,12 @@ button.remove-row {
                                     <label class="col-sm-3 col-form-label">Bank</label>
                                     <div class="col-sm-9">
                                         <select class="form-control" name="bank_name" >
-                                            <option value="">Select Bank</option>
-                                            @foreach ($banks as $bank)
-                                                <option value="{{ $bank->bank_name }}">{{ $bank->bank_name }}</option>
-                                            @endforeach
+                                        @foreach ($banks as $bank)
+                                  <option value="{{ $bank->id }}" 
+                                 {{ $bank->currency == 'Shilling' ? 'selected' : '' }}>
+                                    {{ $bank->bank_name }}
+                                  </option>
+                                 @endforeach
                                         </select>
                                     </div>
                                 </div>
@@ -204,12 +206,15 @@ button.remove-row {
 <script>
 function formatNumber(num) {
     if (isNaN(num)) num = 0;
-    return Number(num).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return new Intl.NumberFormat('sw-TZ', { 
+        minimumFractionDigits: 2, 
+        maximumFractionDigits: 2 
+    }).format(num);
 }
-
 function parseFormattedNumber(str) {
     if (!str) return 0;
-    return parseFloat(str.toString().replace(/,/g, '')) || 0;
+    // Remove dot (.) as thousand separator, replace comma (,) with dot (.)
+    return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
 }
 
 $(document).ready(function () {

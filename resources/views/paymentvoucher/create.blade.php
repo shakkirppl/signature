@@ -81,10 +81,12 @@
                                 <div id="bankNameField" class="form-group" style="">
                                      <label for="bank_id" class="required">Bank Name</label>
                                         <select class="form-control" name="bank_id">
-                                           <option value="">Select Bank</option>
-                                                @foreach ($banks as $bank)
-                                                   <option value="{{ $bank->id }}">{{ $bank->bank_name }}</option>
-                                                @endforeach
+                                        @foreach ($banks as $bank)
+                                  <option value="{{ $bank->id  }}" 
+                                 {{ $bank->currency == 'Shilling' ? 'selected' : '' }}>
+                                    {{ $bank->bank_name }}
+                                  </option>
+                                 @endforeach
                                         </select>
                                  </div>
                                 <div class="form-group">
