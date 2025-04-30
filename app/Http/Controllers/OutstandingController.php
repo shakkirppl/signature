@@ -124,20 +124,21 @@ public function customerOutstanding()
         ->groupBy('account_id')
         ->get();
 
-    // Fetch customer names
+    $totalNegative = 0;
     $customers = Customer::whereIn('id', $outstandings->pluck('account_id'))->pluck('customer_name', 'id');
 
-    // Calculate outstanding balance dynamically
     foreach ($outstandings as $outstanding) {
         if ($outstanding->total_payment > $outstanding->total_receipt) {
             $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+            $totalNegative += $outstanding->outstanding_balance;
         } else {
             $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
         }
     }
 
-    return view('customer_outstanding.index', compact('outstandings', 'customers'));
+    return view('customer_outstanding.index', compact('outstandings', 'customers', 'totalNegative'));
 }
+
 
 
 public function supplierOutstandingPrint()

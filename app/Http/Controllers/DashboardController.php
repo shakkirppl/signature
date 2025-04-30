@@ -53,11 +53,21 @@ class DashboardController extends Controller
             }
         }
         $totalNegative = Outstanding::select(
-            \DB::raw('SUM(payment - receipt) as negative_outstanding')
+            'account_id',
+            \DB::raw('SUM(payment) as total_payment'),
+            \DB::raw('SUM(receipt) as total_receipt')
         )
         ->where('account_type', 'customer')
-        ->whereRaw('payment > receipt')
-        ->value('negative_outstanding');
+        ->groupBy('account_id')
+        ->get()
+        ->reduce(function ($carry, $outstanding) {
+            $payment = $outstanding->total_payment;
+            $receipt = $outstanding->total_receipt;
+            if ($payment > $receipt) {
+                $carry += ($payment - $receipt);
+            }
+            return $carry;
+        }, 0);
     
 
             return view('admin',['now' => Carbon::now()->toDateString(),'name' => $name,'total' => $total,'active'=>$active,'deactive'=>$deactive,'due'=>$due,
