@@ -32,43 +32,49 @@ class BankMasterController extends Controller
     public function store(Request $request)
     {
         try {
-        // Validate the form data
-        $request->validate([
-            'code' => 'required|string|max:255',
-            'bank_name' => 'required|string|max:255',
-            'currency' => 'required|string|max:255',
-            'gl' => 'nullable|string|max:255', 
-            'account_no' => 'nullable|string|max:255', 
-            'account_name' => 'nullable|string|max:255', 
-            'type' => 'nullable|string|max:255', 
-        ]);
+            // Validate the form data
+            $request->validate([
+                'code' => 'required|string|max:255',
+                'bank_name' => 'required|string|max:255',
+                'currency' => 'required|string|max:255',
+                'gl' => 'nullable|string|max:255', 
+                'account_no' => 'nullable|string|max:255', 
+                'account_name' => 'nullable|string|max:255', 
+                'type' => 'nullable|string|max:255', 
+            ]);
     
-        $accountHead = AccountHead::create([
-            'name' => $request->bank_name,
-            'parent_id' => '152', 
-            'opening_balance' => null,
-            'dr_cr' => null,
-            'can_delete' => 1, 
-        ]);
-
-        BankMaster::create([
-            'code' => $request->input('code'),
-            'bank_name' => $request->input('bank_name'),
-            'currency' => $request->input('currency'),
-            'type' =>$request->input('type'),
-            'gl' => $request->input('gl'), 
-            'account_no' => $request->input('account_no'), 
-            'account_name' => $request->input('account_name'), 
-            'store_id' => 1, 
-            'user_id' => auth()->id(), 
-            'account_head_id' => $accountHead->id,
-        ]);
+            // Append currency to bank name
+            $fullBankName = $request->bank_name . ' - ' . strtoupper($request->currency);
     
-        return redirect()->route('bank-master.index')->with('success', 'Bank Master record created successfully.');
-     } catch (\Exception $e) {
+            // Create Account Head
+            $accountHead = AccountHead::create([
+                'name' => $fullBankName,
+                'parent_id' => '152',
+                'opening_balance' => null,
+                'dr_cr' => null,
+                'can_delete' => 1,
+            ]);
+    
+            // Create Bank Master record
+            BankMaster::create([
+                'code' => $request->input('code'),
+                'bank_name' => $fullBankName,
+                'currency' => $request->input('currency'),
+                'type' => $request->input('type'),
+                'gl' => $request->input('gl'),
+                'account_no' => $request->input('account_no'),
+                'account_name' => $request->input('account_name'),
+                'store_id' => 1,
+                'user_id' => auth()->id(),
+                'account_head_id' => $accountHead->id,
+            ]);
+    
+            return redirect()->route('bank-master.index')->with('success', 'Bank Master record created successfully.');
+        } catch (\Exception $e) {
             return $e->getMessage();
         }
     }
+    
 
     public function edit($id)
     {
@@ -93,8 +99,22 @@ class BankMasterController extends Controller
                 'type' => 'nullable|string|max:255', 
             ]);
     
+            // Find existing record
             $bankMaster = BankMaster::findOrFail($id);
-            $bankMaster->update($request->all());
+    
+            // Append currency to bank name
+            $fullBankName = $request->bank_name . ' - ' . strtoupper($request->currency);
+    
+            // Update fields
+            $bankMaster->update([
+                'code' => $request->input('code'),
+                'bank_name' => $fullBankName,
+                'currency' => $request->input('currency'),
+                'type' => $request->input('type'),
+                'gl' => $request->input('gl'),
+                'account_no' => $request->input('account_no'),
+                'account_name' => $request->input('account_name'),
+            ]);
     
             return redirect()->route('bank-master.index')->with('success', 'Bank Master record updated successfully.');
         } 
@@ -113,6 +133,7 @@ class BankMasterController extends Controller
             return redirect()->back()->with('error', 'An error occurred while updating the record.');
         }
     }
+    
 
     public function destroy($id)
     {

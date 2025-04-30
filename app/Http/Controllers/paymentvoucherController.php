@@ -171,15 +171,8 @@ public function update(Request $request, $id)
     $voucher->amount = $request->amount;
     $voucher->currency = $request->currency;
 
-    // If type is 'bank', store the bank_id
-    if ($request->type === 'bank') {
-        $bank = BankMaster::where('bank_name', $request->bank_name)->first();
-        if ($bank) {
-            $voucher->bank_id = $bank->id; 
-        }
-    } else {
-        $voucher->bank_id = null; 
-    }
+    $voucher->bank_id = ($request->type === 'bank') ? $request->bank_id : null;
+
 
     $voucher->save();
 
