@@ -52,26 +52,29 @@ class DashboardController extends Controller
                 $sumGreen += ($outstanding->total_receipt - $outstanding->total_payment);
             }
         }
-        $totalNegative = Outstanding::select(
+        $outstandings = Outstanding::select(
             'account_id',
             \DB::raw('SUM(payment) as total_payment'),
             \DB::raw('SUM(receipt) as total_receipt')
         )
         ->where('account_type', 'customer')
         ->groupBy('account_id')
-        ->get()
-        ->reduce(function ($carry, $outstanding) {
-            $payment = $outstanding->total_payment;
-            $receipt = $outstanding->total_receipt;
-            if ($payment > $receipt) {
-                $carry += ($payment - $receipt);
-            }
-            return $carry;
-        }, 0);
+        ->get();
+
+    $totalPositive = 0;
+
+    foreach ($outstandings as $outstanding) {
+        $payment = $outstanding->total_payment;
+        $receipt = $outstanding->total_receipt;
+
+        if ($receipt > $payment) {
+            $totalPositive += ($receipt - $payment);
+        }
+    }
     
 
             return view('admin',['now' => Carbon::now()->toDateString(),'name' => $name,'total' => $total,'active'=>$active,'deactive'=>$deactive,'due'=>$due,
-            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,'totalNegative'=>$totalNegative]);
+            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,'totalPositive'=>$totalPositive]);
  
     } catch (\Exception $e) {
         return $e->getMessage();
