@@ -125,7 +125,7 @@
                   <div class="card card-light-blue">
                     <div class="card-body">
                       <p class="mb-4">Credit Amount</p>
-                      <p class="fs-30 mb-2">{{ number_format($totalPositive, 2) }}</p>
+                      <p class="fs-30 mb-2">{{ number_format($totalNegative, 2) }}</p>
                       <!-- <p>2.00% (30 days)</p> -->
                     </div>
                   </div>
