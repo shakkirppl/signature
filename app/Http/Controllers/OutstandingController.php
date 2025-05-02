@@ -88,29 +88,55 @@ class OutstandingController extends Controller
     }
 
 
-    public function supplierOutstanding()
+//     public function supplierOutstanding()
+// {
+//     $outstandings = Outstanding::select(
+//             'account_id',
+//             \DB::raw('SUM(payment) as total_payment'),
+//             \DB::raw('SUM(receipt) as total_receipt')
+//         )
+//         ->where('account_type', 'supplier') // Only suppliers
+//         ->groupBy('account_id') // Group by supplier
+//         ->get();
+
+//     // Fetch supplier names
+//     $suppliers = Supplier::whereIn('id', $outstandings->pluck('account_id'))->pluck('name', 'id');
+//     foreach ($outstandings as $outstanding) {
+//         if ($outstanding->total_payment > $outstanding->total_receipt) {
+//             $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+//         } else {
+//             $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+//         }
+//     }
+
+//     return view('supplier_outstanding.index', compact('outstandings', 'suppliers'));
+// }
+public function supplierOutstanding()
 {
     $outstandings = Outstanding::select(
             'account_id',
             \DB::raw('SUM(payment) as total_payment'),
             \DB::raw('SUM(receipt) as total_receipt')
         )
-        ->where('account_type', 'supplier') // Only suppliers
-        ->groupBy('account_id') // Group by supplier
+        ->where('account_type', 'supplier')
+        ->groupBy('account_id')
         ->get();
+
+    // Filter: remove rows where both payment and receipt are 0 or less
+    $outstandings = $outstandings->filter(function ($out) {
+        return $out->total_payment > 0 || $out->total_receipt > 0;
+    });
 
     // Fetch supplier names
     $suppliers = Supplier::whereIn('id', $outstandings->pluck('account_id'))->pluck('name', 'id');
+
     foreach ($outstandings as $outstanding) {
-        if ($outstanding->total_payment > $outstanding->total_receipt) {
-            $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
-        } else {
-            $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
-        }
+        $outstanding->outstanding_balance = abs($outstanding->total_payment - $outstanding->total_receipt);
     }
 
     return view('supplier_outstanding.index', compact('outstandings', 'suppliers'));
 }
+
 
 
 public function customerOutstanding()
