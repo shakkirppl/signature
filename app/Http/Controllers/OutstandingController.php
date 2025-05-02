@@ -122,19 +122,22 @@ public function supplierOutstanding()
         ->groupBy('account_id')
         ->get();
 
-    // Filter: remove rows where both payment and receipt are 0 or less
-    $outstandings = $outstandings->filter(function ($out) {
-        return $out->total_payment > 0 || $out->total_receipt > 0;
-    });
-
-    // Fetch supplier names
     $suppliers = Supplier::whereIn('id', $outstandings->pluck('account_id'))->pluck('name', 'id');
 
     foreach ($outstandings as $outstanding) {
         $outstanding->outstanding_balance = abs($outstanding->total_payment - $outstanding->total_receipt);
+        $outstanding->is_receivable = $outstanding->total_payment > $outstanding->total_receipt;
     }
 
-    return view('supplier_outstanding.index', compact('outstandings', 'suppliers'));
+    // Filter out entries where outstanding_balance == 0
+    $filteredOutstandings = $outstandings->filter(function ($item) {
+        return $item->outstanding_balance > 0;
+    })->values(); // Reindex the array
+
+    return view('supplier_outstanding.index', [
+        'outstandings' => $filteredOutstandings,
+        'suppliers' => $suppliers,
+    ]);
 }
 
 
@@ -164,6 +167,7 @@ public function customerOutstanding()
 
     return view('customer_outstanding.index', compact('outstandings', 'customers', 'totalNegative'));
 }
+
 public function customerOutstandingPrint()
 {
     $outstandings = Outstanding::select(
@@ -189,7 +193,6 @@ public function customerOutstandingPrint()
 
     return view('customer_outstanding.print', compact('outstandings', 'customers', 'totalNegative'));
 }
-
 
 
 public function supplierOutstandingPrint()
