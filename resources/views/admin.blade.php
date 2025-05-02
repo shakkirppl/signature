@@ -43,20 +43,24 @@
             <h3>Next Slaughter Schedule</h3>
 
             @if($nextSchedule)
-                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($nextSchedule->date)->format('d-m-Y') }}</p>
-                <p><strong>Time:</strong> {{ \Carbon\Carbon::parse($nextSchedule->time)->format('h:i A') }}</p>
+            <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($nextSchedule->date)->timezone('Africa/Dar_es_Salaam')->format('d-m-Y') }}</p>
+            <p><strong>Time:</strong> {{ \Carbon\Carbon::parse($nextSchedule->time)->timezone('Africa/Dar_es_Salaam')->format('h:i A') }}</p>
 
                 <h3 id="countdown" class="text-danger"></h3>
 
                 @php
-                    $scheduleDateTime = \Carbon\Carbon::parse($nextSchedule->date . ' ' . $nextSchedule->time)->format('Y-m-d H:i:s');
-                @endphp
+    $scheduleDateTime = \Carbon\Carbon::parse($nextSchedule->date . ' ' . $nextSchedule->time)
+        ->timezone('Africa/Dar_es_Salaam')
+        ->toIso8601String(); // includes timezone offset
+@endphp
 
-                <script>
+
+<script>
+    // Convert from ISO string with +03:00 (Tanzania time)
     let countDownDate = new Date("{{ $scheduleDateTime }}").getTime();
 
     let x = setInterval(function () {
-        let now = new Date().getTime();
+        let now = new Date().getTime(); // Current local time in milliseconds
         let distance = countDownDate - now;
 
         if (distance > 0) {
@@ -66,10 +70,8 @@
             let seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             let countdownStr = "";
-            if (days > 0) {
-                countdownStr += days + "d ";
-            }
-            countdownStr += hours + "h " + minutes + "m " + seconds + "s ";
+            if (days > 0) countdownStr += days + "d ";
+            countdownStr += hours + "h " + minutes + "m " + seconds + "s";
 
             document.getElementById("countdown").innerHTML = countdownStr;
         } else {
@@ -78,6 +80,9 @@
         }
     }, 1000);
 </script>
+
+
+
 
             @else
                 <p>No upcoming slaughter schedules found.</p>

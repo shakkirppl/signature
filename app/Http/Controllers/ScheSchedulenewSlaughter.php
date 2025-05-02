@@ -37,4 +37,37 @@ class ScheSchedulenewSlaughter extends Controller
     $timings = NewSlaughterTime::latest()->get(); // Eager load user if needed
     return view('new-slaughtertime.index', compact('timings'));
 }
+
+public function edit($id)
+{
+    $timing = NewSlaughterTime::findOrFail($id);
+    return view('new-slaughtertime.edit', compact('timing'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'date' => 'required|date',
+        'time' => 'required',
+    ]);
+
+    $timing = NewSlaughterTime::findOrFail($id);
+    $timing->update([
+        'date' => $request->date,
+        'time' => $request->time,
+        'user_id' => Auth::id(),
+    ]);
+
+    return redirect()->route('index.schedule')->with('success', 'Slaughter timing updated successfully.');
+}
+
+public function destroy($id)
+{
+    $timing = NewSlaughterTime::findOrFail($id);
+    $timing->delete();
+
+    return redirect()->back()->with('success', 'Slaughter timing deleted successfully.');
+}
+
+
 }

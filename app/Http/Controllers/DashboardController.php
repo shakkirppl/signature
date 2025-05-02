@@ -33,8 +33,8 @@ class DashboardController extends Controller
                 $query->where('weight_status', 1);
             })->count();
             $debitamount = PurchaseConformation::where('balance_amount', '>', 0)->sum('balance_amount');
-            $nextSchedule = NewSlaughterTime::orderBy('date', 'desc')
-            ->orderBy('time', 'desc')
+            $nextSchedule = NewSlaughterTime::orderBy('date', 'asc')
+            ->orderBy('time', 'asc')
             ->first();
             $outstandings = Outstanding::select(
                 'account_id',

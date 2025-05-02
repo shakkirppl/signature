@@ -483,6 +483,11 @@ Route::get('shipment-/{id}', [ShipmentProfitController::class, 'shipmentprofit']
 Route::get('create-new-scheduletime', [ScheSchedulenewSlaughter::class, 'create'])->name('new.schedule');
 Route::post('store-new-scheduletime', [ScheSchedulenewSlaughter::class, 'store'])->name('store.schedule');
 Route::get('index-new-scheduletime', [ScheSchedulenewSlaughter::class, 'index'])->name('index.schedule');
+Route::get('edit-new-scheduletime/{id}', [ScheSchedulenewSlaughter::class, 'edit'])->name('edit.schedule');;
+Route::put('update-new-scheduletime/{id}', [ScheSchedulenewSlaughter::class, 'update'])->name('update.schedule');;
+Route::delete('delete-new-scheduletime/{id}', [ScheSchedulenewSlaughter::class, 'destroy']);
+
+
 
 
 Route::get('return-payment-create', [ReturnAmountController::class, 'create'])->name('return-payment.create');
