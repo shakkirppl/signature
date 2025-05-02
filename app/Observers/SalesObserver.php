@@ -88,7 +88,9 @@ if($salesPayment->advance_amount>0)
      */
     public function deleted(SalesPayment $salesPayment)
     {
-        //
+        Outstanding::where('transaction_id', $salesPayment->id)
+            ->where('transaction_type', 'sales ')
+            ->delete();
     }
 
     /**

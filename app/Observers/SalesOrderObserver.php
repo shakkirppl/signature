@@ -64,9 +64,11 @@ class SalesOrderObserver
      * @return void
      */
     public function deleted(SalesOrder $salesOrder)
-    {
-        //
-    }
+{
+    Outstanding::where('transaction_id', $salesOrder->id)
+        ->where('transaction_type', 'Sales Order')
+        ->delete();
+}
 
     /**
      * Handle the SalesOrder "restored" event.

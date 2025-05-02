@@ -41,6 +41,8 @@ use App\Http\Controllers\UsdToShillingController;
 use App\Http\Controllers\ShipmentProfitController;
 use App\Http\Controllers\ScheSchedulenewSlaughter;
 use App\Http\Controllers\ReturnAmountController;
+use App\Http\Controllers\DispatchRecordController;
+use App\Http\Controllers\ProductionRecordController;
 
 
 
@@ -383,7 +385,7 @@ Route::get('customer-ledger', [OutstandingController::class, 'customerLedger'])-
 Route::get('supplier-outstanding', [OutstandingController::class, 'supplierOutstanding'])->name('supplier.outstanding');
 Route::get('customer-outstanding', [OutstandingController::class, 'customerOutstanding'])->name('customer.outstanding');
 Route::get('/supplier-outstanding/print', [OutstandingController::class, 'supplierOutstandingPrint'])->name('supplier.outstanding.print');
-Route::get('/customer-outstanding/print', [OutstandingController::class, 'printOutstanding'])->name('customer.outstanding.print');
+Route::get('/customer-outstanding/print', [OutstandingController::class, 'customerOutstandingPrint'])->name('customer.outstanding.print');
 
 
 
@@ -490,6 +492,19 @@ Route::get('/get-suppliers-by-shipment', [ReturnAmountController::class, 'getSup
 Route::get('/get-supplier-outstanding', [ReturnAmountController::class, 'getSupplierOutstanding'])->name('get.supplier.outstanding');
 Route::get('return-payment-index', [ReturnAmountController::class, 'index'])->name('return-payment.index');
 Route::delete('/return-payment/{id}', [ReturnAmountController::class, 'destroy'])->name('return-payment.destroy');
+
+
+
+Route::get('production-record-create', [ProductionRecordController::class, 'create'])->name('production-record.create');
+Route::post('production-record-store', [ProductionRecordController::class,'store'])->name('production-record.store');
+Route::get('production-record-index', [ProductionRecordController::class, 'index'])->name('production-record.index');
+// Route::get('paymentvoucher-edit/{id}', [paymentvoucherController::class, 'edit'])->name('paymentvoucher.edit');
+// Route::post('paymentvoucher-update/{id}', [paymentvoucherController::class, 'update'])->name('paymentvoucher.update');
+// Route::get('paymentvoucher-delete/{id}', [paymentvoucherController::class, 'destroy'])->name('paymentvoucher.destroy');
+// Route::get('paymentvoucher-report', [paymentvoucherController::class, 'report'])->name('paymentvoucher.report');
+Route::get('dispatch-record-create', [DispatchRecordController::class, 'create'])->name('dispatch-record.create');
+Route::post('dispatch-record-store', [DispatchRecordController::class,'store'])->name('dispatch-record.store');
+Route::get('dispatch-record-index', [DispatchRecordController::class, 'index'])->name('dispatch-record.index');
 
 
 

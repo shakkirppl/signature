@@ -52,7 +52,9 @@ class SupplierAdvanceObserver
      */
     public function deleted(SupplierAdvance $supplierAdvance)
     {
-        //
+        Outstanding::where('transaction_id', $supplierAdvance->id)
+            ->where('transaction_type', 'Supplier Advance')
+            ->delete();
     }
 
     /**

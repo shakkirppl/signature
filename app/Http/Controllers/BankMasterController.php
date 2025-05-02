@@ -44,8 +44,9 @@ class BankMasterController extends Controller
             ]);
     
             // Append currency to bank name
-            $fullBankName = $request->bank_name . ' - ' . strtoupper($request->currency);
-    
+            $currency = strtoupper($request->currency);
+            $fullBankName = $currency === 'USD' ? $request->bank_name . ' - ' . $currency : $request->bank_name;
+                
             // Create Account Head
             $accountHead = AccountHead::create([
                 'name' => $fullBankName,
@@ -103,8 +104,8 @@ class BankMasterController extends Controller
             $bankMaster = BankMaster::findOrFail($id);
     
             // Append currency to bank name
-            $fullBankName = $request->bank_name . ' - ' . strtoupper($request->currency);
-    
+            $currency = strtoupper($request->currency);
+            $fullBankName = $currency === 'USD' ? $request->bank_name . ' - ' . $currency : $request->bank_name;    
             // Update fields
             $bankMaster->update([
                 'code' => $request->input('code'),

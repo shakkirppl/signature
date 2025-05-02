@@ -72,10 +72,10 @@ button.remove-row {
                                 <div class="form-group row">
                                     <label class="col-sm-3 col-form-label">Payment Type</label>
                                     <div class="col-sm-9">
-                                        <select class="form-control" name="payment_type" id="payment_type" required>
-                                            <option value="Cash">Cash</option>
-                                            <option value="Cheque">Cheque</option>
-                                            <option value="Transfer">Transfer</option>
+                                    <select class="form-control" name="payment_type" id="payment_type" required>
+                                           <option value="cash">Cash</option>
+                                           <option value="bank">Bank</option>
+                                           <option value="mobilemoney">Mobile Money</option>
                                         </select>
                                     </div>
                                 </div>
@@ -83,39 +83,8 @@ button.remove-row {
                         </div>
 
                         <!-- Conditional Fields for Cheque and Transfer -->
-                        <div id="cheque_fields" style="display: none;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Cheque Date</label>
-                                        <div class="col-sm-9">
-                                            <input type="date" class="form-control" name="cheque_date">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Cheque No</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="cheque_no">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="transfer_fields" style="display: none;">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="col-sm-3 col-form-label">Transfer ID</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" name="transfer_id">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                       
+                       
 
                         <div id="bank_field" style="display: none;">
                             <div class="row">
@@ -353,7 +322,26 @@ button.remove-row {
 $(document).on('input', '.paid', function () {
     updateTotals();
 });
+$(document).ready(function () {
 
+function toggleBankField() {
+    var type = $('#payment_type').val();
+    if (type === 'bank') {
+        $('#bank_field').show();
+        $('#bank_name').attr('required', true);
+    } else {
+        $('#bank_field').hide();
+        $('#bank_name').removeAttr('required');
+    }
+}
+
+toggleBankField();
+
+$('#payment_type').on('change', function () {
+    toggleBankField();
+});
+}
+);
 </script>
 
 <script>
@@ -362,6 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
 });
+
 </script>
 
 @endsection

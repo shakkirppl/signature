@@ -32,6 +32,11 @@
               </ul>
             </div><br />
             @endif
+            @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+ </div>
+@endif
           </div>
           <form class="form-sample" action="{{ route('customer.store') }}" method="post" enctype="multipart/form-data">
             {{ csrf_field() }}

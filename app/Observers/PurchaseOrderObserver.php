@@ -65,7 +65,9 @@ class PurchaseOrderObserver
      */
     public function deleted(PurchaseOrder $purchaseOrder)
     {
-        //
+        Outstanding::where('transaction_id', $purchaseOrder->id)
+            ->where('transaction_type', 'Purchase Order')
+            ->delete();
     }
 
     /**

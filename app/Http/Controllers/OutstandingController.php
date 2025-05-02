@@ -138,6 +138,31 @@ public function customerOutstanding()
 
     return view('customer_outstanding.index', compact('outstandings', 'customers', 'totalNegative'));
 }
+public function customerOutstandingPrint()
+{
+    $outstandings = Outstanding::select(
+            'account_id',
+            \DB::raw('SUM(payment) as total_payment'),
+            \DB::raw('SUM(receipt) as total_receipt')
+        )
+        ->where('account_type', 'customer')
+        ->groupBy('account_id')
+        ->get();
+
+    $totalNegative = 0;
+    $customers = Customer::whereIn('id', $outstandings->pluck('account_id'))->pluck('customer_name', 'id');
+
+    foreach ($outstandings as $outstanding) {
+        if ($outstanding->total_payment > $outstanding->total_receipt) {
+            $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+            $totalNegative += $outstanding->outstanding_balance;
+        } else {
+            $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+        }
+    }
+
+    return view('customer_outstanding.print', compact('outstandings', 'customers', 'totalNegative'));
+}
 
 
 
