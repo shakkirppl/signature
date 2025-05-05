@@ -275,13 +275,29 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('production-record-create')}}">Production Record</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('dispatch-record-create')}}">Dispatch Record</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('chilling-room-create')}}">Chilling Room</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('breakdown-report-create')}}">Breakdown Report</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('breakdown-report-create')}}">Breakdown Report</a></li>
+              </ul>
+            </div>
+          </li> 
+
+          <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#quality-department" aria-expanded="false" aria-controls="charts">
+            <i class="mdi mdi-group menu-icon"></i> 
+              <span class="menu-title">Quality Control Department </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="quality-department">
+              <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('gmp-create')}}">GMP</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('temperature-monitoring-create')}}">Temperature Monitoring</a></li>  
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('cleaning-sanitation-create')}}">Cleaning Sanitation </a></li> 
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('corrective-action-create')}}">Corrective Action Report</a></li> 
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-complaint-create')}}">Customer Complaint</a></li> 
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('internal-auditchecklist-create')}}">Internal Audit Checklist</a></li> 
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('calibration-record-create')}}">Calibration Record</a></li> 
 
 
-
-             
-             
-             
+              
               </ul>
             </div>
           </li> 

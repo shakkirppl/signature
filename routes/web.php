@@ -45,6 +45,13 @@ use App\Http\Controllers\DispatchRecordController;
 use App\Http\Controllers\ProductionRecordController;
 use App\Http\Controllers\ChillingRoomController;
 use App\Http\Controllers\BreakdownReportController;
+use App\Http\Controllers\GMPController;
+use App\Http\Controllers\TemperatureMonitoringRecordController;
+use App\Http\Controllers\CleaningandSanitationController;
+use App\Http\Controllers\CorrectiveActionController;
+use App\Http\Controllers\CustomerComplaintController;
+use App\Http\Controllers\InternalAuditChecklistController;
+use App\Http\Controllers\CalibrationRecordController;
 
 
 
@@ -500,7 +507,7 @@ Route::get('/get-supplier-outstanding', [ReturnAmountController::class, 'getSupp
 Route::get('return-payment-index', [ReturnAmountController::class, 'index'])->name('return-payment.index');
 Route::delete('/return-payment/{id}', [ReturnAmountController::class, 'destroy'])->name('return-payment.destroy');
 
-
+// 
 
 Route::get('production-record-create', [ProductionRecordController::class, 'create'])->name('production-record.create');
 Route::post('production-record-store', [ProductionRecordController::class,'store'])->name('production-record.store');
@@ -520,6 +527,34 @@ Route::get('chilling-room-index', [ChillingRoomController::class, 'index'])->nam
 Route::get('breakdown-report-create', [BreakdownReportController::class, 'create'])->name('breakdown-report.create');
 Route::post('breakdown-report-store', [BreakdownReportController::class,'store'])->name('breakdown-report.store');
 Route::get('breakdown-report-index', [BreakdownReportController::class, 'index'])->name('breakdown-report.index');
+
+Route::get('gmp-create', [GMPController::class, 'create'])->name('gmp.create');
+Route::post('gmp-store', [GMPController::class,'store'])->name('gmp.store');
+Route::get('gmp-index', [GMPController::class, 'index'])->name('gmp.index');
+
+Route::get('temperature-monitoring-create', [TemperatureMonitoringRecordController::class, 'create'])->name('temperature-monitoring.create');
+Route::post('temperature-monitoring-store', [TemperatureMonitoringRecordController::class,'store'])->name('temperature-monitoring.store');
+Route::get('temperature-monitoring-index', [TemperatureMonitoringRecordController::class, 'index'])->name('temperature-monitoring.index');
+
+Route::get('cleaning-sanitation-create', [CleaningandSanitationController::class, 'create'])->name('cleaning-sanitation.create');
+Route::post('cleaning-sanitation-store', [CleaningandSanitationController::class,'store'])->name('cleaning-sanitation.store');
+Route::get('cleaning-sanitation-index', [CleaningandSanitationController::class, 'index'])->name('cleaning-sanitation.index');
+
+Route::get('corrective-action-create', [CorrectiveActionController::class, 'create'])->name('corrective-action.create');
+Route::post('corrective-action-store', [CorrectiveActionController::class,'store'])->name('corrective-action.store');
+Route::get('corrective-action-index', [CorrectiveActionController::class, 'index'])->name('corrective-action.index');
+
+Route::get('customer-complaint-create', [CustomerComplaintController::class, 'create'])->name('customer-complaint.create');
+Route::post('customer-complaint-store', [CustomerComplaintController::class,'store'])->name('customer-complaint.store');
+Route::get('customer-complaint-index', [CustomerComplaintController::class, 'index'])->name('customer-complaint.index');
+
+Route::get('internal-auditchecklist-create', [InternalAuditChecklistController::class, 'create'])->name('internal-auditchecklist.create');
+Route::post('internal-auditchecklist-store', [InternalAuditChecklistController::class,'store'])->name('internal-auditchecklist.store');
+Route::get('internal-auditchecklist-index', [InternalAuditChecklistController::class, 'index'])->name('internal-auditchecklist.index');
+
+Route::get('calibration-record-create', [CalibrationRecordController::class, 'create'])->name('calibration-record.create');
+Route::post('calibration-record-store', [CalibrationRecordController::class,'store'])->name('calibration-record.store');
+Route::get('calibration-record-index', [CalibrationRecordController::class, 'index'])->name('calibration-record.index');
 
 
 
