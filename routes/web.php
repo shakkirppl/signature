@@ -43,6 +43,8 @@ use App\Http\Controllers\ScheSchedulenewSlaughter;
 use App\Http\Controllers\ReturnAmountController;
 use App\Http\Controllers\DispatchRecordController;
 use App\Http\Controllers\ProductionRecordController;
+use App\Http\Controllers\ChillingRoomController;
+use App\Http\Controllers\BreakdownReportController;
 
 
 
@@ -510,6 +512,14 @@ Route::get('production-record-index', [ProductionRecordController::class, 'index
 Route::get('dispatch-record-create', [DispatchRecordController::class, 'create'])->name('dispatch-record.create');
 Route::post('dispatch-record-store', [DispatchRecordController::class,'store'])->name('dispatch-record.store');
 Route::get('dispatch-record-index', [DispatchRecordController::class, 'index'])->name('dispatch-record.index');
+
+Route::get('chilling-room-create', [ChillingRoomController::class, 'create'])->name('chilling-room.create');
+Route::post('chilling-room-store', [ChillingRoomController::class,'store'])->name('chilling-room.store');
+Route::get('chilling-room-index', [ChillingRoomController::class, 'index'])->name('chilling-room.index');
+
+Route::get('breakdown-report-create', [BreakdownReportController::class, 'create'])->name('breakdown-report.create');
+Route::post('breakdown-report-store', [BreakdownReportController::class,'store'])->name('breakdown-report.store');
+Route::get('breakdown-report-index', [BreakdownReportController::class, 'index'])->name('breakdown-report.index');
 
 
 
