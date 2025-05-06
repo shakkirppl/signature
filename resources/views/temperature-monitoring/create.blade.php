@@ -65,9 +65,13 @@
            
                           
                               <div class="form-group">
-                                  <label for="text" class="">Inspector Name</label>
+                                  <label for="text" class="">Inspector Name and Signature</label>
                                   <input type="text" class="form-control" id="inspector_name" name="inspector_name" required>
-                              </div>  
+                                  <canvas id="inspector-signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas>
+  
+                               <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearInspectorSignature()">Clear </button>
+                               <input type="hidden" id="inspector_signature_image" name="inspector_signature">
+                             
                         
 </div>
                              
@@ -89,6 +93,25 @@
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+  const inspectorCanvas = document.getElementById('inspector-signature-pad');
+  const inspectorSignaturePad = new SignaturePad(inspectorCanvas);
+
+  function clearInspectorSignature() {
+    inspectorSignaturePad.clear();
+  }
+
+  document.querySelector('form').addEventListener('submit', function (e) {
+    if (!inspectorSignaturePad.isEmpty()) {
+      const dataUrl = inspectorSignaturePad.toDataURL();
+      document.getElementById('inspector_signature_image').value = dataUrl;
+    } else {
+      e.preventDefault();
+      alert('Please provide Inspector Signature.');
+    }
+  });
+</script>
 
 <script>
         function formatNumber(input) {

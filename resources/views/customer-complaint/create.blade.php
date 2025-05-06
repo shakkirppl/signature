@@ -65,9 +65,14 @@
                   <input type="date" class="form-control" id="date_closed" name="date_closed" required>
                 </div>
                 <div class="form-group">
-                  <label for="manager_signature" class="required">Manager Review Signature</label>
-                  <input type="file" class="form-control" id="manager_signature" name="manager_signature" accept="image/*" required>
-                </div>
+  <label class="required">Manager Review Signature</label>
+  <br>
+  <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+  <br>
+  <button type="button" class="btn btn-sm btn-warning" onclick="clearSignature()">Clear</button>
+  <input type="hidden" id="signature_image" name="manager_signature">
+</div>
+
               </div>
             </div>
 
@@ -81,7 +86,26 @@
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+  let canvas = document.getElementById('signature-pad');
+  let signaturePad = new SignaturePad(canvas);
 
+  function clearSignature() {
+    signaturePad.clear();
+  }
+
+  // On submit, convert the signature to base64 and store it in hidden input
+  document.querySelector('form').addEventListener('submit', function (e) {
+    if (!signaturePad.isEmpty()) {
+      let dataUrl = signaturePad.toDataURL();
+      document.getElementById('signature_image').value = dataUrl;
+    } else {
+      e.preventDefault();
+      alert('Please provide a signature.');
+    }
+  });
+</script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     const dateInput = document.getElementById('date_received');
@@ -89,4 +113,6 @@
     dateInput.value = today;
   });
 </script>
+
+
 @endsection

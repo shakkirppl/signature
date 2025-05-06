@@ -14,7 +14,7 @@
                 <div class="card-body">
                     <h4 class="card-title">Chilling Room Temperature & Humidity Log</h4>
                     <div class="col-md-6 heading">
-                        <a href=" {{ route('dispatch-record.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        <a href=" {{ route('chilling-room.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                     </div>
                     @if($errors->any())
                         <div class="alert alert-danger">
@@ -26,7 +26,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('dispatch-record.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('chilling-room.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                         <div class="row">
                             <!-- First Section -->
@@ -39,11 +39,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="text" class="">Initial carcass temp</label>
-                                    <input type="text" class="form-control" id="Product_id" name="Product_id" >
+                                    <input type="text" class="form-control" id="initial_carcass_temp" name="initial_carcass_temp" >
                                </div>  
                                <div class="form-group">
                                   <label for="text" class="">Exit temp of carcasses</label>
-                                  <input type="text" class="form-control" id="Product_id" name="Product_id" required>
+                                  <input type="text" class="form-control" id="exit_temp_carcass" name="exit_temp_carcass" required>
                               </div>                              
                           
 </div>
@@ -52,12 +52,12 @@
                               
 
 <div class="form-group">
-                                  <label for="text" class="">Time of entry</label>
-                                  <input type="text" class="form-control" id="Product_id" name="Product_id" required>
+                                  <label for="time" class="">Time of entry</label>
+                                  <input type="time" class="form-control" id="time" name="time" required>
 </div>                              
                               <div class="form-group">
                                   <label for="text" class="">Chiller temp & humidity every 2-4 hours</label>
-                                  <input type="text" class="form-control" id="processing_line" name="processing_line" required>
+                                  <input type="text" class="form-control" id="chiller_temp_humidity" name="chiller_temp_humidity" required>
 </div>          
                  
                         
@@ -80,8 +80,7 @@
         </div>
     </div>
 </div>
-
-
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
         function formatNumber(input) {
             // Remove any existing formatting
@@ -102,6 +101,26 @@ document.addEventListener('DOMContentLoaded', function () {
     let today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
 });
+</script>
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+    flatpickr(".timepicker", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "h:i K", // 12-hour format with AM/PM
+        time_24hr: false,
+        onOpen: function(selectedDates, dateStr, instance) {
+            let currentTime = new Date().toLocaleTimeString("en-US", { 
+                timeZone: "Africa/Dar_es_Salaam",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true 
+            });
+            instance.setDate(currentTime, true);
+        }
+    });
+});
+
 </script>
 
 @endsection
