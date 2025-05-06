@@ -56,11 +56,12 @@
 
 <div class="col-md-4">
     <label class="required">Supplier:</label>
-    <select name="supplier_id" id="supplier_id" class="form-control" required>
+    <select name="supplier_id" id="supplier_id" class="form-control select2" required>
         <option value="">Select Supplier</option>
-        {{-- dynamically filled via JS --}}
+        {{-- Options will be appended via JS --}}
     </select>
 </div>
+
 
 
                                 <div class="col-md-4 mt-3">
@@ -87,6 +88,12 @@
 
 {{-- JS --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Select2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // Auto-set today's date
@@ -167,5 +174,16 @@
 
 $('#type').trigger('change'); // default behavior on load
 
+
 </script>
+<script>
+    $(document).ready(function() {
+        $('#supplier_id').select2({
+            placeholder: 'Select Supplier',
+            allowClear: true,
+            width: '100%' // Makes it full width
+        });
+    });
+</script>
+
 @endsection
