@@ -58,13 +58,17 @@ class ReturnAmountController extends Controller
 
         return response()->json(['balance' => number_format($balance, 2, '.', '')]);
     }
-
+    public function getAllSuppliers()
+    {
+        $suppliers = Supplier::select('id', 'name')->get();
+        return response()->json(['suppliers' => $suppliers]);
+    }
     public function store(Request $request)
     {
         // return $request->all();
         $request->validate([
             'date' => 'required|date',
-            'shipment_id' => 'required|exists:shipment,id',
+            'shipment_id' => 'nullable|exists:shipment,id',
             'supplier_id' => 'required|exists:supplier,id',
             'retrun_amount' => 'required|numeric|min:0.01',
         ]);
@@ -77,11 +81,13 @@ class ReturnAmountController extends Controller
             // Step 1: Insert into return_payments table
             $returnPayment = ReturnAmount::create([
                 'date' => $request->date,
-                'shipment_id' => $request->shipment_id,
+                'type' => $request->type,
                 'supplier_id' => $request->supplier_id,
                 'retrun_amount' => $request->retrun_amount,
                 'store_id' => 1,
                  'user_id' => auth()->id(),
+                 'shipment_id' => $request->type === 'transaction' ? $request->shipment_id : null,
+
             ]);
     
             // Step 2: Insert into outstandings table
@@ -89,17 +95,18 @@ class ReturnAmountController extends Controller
                 'date' => $request->date,
                 'time' => Carbon::now()->format('H:i:s'),
                 'account_id' => $request->supplier_id,
-                'receipt' => null,               
+                'receipt' => null,
                 'payment' => -abs($request->retrun_amount),
-                'narration' => 'Return payment from supplier',
+                'narration' => $request->type === 'opening_balance' ? 'Return payment (Opening Balance)' : 'Return payment from supplier',
                 'transaction_id' => $returnPayment->id,
                 'transaction_type' => 'Return Payment',
-                'description' => 'Return Payment - Shipment ID: ' . $request->shipment_id,
+                'description' => 'Return Payment - ' . ($request->type === 'transaction' ? 'Shipment ID: ' . $request->shipment_id : 'Opening Balance'),
                 'account_type' => 'supplier',
                 'store_id' => $returnPayment->store_id,
                 'user_id' => $returnPayment->user_id,
                 'financial_year' => date('Y'),
             ]);
+            
     
             DB::commit();
     

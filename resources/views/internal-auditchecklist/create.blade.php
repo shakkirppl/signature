@@ -61,9 +61,13 @@
                   <input type="date" class="form-control" id="follow_up_date" name="follow_up_date" required>
                 </div>
                 <div class="form-group">
-                  <label for="auditor_signature" class="required">Auditor Signature</label>
-                  <input type="file" class="form-control" id="auditor_signature" name="auditor_signature" accept="image/*" required>
-                </div>
+  <label class="required">Auditor Signature</label><br>
+  <canvas id="auditor-signature-pad" width="300" height="200" style="border:1px solid #ccc;"></canvas>
+  <br>
+  <button type="button" class="btn btn-warning mt-2" onclick="clearAuditorSignature()">Clear Signature</button>
+  <input type="hidden" id="auditor_signature_image" name="auditor_signature" required>
+</div>
+
               </div>
             </div>
 
@@ -77,6 +81,25 @@
     </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+  const auditorCanvas = document.getElementById('auditor-signature-pad');
+  const auditorSignaturePad = new SignaturePad(auditorCanvas);
+
+  function clearAuditorSignature() {
+    auditorSignaturePad.clear();
+  }
+
+  document.querySelector('form').addEventListener('submit', function (e) {
+    if (!auditorSignaturePad.isEmpty()) {
+      const dataUrl = auditorSignaturePad.toDataURL();
+      document.getElementById('auditor_signature_image').value = dataUrl;
+    } else {
+      e.preventDefault();
+      alert('Please provide the Auditor Signature.');
+    }
+  });
+</script>
 
 <script>
   document.addEventListener('DOMContentLoaded', function () {

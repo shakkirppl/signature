@@ -74,6 +74,13 @@
                                   <label for="text" class="">Verified By</label>
                                   <input type="text" class="form-control" id="verified_by" name="verified_by" required>
 </div>    
+<div class="form-group">
+                                  <label for="text" class="">Signature</label>
+                                  <canvas id="inspector-signature-pad" width="300" height="150" style="border:1px solid #ccc;"></canvas>
+  
+  <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearInspectorSignature()">Clear </button>
+  <input type="hidden" id="inspector_signature_image" name="signature">
+</div>    
                  
                         
 </div>
@@ -95,7 +102,25 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+  const inspectorCanvas = document.getElementById('inspector-signature-pad');
+  const inspectorSignaturePad = new SignaturePad(inspectorCanvas);
 
+  function clearInspectorSignature() {
+    inspectorSignaturePad.clear();
+  }
+
+  document.querySelector('form').addEventListener('submit', function (e) {
+    if (!inspectorSignaturePad.isEmpty()) {
+      const dataUrl = inspectorSignaturePad.toDataURL();
+      document.getElementById('inspector_signature_image').value = dataUrl;
+    } else {
+      e.preventDefault();
+      alert('Please provide Inspector Signature.');
+    }
+  });
+</script>
 
 <script>
         function formatNumber(input) {

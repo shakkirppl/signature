@@ -506,6 +506,8 @@ Route::get('/get-suppliers-by-shipment', [ReturnAmountController::class, 'getSup
 Route::get('/get-supplier-outstanding', [ReturnAmountController::class, 'getSupplierOutstanding'])->name('get.supplier.outstanding');
 Route::get('return-payment-index', [ReturnAmountController::class, 'index'])->name('return-payment.index');
 Route::delete('/return-payment/{id}', [ReturnAmountController::class, 'destroy'])->name('return-payment.destroy');
+Route::get('/get-all-suppliers', [ReturnAmountController::class, 'getAllSuppliers'])->name('get.all.suppliers');
+
 
 // 
 

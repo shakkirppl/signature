@@ -46,9 +46,13 @@
                                   <input type="text" class="form-control" id="cleaning_agent" name="cleaning_agent" required>
                               </div>
                               <div class="form-group">
-                                  <label for="text" class="">Verification signature</label>
-                                  <input type="text" class="form-control" id="verification_signature" name="pest_control" required>
-                              </div>                              
+  <label class="required">Verification Signature</label><br>
+  <canvas id="verification-signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+  <br>
+  <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearVerificationSignature()">Clear </button>
+  <input type="hidden" id="verification_signature_image" name="pest_control">
+</div>
+                             
                           
 </div>
 
@@ -95,6 +99,25 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script>
+  const verificationCanvas = document.getElementById('verification-signature-pad');
+  const verificationSignaturePad = new SignaturePad(verificationCanvas);
+
+  function clearVerificationSignature() {
+    verificationSignaturePad.clear();
+  }
+
+  document.querySelector('form').addEventListener('submit', function (e) {
+    if (!verificationSignaturePad.isEmpty()) {
+      const dataUrl = verificationSignaturePad.toDataURL();
+      document.getElementById('verification_signature_image').value = dataUrl;
+    } else {
+      e.preventDefault();
+      alert('Please provide the Verification Signature.');
+    }
+  });
+</script>
 
 
 <script>

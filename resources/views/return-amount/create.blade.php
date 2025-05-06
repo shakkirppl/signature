@@ -37,23 +37,31 @@
                                     <label class="required">Date:</label>
                                     <input type="date" name="date" id="date" class="form-control" required>
                                 </div>
-
                                 <div class="col-md-4">
-                                    <label class="required">Shipment No:</label>
-                                    <select name="shipment_id" id="shipment_id" class="form-control" required>
-                                        <option value="">Select Shipment</option>
-                                        @foreach($shipments as $shipment)
-                                            <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
+    <label class="required">Return Type:</label>
+    <select name="type" id="type" class="form-control" required>
+        <option value="">Select Type</option>
+        <option value="opening_balance">Opening Balance</option>
+        <option value="transaction">Transaction</option>
+    </select>
+</div><div class="col-md-4" id="shipment_section">
+    <label class="required">Shipment No:</label>
+    <select name="shipment_id" id="shipment_id" class="form-control">
+        <option value="">Select Shipment</option>
+        @foreach($shipments as $shipment)
+            <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
+        @endforeach
+    </select>
+</div>
 
-                                <div class="col-md-4">
-                                    <label class="required">Supplier:</label>
-                                    <select name="supplier_id" id="supplier_id" class="form-control" required>
-                                        <option value="">Select Supplier</option>
-                                    </select>
-                                </div>
+<div class="col-md-4">
+    <label class="required">Supplier:</label>
+    <select name="supplier_id" id="supplier_id" class="form-control" required>
+        <option value="">Select Supplier</option>
+        {{-- dynamically filled via JS --}}
+    </select>
+</div>
+
 
                                 <div class="col-md-4 mt-3">
                                     <label for="outstanding_balance">Balance Amount:</label>
@@ -128,5 +136,36 @@
             }
         });
     });
+
+    $('#type').change(function () {
+    var type = $(this).val();
+
+    if (type === 'opening_balance') {
+        $('#shipment_section').hide();
+        // Load all suppliers
+        $.ajax({
+            url: "{{ route('get.all.suppliers') }}",
+            type: "GET",
+            success: function (response) {
+                $('#supplier_id').html('<option value="">Select Supplier</option>');
+                $.each(response.suppliers, function (index, supplier) {
+                    $('#supplier_id').append('<option value="' + supplier.id + '">' + supplier.name + '</option>');
+                });
+                $('#outstanding_balance').val('0.00');
+            }
+        });
+    } else if (type === 'transaction') {
+        $('#shipment_section').show();
+        $('#supplier_id').html('<option value="">Select Supplier</option>');
+        $('#outstanding_balance').val('0.00');
+    } else {
+        $('#shipment_section').hide();
+        $('#supplier_id').html('<option value="">Select Supplier</option>');
+        $('#outstanding_balance').val('0.00');
+    }
+});
+
+$('#type').trigger('change'); // default behavior on load
+
 </script>
 @endsection
