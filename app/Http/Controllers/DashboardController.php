@@ -10,7 +10,7 @@ use App\Models\Shipment;
 use App\Models\InspectionDetail;
 use App\Models\PurchaseConformation;
 use App\Models\NewSlaughterTime;
-use App\Models\Outstanding; // add this
+use App\Models\Outstanding; 
 use App\Models\Supplier;     
 class DashboardController extends Controller
 {
@@ -20,7 +20,9 @@ class DashboardController extends Controller
         try {
   
             $name= Auth::user()->name;
-            $total =Shipment::pluck('shipment_no')
+            $total = Shipment::where('shipment_status', 0)
+            
+            ->pluck('shipment_no')
             ->map(function($no) {
                 return (int) filter_var($no, FILTER_SANITIZE_NUMBER_INT);
             })

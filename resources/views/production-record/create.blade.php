@@ -25,6 +25,11 @@
                             </ul>
                         </div>
                     @endif
+                    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
                     <form action="{{ route('production-record.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -39,7 +44,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="text" class="">No of animals slaughtered</label>
-                                    <input type="text" class="form-control" id="Product_id" name="Product_id" >
+                                    <input type="text" class="form-control" id="number_of_animals" name="number_of_animals" >
 </div>                              
                           
 </div>
@@ -48,9 +53,15 @@
                               
 
 <div class="form-group">
-                                  <label for="text" class="required">Products</label>
-                                  <input type="text" class="form-control" id="Product_id" name="Product_id" required>
-</div>                              
+    <label for="product_id" class="required">Species</label>
+    <select class="form-control" id="product_id" name="product_id" required>
+        <option value="">-- Select Species --</option>
+        @foreach($products as $product)
+            <option value="{{ $product->id }}">{{ $product->product_name }}</option>
+        @endforeach
+    </select>
+</div>
+                            
                               <div class="form-group">
                                   <label for="text" class="">Processing line info</label>
                                   <input type="text" class="form-control" id="processing_line" name="processing_line" required>

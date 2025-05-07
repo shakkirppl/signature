@@ -6,7 +6,7 @@
     color: red;
   }
 </style>
-
+<!--  -->
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-lg-12 grid-margin stretch-card">
@@ -25,7 +25,11 @@
                             </ul>
                         </div>
                     @endif
-
+                    @if(session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
                     <form action="{{ route('dispatch-record.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                         <div class="row">
@@ -39,11 +43,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="text" class="">No. of carcasses dispatched</label>
-                                    <input type="text" class="form-control" id="Product_id" name="Product_id" >
+                                    <input type="text" class="form-control" id="no_of_carcasses" name="no_of_carcasses" >
                                </div>  
                                <div class="form-group">
                                   <label for="text" class="">Customer name/export destination</label>
-                                  <input type="text" class="form-control" id="Product_id" name="Product_id" required>
+                                  <input type="text" class="form-control" id="customer_name" name="customer_name" required>
                               </div>                              
                           
 </div>
@@ -53,15 +57,15 @@
 
 <div class="form-group">
                                   <label for="text" class="">Dispatch temperature</label>
-                                  <input type="text" class="form-control" id="Product_id" name="Product_id" required>
+                                  <input type="text" class="form-control" id="dispatch_temperature" name="dispatch_temperature" >
 </div>                              
                               <div class="form-group">
                                   <label for="text" class="">Packaging material used</label>
-                                  <input type="text" class="form-control" id="processing_line" name="processing_line" required>
+                                  <input type="text" class="form-control" id="packaging_material_used" name="packaging_material_used" >
 </div>          
 <div class="form-group">
                                   <label for="text" class="">Comments</label>
-                                  <input type="text" class="form-control" id="Product_id" name="Product_id" required>
+                                  <input type="text" class="form-control" id="comments" name="comments" >
 </div>                      
                         
 </div>

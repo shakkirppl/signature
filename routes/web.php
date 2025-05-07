@@ -514,13 +514,19 @@ Route::get('/get-all-suppliers', [ReturnAmountController::class, 'getAllSupplier
 Route::get('production-record-create', [ProductionRecordController::class, 'create'])->name('production-record.create');
 Route::post('production-record-store', [ProductionRecordController::class,'store'])->name('production-record.store');
 Route::get('production-record-index', [ProductionRecordController::class, 'index'])->name('production-record.index');
-// Route::get('paymentvoucher-edit/{id}', [paymentvoucherController::class, 'edit'])->name('paymentvoucher.edit');
-// Route::post('paymentvoucher-update/{id}', [paymentvoucherController::class, 'update'])->name('paymentvoucher.update');
-// Route::get('paymentvoucher-delete/{id}', [paymentvoucherController::class, 'destroy'])->name('paymentvoucher.destroy');
+Route::get('production-record-edit/{id}', [ProductionRecordController::class, 'edit'])->name('production-record.edit');
+Route::post('production-record-update/{id}', [ProductionRecordController::class, 'update'])->name('production-record.update');
+Route::delete('production-record-delete/{id}', [ProductionRecordController::class, 'destroy'])->name('production-record.destroy');
 // Route::get('paymentvoucher-report', [paymentvoucherController::class, 'report'])->name('paymentvoucher.report');
+
 Route::get('dispatch-record-create', [DispatchRecordController::class, 'create'])->name('dispatch-record.create');
 Route::post('dispatch-record-store', [DispatchRecordController::class,'store'])->name('dispatch-record.store');
 Route::get('dispatch-record-index', [DispatchRecordController::class, 'index'])->name('dispatch-record.index');
+Route::get('dispatch-record-edit/{id}', [DispatchRecordController::class, 'edit'])->name('dispatch-record.edit');
+Route::post('dispatch-record-update/{id}', [DispatchRecordController::class, 'update'])->name('dispatch-record.update');
+Route::delete('dispatch-record-delete/{id}', [DispatchRecordController::class, 'destroy'])->name('dispatch-record.destroy');
+
+
 
 Route::get('chilling-room-create', [ChillingRoomController::class, 'create'])->name('chilling-room.create');
 Route::post('chilling-room-store', [ChillingRoomController::class,'store'])->name('chilling-room.store');
