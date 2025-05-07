@@ -105,15 +105,19 @@
 
             <div class="col-md-6 grid-margin transparent">
               <div class="row">
-                <div class="col-md-6 mb-4 stretch-card transparent">
-                  <div class="card card-tale">
-                    <div class="card-body">
-                      <p class="mb-4">Number of Shipments</p>
-                      <p class="fs-30 mb-2">{{ $total }}</p>
-                      
-                    </div>
-                  </div>
-                </div>
+                
+                
+                <div class="col-md-6 mb-4 grid-margin transparent">
+  <a href="{{ route('shipment.index') }}" style="text-decoration: none; color: inherit;">
+    <div class="card card-tale">
+      <div class="card-body">
+        <p class="mb-4">Number of Shipments</p>
+        <p class="fs-30 mb-2">{{ $total }}</p>
+      </div>
+    </div>
+  </a>
+</div>
+
                 <div class="col-md-6 mb-4 stretch-card transparent">
                   <div class="card card-dark-blue">
                     <div class="card-body">
@@ -124,9 +128,10 @@
                   </div>
                 </div>
               </div>
-              @if($user->designation_id == 1||$user->designation_id == 3||$user->designation_id == 4||$user->designation_id == 5 )   
+              @if($user->designation_id == 1||$user->designation_id == 3)   
               <div class="row">
-                <div class="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
+              <a href="{{ route('customer.outstanding') }}" class="col-md-6 stretch-card transparent" style="text-decoration: none;">
+
                   <div class="card card-light-blue">
                     <div class="card-body">
                       <p class="mb-4">Credit Amount</p>
@@ -134,8 +139,11 @@
                       <!-- <p>2.00% (30 days)</p> -->
                     </div>
                   </div>
-                </div>
-              
+                
+                </a>
+                @endif
+                @if($user->designation_id == 1||$user->designation_id == 3||$user->designation_id == 4||$user->designation_id == 5 )   
+
                 <a href="{{ route('supplier.outstanding') }}" class="col-md-6 stretch-card transparent" style="text-decoration: none;">
                   <div class="card card-light-danger">
                     <div class="card-body">
@@ -148,9 +156,22 @@
                   </div>
                 </a>
               @endif
+            <br>
+              <div class="col-md-6 mb-4 grid-margin transparent mt-4">
+  <a href="{{ route('purchase-order.index') }}" style="text-decoration: none; color: inherit;">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <p class="mb-4">Orders</p>
+        <p class="fs-30 mb-2">{{ $purchaseOrderCount }}</p>
+      </div>
+    </div>
+  </a>
+</div>
+
               </div>
             </div>
           </div>
+          
           <!-- <div class="row">
             <div class="col-md-6 grid-margin stretch-card">
               <div class="card">

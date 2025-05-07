@@ -11,7 +11,8 @@ use App\Models\InspectionDetail;
 use App\Models\PurchaseConformation;
 use App\Models\NewSlaughterTime;
 use App\Models\Outstanding; 
-use App\Models\Supplier;     
+use App\Models\Supplier;  
+use App\Models\PurchaseOrder;   
 class DashboardController extends Controller
 {
     //
@@ -73,10 +74,11 @@ class DashboardController extends Controller
             $totalPositive += ($receipt - $payment);
         }
     }
-    
+    $purchaseOrderCount = PurchaseOrder::withoutTrashed()->count();
 
             return view('admin',['now' => Carbon::now()->toDateString(),'name' => $name,'total' => $total,'active'=>$active,'deactive'=>$deactive,'due'=>$due,
-            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,'totalPositive'=>$totalPositive]);
+            'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,
+            'totalPositive'=>$totalPositive,'purchaseOrderCount'=>$purchaseOrderCount]);
  
     } catch (\Exception $e) {
         return $e->getMessage();
