@@ -29,6 +29,7 @@
                   <th style="width: 10%;">Shipment No</th>
                   <th style="width: 15%;">Sales Order No</th>
                   <th style="width: 10%;">Advance</th>
+                  <th>Created By</th>
                   <th style="width: 20%;">Actions</th>
                 </tr>
               </thead>
@@ -42,6 +43,8 @@
                   <td>{{ $order->shipment ? $order->shipment->shipment_no : 'N/A' }}</td>
                   <td>{{ $order->salesOrder ? $order->salesOrder->order_no : 'N/A' }}</td>
                   <td>{{ number_format($order->advance_amount, 2) }}</td>
+                  <td>{{ $order->user->name ?? 'N/A' }}</td>
+                
                   <td>
                     <a href="{{ route('purchase-order.view', $order->id) }}" class="btn btn-info btn-sm">View</a>
                     @if($user->designation_id == 1)

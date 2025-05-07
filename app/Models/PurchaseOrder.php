@@ -41,6 +41,10 @@ protected $dates = ['deleted_at'];
     {
         return $this->hasMany(PurchaseOrderDetail::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 
 
     public function details()

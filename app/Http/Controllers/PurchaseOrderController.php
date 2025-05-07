@@ -21,7 +21,7 @@ class PurchaseOrderController extends Controller
 {
     public function index()
 {
-    $purchaseOrders = PurchaseOrder::with(['supplier', 'details','salesOrder','shipment'])->get();
+    $purchaseOrders = PurchaseOrder::with(['supplier', 'details','salesOrder','shipment','user'])->get();
     return view('purchase-order.index', compact('purchaseOrders'));
 }
   
