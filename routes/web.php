@@ -531,6 +531,10 @@ Route::delete('dispatch-record-delete/{id}', [DispatchRecordController::class, '
 Route::get('chilling-room-create', [ChillingRoomController::class, 'create'])->name('chilling-room.create');
 Route::post('chilling-room-store', [ChillingRoomController::class,'store'])->name('chilling-room.store');
 Route::get('chilling-room-index', [ChillingRoomController::class, 'index'])->name('chilling-room.index');
+Route::get('chilling-room-edit/{id}', [ChillingRoomController::class, 'edit'])->name('chilling-room.edit');
+Route::post('chilling-room-update/{id}', [ChillingRoomController::class, 'update'])->name('chilling-room.update');
+Route::delete('chilling-room-delete/{id}', [ChillingRoomController::class, 'destroy'])->name('chilling-room.destroy');
+
 
 Route::get('breakdown-report-create', [BreakdownReportController::class, 'create'])->name('breakdown-report.create');
 Route::post('breakdown-report-store', [BreakdownReportController::class,'store'])->name('breakdown-report.store');

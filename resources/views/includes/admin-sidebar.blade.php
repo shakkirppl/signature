@@ -273,8 +273,8 @@
             <div class="collapse" id="production-department">
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('production-record-index')}}">Production Record</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('dispatch-record-create')}}">Dispatch Record</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('chilling-room-create')}}">Chilling Room</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('dispatch-record-index')}}">Dispatch Record</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('chilling-room-index')}}">Chilling Room</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('breakdown-report-create')}}">Breakdown Report</a></li>
               </ul>
             </div>

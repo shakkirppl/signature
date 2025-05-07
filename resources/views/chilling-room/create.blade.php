@@ -53,8 +53,10 @@
 
 <div class="form-group">
                                   <label for="time" class="">Time of entry</label>
-                                  <input type="time" class="form-control" id="time" name="time" required>
-</div>                              
+                                  <input type="text" class="form-control timepicker" id="time" name="time" required>
+
+                                  </div>   
+                                                             
                               <div class="form-group">
                                   <label for="text" class="">Chiller temp & humidity every 2-4 hours</label>
                                   <input type="text" class="form-control" id="chiller_temp_humidity" name="chiller_temp_humidity" required>
@@ -81,6 +83,7 @@
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script>
         function formatNumber(input) {
             // Remove any existing formatting
@@ -121,6 +124,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+
 </script>
+
+
 
 @endsection
