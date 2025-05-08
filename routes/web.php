@@ -52,6 +52,7 @@ use App\Http\Controllers\CorrectiveActionController;
 use App\Http\Controllers\CustomerComplaintController;
 use App\Http\Controllers\InternalAuditChecklistController;
 use App\Http\Controllers\CalibrationRecordController;
+use App\Http\Controllers\CustomerFeedbackController;
 
 
 
@@ -570,6 +571,12 @@ Route::get('internal-auditchecklist-index', [InternalAuditChecklistController::c
 Route::get('calibration-record-create', [CalibrationRecordController::class, 'create'])->name('calibration-record.create');
 Route::post('calibration-record-store', [CalibrationRecordController::class,'store'])->name('calibration-record.store');
 Route::get('calibration-record-index', [CalibrationRecordController::class, 'index'])->name('calibration-record.index');
+
+
+Route::get('customer-feedback-create', [CustomerFeedbackController::class, 'create'])->name('customer-feedback.create');
+Route::post('customer-feedback/store', [CustomerFeedbackController::class, 'store'])->name('customer-feedback.store');
+Route::get('customer-feedback', [CustomerFeedbackController::class, 'index'])->name('customer-feedback.index');
+Route::delete('customer-feedback/{id}/delete', [CustomerFeedbackController::class, 'destroy'])->name('customer-feedback.destroy');
 
 
 

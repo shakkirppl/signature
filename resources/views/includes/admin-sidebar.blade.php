@@ -158,7 +158,7 @@
 
 
 </li> 
-@if($user->designation_id == 1 || $user->designation_id == 2)
+@if($user->designation_id == 1 || $user->designation_id == 2|| $user->designation_id == 23)
 <li class="nav-item">
   <a class="nav-link" href="{{URL::to('slaughter-schedules-index')}}">
   <i class="mdi mdi-group menu-icon"></i> 
@@ -234,8 +234,6 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/weight-calculator')}}">Weight Calculator</a></li> 
               @endif
 
-
-             
               </ul>
             </div>
           </li>
@@ -243,19 +241,9 @@
    @endif
    <!--  -->
 
-
-
-
- 
-
-
 <!--  -->
            
  
-
-
-
-
 
 <!--  -->
  <!--Shipemt -->
@@ -307,7 +295,16 @@
 
      @endif     
            
-
+     @if($user->designation_id == 1||$user->designation_id == 23|| $user->designation_id == 9)
+ 
+ <li class="nav-item">
+   <a class="nav-link" href="{{URL::to('customer-feedback-create')}}">
+   <i class="mdi mdi-group menu-icon"></i> 
+   <span class="menu-title">Customer Feedback</span>
+   </a>
+ </li>
+ 
+ @endif
 
 
 
