@@ -19,11 +19,20 @@ use Illuminate\Support\Facades\Log;
 
 class PurchaseOrderController extends Controller
 {
+
     public function index()
-{
-    $purchaseOrders = PurchaseOrder::with(['supplier', 'details','salesOrder','shipment'])->orderBy('id', 'desc')->get();
-    return view('purchase-order.index', compact('purchaseOrders'));
-}
+    {
+        $purchaseOrders = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment'])
+            ->whereHas('shipment', function ($query) {
+                $query->where('shipment_status', 0);
+            })
+            ->orderBy('id', 'desc')
+            ->get();
+    
+        return view('purchase-order.index', compact('purchaseOrders'));
+    }
+    
+
 // public function index()
 // {
 //     // Get the latest shipment_id from purchase_orders table

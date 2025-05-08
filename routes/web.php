@@ -539,6 +539,9 @@ Route::delete('chilling-room-delete/{id}', [ChillingRoomController::class, 'dest
 Route::get('breakdown-report-create', [BreakdownReportController::class, 'create'])->name('breakdown-report.create');
 Route::post('breakdown-report-store', [BreakdownReportController::class,'store'])->name('breakdown-report.store');
 Route::get('breakdown-report-index', [BreakdownReportController::class, 'index'])->name('breakdown-report.index');
+Route::get('breakdown-report-edit/{id}', [BreakdownReportController::class, 'edit'])->name('breakdown-report.edit');
+Route::post('breakdown-report-update/{id}', [BreakdownReportController::class, 'update'])->name('breakdown-report.update');
+Route::delete('breakdown-report-delete/{id}', [BreakdownReportController::class, 'destroy'])->name('breakdown-report.destroy');
 
 Route::get('gmp-create', [GMPController::class, 'create'])->name('gmp.create');
 Route::post('gmp-store', [GMPController::class,'store'])->name('gmp.store');
