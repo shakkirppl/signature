@@ -321,6 +321,7 @@ public function destroy($id)
         
         $inspection = Inspection::findOrFail($id);
         $inspection->details()->delete();
+        InvoiceNumber::decreaseInvoice('inspection_no', 1);
          $inspection->update(['status' => 0]);
 
         return redirect()->route('inspection.report')->with('success', 'Inspection status changed successfully and related details deleted.');

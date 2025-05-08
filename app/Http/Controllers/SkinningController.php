@@ -203,6 +203,7 @@ public function destroy($id)
         SkinningDetail::where('skinning_id', $id)->delete();
 
         $skinning->delete();
+        InvoiceNumber::decreaseInvoice('skinning_code', 1);
 
         return redirect()->route('skinning.index')->with('success', 'Sales order and its details have been deleted successfully!');
     } catch (\Exception $e) {

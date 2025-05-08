@@ -176,6 +176,7 @@ public function destroy($id)
         $offalSale = OffalSales::findOrFail($id);
         $offalSale->details()->delete();
         $offalSale->delete();
+        InvoiceNumber::decreaseInvoice('offal-sales', 1); 
 
         return redirect()->route('offal-sales.index')->with('success');
     } catch (\Exception $e) {

@@ -168,6 +168,7 @@ public function destroy($id)
 
         
         $salesOrder->delete();
+        InvoiceNumber::decreaseInvoice('sales_order', 1);
 
         return redirect()->route('goodsout-order.index')->with('success', 'Sales order and its details have been deleted successfully!');
     } catch (\Exception $e) {

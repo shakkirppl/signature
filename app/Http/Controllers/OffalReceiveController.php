@@ -186,7 +186,7 @@ class OffalReceiveController extends Controller
         $offalReceive = OffalReceive::findOrFail($id);
         
         $offalReceive->delete();
-
+        InvoiceNumber::decreaseInvoice('offal_receive', 1); 
         return redirect()->route('offal-receive.index')->with('success', 'Offal Receive deleted successfully.');
     }
 

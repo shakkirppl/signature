@@ -222,6 +222,7 @@ public function destroy($id) {
 
         
         $SalesPayment->delete();
+        InvoiceNumber::decreaseInvoice('sales-payment', 1);
 
         return redirect()->route('sales_payment.index')->with('success', 'Record deleted successfully');
     } catch (\Exception $e) {

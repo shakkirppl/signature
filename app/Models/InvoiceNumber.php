@@ -41,4 +41,16 @@ class InvoiceNumber extends Model
         return $invoice_no->bill_prefix . $code . $bill_no;
     }
     
+    public static function decreaseInvoice($bill_mode, $store_id)
+{
+    $invoice = self::where('bill_mode', $bill_mode)
+        ->where('store_id', $store_id)
+        ->first();
+
+    if ($invoice && $invoice->bill_no > 1) {
+        $invoice->bill_no -= 1;
+        $invoice->save();
+    }
+}
+    
 }

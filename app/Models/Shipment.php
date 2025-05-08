@@ -30,5 +30,11 @@ class Shipment extends Model
     return $this->hasMany(WeightCalculatorMaster::class, 'shipment_id', 'id');
 }
 
-    
+
+
+public function purchaseOrders()
+{
+    return $this->hasMany(PurchaseOrder::class, 'shipment_id'); // Assuming shipment_id is the foreign key
+}
+  
 }

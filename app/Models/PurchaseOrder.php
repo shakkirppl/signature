@@ -87,5 +87,6 @@ protected $dates = ['deleted_at'];
     return $this->hasOne(SalesPayment::class, 'sales_no', 'SalesOrder_id');
 }
 
-    
+
+ 
 }

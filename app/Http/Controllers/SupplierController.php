@@ -202,6 +202,7 @@ public function destroy($id)
         return redirect()->route('supplier.index')->with('error', 'Cannot delete supplier. It is being used in other records.');
     }
         $supplier->delete();
+        InvoiceNumber::decreaseInvoice('supplier_code', 1); 
         return redirect()->route('supplier.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('supplier.index')->with('error', 'Error deleting record: ' . $e->getMessage());

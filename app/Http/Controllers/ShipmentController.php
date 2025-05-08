@@ -56,6 +56,7 @@ class ShipmentController extends Controller
                          'date' => $request->date,
                          'time' => $request->time,
                         'shipment_status' => 0,
+                        
                      ]);
                      InvoiceNumber::updateinvoiceNumber('shipment',1);
 
@@ -67,6 +68,7 @@ class ShipmentController extends Controller
                  {
                      $shipment = Shipment::findOrFail($id);
                      $shipment->update(['shipment_status' => 1]);
+                     InvoiceNumber::decreaseInvoice('shipment', 1);
                  
                      return redirect()->route('shipment.index')->with('success', 'Shipment status updated successfully.');
                  }

@@ -95,6 +95,7 @@ public function destroy($id)
     try {
         $localcustomers = Localcustomer::findOrFail($id);
         $localcustomers->delete();
+        InvoiceNumber::decreaseInvoice('local_customer', 1);
         return redirect()->route('localcustomer.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('localcustomer.index')->with('error', 'Error deleting record: ' . $e->getMessage());

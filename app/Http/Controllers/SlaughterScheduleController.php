@@ -203,7 +203,7 @@ public function destroy($id)
 
         // Delete the main record
         $slaughterSchedule->delete();
-
+        InvoiceNumber::decreaseInvoice('slaughter_no', 1);
         return redirect()->route('slaughter.index')->with('success', 'Packing list deleted successfully.');
     } catch (\Exception $e) {
         return redirect()->route('slaughter.index')->with('error', 'Error deleting packing list: ' . $e->getMessage());

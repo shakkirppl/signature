@@ -188,6 +188,7 @@ public function destroy($id)
     try {
         $airlinepayment = Airline::findOrFail($id);
         $airline->delete();
+        InvoiceNumber::decreaseInvoice('airline_payment', 1);
         return redirect()->route('airline.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('airline.index')->with('error', 'Error deleting record: ' . $e->getMessage());

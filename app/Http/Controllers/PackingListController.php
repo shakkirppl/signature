@@ -100,7 +100,7 @@ public function destroy($id)
 
         
         $packing->delete();
-
+        InvoiceNumber::decreaseInvoice('packinglist_no', 1);
         return redirect()->route('packinglist.index')->with('success', 'Packing list deleted successfully.');
     } catch (\Exception $e) {
         return redirect()->route('packinglist.index')->with('error', 'Error deleting packing list: ' . $e->getMessage());

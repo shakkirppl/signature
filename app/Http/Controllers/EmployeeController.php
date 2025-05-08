@@ -30,7 +30,7 @@ class EmployeeController extends Controller
           }
                  }
 
-
+               
     public function store(Request $request)
     {
         $request->validate([
@@ -97,6 +97,7 @@ public function destroy($id)
     try {
         $Employee = Employee::findOrFail($id);
         $Employee->delete();
+        InvoiceNumber::decreaseInvoice('employee_code', 1);
         return redirect()->route('employee.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('employee.index')->with('error', 'Error deleting record: ' . $e->getMessage());

@@ -34,7 +34,7 @@ class AnteMortemReportController extends Controller
           }
         }
 
-
+        
         public function store(Request $request)
         {
             // return $request->all();
@@ -258,7 +258,7 @@ class AnteMortemReportController extends Controller
 
         // Optionally delete the report itself (if needed)
         $report->delete();
-
+        InvoiceNumber::decreaseInvoice('antemortem_no', 1);
         DB::commit();
 
         return redirect()->route('antemortem.index')->with('success', 'All data for this report has been deleted successfully.');

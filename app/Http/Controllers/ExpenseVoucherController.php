@@ -176,6 +176,7 @@ public function destroy($id)
     try {
         $expensevoucher = ExpenseVoucher::findOrFail($id);
         $expensevoucher->delete();
+        InvoiceNumber::decreaseInvoice('expense_voucher', 1);
         return redirect()->route('expensevoucher.index')->with('success');
     } catch (\Exception $e) {
         return redirect()->route('expensevoucher.index')->with('error', 'Error deleting record: ' . $e->getMessage());
