@@ -215,7 +215,7 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('production-record-index')}}">Production Record</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('dispatch-record-index')}}">Dispatch Record</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('chilling-room-index')}}">Chilling Room</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('breakdown-report-create')}}">Breakdown Report</a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('breakdown-report-index')}}">Breakdown Report</a></li>
               </ul>
             </div>
           </li> 

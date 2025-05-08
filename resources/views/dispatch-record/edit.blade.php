@@ -30,7 +30,7 @@
 
                     <form action="{{ route('dispatch-record.update', $dispatch->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
-                        @method('PUT')
+                        
 
                         <div class="row">
                             <!-- First Section -->
@@ -46,6 +46,10 @@
                                 <div class="form-group">
                                     <label for="customer_name" class="required">Customer name/export destination</label>
                                     <input type="text" class="form-control" id="customer_name" name="customer_name" value="{{ old('customer_name', $dispatch->customer_name) }}" required>
+                                </div> 
+                                <div class="form-group">
+                                    <label for="date" class="required">Production date</label>
+                                    <input type="date" class="form-control" id="production_date" name="production_date"  value="{{ old('production_date', $dispatch->production_date) }}"required>
                                 </div>  
                             </div>
 
@@ -62,6 +66,10 @@
                                     <label for="comments">Comments</label>
                                     <input type="text" class="form-control" id="comments" name="comments" value="{{ old('comments', $dispatch->comments) }}">
                                 </div>
+                                <div class="form-group">
+                                    <label for="date" class="required">Expire Date</label>
+                                    <input type="date" class="form-control" id="expire_date" name="expire_date" value="{{ old('expire_date', $dispatch->expire_date) }}" required>
+                                </div>  
                             </div>
                         </div>
 

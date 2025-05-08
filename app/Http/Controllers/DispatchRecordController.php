@@ -38,6 +38,8 @@ public function store(Request $request)
         'dispatch_temperature' => $request->dispatch_temperature,
         'packaging_material_used' => $request->packaging_material_used,
         'comments' => $request->comments,
+        'production_date' => $request->production_date,
+        'expire_date' => $request->expire_date,
         'user_id' => Auth::id(),
         'store_id' => 1,
     ]);
@@ -70,6 +72,8 @@ public function update(Request $request, $id)
         'dispatch_temperature' => $request->dispatch_temperature,
         'packaging_material_used' => $request->packaging_material_used,
         'comments' => $request->comments,
+        'production_date' => $request->production_date,
+        'expire_date' => $request->expire_date,
     ]);
 
     // Redirect after updating

@@ -48,7 +48,11 @@
                                <div class="form-group">
                                   <label for="text" class="">Customer name/export destination</label>
                                   <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-                              </div>                              
+                              </div> 
+                              <div class="form-group">
+                                    <label for="date" class="required">Production date</label>
+                                    <input type="date" class="form-control" id="production_date" name="production_date" required>
+                                </div>                             
                           
 </div>
 
@@ -66,7 +70,11 @@
 <div class="form-group">
                                   <label for="text" class="">Comments</label>
                                   <input type="text" class="form-control" id="comments" name="comments" >
-</div>                      
+</div>        
+<div class="form-group">
+                                    <label for="date" class="required">Expire Date</label>
+                                    <input type="date" class="form-control" id="expire_date" name="expire_date" required>
+                                </div>              
                         
 </div>
                              

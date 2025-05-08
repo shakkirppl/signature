@@ -31,6 +31,8 @@
                   <th style="width: 15%;">Temperature</th>
                   <th style="width: 15%;">Packaging</th>
                   <th style="width: 25%;">Comments</th>
+                  <th>Production Date</th>
+                  <th>Expire Date</th>
                   <th style="width: 20%;">Actions</th>
                 </tr>
               </thead>
@@ -44,6 +46,8 @@
                     <td>{{ $dispatch->dispatch_temperature }}</td>
                     <td>{{ $dispatch->packaging_material_used }}</td>
                     <td>{{ $dispatch->comments }}</td>
+                    <td>{{ $dispatch->production_date }}</td>
+                    <td>{{ $dispatch->expire_date }}</td>
                     <td>
                       @if($user->designation_id == 1)
                         <a href="{{ route('dispatch-record.edit', $dispatch->id) }}" class="btn btn-warning btn-sm">Edit</a>

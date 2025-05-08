@@ -20,6 +20,8 @@ class DispatchRecord extends Model
         'packaging_material_used',
         'comments',
         'user_id',
-        'store_id'
+        'store_id',
+        'production_date',
+        'expire_date'
     ];
 }
