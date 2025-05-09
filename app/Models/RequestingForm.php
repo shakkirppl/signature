@@ -13,7 +13,7 @@ class RequestingForm extends Model
     protected $table = 'requesting_form';
     protected $fillable = [
         'invoice_no', 'order_no', 'date', 'supplier_id', 'shipment_id', 'SalesOrder_id',
-        'ssf_no', 'market', 'advance_amount', 'amount', 'bank_name', 'account_name',
+        'ssf_no', 'market', 'advance_amount', 'bank_name', 'account_name',
         'account_no', 'user_id','supplier_no'
     ];
 

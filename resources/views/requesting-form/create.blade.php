@@ -125,10 +125,7 @@
                             <label for="advance_amount" class="form-label">Advance Amount</label>
                             <input type="text" id="advance_amount" name="advance_amount" class="form-control" oninput="formatNumber(this)">
                             </div>
-                            <div class="col-md-4">
-                            <label for="amount" class="form-label">Amount (TZS)</label>
-                            <input type="text" id="amount" class="form-control" name="amount">
-                               </div>
+                           
                                <div class="col-md-4">
                                <label for="bank_name" class="form-label">Bank Name</label>
                                 <input type="text" id="bank_name" name="bank_name" class="form-control">   

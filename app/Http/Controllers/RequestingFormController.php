@@ -75,7 +75,6 @@ class RequestingFormController extends Controller
                              'ssf_no' => $request->ssf_no,
                              'market' => $request->market,
                              'advance_amount' => isset($request->advance_amount) ? (float) str_replace(',', '', $request->advance_amount) : 0,
-                             'amount' => $request->amount,
                              'bank_name' => $request->bank_name,
                              'account_name' => $request->account_name,
                              'account_no' => $request->account_no,

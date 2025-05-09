@@ -33,7 +33,7 @@
                   <th>SSF No</th>
                   <th>Market</th>
                   <th>Advance Amount</th>
-                  <th>Amount</th>
+                 
                   <th>Bank Name</th>
                   <th>Account Name</th>
                   <th>Account No</th>
@@ -56,7 +56,7 @@
                   <td>{{ $form->ssf_no }}</td>
                   <td>{{ $form->market }}</td>
                   <td>{{ number_format($form->advance_amount, 2) }}</td>
-                  <td>{{ number_format($form->amount, 2) }}</td>
+                 
                   <td>{{ $form->bank_name }}</td>
                   <td>{{ $form->account_name }}</td>
                   <td>{{ $form->account_no }}</td>
