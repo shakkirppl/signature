@@ -6,28 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseOrder extends Model
+class RequestingForm extends Model
 {
     use HasFactory,SoftDeletes;
 
-    protected $table = 'purchase_order';
-    protected $fillable = [ 
-    'order_no',
-    'date',
-    'supplier_id',
-    'grand_total',
-    'advance_amount',
-    'balance_amount',
-    'status',
-    'inspection_status',
-    'store_id',
-    'user_id',
-    'shipment_id',
-    'SalesOrder_id',
-    'requesting_form_id'
-];
+    protected $table = 'requesting_form';
+    protected $fillable = [
+        'invoice_no', 'order_no', 'date', 'supplier_id', 'shipment_id', 'SalesOrder_id',
+        'ssf_no', 'market', 'advance_amount', 'amount', 'bank_name', 'account_name',
+        'account_no', 'user_id','supplier_no'
+    ];
 
-protected $dates = ['deleted_at'];
   
 
 
@@ -87,7 +76,11 @@ protected $dates = ['deleted_at'];
 {
     return $this->hasOne(SalesPayment::class, 'sales_no', 'SalesOrder_id');
 }
-
-
- 
+public function purchaseOrder()
+{
+    return $this->hasOne(PurchaseOrder::class);
 }
+   
+}
+
+

@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const femaleField = row.querySelector('.female');
 
         let qty = parseInt(qtyField.value) || 0;
-        maleField.value = Math.floor(qty * 0.75); // 75% of quantity
+        maleField.value = Math.floor(qty * 0.90); // 75% of quantity
         femaleField.value = qty - maleField.value; // Remaining 25%
     }
 

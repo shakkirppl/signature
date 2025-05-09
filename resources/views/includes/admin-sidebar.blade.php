@@ -306,6 +306,14 @@
  
  @endif
 
+ 
+ <li class="nav-item">
+   <a class="nav-link" href="{{URL::to('requesting-form-index')}}">
+   <i class="mdi mdi-group menu-icon"></i> 
+   <span class="menu-title">Requesting Form</span>
+   </a>
+ </li>
+
 
 
   

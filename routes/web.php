@@ -53,6 +53,7 @@ use App\Http\Controllers\CustomerComplaintController;
 use App\Http\Controllers\InternalAuditChecklistController;
 use App\Http\Controllers\CalibrationRecordController;
 use App\Http\Controllers\CustomerFeedbackController;
+use App\Http\Controllers\RequestingFormController;
 
 
 
@@ -577,6 +578,15 @@ Route::get('customer-feedback-create', [CustomerFeedbackController::class, 'crea
 Route::post('customer-feedback/store', [CustomerFeedbackController::class, 'store'])->name('customer-feedback.store');
 Route::get('customer-feedback', [CustomerFeedbackController::class, 'index'])->name('customer-feedback.index');
 Route::delete('customer-feedback/{id}/delete', [CustomerFeedbackController::class, 'destroy'])->name('customer-feedback.destroy');
+
+
+Route::get('requesting-form-create', [RequestingFormController::class, 'create'])->name('requesting-form.create');
+Route::get('requesting-form-index', [RequestingFormController::class, 'index'])->name('requesting-form.index');
+
+Route::post('requesting-form/store', [RequestingFormController::class, 'store'])->name('requesting-form.store');
+Route::get('/get-supplier/{id}', [RequestingFormController::class, 'getSupplier']);
+Route::delete('requesting-form/{id}/delete', [RequestingFormController::class, 'destroy'])->name('requesting-form.destroy');
+
 
 
 

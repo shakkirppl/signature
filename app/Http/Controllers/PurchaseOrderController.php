@@ -31,21 +31,7 @@ class PurchaseOrderController extends Controller
     
         return view('purchase-order.index', compact('purchaseOrders'));
     }
-    
 
-// public function index()
-// {
-//     // Get the latest shipment_id from purchase_orders table
-//     $latestShipmentId = PurchaseOrder::latest()->pluck('shipment_id')->first();
-
-//     // Fetch only purchase orders belonging to that latest shipment_id
-//     $purchaseOrders = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment'])
-//         ->where('shipment_id', $latestShipmentId)
-//         ->orderBy('id', 'desc')
-//         ->get();
-
-//     return view('purchase-order.index', compact('purchaseOrders'));
-// }
   
         public function create()
         {
