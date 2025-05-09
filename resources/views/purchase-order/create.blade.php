@@ -140,9 +140,9 @@ button.remove-row {
                             </div>
 
                             <div class="col-md-3">
-    <label for="outstanding_balance" class="form-label">Outstanding Balance:</label>
-    <input type="text" id="outstanding_balance" class="form-control" readonly>
-    <small id="outstanding_error" class="text-danger" style="display:none;"></small> <!-- Error Message -->
+                           <label for="outstanding_balance" class="form-label">Outstanding Balance:</label>
+                            <input type="text" id="outstanding_balance" class="form-control" readonly>
+                                <small id="outstanding_error" class="text-danger" style="display:none;"></small> <!-- Error Message -->
 </div>
 
                         </div>

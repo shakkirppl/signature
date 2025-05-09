@@ -63,11 +63,11 @@
                         <div class="row g-3">
                         <div class="col-md-4">
                                 <label for="code" class="form-label">Order No:</label>
-                                <input type="text" class="form-control" id="code" name="order_no" value="{{ $invoice_no }}" readonly>
+                                <input type="text" class="form-control" id="code" name="order_no" value="{{ $purchase_order_no }}" readonly>
                             </div>
                             <div class="col-md-4">
                                 <label for="invoice_no" class="form-label">Advance Request No</label>
-                                <input type="text" class="form-control" id="invoice_no" name="invoice_no" >
+                                <input type="text" class="form-control" id="invoice_no" name="invoice_no" value="{{ $advance_invoice_no }}" readonly >
                             </div>
 
                             <div class="col-md-4">

@@ -254,6 +254,14 @@
   <span class="menu-title">Shipment</span>
   </a>
 </li> 
+@endif
+@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 4)
+<li class="nav-item">
+   <a class="nav-link" href="{{URL::to('requesting-form-index')}}">
+   <i class="mdi mdi-group menu-icon"></i> 
+   <span class="menu-title">Requesting Form</span>
+   </a>
+ </li>
           @endif
 <!--  -->
 
@@ -307,12 +315,7 @@
  @endif
 
  
- <li class="nav-item">
-   <a class="nav-link" href="{{URL::to('requesting-form-index')}}">
-   <i class="mdi mdi-group menu-icon"></i> 
-   <span class="menu-title">Requesting Form</span>
-   </a>
- </li>
+
 
 
 

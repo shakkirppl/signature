@@ -31,13 +31,17 @@ class RequestingFormController extends Controller
         $products = Product::all();
         $SalesOrders=SalesOrder::all();
         $shipments = Shipment::where('shipment_status', 0)->get();
-        return view('requesting-form.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments','SalesOrders'));
+        $purchase_order_no = InvoiceNumber::ReturnInvoice('purchase_order', 1);
+        $advance_invoice_no = InvoiceNumber::ReturnInvoice('advance_request', 1);
+        return view('requesting-form.create',['invoice_no'=>$this->invoice_no()],compact('suppliers','products','shipments','SalesOrders','purchase_order_no','advance_invoice_no'));
     }
 
     public function invoice_no(){
         try {
              
          return $invoice_no =  InvoiceNumber::ReturnInvoice('purchase_order',1);
+         $advanceRequestInvoice = InvoiceNumber::ReturnInvoice('advance_request', 1);
+
                   } catch (\Exception $e) {
          
             return $e->getMessage();
@@ -111,6 +115,7 @@ class RequestingFormController extends Controller
                          }
                  
                          InvoiceNumber::updateinvoiceNumber('purchase_order', 1);
+                         InvoiceNumber::updateinvoiceNumber('advance_request', 1);
                  
                          DB::commit();
                          return redirect()->route('requesting-form.index')->with('success', 'Advance Request Created Successfully');
@@ -139,6 +144,7 @@ public function destroy($id)
 
     // Delete requesting form
     $requestingForm->delete();
+    InvoiceNumber::decreaseInvoice('advance_request', 1);
 
     return redirect()->route('requesting-form.index')->with('success', 'Request and related orders deleted successfully.');
 }
