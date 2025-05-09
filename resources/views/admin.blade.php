@@ -167,7 +167,7 @@
     </div>
   </a>
 </div>
-@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 4)
+@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 4|| $user->designation_id == 5)
 
 <div class="col-md-6 mb-4 grid-margin transparent mt-4">
   <a href="{{ route('requesting-form.index') }}" style="text-decoration: none; color: inherit;">

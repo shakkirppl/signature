@@ -255,7 +255,7 @@
   </a>
 </li> 
 @endif
-@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 4)
+@if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 4|| $user->designation_id == 5)
 <li class="nav-item">
    <a class="nav-link" href="{{URL::to('requesting-form-index')}}">
    <i class="mdi mdi-group menu-icon"></i> 
