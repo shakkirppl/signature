@@ -189,7 +189,7 @@
     <div class="card bg-success text-white">
       <div class="card-body">
         <p class="mb-4">Payment Request</p>
-        <p class="fs-30 mb-2"><h4>Click Here</h4></p>
+        <p class="fs-30 mb-2">{{$pendingCount}}</p>
       </div>
     </div>
   </a>

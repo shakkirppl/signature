@@ -64,23 +64,28 @@ button.remove-row {
                                 <input type="text" class="form-control" id="supplier_name" name="supplier_name" value="{{ $purchaseOrder->supplier->name }}" readonly>
                                <input type="hidden" name="supplier_id" value="{{ $purchaseOrder->supplier_id }}">
                             </div>
-
+<!-- 
                            <div class="col-md-3">
                            <label for="shipment_no" class="form-label">Shipment No:</label>
-                             <input type="text" class="form-control" id="shipment_no" name="shipment_no" value="{{ $purchaseOrder->shipment->shipment_no }}" readonly>
+                             <input type="text" class="form-control" id="shipment_no" name="shipment_no" value="{{ $purchaseOrder->shipment->shipment_no }}" >
                             <input type="hidden" name="shipment_id" value="{{ $purchaseOrder->shipment_id }}">
-                          </div>
+                          </div> -->
 
 
+<div class="col-md-3">
+    <label for="shipment_id" class="form-label">Shipment No:</label>
+    <select name="shipment_id" id="shipment_id" class="form-control" required>
+        <option value="">-- Select Shipment --</option>
+        @foreach ($shipments as $shipment)
+            <option value="{{ $shipment->id }}"
+                {{ $purchaseOrder->shipment_id == $shipment->id ? 'selected' : '' }}>
+                {{ $shipment->shipment_no }}
+            </option>
+        @endforeach
+    </select>
+</div>
 
-                            <!-- <div class="col-md-3">
-                            <label for="shipment_id" class="form-label">Shipment No:</label>
-                                <select name="shipment_id" id="shipment_id" class="form-control" required>
-                                    @foreach ($shipments as $shipment)
-                                        <option value="{{ $shipment->id }}">{{ $shipment->shipment_no }}</option>
-                                    @endforeach
-                                </select>
-                            </div> -->
+
                            
 
 

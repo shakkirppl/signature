@@ -140,6 +140,8 @@
               @if($user->designation_id == 1 || $user->designation_id == 6 || $user->designation_id == 9 )
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('inspection-index')}}">Inspection </a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/animal-receive-notes')}}">Animal Receive Notes </a></li> 
+
             
 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/deathanimal')}}">Death Animal</a></li> 

@@ -45,7 +45,10 @@ public function view($id)
     $suppliers = Supplier::all(); 
     $products = Product::all();   
     $rejectReasons=RejectMaster::all();
-    $shipments = Shipment::where('shipment_status', 0)->where('id',$purchaseOrder->shipment_id)->get();
+   $shipments = Shipment::where('shipment_status', 0)
+    ->orWhere('id', $purchaseOrder->shipment_id) // include the selected one
+    ->get();
+
     return view('inspection.view', compact('purchaseOrder', 'suppliers', 'products','rejectReasons','shipments'),[ 'invoice_no' => $this->invoice_no()]);
 }
 

@@ -14,10 +14,15 @@ class RequestingForm extends Model
     protected $fillable = [
         'invoice_no', 'order_no', 'date', 'supplier_id', 'shipment_id', 'SalesOrder_id',
         'ssf_no', 'market', 'advance_amount', 'bank_name', 'account_name',
-        'account_no', 'user_id','supplier_no'
+        'account_no', 'user_id','supplier_no','status','phone_number','payment_type'
+        
     ];
 
   
+ public function bank()
+{
+    return $this->belongsTo(BankMaster::class, 'bank_name'); // assuming 'bank_name' holds the id of the bank
+}
 
 
     public function supplier()
@@ -37,10 +42,11 @@ class RequestingForm extends Model
     }
 
 
-    public function details()
-    {
-        return $this->hasMany(PurchaseOrderDetail::class, 'purchase_order_id');
-    }
+   public function details()
+{
+    return $this->hasMany(RequestFormDetail::class, 'requesting_form_id');
+}
+
     
 
     // Automatically delete associated details when a SalesOrder is deleted
@@ -54,10 +60,10 @@ class RequestingForm extends Model
         });
     }
 
-    public function products()
-    {
-        return $this->hasMany(PurchaseOrderDetail::class, 'purchase_order_id');
-    }
+   public function products()
+{
+    return $this->hasMany(RequestingFormDetail::class, 'requesting_form_id');
+}
 
     public function shipment() {
         return $this->belongsTo(Shipment::class, 'shipment_id'); 

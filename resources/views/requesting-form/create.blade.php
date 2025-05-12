@@ -113,10 +113,10 @@
                                 </select>
                             </div>
                             
-                            <div class="col-md-4">
+                            <!-- <div class="col-md-4">
                                 <label for="text" class="form-label">SSF No</label>
                                 <input type="text" class="form-control" id="ssf_no" name="ssf_no" required>
-                            </div>
+                            </div> -->
                             <div class="col-md-4">
                                 <label for="text" class="form-label">Market</label>
                                 <input type="text" class="form-control" id="market" name="market" required>
@@ -126,18 +126,42 @@
                             <input type="text" id="advance_amount" name="advance_amount" class="form-control" oninput="formatNumber(this)">
                             </div>
                            
-                               <div class="col-md-4">
-                               <label for="bank_name" class="form-label">Bank Name</label>
-                                <input type="text" id="bank_name" name="bank_name" class="form-control">   
-                               </div>
-                               <div class="col-md-4">
-                               <label for="account_name" class="form-label">Account Name</label>
-                                <input type="text" id="account_name" name="account_name" class="form-control">   
-                               </div>
-                               <div class="col-md-4">
-                               <label for="account_no" class="form-label">Account No</label>
-                                <input type="text" id="account_no" name="account_no" class="form-control">   
-                               </div>
+                            
+    <div class="col-md-4">
+        <label for="payment_type" class="form-label">Payment Type</label>
+        <select id="payment_type" name="payment_type" class="form-control" onchange="togglePaymentFields()">
+            <option value="">-- Select --</option>
+            <option value="Bank">Bank</option>
+            <option value="Mobile Money">Mobile Money</option>
+        </select>
+    </div>
+
+
+<div class="row mt-3" id="bank_fields" style="display: none;">
+    <div class="col-md-4">
+        <label for="bank_name" class="form-label">Bank Name</label>
+<select id="bank_name" name="bank_name" class="form-control">
+    <option value="">Select Bank</option>
+    @foreach($banks as $bank)
+        <option value="{{ $bank->id }}">{{ $bank->bank_name }}</option>
+    @endforeach
+</select>
+    </div>
+    <div class="col-md-4">
+        <label for="account_name" class="form-label">Account Name</label>
+        <input type="text" id="account_name" name="account_name" class="form-control">
+    </div>
+    <div class="col-md-4">
+        <label for="account_no" class="form-label">Account No</label>
+        <input type="text" id="account_no" name="account_no" class="form-control">
+    </div>
+</div>
+
+<div class="col-md-4 mt-3" id="mobile_money_fields" style="display: none;">
+    <label for="phone_number" class="form-label">Phone Number</label>
+    <input type="text" id="phone_number" name="phone_number" class="form-control">
+</div>
+
                         </div>
 
                         <!-- Product Table -->
@@ -295,6 +319,13 @@ document.addEventListener('DOMContentLoaded', function () {
         supplierNoField.value = code || '';
     });
 });
+</script>
+<script>
+    function togglePaymentFields() {
+        var type = document.getElementById("payment_type").value;
+        document.getElementById("bank_fields").style.display = type === "Bank" ? "flex" : "none";
+        document.getElementById("mobile_money_fields").style.display = type === "Mobile Money" ? "flex" : "none";
+    }
 </script>
 
 

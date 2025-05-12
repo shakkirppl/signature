@@ -30,13 +30,11 @@
                   <th>Supplier</th>
                   <th>Shipment</th>
                   <th>Sales Order</th>
-                  <th>SSF No</th>
-                  <th>Market</th>
+                 
+                 
                   <th>Advance Amount</th>
                  
-                  <th>Bank Name</th>
-                  <th>Account Name</th>
-                  <th>Account No</th>
+                  
                   <th>Created By</th>
                   <th>Actions</th>
                 </tr>
@@ -53,23 +51,24 @@
                   <td>{{ $form->supplier->name ?? 'N/A' }}</td>
                   <td>{{ $form->shipment->shipment_no ?? 'N/A' }}</td>
                   <td>{{ $form->salesOrder->order_no ?? 'N/A' }}</td>
-                  <td>{{ $form->ssf_no }}</td>
-                  <td>{{ $form->market }}</td>
                   <td>{{ number_format($form->advance_amount, 2) }}</td>
-                  
-                  <td>{{ $form->bank_name }}</td>
-                  <td>{{ $form->account_name }}</td>
-                  <td>{{ $form->account_no }}</td>
                   <td>{{ $form->user->name ?? 'N/A' }}</td>
-                  <td>
-                    @if($user->designation_id == 1)
-                    <form action="{{ route('requesting-form.destroy', $form->id) }}" method="POST" style="display:inline-block;">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
-                    </form>
-                    @endif
-                  </td>
+                 <td>
+  @if($user->designation_id == 1)
+    <a href="{{ route('requesting-form.show', $form->id) }}" class="btn btn-info btn-sm">View</a>
+    
+    <form action="{{ route('requesting-form.accept', $form->id) }}" method="POST" style="display:inline-block;">
+      @csrf
+      <button type="submit" class="btn btn-success btn-sm" onclick="return confirm('Accept this request?')">Accept</button>
+    </form>
+
+    <form action="{{ route('requesting-form.reject', $form->id) }}" method="POST" style="display:inline-block;">
+      @csrf
+      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Reject this request?')">Reject</button>
+    </form>
+  @endif
+</td>
+
                 </tr>
                 @endforeach
               </tbody>

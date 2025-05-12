@@ -586,6 +586,15 @@ Route::get('requesting-form-index', [RequestingFormController::class, 'index'])-
 Route::post('requesting-form/store', [RequestingFormController::class, 'store'])->name('requesting-form.store');
 Route::get('/get-supplier/{id}', [RequestingFormController::class, 'getSupplier']);
 Route::delete('requesting-form/{id}/delete', [RequestingFormController::class, 'destroy'])->name('requesting-form.destroy');
+Route::post('/requesting-form/{id}/accept', [RequestingFormController::class, 'accept'])->name('requesting-form.accept');
+Route::post('/requesting-form/{id}/reject', [RequestingFormController::class, 'reject'])->name('requesting-form.reject');
+Route::get('/requesting-form/{id}', [RequestingFormController::class, 'show'])->name('requesting-form.show');
+
+
+Route::get('/animal-receive-notes', [AnimalReceivingNoteController::class, 'index'])->name('animalReceive.index');
+Route::get('/animal-receive-notes/{id}', [AnimalReceivingNoteController::class, 'show'])->name('animalReceive.view');
+Route::get('/animal-receive-notes/print/{id}', [AnimalReceivingNoteController::class, 'print'])->name('animalReceive.print');
+
 
 
 

@@ -12,7 +12,8 @@ use App\Models\PurchaseConformation;
 use App\Models\NewSlaughterTime;
 use App\Models\Outstanding; 
 use App\Models\Supplier;  
-use App\Models\PurchaseOrder;   
+use App\Models\PurchaseOrder;
+use App\Models\RequestingForm;   
 class DashboardController extends Controller
 {
     //
@@ -79,10 +80,12 @@ class DashboardController extends Controller
         }
     }
     $purchaseOrderCount = PurchaseOrder::withoutTrashed()->count();
+        $pendingCount = RequestingForm::where('status', 'pending')->count();
+
 
             return view('admin',['now' => Carbon::now()->toDateString(),'name' => $name,'total' => $total,'active'=>$active,'deactive'=>$deactive,'due'=>$due,
             'recent_store'=>$recent_store,'totalProducts'=>$totalProducts,'debitamount'=>$debitamount,'nextSchedule'=>$nextSchedule,'sumGreen' => $sumGreen,
-            'totalPositive'=>$totalPositive,'purchaseOrderCount'=>$purchaseOrderCount]);
+            'totalPositive'=>$totalPositive,'purchaseOrderCount'=>$purchaseOrderCount,'pendingCount'=>$pendingCount]);
  
     } catch (\Exception $e) {
         return $e->getMessage();
