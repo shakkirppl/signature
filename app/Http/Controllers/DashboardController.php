@@ -79,7 +79,12 @@ class DashboardController extends Controller
             $totalPositive += ($receipt - $payment);
         }
     }
-    $purchaseOrderCount = PurchaseOrder::withoutTrashed()->count();
+   $purchaseOrderCount = PurchaseOrder::whereHas('shipment', function ($query) {
+        $query->where('shipment_status', 0);
+    })
+    ->withoutTrashed()
+    ->count();
+
         $pendingCount = RequestingForm::where('status', 'pending')->count();
 
 
