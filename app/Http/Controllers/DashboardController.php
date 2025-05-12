@@ -32,9 +32,13 @@ class DashboardController extends Controller
             $deactive = 0;
             $due = 0;
             $recent_store=[];
+            // $totalProducts = InspectionDetail::whereHas('inspection', function ($query) {
+            //     $query->where('weight_status', 1);
+            // })->count();
             $totalProducts = InspectionDetail::whereHas('inspection', function ($query) {
                 $query->where('weight_status', 1);
-            })->count();
+                })->sum('received_qty');
+
             $debitamount = PurchaseConformation::where('balance_amount', '>', 0)->sum('balance_amount');
             $nextSchedule = NewSlaughterTime::orderBy('date', 'asc')
             ->orderBy('time', 'asc')

@@ -106,7 +106,7 @@
             <div class="col-md-6 grid-margin transparent">
               <div class="row">
                 
-                
+<!--                 
                 <div class="col-md-6 mb-4 grid-margin transparent">
   <a href="{{ route('shipment.index') }}" style="text-decoration: none; color: inherit;">
     <div class="card card-tale">
@@ -116,7 +116,22 @@
       </div>
     </div>
   </a>
+</div> -->
+
+<div class="col-md-6 mb-4 grid-margin transparent">
+@if($user->designation_id == 1 || $user->designation_id == 3)        <a href="{{ route('shipment.index') }}" style="text-decoration: none; color: inherit;">
+    @endif
+        <div class="card card-tale" >
+            <div class="card-body">
+                <p class="mb-4">Number of Shipments</p>
+                <p class="fs-30 mb-2">{{ $total }}</p>
+            </div>
+        </div>
+@if($user->designation_id == 1 || $user->designation_id == 3)        
+</a>
+    @endif
 </div>
+
 
                 <div class="col-md-6 mb-4 stretch-card transparent">
                   <div class="card card-dark-blue">
