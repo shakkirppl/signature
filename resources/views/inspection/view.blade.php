@@ -84,6 +84,20 @@ button.remove-row {
         @endforeach
     </select>
 </div>
+  <div class="col-md-3">
+                                <label for="text" class="form-label">Mark:</label>
+                                <input type="text" class="form-control" id="mark" name="mark" value="" required>
+                            </div>
+
+<div class="col-md-6 mt-3">
+    <label for="signature" class="form-label"><strong>Signature:</strong></label>
+    <canvas id="signature-pad" class="signature-pad" width="300" height="100" style="border: 1px solid #000;"></canvas>
+    <button type="button" id="clear-signature" class="btn btn-danger btn-sm mt-2">Clear</button>
+    <input type="hidden" id="signature-data" name="signature">
+</div>
+
+
+
 
 
                            
@@ -174,8 +188,10 @@ button.remove-row {
             </td>
         </tr>
     @endforeach
+    
                             </tbody>
                         </table>
+                        
 </div>
                         <button type="submit" class="btn btn-primary mt-4">submit</button>
                     </form>
@@ -185,6 +201,33 @@ button.remove-row {
     </div>
 </div>
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var canvas = document.getElementById('signature-pad');
+    var signaturePad = new SignaturePad(canvas);
+
+    document.getElementById('clear-signature').addEventListener('click', function () {
+        signaturePad.clear();
+    });
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        if (signaturePad.isEmpty()) {
+            alert("Please provide a signature.");
+            e.preventDefault(); // Prevent form submission
+        } else {
+            var signatureData = signaturePad.toDataURL(); // Get base64 string
+            document.getElementById('signature-data').value = signatureData; // Set hidden input value
+        }
+    });
+});
+
+</script>
+
+
+
+
+
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -258,5 +301,7 @@ document.addEventListener('DOMContentLoaded', function () {
     dateInput.value = today;
 });
 </script>
+
+
 
 

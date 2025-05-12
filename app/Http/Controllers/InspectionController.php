@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Shipment;
 use Illuminate\Support\Facades\DB;
 use App\Models\InvoiceNumber;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 use Illuminate\Support\Facades\Log;
 
@@ -56,12 +58,14 @@ public function view($id)
 public function store(Request $request)
 {
     // Validate form data
-    // return $request->all();
+    return $request->all();
+    //  dd($request->input('signature')); 
         $validated = $request->validate([
             'order_no' => 'required|string',
             'inspection_no' => 'required|string',
             'purchaseOrder_id'=>'required',
             'date' => 'required|date',
+            'mark'=> 'nullable|string',
             'supplier_id' => 'required|exists:supplier,id',
             'shipment_id' => 'required|exists:shipment,id',
             'products.*.product_id' => 'required|exists:product,id',
@@ -78,10 +82,26 @@ public function store(Request $request)
             'products.*.rate' => 'nullable|numeric',
             'products.*.total' => 'nullable|numeric',
         ]);
-        
-   
+    $signatureData = $request->input('signature');
 
-    // Create the inspection record
+if ($signatureData) {
+    // Remove the "data:image/png;base64," part
+    $signatureData = preg_replace('#^data:image/\w+;base64,#i', '', $signatureData);
+
+    // Decode it
+    $signatureBinary = base64_decode($signatureData);
+
+    // Generate a unique filename
+    $fileName = 'signature_' . time() . '.png';
+
+    // Store the image (in public disk)
+    Storage::disk('public')->put('signatures/' . $fileName, $signatureBinary);
+
+    // Save path in database (e.g., inspections table)
+    $inspection->signature = 'signatures/' . $fileName;
+}
+
+
     $inspection = Inspection::create([
         'purchaseOrder_id' => $validated['purchaseOrder_id'],
         'inspection_no'=>$validated['inspection_no'],
@@ -89,14 +109,18 @@ public function store(Request $request)
         'shipment_id' => $validated['shipment_id'],
         'date' => $validated['date'],
         'supplier_id' => $validated['supplier_id'],
-        'total_death_qty' => null,
+         'mark' => $validated['mark'],
+        'signature' => $imagePath,
+ 'total_death_qty' => null,
         'user_id' => Auth::id(),
         'store_id' => 1,
         'status' => 1,
         'purchase_status' => 0,
         'weight_status' => 1,
+        
     ]);
     InvoiceNumber::updateinvoiceNumber('inspection_no', 1);
+    
     // Loop through the product details and create InspectionDetail records
     foreach ($validated['products'] as $product) {
         InspectionDetail::create([
@@ -121,6 +145,7 @@ public function store(Request $request)
            
         ]);
     }
+
 
     // Update the inspection_status in the purchase_orders table
     PurchaseOrder::where('order_no', $validated['order_no'])->update(['inspection_status' => 1]);

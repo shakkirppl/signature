@@ -14,6 +14,7 @@
                             <p><strong>Inspection No:</strong> {{ $inspection->inspection_no }}</p>
                             <p><strong>Date:</strong> {{ $inspection->date }}</p>
                             <p><strong>Supplier:</strong> {{ $inspection->supplier->name }}</p>
+                              <p><strong>Mark:</strong> {{ $inspection->mark }}</p>
                         </div>
                     </div>
 

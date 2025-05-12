@@ -58,6 +58,11 @@
                   </td>
                 </tr>
                 @endforeach
+                  <div class="row mt-3">
+            <div class="col-md-12 text-right">
+              <h5><strong>Total Advance Amount:</strong> {{ number_format($totalAdvance, 2) }}</h5>
+            </div>
+          </div>
               </tbody>
             </table>
           </div> <!-- End of table-responsive -->

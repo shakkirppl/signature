@@ -25,6 +25,7 @@
                 <th>Date</th>
                 <th>Supplier</th>
                 <th>Shipment</th>
+                <th>created By</th>
                 <th>Actions</th>
             </tr>
             <tbody>
@@ -35,6 +36,8 @@
                 <td>{{ $inspection->date }}</td>
                 <td>{{ $inspection->supplier->name ?? '' }}</td>
                 <td>{{ $inspection->shipment->shipment_no ?? '' }}</td>
+                <td>{{ $inspection->user->name ?? '' }}</td>
+
                 <td>
                     <a href="{{ route('animalReceive.view', $inspection->id) }}" class="btn btn-info btn-sm">View</a>
                     <a href="{{ route('animalReceive.print', $inspection->id) }}" class="btn btn-secondary btn-sm" target="_blank">Print</a>

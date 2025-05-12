@@ -10,7 +10,8 @@ class Inspection extends Model
 {
     use HasFactory,SoftDeletes;
     protected $table = 'inspection';
-    protected $fillable = ['purchaseOrder_id','order_no', 'date', 'supplier_id','store_id','user_id','status','purchase_status','shipment_id','inspection_no','total_death_qty','weight_status'];
+    protected $fillable = ['purchaseOrder_id','order_no', 'date', 'supplier_id','store_id','user_id',
+    'status','purchase_status','shipment_id','inspection_no','total_death_qty','weight_status','mark','signature'];
 
     protected $dates = ['deleted_at']; 
     public function details()

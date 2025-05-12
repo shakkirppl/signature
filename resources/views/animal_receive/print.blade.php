@@ -6,6 +6,19 @@
         body { font-family: sans-serif; font-size: 14px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #000; padding: 6px; text-align: left; }
+        .signature-section {
+            margin-top: 60px;
+            display: flex;
+            justify-content: flex-start;
+        }
+        .signature-box {
+            width: 150px;
+            text-align: center;
+        }
+        .signature-line {
+            border-top: 1px solid #000;
+            margin-top: 60px;
+        }
     </style>
 </head>
 <body onload="window.print()">
@@ -42,5 +55,12 @@
             @endforeach
         </tbody>
     </table>
+
+    <div class="signature-section">
+        <div class="signature-box">
+            <div class="signature-line"></div>
+            <p>Supplier Signature</p>
+        </div>
+    </div>
 </body>
 </html>

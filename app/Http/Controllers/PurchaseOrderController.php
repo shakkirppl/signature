@@ -28,8 +28,9 @@ class PurchaseOrderController extends Controller
             })
             ->orderBy('id', 'desc')
             ->get();
+            $totalAdvance = $purchaseOrders->sum('advance_amount');
     
-        return view('purchase-order.index', compact('purchaseOrders'));
+        return view('purchase-order.index', compact('purchaseOrders','totalAdvance'));
     }
 
   
