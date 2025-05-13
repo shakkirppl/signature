@@ -34,22 +34,25 @@ class PurchaseOrderController extends Controller
     // }
 public function index(Request $request)
 {
+    $supplierId = $request->get('supplier_id');
+
     $query = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment', 'user'])
-        ->whereHas('shipment', function ($q) {
-            $q->where('shipment_status', 0);
+        ->whereHas('shipment', function ($query) {
+            $query->where('shipment_status', 0);
         });
 
-    if ($request->supplier_id) {
-        $query->where('supplier_id', $request->supplier_id);
+    if ($supplierId) {
+        $query->where('supplier_id', $supplierId);
     }
 
     $purchaseOrders = $query->orderBy('id', 'desc')->get();
 
+    // Sum of advance amount
     $totalAdvance = $purchaseOrders->sum('advance_amount');
 
-    // Calculate total product count from details
-    $totalProductCount = $purchaseOrders->sum(function ($order) {
-        return $order->details->count();
+    // Sum of quantity (not product count)
+    $totalQuantity = $purchaseOrders->sum(function ($order) {
+        return $order->details->sum('qty');
     });
 
     $suppliers = Supplier::all();
@@ -57,12 +60,12 @@ public function index(Request $request)
     return view('purchase-order.index', compact(
         'purchaseOrders',
         'totalAdvance',
+        'totalQuantity',
         'suppliers',
-        'totalProductCount'
-    ))->with([
-        'supplierId' => $request->supplier_id
-    ]);
+        'supplierId'
+    ));
 }
+
 
 
 

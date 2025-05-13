@@ -43,7 +43,7 @@
             <div class="col-md-6 text-right">
               <h5><strong>Total Advance Amount:</strong> {{ number_format($totalAdvance, 2) }}</h5>
               @if(isset($supplierId))
-                <h5><strong>Total Animals:</strong> {{ $totalProductCount }}</h5>
+                <h5><strong>Total Animals:</strong>{{ $totalQuantity }}</h5>
               @endif
             </div>
           </div>
@@ -75,7 +75,7 @@
                   <td>{{ $order->shipment->shipment_no ?? 'N/A' }}</td>
                   <td>{{ $order->salesOrder->order_no ?? 'N/A' }}</td>
                   <td>{{ number_format($order->advance_amount, 2) }}</td>
-                  <td>{{ $order->details->count() }}</td>
+                 <td>{{ $order->details->sum('qty') }}</td>
                   <td>{{ $order->user->name ?? 'N/A' }}</td>
                   <td>
                     <a href="{{ route('purchase-order.view', $order->id) }}" class="btn btn-info btn-sm">View</a>
