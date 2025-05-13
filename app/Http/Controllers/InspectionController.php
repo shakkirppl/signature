@@ -58,7 +58,7 @@ public function view($id)
 public function store(Request $request)
 {
     // Validate form data
-    return $request->all();
+    // return $request->all();
     //  dd($request->input('signature')); 
         $validated = $request->validate([
             'order_no' => 'required|string',
