@@ -202,6 +202,8 @@ button.remove-row {
 </div>
 @endsection
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('signature-pad');
@@ -301,6 +303,20 @@ document.addEventListener('DOMContentLoaded', function () {
     dateInput.value = today;
 });
 </script>
+<script>
+    $(document).on('keydown', 'input, select', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Prevent form submission
+            const inputs = $('#product-rows').find('input, select').filter(':visible');
+            const index = inputs.index(this);
+
+            if (index !== -1 && index + 1 < inputs.length) {
+                inputs.eq(index + 1).focus();
+            }
+        }
+    });
+</script>
+
 
 
 
