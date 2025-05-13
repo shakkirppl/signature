@@ -16,9 +16,11 @@
             <div class="col-md-6">
               <h4 class="card-title">Return Payment List</h4>
             </div>
+             @if($user->designation_id == 1||$user->designation_id == 3)
             <div class="col-md-6 text-right">
               <a href="{{ route('return-payment.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
             </div>
+            @endif
           </div>
 
           <!-- Responsive Table -->
