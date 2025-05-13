@@ -20,18 +20,51 @@ use Illuminate\Support\Facades\Log;
 class PurchaseOrderController extends Controller
 {
 
-    public function index()
-    {
-        $purchaseOrders = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment'])
-            ->whereHas('shipment', function ($query) {
-                $query->where('shipment_status', 0);
-            })
-            ->orderBy('id', 'desc')
-            ->get();
-            $totalAdvance = $purchaseOrders->sum('advance_amount');
+    // public function index()
+    // {
+    //     $purchaseOrders = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment'])
+    //         ->whereHas('shipment', function ($query) {
+    //             $query->where('shipment_status', 0);
+    //         })
+    //         ->orderBy('id', 'desc')
+    //         ->get();
+    //         $totalAdvance = $purchaseOrders->sum('advance_amount');
     
-        return view('purchase-order.index', compact('purchaseOrders','totalAdvance'));
+    //     return view('purchase-order.index', compact('purchaseOrders','totalAdvance'));
+    // }
+public function index(Request $request)
+{
+    $query = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment', 'user'])
+        ->whereHas('shipment', function ($q) {
+            $q->where('shipment_status', 0);
+        });
+
+    if ($request->supplier_id) {
+        $query->where('supplier_id', $request->supplier_id);
     }
+
+    $purchaseOrders = $query->orderBy('id', 'desc')->get();
+
+    $totalAdvance = $purchaseOrders->sum('advance_amount');
+
+    // Calculate total product count from details
+    $totalProductCount = $purchaseOrders->sum(function ($order) {
+        return $order->details->count();
+    });
+
+    $suppliers = Supplier::all();
+
+    return view('purchase-order.index', compact(
+        'purchaseOrders',
+        'totalAdvance',
+        'suppliers',
+        'totalProductCount'
+    ))->with([
+        'supplierId' => $request->supplier_id
+    ]);
+}
+
+
 
   
         public function create()
