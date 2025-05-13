@@ -110,7 +110,7 @@ if ($signatureData) {
         'date' => $validated['date'],
         'supplier_id' => $validated['supplier_id'],
          'mark' => $validated['mark'],
-        'signature' => $imagePath,
+        'signature' => $signatureData,
  'total_death_qty' => null,
         'user_id' => Auth::id(),
         'store_id' => 1,
