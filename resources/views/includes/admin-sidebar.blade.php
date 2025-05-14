@@ -193,7 +193,7 @@
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('gmp-index')}}">GMP</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('temperature-monitoring-index')}}">Temperature Monitoring</a></li>  
-               <li class="nav-item"> <a class="nav-link" href="{{URL::to('cleaning-sanitation-create')}}">Cleaning Sanitation </a></li> 
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('cleaning-sanitation-index')}}">Cleaning Sanitation </a></li> 
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('corrective-action-create')}}">Corrective Action Report</a></li> 
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-complaint-create')}}">Customer Complaint</a></li> 
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('internal-auditchecklist-create')}}">Internal Audit Checklist</a></li> 
