@@ -8,138 +8,117 @@
 </style>
 
 <div class="main-panel">
-    <div class="content-wrapper">
-        <div class="col-lg-12 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Cleaning and Sanitation Record After Production </h4>
-                    <div class="col-md-6 heading">
-                        <a href=" {{ route('cleaning-sanitation.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
-                    </div>
-                    @if($errors->any())
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+  <div class="content-wrapper">
+    <div class="col-lg-12 grid-margin stretch-card">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Cleaning and Sanitation Record After Production</h4>
+          <div class="col-md-6 heading">
+            <a href="{{ route('cleaning-sanitation.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+          </div>
 
-                    <form action="{{ route('cleaning-sanitation.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                        <div class="row">
-                            <!-- First Section -->
-                            <div class="col-md-6">
-                              
-
-                                <div class="form-group">
-                                    <label for="date" class="required">Date</label>
-                                    <input type="date" class="form-control" id="date" name="date" required>
-                                </div>
-                                <div class="form-group">
-                                  <label for="text" class="">Cleaning Method  Used</label>
-                                  <input type="text" class="form-control" id="cleaning_method" name="cleaning_method" required>
-                              </div>  
-                               <div class="form-group">
-                                  <label for="text" class="">Cleaning Agent Used</label>
-                                  <input type="text" class="form-control" id="cleaning_agent" name="cleaning_agent" required>
-                              </div>
-                              <div class="form-group">
-  <label class="required">Verification Signature</label><br>
-  <canvas id="verification-signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
-  <br>
-  <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearVerificationSignature()">Clear </button>
-  <input type="hidden" id="verification_signature_image" name="pest_control">
-</div>
-                             
-                          
-</div>
-
-
-<div class="col-md-6">
-                              
-
-<div class="form-group">
-                                    <label for="text" class="">Area cleaned</label>
-                                    <input type="text" class="form-control" id="area_cleaned" name="area_cleaned" >
-</div>                           
-                              <div class="form-group">
-                                  <label for="text" class="">Cleaner Name</label>
-                                  <input type="text" class="form-control" id="cleaner_name" name="cleaner_name" required>
-</div>          
-<div class="form-group">
-    <label for="supervisor_check">Supervisor Check</label>
-    <select class="form-control" id="supervisor_check" name="supervisor_check" required>
-        <option value="">Select</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
-    </select>
-</div>
-
-       
-                 
-                        
-</div>
-                             
-                           
-
-                                
-                               
-                               
-                            </div>
-                        </div>
-
-                        <div class="submitbutton">
-                    <button type="submit" class="btn btn-primary mb-2 submit">Submit<i class="fas fa-save"></i></button>
-                  </div>
-                    </form>
-                </div>
+          @if($errors->any())
+            <div class="alert alert-danger">
+              <ul>
+                @foreach($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
             </div>
-        </div>
-    </div>
+          @endif
+
+          <form id="temperatureForm" action="{{ route('cleaning-sanitation.store') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <div class="row">
+              <!-- Left Column -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="date" class="required">Date</label>
+                  <input type="date" class="form-control" id="date" name="date" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="required">Cleaning Method Used</label>
+                  <input type="text" class="form-control" id="cleaning_method" name="cleaning_method" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="required">Cleaning Agent Used</label>
+                  <input type="text" class="form-control" id="cleaning_agent" name="cleaning_agent" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="required">Verification Signature</label><br>
+                  <canvas id="signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas><br>
+                  <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
+                  <input type="hidden" name="verification_signature" id="verification_signature">
+                </div>
+              </div>
+
+              <!-- Right Column -->
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label>Area Cleaned</label>
+                  <input type="text" class="form-control" id="area_cleaned" name="area_cleaned">
+                </div>
+
+                <div class="form-group">
+                  <label class="required">Cleaner Name</label>
+                  <input type="text" class="form-control" id="cleaner_name" name="cleaner_name" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="required">Supervisor Check</label>
+                  <select class="form-control" id="supervisor_check" name="supervisor_check" required>
+                    <option value="">Select</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </select>
+                </div>
+                <div class="form-group">
+  <label for="comments">Comments</label>
+  <textarea class="form-control" id="comments" name="comments" rows="4" placeholder="Enter comments (optional)"></textarea>
 </div>
+              </div>
+            </div>
+
+            <div class="submitbutton">
+              <button type="submit" class="btn btn-primary mb-2 submit">Submit <i class="fas fa-save"></i></button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Signature Pad Script -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+
 <script>
-  const verificationCanvas = document.getElementById('verification-signature-pad');
-  const verificationSignaturePad = new SignaturePad(verificationCanvas);
+  document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
 
-  function clearVerificationSignature() {
-    verificationSignaturePad.clear();
-  }
+    // Clear button function
+    window.clearSignature = function () {
+      signaturePad.clear();
+    };
 
-  document.querySelector('form').addEventListener('submit', function (e) {
-    if (!verificationSignaturePad.isEmpty()) {
-      const dataUrl = verificationSignaturePad.toDataURL();
-      document.getElementById('verification_signature_image').value = dataUrl;
-    } else {
-      e.preventDefault();
-      alert('Please provide the Verification Signature.');
-    }
+    // Set current date
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    // Form submit
+    document.getElementById('temperatureForm').addEventListener('submit', function (e) {
+      if (signaturePad.isEmpty()) {
+        alert('Verification signature is required.');
+        e.preventDefault();
+        return;
+      }
+
+      // Store base64 image in hidden input
+      document.getElementById('verification_signature').value = signaturePad.toDataURL();
+    });
   });
 </script>
-
-
-<script>
-        function formatNumber(input) {
-            // Remove any existing formatting
-            let value = input.value.replace(/,/g, '');
-            
-            // Convert to a number
-            let number = parseFloat(value);
-            
-            // Format with commas
-            if (!isNaN(number)) {
-                input.value = new Intl.NumberFormat('en-US').format(number);
-            }
-        }
-    </script>
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-    const dateInput = document.getElementById('date');
-    let today = new Date().toISOString().split('T')[0];
-    dateInput.value = today;
-});
-</script>
-
 @endsection

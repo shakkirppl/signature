@@ -69,7 +69,8 @@
                                     <label>Inspector Signature</label><br>
                                     <canvas id="signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas><br>
                                     <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
-                                    <input type="hidden" name="inspector_signature" id="inspector_signature">
+                                    <input type="hidden" name="verification_signature" id="inspector_signature">
+                                    <!--  -->
                                 </div>
                             </div>
                         </div>
