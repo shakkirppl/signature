@@ -1,16 +1,18 @@
 @extends('layouts.layout')
+
 @section('content')
 <style>
-/* Adjust spacing between table rows */
-.table {
-    border-collapse: collapse;
-    width: 40%;
-}
+    /* Adjust spacing between table rows */
+    .table {
+        border-collapse: collapse;
+        width: 40%;
+    }
 
-button.remove-row {
-    padding: 5px 10px;
-}
+    button.remove-row {
+        padding: 5px 10px;
+    }
 </style>
+
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="col-12 grid-margin createtable">
@@ -18,11 +20,13 @@ button.remove-row {
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <h4 class="card-title">Inspection & Animal Receive  Detail</h4>
+                            <h4 class="card-title">Inspection & Animal Receive Detail</h4>
                         </div>
-                        <div class="col-6" style="text-align: end;">
+                        <div class="col-6 text-end">
+                            <!-- You can add any additional button or content here if needed -->
                         </div>
                     </div>
+                    
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -32,169 +36,153 @@ button.remove-row {
                             </ul>
                         </div><br />
                     @endif
-                    <form action="{{ route('inspection.store') }}" method="POST">
+                    
+                    <form id="temperatureForm" action="{{ route('inspection.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="row mb-3">
-                        <div class="col-md-3">
-                               <label for="inspection_no"><strong>Inspection No:</strong></label>
+                            <!-- Inspection No -->
+                            <div class="col-md-3">
+                                <label for="inspection_no"><strong>Inspection No:</strong></label>
                                 <input type="text" name="inspection_no" id="inspection_no" class="form-control" value="{{$invoice_no}}" readonly>
-                        </div>
+                            </div>
+
+                            <!-- Order No -->
                             <div class="col-md-3">
                                 <label for="code" class="form-label">Order No:</label>
                                 <input type="text" class="form-control" id="code" name="order_no" value="{{ $purchaseOrder->order_no }}" readonly>
                                 <input type="hidden" class="form-control" id="purchaseOrder_id" name="purchaseOrder_id" value="{{ $purchaseOrder->id }}" readonly>
                             </div>
+
+                            <!-- Date -->
                             <div class="col-md-3">
                                 <label for="date" class="form-label">Date:</label>
                                 <input type="date" class="form-control" id="date" name="date" value="" required>
                             </div>
-                            <!-- <div class="col-md-3">
-                                <label for="supplier_id" class="form-label">Supplier:</label>
-                                <select name="supplier_id" id="supplier_id" class="form-control" required>
-                                    <option value="">Select suppliers</option>
-                                    @foreach ($suppliers as $supplier)
-                                        <option value="{{ $supplier->id }}" {{ $purchaseOrder->supplier_id == $supplier->id ? 'selected' : '' }}>
-                                            {{ $supplier->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div> -->
+
+                            <!-- Supplier Name -->
                             <div class="col-md-3">
                                <label for="supplier_name" class="form-label">Supplier:</label>
                                 <input type="text" class="form-control" id="supplier_name" name="supplier_name" value="{{ $purchaseOrder->supplier->name }}" readonly>
                                <input type="hidden" name="supplier_id" value="{{ $purchaseOrder->supplier_id }}">
                             </div>
-<!-- 
-                           <div class="col-md-3">
-                           <label for="shipment_no" class="form-label">Shipment No:</label>
-                             <input type="text" class="form-control" id="shipment_no" name="shipment_no" value="{{ $purchaseOrder->shipment->shipment_no }}" >
-                            <input type="hidden" name="shipment_id" value="{{ $purchaseOrder->shipment_id }}">
-                          </div> -->
 
+                            <!-- Shipment No -->
+                            <div class="col-md-3">
+                                <label for="shipment_id" class="form-label">Shipment No:</label>
+                                <select name="shipment_id" id="shipment_id" class="form-control" required>
+                                    <option value="">-- Select Shipment --</option>
+                                    @foreach ($shipments as $shipment)
+                                        <option value="{{ $shipment->id }}" {{ $purchaseOrder->shipment_id == $shipment->id ? 'selected' : '' }}>
+                                            {{ $shipment->shipment_no }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-<div class="col-md-3">
-    <label for="shipment_id" class="form-label">Shipment No:</label>
-    <select name="shipment_id" id="shipment_id" class="form-control" required>
-        <option value="">-- Select Shipment --</option>
-        @foreach ($shipments as $shipment)
-            <option value="{{ $shipment->id }}"
-                {{ $purchaseOrder->shipment_id == $shipment->id ? 'selected' : '' }}>
-                {{ $shipment->shipment_no }}
-            </option>
-        @endforeach
-    </select>
-</div>
-  <div class="col-md-3">
-                                <label for="text" class="form-label">Mark:</label>
+                            <!-- Mark -->
+                            <div class="col-md-3">
+                                <label for="mark" class="form-label">Mark:</label>
                                 <input type="text" class="form-control" id="mark" name="mark" value="" required>
                             </div>
 
-<div class="col-md-6 mt-3">
-    <label for="signature" class="form-label"><strong>Signature:</strong></label>
-    <canvas id="signature-pad" class="signature-pad" width="300" height="100" style="border: 1px solid #000;"></canvas>
-    <button type="button" id="clear-signature" class="btn btn-danger btn-sm mt-2">Clear</button>
-    <input type="hidden" id="signature-data" name="signature">
-</div>
-
-
-
-
-
-
-                           
-
-
+                            <!-- Signature -->
+                         <div class="col-md-6 mt-3">
+        <label>Inspector Signature</label><br>
+        <canvas id="signature-pad" width="300" height="100" style="border:1px solid #ccc;"></canvas><br>
+        <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
+        <input type="hidden" name="signature" id="inspector_signature">
+    </div>
                         </div>
+
+                        <!-- Product Table -->
                         <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Product</th>
-                                    <th>Actual Quantity</th>
-                                    <th>Received Quantity</th>
-                                    <!-- <th>Male</th>
-                                    <th>Female</th> -->
-                                    <!-- <th>Mark</th> -->
-                                    <th>Male </th>
-                                    <th>Female</th>
-                                    <th>Male Rejected Quantity</th>
-                                    <th>Female Rejected Quantity</th>
-                                    <th>Rejected Reasons</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="product-rows">
-                            @foreach ($purchaseOrder->details as $index => $detail)
-        <tr>
-            <td>
-                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 150px;">
-                    <option value="">Select Product</option>
-                    @foreach ($products as $product)
-                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
-                            {{ $product->product_name }}
-                        </option>
-                    @endforeach
-                </select>
-            </td>
-           
-            <td>
-                <input type="text" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}"  style="width: 150px;">
-            </td>
-            <td>
-                <input type="text" name="products[{{ $index }}][received_qty]" class="form-control qty" value="{{ $detail->received_qty }}"  style="width: 150px;">
-            </td>
-            <!-- <td>
-                <input type="text" name="products[{{ $index }}][male]" class="form-control male" value=""  style="width: 150px;">
-            </td>
-            <td>
-                <input type="number" name="products[{{ $index }}][female]" class="form-control female" value="" min="1" style="width: 150px;">
-            </td> -->
-            <!-- <td>
-                <input type="text" name="products[{{ $index }}][mark]" class="form-control qty" value="" style="width: 150px;">
-            </td> -->
-            <td>
-                <input type="text" name="products[{{ $index }}][male_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
-            </td>
-            <td>
-                <input type="text" name="products[{{ $index }}][female_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
-            </td>
-            <td>
-                <input type="text" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" >
-            </td>
-           
-            <td>
-                <input type="text" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" >
-            </td>
-         
-            <td>
-                <select name="products[{{ $index }}][rejected_reason]" class="form-control rejected-reason" style="width: 150px;" >
-                    <option value="">Select Reason</option>
-                    @foreach ($rejectReasons as $reason)
-                        <option value="{{ $reason->id }}" {{ isset($detail->rejected_reasons) && $detail->rejected_reasons == $reason->id ? 'selected' : '' }}>
-                            {{ $reason->rejected_reasons }}
-                        </option>
-                    @endforeach
-                </select>
-            </td>
-          
-            
-                <input type="hidden" name="products[{{ $index }}][rate]" value="{{ $detail->rate }}">
-            
-           
-         
-                <input type="hidden" name="products[{{ $index }}][total]" value="{{ $detail->total }}" readonly>
-            
-            <td>
-                <button type="button" class="btn btn-danger remove-row">Remove</button>
-            </td>
-        </tr>
-    @endforeach
-    
-                            </tbody>
-                        </table>
-                        
-</div>
-                        <button type="submit" class="btn btn-primary mt-4">submit</button>
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Actual Quantity</th>
+                                        <th>Received Quantity</th>
+                                        <th>Male</th>
+                                        <th>Female</th>
+                                        <th>Male Rejected Quantity</th>
+                                        <th>Female Rejected Quantity</th>
+                                        <th>Rejected Reasons</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="product-rows">
+                                    @foreach ($purchaseOrder->details as $index => $detail)
+                                        <tr>
+                                            <!-- Product Selection -->
+                                            <td>
+                                                <select name="products[{{ $index }}][product_id]" class="form-control product-select" required style="width: 150px;">
+                                                    <option value="">Select Product</option>
+                                                    @foreach ($products as $product)
+                                                        <option value="{{ $product->id }}" data-rate="{{ $product->rate }}" {{ $detail->product_id == $product->id ? 'selected' : '' }}>
+                                                            {{ $product->product_name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+
+                                            <!-- Actual Quantity -->
+                                            <td>
+                                                <input type="text" name="products[{{ $index }}][qty]" class="form-control qty" value="{{ $detail->qty }}"  style="width: 150px;">
+                                            </td>
+
+                                            <!-- Received Quantity -->
+                                            <td>
+                                                <input type="text" name="products[{{ $index }}][received_qty]" class="form-control qty" value="{{ $detail->received_qty }}"  style="width: 150px;">
+                                            </td>
+
+                                            <!-- Male Accepted Quantity -->
+                                            <td>
+                                                <input type="text" name="products[{{ $index }}][male_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
+                                            </td>
+
+                                            <!-- Female Accepted Quantity -->
+                                            <td>
+                                                <input type="text" name="products[{{ $index }}][female_accepted_qty]" class="form-control accepted-qty" value="{{ $detail->accepted_qty ?? '' }}" min="0" required style="width: 150px;">
+                                            </td>
+
+                                            <!-- Male Rejected Quantity -->
+                                            <td>
+                                                <input type="text" name="products[{{ $index }}][male_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" >
+                                            </td>
+
+                                            <!-- Female Rejected Quantity -->
+                                            <td>
+                                                <input type="text" name="products[{{ $index }}][female_rejected_qty]" class="form-control rejected-qty" value="{{ $detail->rejected_qty ?? '' }}" min="0" style="width: 150px;" >
+                                            </td>
+
+                                            <!-- Rejected Reason -->
+                                            <td>
+                                                <select name="products[{{ $index }}][rejected_reason]" class="form-control rejected-reason" style="width: 150px;" >
+                                                    <option value="">Select Reason</option>
+                                                    @foreach ($rejectReasons as $reason)
+                                                        <option value="{{ $reason->id }}" {{ isset($detail->rejected_reasons) && $detail->rejected_reasons == $reason->id ? 'selected' : '' }}>
+                                                            {{ $reason->rejected_reasons }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </td>
+
+                                            <!-- Hidden Fields for Rate and Total -->
+                                            <input type="hidden" name="products[{{ $index }}][rate]" value="{{ $detail->rate }}">
+                                            <input type="hidden" name="products[{{ $index }}][total]" value="{{ $detail->total }}" readonly>
+
+                                            <!-- Remove Row Button -->
+                                            <td>
+                                                <button type="button" class="btn btn-danger remove-row">Remove</button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="btn btn-primary mt-4">Submit</button>
                     </form>
                 </div>
             </div>
@@ -202,58 +190,29 @@ button.remove-row {
     </div>
 </div>
 @endsection
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@2.3.2/dist/signature_pad.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
-    const canvas = document.getElementById('signature-pad');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById('signature-pad');
+        const signaturePad = new SignaturePad(canvas);
 
-    canvas.addEventListener('mousedown', () => { drawing = true; ctx.beginPath(); });
-    canvas.addEventListener('mouseup', () => { drawing = false; });
-    canvas.addEventListener('mouseout', () => { drawing = false; });
-    canvas.addEventListener('mousemove', function(e) {
-        if (!drawing) return;
-        const rect = canvas.getBoundingClientRect();
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.strokeStyle = '#000';
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-        ctx.stroke();
-    });
-
-    document.getElementById('clear-signature').addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        document.getElementById('signature-data').value = '';
-    });
-
-    // Store signature before form submit
-    $('form').on('submit', function () {
-        const dataURL = canvas.toDataURL('image/png');
-        $('#signature-data').val(dataURL);
-    });
-</script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var canvas = document.getElementById('signature-pad');
-    var signaturePad = new SignaturePad(canvas);
-
-    document.getElementById('clear-signature').addEventListener('click', function () {
-        signaturePad.clear();
-    });
-
-    document.querySelector('form').addEventListener('submit', function (e) {
-        if (signaturePad.isEmpty()) {
-            alert("Please provide a signature.");
-            e.preventDefault(); // Prevent form submission
-        } else {
-            var signatureData = signaturePad.toDataURL(); // Get base64 string
-            document.getElementById('signature-data').value = signatureData; // Set hidden input value
+        function clearSignature() {
+            signaturePad.clear();
         }
-    });
-});
 
+        document.querySelector('button[onclick="clearSignature()"]').addEventListener('click', clearSignature);
+
+        document.getElementById('temperatureForm').addEventListener('submit', function (e) {
+            if (signaturePad.isEmpty()) {
+                alert('Inspector signature is required.');
+                e.preventDefault();
+            } else {
+                const dataURL = signaturePad.toDataURL('image/png');
+                document.getElementById('inspector_signature').value = dataURL;
+            }
+        });
+    });
 </script>
 
 

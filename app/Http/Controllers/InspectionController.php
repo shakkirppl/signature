@@ -82,26 +82,26 @@ public function store(Request $request)
             'products.*.rejected_reason' => 'nullable|exists:reject_masters,id',
             'products.*.rate' => 'nullable|numeric',
             'products.*.total' => 'nullable|numeric',
+            'signature' => 'required',
+
         ]);
   
-    $signatureData = null;
+   $fileName = null;
 
-    if ($request->filled('signature') && strpos($request->signature, 'data:image/png;base64,') === 0) {
-        $signatureBase64 = $request->input('signature');
-        $signatureImage = str_replace('data:image/png;base64,', '', $signatureBase64);
-        $signatureImage = str_replace(' ', '+', $signatureImage);
+    if ($request->signature) {
+        $image = $request->signature;
+        
+        // Extract base64 content
+        $image = str_replace('data:image/png;base64,', '', $image);
+        $image = str_replace(' ', '+', $image);
+        $imageData = base64_decode($image);
 
-        $signatureName = 'signature_' . time() . '.png';
-        $signaturePath = public_path('uploads/signatures/' . $signatureName);
+        // Create unique file name
+        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
 
-        if (!file_exists(public_path('uploads/signatures'))) {
-            mkdir(public_path('uploads/signatures'), 0775, true);
-        }
-
-        file_put_contents($signaturePath, base64_decode($signatureImage));
-        $signatureData = 'uploads/signatures/' . $signatureName; // Save relative path
+        // Save to public path (or storage if preferred)
+        file_put_contents(public_path('uploads/signatures/' . $fileName), $imageData);
     }
-
 
     $inspection = Inspection::create([
         'purchaseOrder_id' => $validated['purchaseOrder_id'],
@@ -111,7 +111,7 @@ public function store(Request $request)
         'date' => $validated['date'],
         'supplier_id' => $validated['supplier_id'],
          'mark' => $validated['mark'],
-        'signature' => $signatureData,
+        'signature' => $fileName,
          'total_death_qty' => null,
         'user_id' => Auth::id(),
         'store_id' => 1,

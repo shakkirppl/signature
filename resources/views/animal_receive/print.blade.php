@@ -61,6 +61,17 @@
             <div class="signature-line"></div>
             <p>Supplier Signature</p>
         </div>
+          <div class="signature-box">
+           
+        </div>
+         <div class="signature-box">
+            <div>   @if($inspection->signature)
+    <img src="{{ asset('uploads/signatures/' . $inspection->signature) }}" width="200">
+@endif</div>
+           <p>Inspector Signature</p> 
+        </div>
+        
+                           
     </div>
 </body>
 </html>

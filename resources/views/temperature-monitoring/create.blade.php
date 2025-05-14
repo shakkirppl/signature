@@ -12,10 +12,11 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Temperature Monitoring Record </h4>
+                    <h4 class="card-title">Temperature Monitoring Record</h4>
                     <div class="col-md-6 heading">
-                        <a href=" {{ route('temperature-monitoring.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
+                        <a href="{{ route('temperature-monitoring.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                     </div>
+
                     @if($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -26,63 +27,56 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('temperature-monitoring.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
+                    <form id="temperatureForm" action="{{ route('temperature-monitoring.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
                         <div class="row">
-                            <!-- First Section -->
+                            <!-- First Column -->
                             <div class="col-md-6">
-                              
-
                                 <div class="form-group">
                                     <label for="date" class="required">Date</label>
                                     <input type="date" class="form-control" id="date" name="date" required>
                                 </div>
                                 <div class="form-group">
-                                  <label for="text" class="">Temp Before (°C)</label>
-                                  <input type="text" class="form-control" id="temp_before" name="temp_before" required>
-                              </div>  
-                               <div class="form-group">
-                                  <label for="text" class="">Temp After (°C)</label>
-                                  <input type="text" class="form-control" id="temp_after" name="temp_after" required>
-                              </div>                              
-                          
-</div>
-
-<div class="col-md-6">
-                              
-                                <div class="form-group">
-                                    <label for="time" class="required">Time</label>
-                                    <input type="time" class="form-control" id="time" name="time" required>
+                                    <label for="temp_before">Temp Before (°C)</label>
+                                    <input type="text" class="form-control" id="temp_before" name="temp_before" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="text" class="">Slaughter area</label>
-                                    <input type="text" class="form-control" id="slaughter_area" name="slaughter_area" >
-                              </div>                           
-                              <div class="form-group">
-                                  <label for="text" class="">Average Carcass Temp</label>
-                                  <input type="text" class="form-control" id="average_carcass" name="average_carcass" required>
-                             </div>          
-           
-                          
-                              <div class="form-group">
-                                  <label for="text" class="">Inspector Name and Signature</label>
-                                  <input type="text" class="form-control" id="inspector_name" name="inspector_name" required>
-                                  <canvas id="inspector-signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas>
-  
-                               <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearInspectorSignature()">Clear </button>
-                               <input type="hidden" id="inspector_signature_image" name="inspector_signature">
-                             
-                        
-</div>
-                             
-                           
-</div> 
-  </div>
+                                    <label for="temp_after">Temp After (°C)</label>
+                                    <input type="text" class="form-control" id="temp_after" name="temp_after" required>
+                                </div>
+                            </div>
+
+                            <!-- Second Column -->
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="time" class="required">Time</label>
+                                    <input type="text" class="form-control timepicker" id="time" name="time" required>
+                                </div>
+                                 
+                                <div class="form-group">
+                                    <label for="slaughter_area">Slaughter Area</label>
+                                    <input type="text" class="form-control" id="slaughter_area" name="slaughter_area">
+                                </div>
+                                <div class="form-group">
+                                    <label for="average_carcass">Average Carcass Temp</label>
+                                    <input type="text" class="form-control" id="average_carcass" name="average_carcass" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inspector_name">Inspector Name</label>
+                                    <input type="text" class="form-control" id="inspector_name" name="inspector_name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Inspector Signature</label><br>
+                                    <canvas id="signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas><br>
+                                    <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
+                                    <input type="hidden" name="inspector_signature" id="inspector_signature">
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="submitbutton">
-                    <button type="submit" class="btn btn-primary mb-2 submit">Submit<i class="fas fa-save"></i></button>
-                  </div>
+                        <div class="submitbutton mt-3">
+                            <button type="submit" class="btn btn-primary mb-2 submit">Submit <i class="fas fa-save"></i></button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -90,25 +84,30 @@
     </div>
 </div>
 
+<!-- JS for Signature Pad -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <script>
-  const inspectorCanvas = document.getElementById('inspector-signature-pad');
-  const inspectorSignaturePad = new SignaturePad(inspectorCanvas);
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
 
-  function clearInspectorSignature() {
-    inspectorSignaturePad.clear();
-  }
-
-  document.querySelector('form').addEventListener('submit', function (e) {
-    if (!inspectorSignaturePad.isEmpty()) {
-      const dataUrl = inspectorSignaturePad.toDataURL();
-      document.getElementById('inspector_signature_image').value = dataUrl;
-    } else {
-      e.preventDefault();
-      alert('Please provide Inspector Signature.');
+    function clearSignature() {
+        signaturePad.clear();
     }
-  });
+
+    document.getElementById('temperatureForm').addEventListener('submit', function (e) {
+        if (signaturePad.isEmpty()) {
+            alert('Inspector signature is required.');
+            e.preventDefault();
+        } else {
+            const dataURL = signaturePad.toDataURL('image/png');
+            document.getElementById('inspector_signature').value = dataURL;
+        }
+    });
 </script>
+
 
 <script>
         function formatNumber(input) {
@@ -130,6 +129,27 @@ document.addEventListener('DOMContentLoaded', function () {
     let today = new Date().toISOString().split('T')[0];
     dateInput.value = today;
 });
+</script>
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+    flatpickr(".timepicker", {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "h:i K", // 12-hour format with AM/PM
+        time_24hr: false,
+        onOpen: function(selectedDates, dateStr, instance) {
+            let currentTime = new Date().toLocaleTimeString("en-US", { 
+                timeZone: "Africa/Dar_es_Salaam",
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true 
+            });
+            instance.setDate(currentTime, true);
+        }
+    });
+});
+
+
 </script>
 
 @endsection

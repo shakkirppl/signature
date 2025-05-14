@@ -6,7 +6,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Inspection Details</h4>
+                    <h4 class="card-title">Animal Receive Notes</h4>
                     
                     <div class="row">
                         <div class="col-md-6">
@@ -15,7 +15,12 @@
                             <p><strong>Date:</strong> {{ $inspection->date }}</p>
                             <p><strong>Supplier:</strong> {{ $inspection->supplier->name }}</p>
                               <p><strong>Mark:</strong> {{ $inspection->mark }}</p>
+                              
+                              @if($inspection->signature)
+    <img src="{{ asset('uploads/signatures/' . $inspection->signature) }}" width="200">
+@endif
                         </div>
+                        
                     </div>
 
                     <h5 class="mt-4">Products</h5>
@@ -44,6 +49,7 @@
                                     <td>{{ $detail->rejectMaster->rejected_reasons ?? 'N/A' }}</td>
                                 </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>
