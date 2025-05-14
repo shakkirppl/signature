@@ -17,6 +17,8 @@
               <a href="{{ route('purchase-order.create') }}" class="newicon">
                 <i class="mdi mdi-new-box"></i>
               </a>
+                <button onclick="printPage()" class="btn btn-secondary btn-sm">Print</button>
+
             </div>
           </div>
 
@@ -125,5 +127,74 @@
     font-size: 30px;
   }
 </style>
+<script>
+  function printPage() {
+    window.print();
+  }
+</script>
+<style>
+  @media print {
+    nav,               /* Main navbar */
+    .navbar,           /* Navbar class */
+    .sidebar,          /* Sidebar (navigation) */
+    .logo,             /* Logo area */
+    .newicon,          /* "New" icon */
+    .input-group,      /* Supplier dropdown */
+    .btn,              /* All buttons */
+    .select2-container,
+    .card-title + div, /* Top-right controls like Print button */
+    footer {           /* Optional footer */
+      display: none !important;
+    }
+
+    .main-panel, .content-wrapper {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+    }
+
+  
+    .table {
+      font-size: 10px;
+    }
+
+    body {
+      margin: 10px;
+      background: #fff;
+    }
+  }
+</style>
+<style>
+  @media print {
+    /* Prevent page breaks inside elements */
+    .card, .table, .table-responsive, .content-wrapper {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Remove margins and paddings that may cause overflow */
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Force everything onto one page */
+    body {
+      zoom: 100%; /* Shrinks content if needed */
+    }
+
+    /* Hide unnecessary UI elements */
+    nav, .navbar, .sidebar, .logo, .newicon, .input-group, .btn, .select2-container, footer {
+      display: none !important;
+    }
+
+    .main-panel, .content-wrapper {
+      width: 100%;
+    }
+  }
+</style>
+
+
 
 @endsection
