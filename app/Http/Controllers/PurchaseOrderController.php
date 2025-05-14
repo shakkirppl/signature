@@ -35,7 +35,10 @@ class PurchaseOrderController extends Controller
 public function index(Request $request)
 {
     $supplierId = $request->get('supplier_id');
-    $query = PurchaseOrder::with(['supplier', 'shipment', 'salesOrder', 'details', 'user']);
+    $query = PurchaseOrder::with(['supplier', 'shipment', 'salesOrder', 'details', 'user'])
+     ->whereHas('shipment', function ($query) {
+                $query->where('shipment_status', 0);
+             });
 
     if ($supplierId) {
         $query->where('supplier_id', $supplierId);
