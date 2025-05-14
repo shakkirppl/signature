@@ -100,6 +100,7 @@ button.remove-row {
 
 
 
+
                            
 
 
@@ -205,6 +206,35 @@ button.remove-row {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+    const canvas = document.getElementById('signature-pad');
+    const ctx = canvas.getContext('2d');
+    let drawing = false;
+
+    canvas.addEventListener('mousedown', () => { drawing = true; ctx.beginPath(); });
+    canvas.addEventListener('mouseup', () => { drawing = false; });
+    canvas.addEventListener('mouseout', () => { drawing = false; });
+    canvas.addEventListener('mousemove', function(e) {
+        if (!drawing) return;
+        const rect = canvas.getBoundingClientRect();
+        ctx.lineWidth = 2;
+        ctx.lineCap = 'round';
+        ctx.strokeStyle = '#000';
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+    });
+
+    document.getElementById('clear-signature').addEventListener('click', () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        document.getElementById('signature-data').value = '';
+    });
+
+    // Store signature before form submit
+    $('form').on('submit', function () {
+        const dataURL = canvas.toDataURL('image/png');
+        $('#signature-data').val(dataURL);
+    });
+</script>
+<script>
   document.addEventListener('DOMContentLoaded', function () {
     var canvas = document.getElementById('signature-pad');
     var signaturePad = new SignaturePad(canvas);
@@ -225,6 +255,7 @@ button.remove-row {
 });
 
 </script>
+
 
 
 

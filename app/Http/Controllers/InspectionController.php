@@ -66,6 +66,7 @@ public function store(Request $request)
             'purchaseOrder_id'=>'required',
             'date' => 'required|date',
             'mark'=> 'nullable|string',
+            // 'signature'=> 'required',
             'supplier_id' => 'required|exists:supplier,id',
             'shipment_id' => 'required|exists:shipment,id',
             'products.*.product_id' => 'required|exists:product,id',
@@ -82,24 +83,24 @@ public function store(Request $request)
             'products.*.rate' => 'nullable|numeric',
             'products.*.total' => 'nullable|numeric',
         ]);
-    $signatureData = $request->input('signature');
+  
+    $signatureData = null;
 
-if ($signatureData) {
-    // Remove the "data:image/png;base64," part
-    $signatureData = preg_replace('#^data:image/\w+;base64,#i', '', $signatureData);
+    if ($request->filled('signature') && strpos($request->signature, 'data:image/png;base64,') === 0) {
+        $signatureBase64 = $request->input('signature');
+        $signatureImage = str_replace('data:image/png;base64,', '', $signatureBase64);
+        $signatureImage = str_replace(' ', '+', $signatureImage);
 
-    // Decode it
-    $signatureBinary = base64_decode($signatureData);
+        $signatureName = 'signature_' . time() . '.png';
+        $signaturePath = public_path('uploads/signatures/' . $signatureName);
 
-    // Generate a unique filename
-    $fileName = 'signature_' . time() . '.png';
+        if (!file_exists(public_path('uploads/signatures'))) {
+            mkdir(public_path('uploads/signatures'), 0775, true);
+        }
 
-    // Store the image (in public disk)
-    Storage::disk('public')->put('signatures/' . $fileName, $signatureBinary);
-
-    // Save path in database (e.g., inspections table)
-    $inspection->signature = 'signatures/' . $fileName;
-}
+        file_put_contents($signaturePath, base64_decode($signatureImage));
+        $signatureData = 'uploads/signatures/' . $signatureName; // Save relative path
+    }
 
 
     $inspection = Inspection::create([

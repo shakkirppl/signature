@@ -42,9 +42,8 @@
 
             <div class="col-md-6 text-right">
               <h5><strong>Total Advance Amount:</strong> {{ number_format($totalAdvance, 2) }}</h5>
-              @if(isset($supplierId))
-                <h5><strong>Total Animals:</strong>{{ $totalQuantity }}</h5>
-              @endif
+             <h5><strong>Total Animals:</strong> {{ $totalQuantity }}</h5>
+
             </div>
           </div>
 

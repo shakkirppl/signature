@@ -35,36 +35,31 @@ class PurchaseOrderController extends Controller
 public function index(Request $request)
 {
     $supplierId = $request->get('supplier_id');
-
-    $query = PurchaseOrder::with(['supplier', 'details', 'salesOrder', 'shipment', 'user'])
-        ->whereHas('shipment', function ($query) {
-            $query->where('shipment_status', 0);
-        });
+    $query = PurchaseOrder::with(['supplier', 'shipment', 'salesOrder', 'details', 'user']);
 
     if ($supplierId) {
         $query->where('supplier_id', $supplierId);
     }
 
-    $purchaseOrders = $query->orderBy('id', 'desc')->get();
+    $purchaseOrders = $query->get();
 
-    // Sum of advance amount
+    $suppliers = Supplier::all();
+
+    // Total Advance and Quantity (Animals Count)
     $totalAdvance = $purchaseOrders->sum('advance_amount');
-
-    // Sum of quantity (not product count)
     $totalQuantity = $purchaseOrders->sum(function ($order) {
         return $order->details->sum('qty');
     });
 
-    $suppliers = Supplier::all();
-
     return view('purchase-order.index', compact(
         'purchaseOrders',
-        'totalAdvance',
-        'totalQuantity',
         'suppliers',
-        'supplierId'
+        'supplierId',
+        'totalAdvance',
+        'totalQuantity'
     ));
 }
+
 
 
 
