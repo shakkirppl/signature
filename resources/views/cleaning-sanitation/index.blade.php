@@ -76,7 +76,7 @@
                               </button>
                             </div>
                             <div class="modal-body text-center">
-                              <img src="{{ asset('uploads/signatures/' . $record->verification_signature) }}" alt="Signature" style="width: 100%; max-width: 800px; height: auto;">
+                              <img src="{{ asset('storage/signatures/' . $record->verification_signature) }}" alt="Signature" style="width: 100%; max-width: 800px; height: auto;">
                             </div>
                           </div>
                         </div>

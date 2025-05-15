@@ -13,7 +13,7 @@ class TemperatureMonitoringRecordController extends Controller
 {
     public function index()
 {
-    $records = TemperatureMonitoringRecord::orderBy('date', 'desc')->get();
+    $records = TemperatureMonitoringRecord::orderBy('id', 'desc')->get();
     return view('temperature-monitoring.index', compact('records'));
 }
 
@@ -35,22 +35,22 @@ public function store(Request $request)
         'inspector_signature' => 'required', // base64 validation
     ]);
 
-   $fileName = null;
+    $fileName = null;
 
-    if ($request->inspector_signature) {
-        $image = $request->inspector_signature;
-        
-        // Extract base64 content
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageData = base64_decode($image);
+if ($request->inspector_signature) {
+    $base64Image = $request->inspector_signature;
 
-        // Create unique file name
-        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+    // Extract base64 content
+    $base64Image = str_replace('data:image/png;base64,', '', $base64Image);
+    $base64Image = str_replace(' ', '+', $base64Image);
+    $imageData = base64_decode($base64Image);
 
-        // Save to public path (or storage if preferred)
-        file_put_contents(public_path('uploads/signatures/' . $fileName), $imageData);
-    }
+    // Create unique file name
+    $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+
+    // Save to public storage disk under 'signatures' directory
+    Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+}
 
     TemperatureMonitoringRecord::create([
         'date' => $request->date,

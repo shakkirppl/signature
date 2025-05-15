@@ -66,7 +66,7 @@
         </div>
          <div class="signature-box">
             <div>   @if($inspection->signature)
-    <img src="{{ asset('uploads/signatures/' . $inspection->signature) }}" width="200">
+    <img src="{{ asset('storage/signatures/' . $inspection->signature) }}" width="200">
 @endif</div>
            <p>Inspector Signature</p> 
         </div>

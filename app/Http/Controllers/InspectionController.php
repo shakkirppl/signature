@@ -86,22 +86,24 @@ public function store(Request $request)
 
         ]);
   
-   $fileName = null;
 
-    if ($request->signature) {
-        $image = $request->signature;
-        
-        // Extract base64 content
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageData = base64_decode($image);
 
-        // Create unique file name
-        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+    $fileName = null;
 
-        // Save to public path (or storage if preferred)
-        file_put_contents(public_path('uploads/signatures/' . $fileName), $imageData);
-    }
+if ($request->signature) {
+    $base64Image = $request->signature;
+
+    // Extract base64 content
+    $base64Image = str_replace('data:image/png;base64,', '', $base64Image);
+    $base64Image = str_replace(' ', '+', $base64Image);
+    $imageData = base64_decode($base64Image);
+
+    // Create unique file name
+    $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+
+    // Save to public storage disk under 'signatures' directory
+    Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+}
 
     $inspection = Inspection::create([
         'purchaseOrder_id' => $validated['purchaseOrder_id'],

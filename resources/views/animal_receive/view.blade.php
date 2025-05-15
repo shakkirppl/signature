@@ -16,9 +16,9 @@
                             <p><strong>Supplier:</strong> {{ $inspection->supplier->name }}</p>
                               <p><strong>Mark:</strong> {{ $inspection->mark }}</p>
                               
-                              @if($inspection->signature)
-    <img src="{{ asset('uploads/signatures/' . $inspection->signature) }}" width="200">
-@endif
+                             
+    <img src="{{ asset('storage/signatures/' . $inspection->signature) }}" width="200">
+
                         </div>
                         
                     </div>
