@@ -488,7 +488,7 @@ Route::post('/usd-to-shilling/{id}', [UsdToShillingController::class, 'update'])
 
 
 Route::get('shipment-profit/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
-Route::get('shipment-/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
+// Route::get('shipment-/{id}', [ShipmentProfitController::class, 'shipmentprofit'])->name('shipmentprofit.report');
 
 
 Route::get('create-new-scheduletime', [ScheSchedulenewSlaughter::class, 'create'])->name('new.schedule');
