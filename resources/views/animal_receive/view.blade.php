@@ -18,7 +18,7 @@
                               
                              
     <img src="{{ asset('storage/signatures/' . $inspection->signature) }}" width="200">
-
+<!--  -->
                         </div>
                         
                     </div>
