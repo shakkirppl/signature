@@ -133,16 +133,18 @@
 </div>
 
 
-                <div class="col-md-6 mb-4 stretch-card transparent">
-                  <div class="card card-dark-blue">
-                    <div class="card-body">
-                      <p class="mb-4">Animals Stock</p>
-                      <p class="fs-30 mb-2">{{$totalProducts}}</p>
-                      <!-- <p>22.00% (30 days)</p> -->
-                    </div>
-                  </div>
-                </div>
-              </div>
+               <div class="col-md-6 mb-4 stretch-card transparent">
+  <div class="card card-dark-blue">
+    <a href="{{ route('animalReceive.index') }}" style="text-decoration: none; color: inherit;">
+      <div class="card-body">
+        <p class="mb-4">Animals Stock</p>
+        <p class="fs-30 mb-2">{{ $totalProducts }}</p>
+        <!-- <p>22.00% (30 days)</p> -->
+      </div>
+    </a>
+  </div>
+</div>
+
               @if($user->designation_id == 1||$user->designation_id == 3)   
               <div class="row">
               <a href="{{ route('customer.outstanding') }}" class="col-md-6 stretch-card transparent" style="text-decoration: none;">
