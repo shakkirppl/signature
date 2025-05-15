@@ -22,12 +22,24 @@
     </style>
 </head>
 <body onload="window.print()">
-    <h3>Animal Receive Note</h3>
-    <p><strong>Inspection No:</strong> {{ $inspection->inspection_no }}</p>
-    <p><strong>Order No:</strong> {{ $inspection->order_no }}</p>
-    <p><strong>Supplier:</strong> {{ $inspection->supplier->name ?? '' }}</p>
-    <p><strong>Date:</strong> {{ $inspection->date }}</p>
-    <p><strong>Shipment No:</strong> {{ $inspection->shipment->shipment_no ?? '' }}</p>
+   <h3 style="text-align: center;">Animal Receive Note</h3>
+
+<div style="display: flex; justify-content: space-between;">
+    <!-- Left Column -->
+    <div style="width: 52%;">
+        <p><strong>Inspection No:</strong> {{ $inspection->inspection_no }}</p>
+        <p><strong>Order No:</strong> {{ $inspection->order_no }}</p>
+        <p><strong>Supplier:</strong> {{ $inspection->supplier->name ?? '' }}</p>
+    </div>
+
+    <!-- Right Column -->
+    <div style="width: 48%;">
+        <p><strong>Date:</strong> {{ $inspection->date }}</p>
+        <p><strong>Shipment No:</strong> {{ $inspection->shipment->shipment_no ?? '' }}</p>
+        <p><strong>Mark:</strong> {{ $inspection->mark }}</p>
+    </div>
+</div>
+
 
     <table>
         <thead>
