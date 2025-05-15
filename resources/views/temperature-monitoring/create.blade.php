@@ -69,7 +69,7 @@
                                     <label>Inspector Signature</label><br>
                                     <canvas id="signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas><br>
                                     <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
-                                    <input type="hidden" name="verification_signature" id="inspector_signature">
+                                    <input type="hidden" name="inspector_signature" id="inspector_signature">
                                     <!--  -->
                                 </div>
                             </div>
@@ -91,22 +91,30 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <script>
+  document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('signature-pad');
     const signaturePad = new SignaturePad(canvas);
 
-    function clearSignature() {
-        signaturePad.clear();
-    }
+    // Clear button function
+    window.clearSignature = function () {
+      signaturePad.clear();
+    };
 
+    // Set current date
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    // Form submit
     document.getElementById('temperatureForm').addEventListener('submit', function (e) {
-        if (signaturePad.isEmpty()) {
-            alert('Inspector signature is required.');
-            e.preventDefault();
-        } else {
-            const dataURL = signaturePad.toDataURL('image/png');
-            document.getElementById('inspector_signature').value = dataURL;
-        }
+      if (signaturePad.isEmpty()) {
+        alert('Verification signature is required.');
+        e.preventDefault();
+        return;
+      }
+
+      // Store base64 image in hidden input
+      document.getElementById('inspector_signature').value = signaturePad.toDataURL();
     });
+  });
 </script>
 
 
