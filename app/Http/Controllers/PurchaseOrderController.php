@@ -242,7 +242,7 @@ public function index(Request $request)
     
             
             $purchaseOrder->delete();
-            InvoiceNumber::decreaseInvoice('purchase_order', 1);
+          
     
             return redirect()->route('purchase-order.index')->with('success', 'purchase order and its details have been deleted successfully!');
         } catch (\Exception $e) {
