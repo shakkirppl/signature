@@ -22,7 +22,7 @@ class TemperatureMonitoringRecordController extends Controller
         
         return view('temperature-monitoring.create');
     }
-
+// 
 public function store(Request $request)
 {
     $request->validate([
