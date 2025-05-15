@@ -63,7 +63,7 @@
                         <div class="row mb-3">
                             <div class="col-md-3">
                                 <label class="form-label">Bank Name:</label>
-                                <input type="text" class="form-control" value="{{ $form->bank->bank_name }}" readonly>
+                               <input type="text" class="form-control" value="{{ optional($form->bank)->bank_name ?? 'N/A' }}" readonly>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Account Name:</label>
