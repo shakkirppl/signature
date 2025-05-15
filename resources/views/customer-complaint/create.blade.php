@@ -27,7 +27,7 @@
           </div>
           @endif
 
-          <form action="{{ route('customer-complaint.store') }}" method="POST" enctype="multipart/form-data">
+          <form id="temperatureForm"  action="{{ route('customer-complaint.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
               <!-- Left Column -->
@@ -67,10 +67,10 @@
                 <div class="form-group">
   <label class="required">Manager Review Signature</label>
   <br>
-  <canvas id="signature-pad" width="400" height="200" style="border:1px solid #ccc;"></canvas>
+  <canvas id="signature-pad" width="400" height="100" style="border:1px solid #ccc;"></canvas>
   <br>
   <button type="button" class="btn btn-sm btn-warning" onclick="clearSignature()">Clear</button>
-  <input type="hidden" id="signature_image" name="manager_signature">
+  <input type="hidden" id="signature" name="manager_signature">
 </div>
 
               </div>
@@ -88,31 +88,35 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
-  let canvas = document.getElementById('signature-pad');
-  let signaturePad = new SignaturePad(canvas);
-
-  function clearSignature() {
-    signaturePad.clear();
-  }
-
-  // On submit, convert the signature to base64 and store it in hidden input
-  document.querySelector('form').addEventListener('submit', function (e) {
-    if (!signaturePad.isEmpty()) {
-      let dataUrl = signaturePad.toDataURL();
-      document.getElementById('signature_image').value = dataUrl;
-    } else {
-      e.preventDefault();
-      alert('Please provide a signature.');
-    }
-  });
-</script>
-<script>
   document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
+
+    // Clear button function
+    window.clearSignature = function () {
+      signaturePad.clear();
+    };
+
+    // Set current date to date_received
     const dateInput = document.getElementById('date_received');
-    let today = new Date().toISOString().split('T')[0];
-    dateInput.value = today;
+    const today = new Date().toISOString().split('T')[0];
+    if (dateInput) dateInput.value = today;
+
+    // Form submit
+    const form = document.getElementById('temperatureForm');
+    form.addEventListener('submit', function (e) {
+      if (signaturePad.isEmpty()) {
+        alert('Manager signature is required.');
+        e.preventDefault();
+        return;
+      }
+
+      // Store base64 image in hidden input
+      document.getElementById('signature').value = signaturePad.toDataURL();
+    });
   });
 </script>
+
 
 
 @endsection

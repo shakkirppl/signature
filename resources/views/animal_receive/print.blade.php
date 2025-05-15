@@ -19,6 +19,11 @@
             border-top: 1px solid #000;
             margin-top: 60px;
         }
+        @media print {
+    .no-print {
+        display: none !important;
+    }
+}
     </style>
 </head>
 <body onload="window.print()">
@@ -85,5 +90,10 @@
         
                            
     </div>
+   <div class="no-print" style="margin-top: 30px; text-align: center;">
+    <a href="{{ route('animalReceive.index') }}" style="padding: 8px 16px; font-size: 14px; text-decoration: none; background: #ccc; color: #000; border: 1px solid #999;">
+        ← Back 
+    </a>
+</div>
 </body>
 </html>
