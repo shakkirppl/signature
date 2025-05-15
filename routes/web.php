@@ -582,13 +582,16 @@ Route::delete('customer-feedback/{id}/delete', [CustomerFeedbackController::clas
 
 Route::get('requesting-form-create', [RequestingFormController::class, 'create'])->name('requesting-form.create');
 Route::get('requesting-form-index', [RequestingFormController::class, 'index'])->name('requesting-form.index');
-
 Route::post('requesting-form/store', [RequestingFormController::class, 'store'])->name('requesting-form.store');
 Route::get('/get-supplier/{id}', [RequestingFormController::class, 'getSupplier']);
 Route::delete('requesting-form/{id}/delete', [RequestingFormController::class, 'destroy'])->name('requesting-form.destroy');
 Route::post('/requesting-form/{id}/accept', [RequestingFormController::class, 'accept'])->name('requesting-form.accept');
 Route::post('/requesting-form/{id}/reject', [RequestingFormController::class, 'reject'])->name('requesting-form.reject');
 Route::get('/requesting-form/{id}', [RequestingFormController::class, 'show'])->name('requesting-form.show');
+Route::get('requesting-form/{id}/edit', [RequestingFormController::class, 'edit'])->name('requesting-form.edit');
+Route::put('requesting-form/{id}', [RequestingFormController::class, 'update'])->name('requesting-form.update');
+Route::patch('/requesting-form/{id}/update-advance', [RequestingFormController::class, 'updateAdvance'])->name('requesting-form.update-advance');
+
 
 
 Route::get('/animal-receive-notes', [AnimalReceivingNoteController::class, 'index'])->name('animalReceive.index');

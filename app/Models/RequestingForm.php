@@ -44,7 +44,7 @@ class RequestingForm extends Model
 
    public function details()
 {
-    return $this->hasMany(RequestFormDetail::class, 'requesting_form_id');
+    return $this->hasMany(RequestingFormDetail::class, 'requesting_form_id');
 }
 
     

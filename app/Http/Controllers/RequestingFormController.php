@@ -17,7 +17,7 @@ use App\Models\Outstanding;
 use App\Models\RequestingForm;
 use App\Models\BankMaster;
 use App\Models\RequestingFormDetail;
-
+// 
 class RequestingFormController extends Controller
 {
     public function index()
@@ -196,5 +196,93 @@ public function destroy($id)
 
     return redirect()->route('requesting-form.index')->with('success', 'Request and related orders deleted successfully.');
 }
+
+public function edit($id)
+{
+    $requestingForm = RequestingForm::with('details')->findOrFail($id);
+
+    $suppliers = Supplier::all(); 
+    $banks = BankMaster::all(); 
+    $products = Product::all();
+    $SalesOrders = SalesOrder::all();
+    $shipments = Shipment::where('shipment_status', 0)->get();
+
+    return view('requesting-form.edit', compact(
+        'requestingForm', 'suppliers', 'banks', 'products', 'SalesOrders', 'shipments'
+    ));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'order_no' => 'required|unique:purchase_order,order_no,' . $id,
+        'date' => 'required|date',
+        'supplier_id' => 'nullable|exists:supplier,id',
+        'shipment_id'=> 'required|exists:shipment,id',
+        'SalesOrder_id' => 'required|exists:sales_order,id',
+        'products' => 'required|array|min:1',
+        'products.*.product_id' => 'required|exists:product,id',
+        'products.*.qty' => 'required|numeric|min:1',
+    ]);
+
+    DB::beginTransaction();
+
+    try {
+        $requestingForm = RequestingForm::findOrFail($id);
+        $requestingForm->update([
+            'order_no' => $request->order_no,
+            'invoice_no' => $request->invoice_no,
+            'date' => $request->date,
+            'supplier_id' => $request->supplier_id,
+            'supplier_no' => $request->supplier_no,
+            'shipment_id' => $request->shipment_id,
+            'SalesOrder_id' => $request->SalesOrder_id,
+            'market' => $request->market,
+            'advance_amount' => isset($request->advance_amount) ? (float) str_replace(',', '', $request->advance_amount) : 0,
+            'bank_name' => $request->bank_name,
+            'account_name' => $request->account_name,
+            'account_no' => $request->account_no,
+            'payment_type' => $request->payment_type,
+            'phone_number' => $request->phone_number,
+        ]);
+
+        // Delete existing details
+        RequestingFormDetail::where('requesting_form_id', $requestingForm->id)->delete();
+
+        // Reinsert details
+        foreach ($request->products as $product) {
+            RequestingFormDetail::create([
+                'requesting_form_id' => $requestingForm->id,
+                'product_id' => $product['product_id'],
+                'qty' => $product['qty'],
+                'male' => $product['male'] ?? 0,
+                'female' => $product['female'] ?? 0,
+            ]);
+        }
+
+        DB::commit();
+        return redirect()->route('requesting-form.index')->with('success', 'Request Updated Successfully');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
+}
+
+
+public function updateAdvance(Request $request, $id)
+{
+    $request->validate([
+        'advance_amount' => 'required|numeric',
+    ]);
+
+    $form = RequestingForm::findOrFail($id);
+    $form->advance_amount = $request->advance_amount;
+    $form->save();
+
+    return redirect()->route('requesting-form.index')->with('success', 'Advance amount updated successfully.');
+}
+
+
+
 
 }
