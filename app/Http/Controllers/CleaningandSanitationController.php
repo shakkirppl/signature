@@ -34,22 +34,22 @@ public function index()
         'supervisor_check' => 'required|in:Yes,No',
         'verification_signature' => 'required',
     ]);
- $fileName = null;
+$fileName = null;
 
-    if ($request->verification_signature) {
-        $image = $request->verification_signature;
-        
-        // Extract base64 content
-        $image = str_replace('data:image/png;base64,', '', $image);
-        $image = str_replace(' ', '+', $image);
-        $imageData = base64_decode($image);
+if ($request->verification_signature) {
+    $base64Image = $request->verification_signature;
 
-        // Create unique file name
-        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+    // Extract base64 content
+    $base64Image = str_replace('data:image/png;base64,', '', $base64Image);
+    $base64Image = str_replace(' ', '+', $base64Image);
+    $imageData = base64_decode($base64Image);
 
-        // Save to public path (or storage if preferred)
-        file_put_contents(public_path('uploads/signatures/' . $fileName), $imageData);
-    }
+    // Create unique file name
+    $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+
+    // Save to public storage disk under 'signatures' directory
+    Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+}
     CleaningSanitationRecord::create([
         'date' => $request->date,
         'cleaning_method' => $request->cleaning_method,
