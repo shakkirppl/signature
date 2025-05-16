@@ -27,7 +27,7 @@
           </div>
           @endif
 
-          <form action="{{ route('calibration-record.store') }}" method="POST" enctype="multipart/form-data">
+          <form   id="temperatureForm" action="{{ route('calibration-record.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
               <!-- Left Column -->
@@ -66,10 +66,9 @@
                 </div>
                 <div class="form-group">
   <label class="required">Signature</label><br>
-  <canvas id="signature-pad" width="300" height="200" style="border:1px solid #ccc;"></canvas>
-  <br>
-  <button type="button" class="btn btn-warning mt-2" onclick="clearSignature()">Clear </button>
-  <input type="hidden" id="signature_image" name="signature" required>
+ <canvas id="signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas><br>
+  <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
+  <input type="hidden" name="signature" id="signature">
 </div>
 
               </div>
@@ -87,21 +86,29 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
-  const canvas = document.getElementById('signature-pad');
-  const signaturePad = new SignaturePad(canvas);
+  document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
 
-  function clearSignature() {
-    signaturePad.clear();
-  }
+    // Clear button function
+    window.clearSignature = function () {
+      signaturePad.clear();
+    };
 
-  document.querySelector('form').addEventListener('submit', function (e) {
-    if (!signaturePad.isEmpty()) {
-      const dataUrl = signaturePad.toDataURL();
-      document.getElementById('signature_image').value = dataUrl;
-    } else {
-      e.preventDefault();
-      alert('Please provide a signature.');
-    }
+    // Set current date
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    // Form submit
+    document.getElementById('temperatureForm').addEventListener('submit', function (e) {
+      if (signaturePad.isEmpty()) {
+        alert('Verification signature is required.');
+        e.preventDefault();
+        return;
+      }
+
+      // Store base64 image in hidden input
+      document.getElementById('signature').value = signaturePad.toDataURL();
+    });
   });
 </script>
 

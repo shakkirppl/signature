@@ -197,7 +197,7 @@
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('corrective-action-index')}}">Corrective Action Report</a></li> 
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-complaint-index')}}">Customer Complaint</a></li> 
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('internal-auditchecklist-index')}}">Internal Audit Checklist</a></li> 
-               <li class="nav-item"> <a class="nav-link" href="{{URL::to('calibration-record-create')}}">Calibration Record</a></li> 
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('calibration-record-index')}}">Calibration Record</a></li> 
               </ul>
             </div>
           </li> 

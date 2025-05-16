@@ -6,25 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
  use Illuminate\Database\Eloquent\SoftDeletes;
 
-
-class CorrectiveAction extends Model
+class CalibrationRecord extends Model
 {
-      use HasFactory, SoftDeletes;
+        use HasFactory, SoftDeletes;
 
-    protected $table = 'corrective_actions';
+    protected $table = 'calibration_records';
     protected $fillable = [
     'date',
-    'non_conformity',
-    'action_taken',
-    'responsible_person',
-    'department',
-    'root_cause',
-    'date_of_completion',
-    'verified_by',
+    'equipment_name',
+    'standard_used',
+    'calibration_result',
+    'next_calibration_due',
+    'technician_name',
     'signature',
-     'store_id',
-        'user_id'
+    'user_id',
+    'store_id'
 ];
+   
      
     public function user()
     {

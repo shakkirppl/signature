@@ -79,7 +79,8 @@
   <canvas id="signature-pad" width="400" height="150" style="border:1px solid #ccc;"></canvas><br>
   <button type="button" class="btn btn-sm btn-warning mt-2" onclick="clearSignature()">Clear</button>
   <input type="hidden" name="signature" id="signature">
-</div>
+  </div>
+
 
    
                  
