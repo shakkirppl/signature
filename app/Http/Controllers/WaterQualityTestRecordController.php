@@ -8,10 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-
 class WaterQualityTestRecordController extends Controller
 {
-    public function index()
+      public function index()
 {
     $records = WaterQualityTestRecord::with('user')->latest()->get();
     return view('water-quality.index', compact('records'));
@@ -73,5 +72,4 @@ public function destroy($id)
     $record->delete();
  return redirect()->route('water-quality.index')->with('success', 'Record deleted successfully.');
 }
-
 }
