@@ -27,7 +27,8 @@
           </div>
           @endif
 
-          <form action="{{ route('internal-auditchecklist.store') }}" method="POST" enctype="multipart/form-data">
+         
+          <form id="temperatureForm"  action="{{ route('internal-auditchecklist.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
               <!-- Left Column -->
@@ -62,10 +63,11 @@
                 </div>
                 <div class="form-group">
   <label class="required">Auditor Signature</label><br>
-  <canvas id="auditor-signature-pad" width="300" height="200" style="border:1px solid #ccc;"></canvas>
+
+  <canvas id="signature-pad" width="400" height="100" style="border:1px solid #ccc;"></canvas>
   <br>
-  <button type="button" class="btn btn-warning mt-2" onclick="clearAuditorSignature()">Clear Signature</button>
-  <input type="hidden" id="auditor_signature_image" name="auditor_signature" required>
+  <button type="button" class="btn btn-sm btn-warning" onclick="clearSignature()">Clear</button>
+  <input type="hidden" id="signature" name="auditor_signature">
 </div>
 
               </div>
@@ -83,21 +85,32 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script>
-  const auditorCanvas = document.getElementById('auditor-signature-pad');
-  const auditorSignaturePad = new SignaturePad(auditorCanvas);
+  document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('signature-pad');
+    const signaturePad = new SignaturePad(canvas);
 
-  function clearAuditorSignature() {
-    auditorSignaturePad.clear();
-  }
+    // Clear button function
+    window.clearSignature = function () {
+      signaturePad.clear();
+    };
 
-  document.querySelector('form').addEventListener('submit', function (e) {
-    if (!auditorSignaturePad.isEmpty()) {
-      const dataUrl = auditorSignaturePad.toDataURL();
-      document.getElementById('auditor_signature_image').value = dataUrl;
-    } else {
-      e.preventDefault();
-      alert('Please provide the Auditor Signature.');
-    }
+    // Set current date to date_received
+    const dateInput = document.getElementById('date_received');
+    const today = new Date().toISOString().split('T')[0];
+    if (dateInput) dateInput.value = today;
+
+    // Form submit
+    const form = document.getElementById('temperatureForm');
+    form.addEventListener('submit', function (e) {
+      if (signaturePad.isEmpty()) {
+        alert('Manager signature is required.');
+        e.preventDefault();
+        return;
+      }
+
+      // Store base64 image in hidden input
+      document.getElementById('signature').value = signaturePad.toDataURL();
+    });
   });
 </script>
 
