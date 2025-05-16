@@ -201,6 +201,13 @@
               </ul>
             </div>
           </li> 
+
+          <li class="nav-item">
+  <a class="nav-link" href="{{URL::to('water-quality-index')}}">
+  <i class="mdi mdi-group menu-icon"></i> 
+  <span class="menu-title">Water Quality Test Record</span>
+  </a>
+</li>
 @endif
 <!--  -->
 

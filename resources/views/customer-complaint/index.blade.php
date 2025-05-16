@@ -34,6 +34,7 @@
                   <th>Date Closed</th>
                   <th>Manager Signature</th>
                   <th>Created By</th>
+                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -74,6 +75,11 @@
                     @endif
                   </td>
                   <td>{{ $record->user->name ?? 'N/A' }}</td>
+                  <td>  <form action="{{ route('customer-complaint.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+  </form></td>
                 </tr>
                 @endforeach
               </tbody>

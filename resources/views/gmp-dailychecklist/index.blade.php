@@ -35,6 +35,7 @@
                                 <th>Personal Hygiene</th>
                                 <th>Equipment Sanitation</th>
                                <th>created By</th>
+                               <th>Action</th>
                             </tr>
               </thead>
              <tbody>
@@ -47,6 +48,11 @@
                                 <td>{{ $record->personal_hygiene ?? '-' }}</td>
                                 <td>{{ $record->equipment_sanitation }}</td>
                                   <td>{{ $record->user->name ?? 'N/A' }}</td>
+                                  <td>  <form action="{{ route('gmp.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+  </form></td>
                                
                             </tr>
                             @endforeach

@@ -92,9 +92,14 @@
 
 
 
-                  <td>
-                    {{-- You can add edit/delete buttons if needed --}}
-                    {{-- Example:
+ <td>
+  <!-- Delete Form -->
+  <form action="{{ route('temperature-monitoring.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+  </form>
+                   {{-- Example:
                     <a href="{{ route('temperature-monitoring.edit', $record->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     --}}
                   </td>

@@ -68,4 +68,11 @@ if ($request->inspector_signature) {
     return redirect()->route('temperature-monitoring.index')->with('success', 'Record saved successfully!');
 }
 
+public function destroy($id)
+{
+    $record = TemperatureMonitoringRecord::findOrFail($id);
+    $record->delete();
+ return redirect()->route('temperature-monitoring.index')->with('success', 'Record deleted successfully.');
+}
+
 }

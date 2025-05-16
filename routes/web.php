@@ -54,6 +54,7 @@ use App\Http\Controllers\InternalAuditChecklistController;
 use App\Http\Controllers\CalibrationRecordController;
 use App\Http\Controllers\CustomerFeedbackController;
 use App\Http\Controllers\RequestingFormController;
+use App\Http\Controllers\WaterQualityTestRecordController;
 
 
 
@@ -548,30 +549,44 @@ Route::delete('breakdown-report-delete/{id}', [BreakdownReportController::class,
 Route::get('gmp-create', [GMPController::class, 'create'])->name('gmp.create');
 Route::post('gmp-store', [GMPController::class,'store'])->name('gmp.store');
 Route::get('gmp-index', [GMPController::class, 'index'])->name('gmp.index');
+Route::delete('gmp/{id}', [GMPController::class, 'destroy'])->name('gmp.destroy');
+
 
 Route::get('temperature-monitoring-create', [TemperatureMonitoringRecordController::class, 'create'])->name('temperature-monitoring.create');
 Route::post('temperature-monitoring-store', [TemperatureMonitoringRecordController::class,'store'])->name('temperature-monitoring.store');
 Route::get('temperature-monitoring-index', [TemperatureMonitoringRecordController::class, 'index'])->name('temperature-monitoring.index');
+Route::delete('temperature-monitoring/{id}', [TemperatureMonitoringRecordController::class, 'destroy'])->name('temperature-monitoring.destroy');
+
 
 Route::get('cleaning-sanitation-create', [CleaningandSanitationController::class, 'create'])->name('cleaning-sanitation.create');
 Route::post('cleaning-sanitation-store', [CleaningandSanitationController::class,'store'])->name('cleaning-sanitation.store');
 Route::get('cleaning-sanitation-index', [CleaningandSanitationController::class, 'index'])->name('cleaning-sanitation.index');
+Route::delete('cleaning-sanitation/{id}', [CleaningandSanitationController::class, 'destroy'])->name('cleaning-sanitation.destroy');
+
 
 Route::get('corrective-action-create', [CorrectiveActionController::class, 'create'])->name('corrective-action.create');
 Route::post('corrective-action-store', [CorrectiveActionController::class,'store'])->name('corrective-action.store');
 Route::get('corrective-action-index', [CorrectiveActionController::class, 'index'])->name('corrective-action.index');
+Route::delete('corrective-action/{id}', [CorrectiveActionController::class, 'destroy'])->name('corrective-action.destroy');
+
 
 Route::get('customer-complaint-create', [CustomerComplaintController::class, 'create'])->name('customer-complaint.create');
 Route::post('customer-complaint-store', [CustomerComplaintController::class,'store'])->name('customer-complaint.store');
 Route::get('customer-complaint-index', [CustomerComplaintController::class, 'index'])->name('customer-complaint.index');
+Route::delete('customer-complaint/{id}', [InternalAuditChecklistController::class, 'destroy'])->name('customer-complaint.destroy');
+
 
 Route::get('internal-auditchecklist-create', [InternalAuditChecklistController::class, 'create'])->name('internal-auditchecklist.create');
 Route::post('internal-auditchecklist-store', [InternalAuditChecklistController::class,'store'])->name('internal-auditchecklist.store');
 Route::get('internal-auditchecklist-index', [InternalAuditChecklistController::class, 'index'])->name('internal-auditchecklist.index');
+Route::delete('internal-auditchecklist/{id}', [InternalAuditChecklistController::class, 'destroy'])->name('internal-auditchecklist.destroy');
+
 
 Route::get('calibration-record-create', [CalibrationRecordController::class, 'create'])->name('calibration-record.create');
 Route::post('calibration-record-store', [CalibrationRecordController::class,'store'])->name('calibration-record.store');
 Route::get('calibration-record-index', [CalibrationRecordController::class, 'index'])->name('calibration-record.index');
+Route::delete('calibration-record/{id}', [CalibrationRecordController::class, 'destroy'])->name('calibration-record.destroy');
+
 
 
 Route::get('customer-feedback-create', [CustomerFeedbackController::class, 'create'])->name('customer-feedback.create');
@@ -597,6 +612,13 @@ Route::patch('/requesting-form/{id}/update-advance', [RequestingFormController::
 Route::get('/animal-receive-notes', [AnimalReceivingNoteController::class, 'index'])->name('animalReceive.index');
 Route::get('/animal-receive-notes/{id}', [AnimalReceivingNoteController::class, 'show'])->name('animalReceive.view');
 Route::get('/animal-receive-notes/print/{id}', [AnimalReceivingNoteController::class, 'print'])->name('animalReceive.print');
+
+Route::get('water-quality-create', [WaterQualityTestRecordController::class, 'create'])->name('water-quality.create');
+Route::get('water-quality-index', [WaterQualityTestRecordController::class, 'index'])->name('water-quality.index');
+Route::post('water-quality-store', [WaterQualityTestRecordController::class, 'store'])->name('water-quality.store');
+Route::delete('water-quality/{id}', [WaterQualityTestRecordController::class, 'destroy'])->name('water-quality.destroy');
+
+
 
 
 

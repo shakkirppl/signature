@@ -45,4 +45,11 @@ class GMPController extends Controller
     return redirect()->route('gmp.index')->with('success', 'GMP Checklist submitted successfully.');
 }
 
+public function destroy($id)
+{
+    $record = GmpChecklist::findOrFail($id);
+    $record->delete();
+ return redirect()->route('gmp.index')->with('success', 'Record deleted successfully.');
+}
+
 }

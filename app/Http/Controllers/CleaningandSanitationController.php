@@ -66,4 +66,11 @@ if ($request->verification_signature) {
 
     return redirect()->route('cleaning-sanitation.index')->with('success', 'Record saved successfully.');
 }
+
+public function destroy($id)
+{
+    $record = CleaningSanitationRecord::findOrFail($id);
+    $record->delete();
+ return redirect()->route('cleaning-sanitation.index')->with('success', 'Record deleted successfully.');
+}
 }

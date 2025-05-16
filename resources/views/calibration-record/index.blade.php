@@ -33,6 +33,7 @@
                   <th>Technician</th>
                   <th>Signature</th>
                   <th>Created By</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -72,6 +73,11 @@
                     @endif
                   </td>
                   <td>{{ $record->user->name ?? 'N/A' }}</td>
+                  <td>  <form action="{{ route('calibration-record.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+  </form></td>
                 </tr>
                 @endforeach
               </tbody>

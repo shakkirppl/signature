@@ -67,4 +67,11 @@ if ($request->manager_signature) {
 
     return redirect()->route('customer-complaint.index')->with('success', 'Customer complaint submitted successfully!');
 }
+
+public function destroy($id)
+{
+    $record = CustomerComplaint::findOrFail($id);
+    $record->delete();
+ return redirect()->route('customer-complaint.index')->with('success', 'Record deleted successfully.');
+}
 }

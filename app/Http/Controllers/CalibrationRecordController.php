@@ -64,4 +64,12 @@ if ($request->signature) {
 
     return redirect()->route('calibration-record.index')->with('success', 'Record created successfully.');
 }
+
+public function destroy($id)
+{
+    $record = CalibrationRecord::findOrFail($id);
+    $record->delete();
+ return redirect()->route('calibration-record.index')->with('success', 'Record deleted successfully.');
+}
+
 }

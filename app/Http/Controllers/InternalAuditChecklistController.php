@@ -62,4 +62,12 @@ if ($request->auditor_signature) {
     return redirect()->route('internal-auditchecklist.index')->with('success', 'Audit checklist saved successfully!');
 }
 
+public function destroy($id)
+{
+    $record = InternalAuditChecklist::findOrFail($id);
+    $record->delete();
+ return redirect()->route('internal-auditchecklist.index')->with('success', 'Record deleted successfully.');
+}
+
+
 }

@@ -69,4 +69,11 @@ class CorrectiveActionController extends Controller
 
     return redirect()->route('corrective-action.index')->with('success', 'Corrective Action Report submitted successfully!');
 }
+
+public function destroy($id)
+{
+    $record = CorrectiveAction::findOrFail($id);
+    $record->delete();
+ return redirect()->route('corrective-action.index')->with('success', 'Record deleted successfully.');
+}
 }

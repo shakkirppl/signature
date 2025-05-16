@@ -88,8 +88,11 @@
                   <td>{{ $record->user->name ?? 'N/A' }}</td>
                   <td>{{ $record->comments }}</td>
                   <td>
-                    {{-- <a href="{{ route('cleaning-sanitation.edit', $record->id) }}" class="btn btn-warning btn-sm">Edit</a> --}}
-                  </td>
+  <form action="{{ route('cleaning-sanitation.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+  </form>                  </td>
                 </tr>
                 @endforeach
               </tbody>
