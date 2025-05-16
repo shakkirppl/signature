@@ -222,55 +222,56 @@ $(document).ready(function () {
                 url: "{{ route('get.supplier.products') }}",
                 type: "GET",
                 data: { supplier_id: supplier_id, shipment_id: shipment_id },
-                success: function (response) {
-                    let rows = '';
+              success: function (response) {
+    let rows = '';
 
-                    response.forEach(detail => {
-                        let totalAcceptedQty = detail.male_accepted_qty + detail.female_accepted_qty;
-                        let productName = detail.product.product_name.trim().toLowerCase();
-                        let productId = detail.product.id;
+    response.forEach(detail => {
+        let productId = detail.product_id;
+        let productName = detail.product_name.trim().toLowerCase();
+        let totalAcceptedQty = detail.total_accepted_qty;
 
-                        // Original Product Row
-                        let productRow = `
-                            <tr class="product-row" data-product-id="${productId}">
-                                <td>
-                                    <input type="hidden" name="product_id[]" value="${productId}">
-                                    ${detail.product.product_name}
-                                </td>
-                                <td>
-                                    <input type="text" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted original-live-goat" readonly data-original-value="${totalAcceptedQty}">
-                                </td>
-                                <td>
-                                    <input type="text" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
-                                </td>
-                            </tr>
-                        `;
+        // Main product row
+        let productRow = `
+            <tr class="product-row" data-product-id="${productId}">
+                <td>
+                    <input type="hidden" name="product_id[]" value="${productId}">
+                    ${detail.product_name}
+                </td>
+                <td>
+                    <input type="text" name="total_accepted_qty[]" value="${totalAcceptedQty}" class="form-control total-accepted original-live-goat" readonly data-original-value="${totalAcceptedQty}">
+                </td>
+                <td>
+                    <input type="text" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                </td>
+            </tr>
+        `;
 
-                        rows += productRow;
+        rows += productRow;
 
-                        // If the product name contains "live goat" in any case variation, add an additional row below it
-                        if (productName.includes("live goat")) {
-                            let additionalRow = `
-                                <tr class="additional-live-goat">
-                                    <td>
-                                        <input type="hidden" name="product_id[]" value="${productId}">
-                                         ${detail.product.product_name}
-                                    </td>
-                                    <td>
-                                        <input type="text" name="total_accepted_qty[]" class="form-control total-accepted additional-accepted" oninput="adjustLiveGoatQty(${productId})">
-                                    </td>
-                                    <td>
-                                        <input type="text" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
-                                    </td>
-                                </tr>
-                            `;
-                            rows += additionalRow; // Append additional row below the original row
-                        }
-                    });
+        // Add additional row if product contains 'live goat'
+        if (productName.includes("live goat")) {
+            let additionalRow = `
+                <tr class="additional-live-goat">
+                    <td>
+                        <input type="hidden" name="product_id[]" value="${productId}">
+                        ${detail.product_name} 
+                    </td>
+                    <td>
+                        <input type="text" name="total_accepted_qty[]" class="form-control total-accepted additional-accepted" oninput="adjustLiveGoatQty(${productId})">
+                    </td>
+                    <td>
+                        <input type="text" name="weight[]" class="form-control weight-input" style="width: 200px;" step="0.01" required>
+                    </td>
+                </tr>
+            `;
+            rows += additionalRow;
+        }
+    });
 
-                    $('#productDetails').html(rows);
-                    $('.weight-input').on('input', calculateTotalWeight);
-                }
+    $('#productDetails').html(rows);
+    $('.weight-input').on('input', calculateTotalWeight);
+}
+
             });
         } else {
             $('#productDetails').html('');

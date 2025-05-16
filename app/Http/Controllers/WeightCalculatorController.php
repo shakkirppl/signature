@@ -155,6 +155,24 @@ public function getSuppliersByShipment($shipment_id) {
 }
 
 
+// public function getSupplierProducts(Request $request)
+// {
+//     $supplier_id = $request->supplier_id;
+//     $shipment_id = $request->shipment_id;
+
+//     $inspectionDetails = InspectionDetail::whereHas('inspection', function ($query) use ($supplier_id, $shipment_id) {
+//         $query->where('shipment_id', $shipment_id)
+//               ->where('supplier_id', $supplier_id);
+//     })->with('product')->get();
+
+//     // Filter out products where total_accepted_qty is 0 or below
+//     $filteredDetails = $inspectionDetails->filter(function ($detail) {
+//         return ($detail->male_accepted_qty + $detail->female_accepted_qty) > 0;
+//     });
+
+//     return response()->json($filteredDetails);
+// }
+
 public function getSupplierProducts(Request $request)
 {
     $supplier_id = $request->supplier_id;
@@ -165,13 +183,22 @@ public function getSupplierProducts(Request $request)
               ->where('supplier_id', $supplier_id);
     })->with('product')->get();
 
-    // Filter out products where total_accepted_qty is 0 or below
-    $filteredDetails = $inspectionDetails->filter(function ($detail) {
-        return ($detail->male_accepted_qty + $detail->female_accepted_qty) > 0;
-    });
+    // Group by product_id and sum accepted qty
+    $grouped = $inspectionDetails->groupBy('product_id')->map(function ($items) {
+        $totalMale = $items->sum('male_accepted_qty');
+        $totalFemale = $items->sum('female_accepted_qty');
+        $totalQty = $totalMale + $totalFemale;
 
-    return response()->json($filteredDetails);
+        return [
+            'product_id' => $items->first()->product->id,
+            'product_name' => $items->first()->product->product_name,
+            'total_accepted_qty' => $totalQty,
+        ];
+    })->values(); // reset index
+
+    return response()->json($grouped);
 }
+
 
 
 public function checkExistingWeightCalculation(Request $request)

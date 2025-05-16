@@ -174,6 +174,8 @@
                 </a>
               @endif
             <br>
+              @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 5 || $user->designation_id == 4)
+
               <div class="col-md-6 mb-4 grid-margin transparent mt-4">
   <a href="{{ route('purchase-order.index') }}" style="text-decoration: none; color: inherit;">
     <div class="card bg-warning text-white">
@@ -184,6 +186,7 @@
     </div>
   </a>
 </div>
+@endif
 @if($user->designation_id == 1 || $user->designation_id == 3|| $user->designation_id == 4|| $user->designation_id == 5)
 
 <div class="col-md-6 mb-4 grid-margin transparent mt-4">
