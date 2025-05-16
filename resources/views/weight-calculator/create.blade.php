@@ -51,7 +51,7 @@ button.remove-row {
     </div>
 @endif
 
-                    <form method="POST" action="{{ route('weight_calculator.store') }}">
+                    <form method="POST" action="{{ route('weight_calculator.store') }}" enctype="multipart/form-data">
                         @csrf
                         <input type="hidden" name="shipment_id" value="{{ $shipment_id }}">
                         <div class="row mb-3 align-items-center">
@@ -79,6 +79,13 @@ button.remove-row {
                                 @endforeach
                           </select>
                   </div>
+                  <div class="row mb-3">
+    <div class="col-md-8">
+        <label for="document">Upload Document </label>
+        <input type="file" class="form-control" name="document" id="document" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+    </div>
+</div>
+
                </div>
                <div class="table-responsive">
                   <table class="table">

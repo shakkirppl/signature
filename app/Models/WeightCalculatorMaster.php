@@ -10,7 +10,7 @@ class WeightCalculatorMaster extends Model
     use HasFactory;
     
     protected $table = 'weight_calculator_master';
-    protected $fillable = ['id', 'date','weight_code','shipment_id','total_weight','user_id','store_id','status','supplier_id' ,'inspection_id','purchaseOrder_id'];
+    protected $fillable = ['id', 'date','weight_code','shipment_id','total_weight','user_id','store_id','status','supplier_id' ,'inspection_id','purchaseOrder_id','document'];
 
 
     public function shipment()
