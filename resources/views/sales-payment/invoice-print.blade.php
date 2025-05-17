@@ -36,6 +36,9 @@
     border-collapse: collapse;
     font-size: 11px;
     border: 1px solid black;
+      width: 100%; /* already set */
+    max-width: 100%; /* add this */
+    table-layout: fixed;
 }
 
 .packing-list th, .packing-list td {
@@ -186,6 +189,15 @@
     .packing-list {
    
     border: 1px solid black;
+     border-top: 1px solid black !important;
+    border-bottom: 1px solid black !important; /* BLACK bottom border */
+    border-left: 1px solid black !important;
+    border-right: 1px solid black !important;
+  
+    text-align: left;
+  
+    vertical-align: middle;
+    
 }
 
     button {
@@ -194,12 +206,17 @@
     .back {
         display: none !important;
     }
+    
 }
 
 @page {
     size: A4;
-    margin: 3mm; /* Was previously 2mm, keep or decrease to 0 if needed */
+    margin: 0.0mm; 
+
+    /* size: A4;
+    margin: 3mm 8mm 3mm 3mm; */
 }
+
 
     </style>
 
