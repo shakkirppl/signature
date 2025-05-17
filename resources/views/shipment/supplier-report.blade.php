@@ -161,6 +161,8 @@
                             <tr>
                                 <th><strong>No</strong></td>
                                 <th><strong>Type</strong></td>
+                                 <th><strong>Quandity</strong></td>
+                               
                                 <th><strong>Meat Weight</strong></td>
                                 <th><strong>Support Amount</strong></td>
                                 <th><strong>Amount</strong></td>
@@ -170,6 +172,7 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $puDetail->product->product_name ?? 'N/A' }}</td>
+                                <td>{{ $puDetail->total_accepted_qty }}</td>
                                 <td>{{ $puDetail->total_weight }}</td>
                                 <td>{{ $puDetail->transportation_amount }}</td>
                                 <td>{{ number_format($puDetail->total_weight * $puDetail->transportation_amount, 2) }}</td>

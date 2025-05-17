@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Supplier Final Payment Report</title>
+    <title>Supplier Final Payment </title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
@@ -14,8 +14,8 @@
     </style>
 </head>
 <body onload="window.print()">
-<img src="{{ asset('public/image/signature-logo.png') }}" class="logo">
-<h2>Supplier Final Payment Report</h2>
+<img src="{{ url('image/signature-logo.png') }}" class="logo">
+<h2>Supplier Final Payment </h2>
 <p><strong>Supplier:</strong> {{ $supplier->name ?? 'N/A' }}</p>
 @foreach($purchaseConformationDetail as $puDetail)
 
@@ -32,17 +32,23 @@
         </tr>
     </thead>
     <tbody>
-    @php $totalAdvance = 0; @endphp
-    @foreach($PurchaseOrder as $po)
-        <tr>
-            <td>{{ $loop->iteration }}</td>
-            <td>{{ $po->date }}</td>
-            <td>Adv Amount</td>
-            <td>Cash</td>
-            <td>{{ $po->advance_amount }}</td>
-        </tr>
-        @php $totalAdvance += $po->advance_amount; @endphp
-    @endforeach
+     @php 
+            $totalAdvance = 0; 
+            $slNo = 1; 
+        @endphp
+
+        @foreach($PurchaseOrder as $po)
+            @if($po->advance_amount > 0)
+                <tr>
+                    <td>{{ $slNo++ }}</td>
+                    <td>{{ $po->date }}</td>
+                    <td>Adv Amount</td>
+                    <td>Cash</td>
+                    <td>{{ number_format($po->advance_amount, 2) }}</td>
+                </tr>
+                @php $totalAdvance += $po->advance_amount; @endphp
+            @endif
+        @endforeach
     <tr class="adv-arrears">
         <td colspan="4">Total Advance & Arrears</td>
         <td>{{ number_format($totalAdvance, 2) }}</td>
@@ -81,17 +87,20 @@
     <tr>
         <th>No</th>
         <th>Type</th>
+         <th>Quandity</th>
         <th>Meat Weight</th>
-        <th>Support Amount</th>
+        <!-- <th>Support Amount</th> -->
         <th>Amount</th>
     </tr>
     @php $totalTransportAmount = 0; @endphp
     @foreach($purchaseConformationDetail as $puDetail)
-        <tr>
+       <tr>
             <td>{{ $loop->iteration }}</td>
             <td>{{ $puDetail->product->product_name ?? 'N/A' }}</td>
+             <td>{{ $puDetail->total_accepted_qty }}</td>
+
             <td>{{ $puDetail->total_weight }}</td>
-            <td>{{ $puDetail->transportation_amount }}</td>
+            <!-- <td>{{ $puDetail->transportation_amount }}</td> -->
             <td>{{ number_format($puDetail->total_weight * $puDetail->transportation_amount, 2) }}</td>
         </tr>
         @php $totalTransportAmount += $puDetail->total_weight * $puDetail->transportation_amount; @endphp
