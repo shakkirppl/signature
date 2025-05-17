@@ -372,7 +372,7 @@
 
 <tr class="subtotal">
     <td><strong>Subtotal (After Shrinkage)</strong></td>
-    <td><strong>{{ number_format($order->packaging, 2) }} </strong></td>
+    <td><strong>{{ number_format($order->packaging, 2) }}  </strong></td>
     <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
     <td colspan="2" class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>
    
