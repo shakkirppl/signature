@@ -243,11 +243,11 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/weight-calculator')}}">Weight Calculator</a></li> 
               @if($user->designation_id == 1 || $user->designation_id == 5)
 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-approval/facility')}}">Facility Manager Approval</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-approval/facility')}}">Facility  Approval</a></li> 
                @endif
                @if($user->designation_id == 1 ||  $user->designation_id == 3)
 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-approval/accountant')}}">Accountant Manager Approval</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('weight-approval/accountant')}}">Accountant  Approval</a></li> 
   @endif
               @endif
 
