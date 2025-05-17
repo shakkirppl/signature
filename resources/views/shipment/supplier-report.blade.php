@@ -109,7 +109,7 @@
                                     <th>Date</th>
                                     <th>Description</th>
                                     <th>Bank / Cash</th>
-                                    <th>Amount</th>
+                                    <th colspan="5"> Amount</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -120,27 +120,34 @@
                                 <td>{{ $po->date }}</td>
                                 <td>Adv Amount</td>
                                 <td>Cash</td>
-                                <td>{{ $po->advance_amount }}</td>
+                                <td colspan="5">{{ $po->advance_amount }}</td>
                               </tr>
                               @php $totalAdvance += $po->advance_amount; @endphp
                             @endforeach
-                            <tr>
+                            <tr class="adv-arrears">
                                 <td colspan="4"><strong style="color:red;">Total Advance & Arrears</strong></td>
-                                <td><strong>{{ number_format($totalAdvance, 2) }}</strong></td>
+                                <td><strong colspan="5">{{ number_format($totalAdvance, 2) }}</strong></td>
                             </tr>
 
                             <tr>
                                 <th><strong>No</strong></td>
                                 <th><strong>Type</strong></td>
+                                  <th><strong>Quandity</strong></td>
+                                
                                 <th><strong>Tot: Carcass Wt</strong></td>
                                 <th><strong>Price/KG</strong></td>
                                 <th><strong>Total Price</strong></td>
                             </tr>
-                            @php $totalAmount = 0; $totalWeight = 0; @endphp
+                            @php 
+    $totalWeight = 0; 
+    $totalAmount = 0; 
+    $totalqty = 0; 
+@endphp
                             @foreach($purchaseConformationDetail as $puDetail)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $puDetail->product->product_name ?? 'N/A' }}</td>
+                                <td>{{ $puDetail->total_accepted_qty }}</td>
                                 <td>{{ $puDetail->total_weight }}</td>
                                 <td>{{ $puDetail->rate }}</td>
                                 <td>{{ number_format($puDetail->total_weight * $puDetail->rate, 2) }}</td>
@@ -148,21 +155,23 @@
                             @php
                                 $totalWeight += $puDetail->total_weight;
                                 $totalAmount += $puDetail->total_weight * $puDetail->rate;
+                                 $totalqty += $puDetail->total_accepted_qty;
                             @endphp
                             @endforeach
                             <tr>
-                                <td></td>
-                                <td colspan="1"><strong>Tot Wt.:</strong></td>
-                                <td><strong>{{ number_format($totalWeight, 2) }}</strong></td>
-                                <td><strong>Total Amount</strong></td>
-                                <td><strong>{{ number_format($totalAmount, 2) }}</strong></td>
+                                 <tr class="total-row">
+         <td colspan="2"></td>
+        <td colspan="">{{ number_format($totalqty, 2) }}</td>
+        <!-- <td >Tot Wt.:</td> -->
+        <td>{{ number_format($totalWeight, 2) }}</td>
+        <td colspan="1">Total Amount</td>
+        <td>{{ number_format($totalAmount, 2) }}</td>
+    </tr>
                             </tr>
 
-                            <tr>
+                            <!-- <tr>
                                 <th><strong>No</strong></td>
                                 <th><strong>Type</strong></td>
-                                 <th><strong>Quandity</strong></td>
-                               
                                 <th><strong>Meat Weight</strong></td>
                                 <th><strong>Support Amount</strong></td>
                                 <th><strong>Amount</strong></td>
@@ -172,7 +181,6 @@
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $puDetail->product->product_name ?? 'N/A' }}</td>
-                                <td>{{ $puDetail->total_accepted_qty }}</td>
                                 <td>{{ $puDetail->total_weight }}</td>
                                 <td>{{ $puDetail->transportation_amount }}</td>
                                 <td>{{ number_format($puDetail->total_weight * $puDetail->transportation_amount, 2) }}</td>
@@ -185,7 +193,7 @@
                                 <td ><strong>Total Amount</strong></td>
                                 <td><strong>{{ number_format($totalTransportAmount, 2) }}</strong></td>
                                
-                            </tr>
+                            </tr> -->
 <br>
 
                             <tr>
