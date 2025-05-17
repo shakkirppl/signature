@@ -157,6 +157,12 @@
         padding: 0 !important;
         height: 100% !important;
     }
+     .desc-col { width: 35%; }
+        .pack-col { width: 5%; }
+        .weight-col { width: 15%; }
+        .price-col { width: 15%; }
+        .par-col { width: 10%; }
+        .total-col { width: 20%; }
 
    
 
@@ -330,7 +336,7 @@
 
             <tr>
                 <td class="bold " ><strong>Total</strong></td>
-                <td><strong>{{ number_format($totalPackaging, 2) }}</strong></td>
+                <td><strong>{{ number_format($order->packaging, 2) }}</strong></td>
                 <td><strong>{{ number_format($total_kg, 2) }}</strong></td>
                 <td class="total_price"><strong>{{ number_format($totalPrice, 2) }}</strong></td>
                 <td></td>

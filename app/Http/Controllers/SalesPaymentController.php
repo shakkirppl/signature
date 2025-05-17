@@ -260,6 +260,7 @@ public function printInvoice($order_no)
     $products = SalesPaymentDetail::where('sales_payment_id', $order->id)
         ->join('product', 'sales_payment_detail.product_id', '=', 'product.id')
         ->select(
+            'product.product_name',
             'product.description',
             'product.hsn_code',
             'sales_payment_detail.qty as quantity',
@@ -267,7 +268,8 @@ public function printInvoice($order_no)
            
         )
         ->get();
-        $totalPackaging = $order->details->sum('packaging');
+
+        $totalPackaging = $order->sum('packaging');
         $totalPrice = $products->sum('price');
         $totalWeight = $order->details->sum('quantity');
        
