@@ -75,11 +75,20 @@ class ShipmentController extends Controller
                  
                  
    
-                 public function report()
-    {
-        $shipments = Shipment::OrderBy('id','DESC')->get();
-        return view('shipment.report', compact('shipments'));
-    }
+    //              public function report()
+    // {
+    //     $shipments = Shipment::OrderBy('id','DESC')->get();
+    //     return view('shipment.report', compact('shipments'));
+    // }
+    public function report()
+{
+    $shipments = Shipment::where('shipment_status', 0)
+                         ->orderBy('id', 'DESC')
+                         ->get();
+
+    return view('shipment.report', compact('shipments'));
+}
+
     public function view($id)
     {
         $shipments = Shipment::find($id);
