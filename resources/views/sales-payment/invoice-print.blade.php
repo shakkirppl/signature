@@ -211,7 +211,7 @@
 
 @page {
     size: A4;
-    margin: 0.0mm; 
+    margin: 0mm; 
 
     /* size: A4;
     margin: 3mm 8mm 3mm 3mm; */
