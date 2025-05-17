@@ -25,7 +25,7 @@ class PurchaseConformationController extends Controller
     public function index()
 {
    
-    $conformations = WeightCalculatorMaster::with('supplier', 'user')->where('status', 1)->get();
+    $conformations = WeightCalculatorMaster::with('supplier', 'user')->where('status', 3)->get();
    
 
    

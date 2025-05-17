@@ -323,6 +323,13 @@ Route::post('/update-weight-calculation', [WeightCalculatorController::class, 'u
 Route::get('/get-supplier-products', [WeightCalculatorController::class, 'getSupplierProducts'])->name('get.supplier.products');
 Route::get('/get-purchase-order-id', [WeightCalculatorController::class, 'getPurchaseOrderId'])->name('get.purchase.order.id');
 
+Route::get('weight-approval/facility', [WeightCalculatorController::class, 'pendingFacilityApproval'])->name('weight_approval.facility');
+Route::post('weight-approval/facility/{id}/approve', [WeightCalculatorController::class, 'facilityApprove'])->name('weight_approval.facility.approve');
+
+Route::get('weight-approval/accountant', [WeightCalculatorController::class, 'pendingAccountantApproval'])->name('weight_approval.accountant');
+Route::post('weight-approval/accountant/{id}/approve', [WeightCalculatorController::class, 'accountantApprove'])->name('weight_approval.accountant.approve');
+
+
 
 
     

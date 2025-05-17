@@ -303,5 +303,55 @@ public function reportview($id) {
     $weightDetails = WeightCalculatorDetail::where('weight_master_id', $id)->with('product')->get();
     return view('weight-calculator-report.reportview', compact('weightMaster', 'weightDetails'));
 }
+
+
+
+// Facility Manager approval
+public function facilityApprove($id)
+{
+    $calculator = WeightCalculatorMaster::findOrFail($id);
+
+    if ($calculator->status == 1) {
+        $calculator->status = 2; // pending Accountant
+        $calculator->save();
+    }
+
+    return redirect()->back()->with('success', 'Approved by Facility Manager.');
+}
+
+// Accountant final approval
+public function accountantApprove($id)
+{
+    $calculator = WeightCalculatorMaster::findOrFail($id);
+
+    if ($calculator->status == 2) {
+        $calculator->status = 3; // Final approved
+        $calculator->save();
+    }
+
+    return redirect()->back()->with('success', 'Final approval by Accountant.');
+}
+
+
+// Facility Manager Pending List
+public function pendingFacilityApproval()
+{
+    $data = WeightCalculatorMaster::where('status', 1)
+        ->with(['supplier', 'details']) // eager load supplier and details
+        ->get();
+
+    return view('weight-approval.facility', compact('data'));
+}
+
+public function pendingAccountantApproval()
+{
+    $data = WeightCalculatorMaster::where('status', 2)
+        ->with(['supplier', 'details']) // eager load supplier and details
+        ->get();
+
+    return view('weight-approval.accountant', compact('data'));
+}
+
+    
                 
 }
