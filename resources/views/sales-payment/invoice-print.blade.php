@@ -277,7 +277,7 @@
             @foreach ($products as $product)
             <tr class="no-border-row">
                 <td>{{ $product->description }} <br>{{ $product->hsn_code }}</td>
-                <td class="packaging">{{ number_format($product->packaging, 2) }}</td>
+                <td class="packaging">{{ number_format($order->packaging, 2) }}</td>
                 <td class="quantity">{{ number_format($product->quantity, 2) }}</td>
                 <td class="price">{{ number_format($product->price, 2) }}</td>
                 <td>pcs</td>

@@ -498,6 +498,8 @@ Route::get('index-new-scheduletime', [ScheSchedulenewSlaughter::class, 'index'])
 Route::get('edit-new-scheduletime/{id}', [ScheSchedulenewSlaughter::class, 'edit'])->name('edit.schedule');;
 Route::put('update-new-scheduletime/{id}', [ScheSchedulenewSlaughter::class, 'update'])->name('update.schedule');;
 Route::delete('delete-new-scheduletime/{id}', [ScheSchedulenewSlaughter::class, 'destroy']);
+Route::get('/stop-slaughter', [ScheSchedulenewSlaughter::class, 'stop'])->name('slaughter.stop');
+
 
 
 

@@ -75,11 +75,14 @@
 
             document.getElementById("countdown").innerHTML = countdownStr;
         } else {
-            document.getElementById("countdown").innerHTML = "Scheduled time passed.";
+            document.getElementById("countdown").innerHTML = "Slaughter Start.";
             clearInterval(x);
         }
     }, 1000);
 </script>
+
+
+
 
 
 

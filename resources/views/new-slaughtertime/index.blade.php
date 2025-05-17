@@ -13,6 +13,9 @@
                         <div class="col-md-6 text-right">
             <a href="{{ route('new.schedule') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
             </div>
+            <a href="{{ route('slaughter.stop') }}" class="btn btn-danger float-right">
+    Stop Slaughter
+</a>
                     </div>
 
                     @if(session('success'))
@@ -38,9 +41,11 @@
                                         <td>{{ $timing->date }}</td>
                                         <td>{{ $timing->time }}</td>
                                         <td>{{ $timing->created_at->format('d-m-Y H:i') }}</td>
+                                        
                                         <td><a href="{{ url('edit-new-scheduletime/' . $timing->id) }}" class="btn btn-sm btn-warning">
     Edit
 </a>
+
 <form action="{{ url('delete-new-scheduletime/' . $timing->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this timing?');">
         @csrf
         @method('DELETE')
