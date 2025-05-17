@@ -142,6 +142,7 @@
     $totalWeight = 0; 
     $totalAmount = 0; 
     $totalqty = 0; 
+    $totalrate=0;
 @endphp
                             @foreach($purchaseConformationDetail as $puDetail)
                             <tr>
@@ -156,6 +157,7 @@
                                 $totalWeight += $puDetail->total_weight;
                                 $totalAmount += $puDetail->total_weight * $puDetail->rate;
                                  $totalqty += $puDetail->total_accepted_qty;
+                                   $totalrate += $puDetail->rate;
                             @endphp
                             @endforeach
                             <tr>
@@ -164,7 +166,7 @@
         <td colspan="">{{ number_format($totalqty, 2) }}</td>
         <!-- <td >Tot Wt.:</td> -->
         <td>{{ number_format($totalWeight, 2) }}</td>
-        <td colspan="1">Total Amount</td>
+        <td colspan="1">{{ number_format($totalrate, 2) }}</td>
         <td>{{ number_format($totalAmount, 2) }}</td>
     </tr>
                             </tr>
