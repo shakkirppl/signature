@@ -149,21 +149,38 @@
         background-size: cover !important;
         background-repeat: no-repeat !important;
         background-position: top center !important;
+  
+ 
        
     }
+    /* .a4-container {
+    width: 100%;
+    max-width: 200mm;
+    padding: 10mm;
+    margin: 0 auto;
+    background-color: white;
+    background-image: url("{{ asset('image/Back2.jpg') }}");
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    position: relative;
+    page-break-after: always;
+} */
 
     html, body {
         margin: 0 !important;
         padding: 0 !important;
         height: 100% !important;
+        
     }
-     .desc-col { width: 35%; }
+     .desc-col { width: 30%; }
         .pack-col { width: 5%; }
         .weight-col { width: 15%; }
         .price-col { width: 15%; }
         .par-col { width: 10%; }
-        .total-col { width: 20%; }
+        .total-col { width: 25%; }
 
+    
    
 
     .packing-list {
