@@ -260,8 +260,7 @@ public function printInvoice($order_no)
     $products = SalesPaymentDetail::where('sales_payment_id', $order->id)
         ->join('product', 'sales_payment_detail.product_id', '=', 'product.id')
         ->select(
-            'product.product_name',
-            'product.description',
+ 'product.product_name as product_name',            'product.description',
             'product.hsn_code',
             'sales_payment_detail.qty as quantity',
             'sales_payment_detail.rate as price',

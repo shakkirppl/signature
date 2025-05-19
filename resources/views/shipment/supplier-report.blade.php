@@ -166,8 +166,9 @@
         <td colspan="">{{ number_format($totalqty, 2) }}</td>
         <!-- <td >Tot Wt.:</td> -->
         <td>{{ number_format($totalWeight, 2) }}</td>
-        <td colspan="1">{{ number_format($totalrate, 2) }}</td>
-        <td>{{ number_format($totalAmount, 2) }}</td>
+        <!-- <td colspan="1">{{ number_format($totalrate, 2) }}</td> -->
+         <td></td>
+        <td colspan="6">{{ number_format($totalAmount, 2) }}</td>
     </tr>
                             </tr>
 

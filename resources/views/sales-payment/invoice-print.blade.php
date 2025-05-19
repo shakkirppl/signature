@@ -313,10 +313,11 @@
                 <th class="par-col">Par</th>
                 <th class="total-col">Total</th>
                 
-            </tr>
+            </tr>  
             @foreach ($products as $product)
             <tr class="no-border-row">
-                <td>{{ $product->description }} <br>{{ $product->hsn_code }}</td>
+                <td>            <strong>{{ $product->product_name }}</strong><br>
+ <br>{{ $product->hsn_code }}</td>
                 <td class="packaging">{{ number_format($order->packaging, 2) }}</td>
                 <td class="quantity">{{ number_format($product->quantity, 2) }}</td>
                 <td class="price">{{ number_format($product->price, 2) }}</td>
