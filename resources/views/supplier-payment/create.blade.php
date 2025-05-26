@@ -205,16 +205,15 @@ button.remove-row {
 
 <script>
 function formatNumber(num) {
+    num = parseFloat(num);
     if (isNaN(num)) num = 0;
-    return new Intl.NumberFormat('sw-TZ', { 
-        minimumFractionDigits: 2, 
-        maximumFractionDigits: 2 
-    }).format(num);
+    return num.toFixed(2);
 }
+
 function parseFormattedNumber(str) {
     if (!str) return 0;
-    // Remove dot (.) as thousand separator, replace comma (,) with dot (.)
-    return parseFloat(str.toString().replace(/\./g, '').replace(',', '.')) || 0;
+    // Clean string and parse as float
+    return parseFloat(str.toString().replace(/[^0-9.-]/g, '')) || 0;
 }
 
 $(document).ready(function () {
@@ -232,9 +231,7 @@ $(document).ready(function () {
 
     toggleBankField();
 
-    $('#payment_type').on('change', function () {
-        toggleBankField();
-    });
+    $('#payment_type').on('change', toggleBankField);
 
     $('#shipment').change(function () {
         var shipmentId = $(this).val();
@@ -282,7 +279,7 @@ $(document).ready(function () {
                         });
                     }
 
-                    $('#outstanding_amount').val(outstandingAmount.toFixed(2));
+                    $('#outstanding_amount').val(formatNumber(outstandingAmount));
                     updateTotals();
                 },
                 error: function () {
@@ -299,12 +296,9 @@ $(document).ready(function () {
     });
 
     $(document).on('input', '.paid', function () {
-        let inputVal = $(this).val();
+        let inputVal = $(this).val().replace(/[^0-9.]/g, '');
 
-        // Allow only numbers and decimal points
-        inputVal = inputVal.replace(/[^0-9.]/g, '');
-
-        // Handle multiple decimals (keep only first one)
+        // Limit to one decimal point
         let parts = inputVal.split('.');
         if (parts.length > 2) {
             inputVal = parts[0] + '.' + parts.slice(1).join('');
@@ -313,10 +307,7 @@ $(document).ready(function () {
         $(this).val(inputVal);
 
         let numericVal = parseFloat(inputVal) || 0;
-
-        // Show formatted value below input
-        let formattedValue = formatNumber(numericVal);
-        $(this).next('.formatted-display').text(formattedValue);
+        $(this).next('.formatted-display').text(formatNumber(numericVal));
 
         updateTotals();
     });
@@ -339,40 +330,34 @@ $(document).ready(function () {
         let outstandingAmount = parseFormattedNumber($('#outstanding_amount').val());
         let balance = outstandingAmount - totalPaid;
 
-        // **Allocate amount must be equal to total paid**
-        $('#allocated_amount').val(totalPaid.toFixed(2));
-
+        $('#allocated_amount').val(formatNumber(totalPaid));
         $('#balance').val(formatNumber(balance));
+
         $('#total_amount').text(formatNumber(totalAmount));
         $('#total_balance').text(formatNumber(totalBalance));
         $('#total_paid').text(formatNumber(totalPaid));
 
-        // Hidden values if required
-        $('#total_amount_input').val(totalAmount.toFixed(2));
-        $('#total_balance_input').val(totalBalance.toFixed(2));
-        $('#total_paidAmount').val(totalPaid.toFixed(2));
+        // Hidden values
+        $('#total_amount_input').val(formatNumber(totalAmount));
+        $('#total_balance_input').val(formatNumber(totalBalance));
+        $('#total_paidAmount').val(formatNumber(totalPaid));
     }
 
-    // Set today's date by default
+    // Set today's date
     const dateInput = document.getElementById('payment_date');
     let today = new Date().toISOString().split('T')[0];
-    dateInput.value = today;
+    if (dateInput) dateInput.value = today;
 
-});
-$('form').on('submit', function () {
-    $('.amount, .balance_amount, .paid').each(function () {
-        let plainValue = parseFormattedNumber($(this).val()).toFixed(2);
-        $(this).val(plainValue);
+    $('form').on('submit', function () {
+        $('.amount, .balance_amount, .paid').each(function () {
+            let plainValue = parseFormattedNumber($(this).val()).toFixed(2);
+            $(this).val(plainValue);
+        });
+
+        $('#allocated_amount').val(parseFormattedNumber($('#allocated_amount').val()).toFixed(2));
+        $('#balance').val(parseFormattedNumber($('#balance').val()).toFixed(2));
     });
-
-    let allocPlain = parseFormattedNumber($('#allocated_amount').val()).toFixed(2);
-    $('#allocated_amount').val(allocPlain);
-
-    let balancePlain = parseFormattedNumber($('#balance').val()).toFixed(2);
-    $('#balance').val(balancePlain);
 });
-
-
 
 // Function to return dynamic table row
 function appendRow(index, item) {
@@ -388,7 +373,7 @@ function appendRow(index, item) {
             <td><input type="text" class="form-control balance_amount" name="balance_amount[]" value="${formatNumber(item.balance_amount)}" readonly></td>
             <td>
                 <input type="text" class="form-control paid" name="paid[]" min="0" step="0.01" value="0.00">
-                <div class="formatted-display text-muted" style="font-size: 12px; margin-top: 2px;">0.00 </div>
+                <div class="formatted-display text-muted" style="font-size: 12px; margin-top: 2px;">0.00</div>
             </td>
             <td><button type="button" class="btn btn-danger removeRow">Remove</button></td>
         </tr>
