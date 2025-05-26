@@ -112,29 +112,34 @@
 <!-- JavaScript to Calculate Totals -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-      let totalPayment = 0;
-      let totalReceipt = 0;
-      
-      document.querySelectorAll("#supplierLedgerTable tbody tr").forEach(row => {
-          let paymentElement = row.querySelector(".payment");
-          let receiptElement = row.querySelector(".receipt");
+    let totalPayment = 0;
+    let totalReceipt = 0;
 
-          let payment = paymentElement ? parseFloat(paymentElement.textContent.trim()) || 0 : 0;
-          let receipt = receiptElement ? parseFloat(receiptElement.textContent.trim()) || 0 : 0;
+    document.querySelectorAll("#supplierLedgerTable tbody tr").forEach(row => {
+      let paymentElement = row.querySelector(".payment");
+      let receiptElement = row.querySelector(".receipt");
 
-          totalPayment += payment;
-          totalReceipt += receipt;
-      });
+      let payment = paymentElement ? parseFloat(paymentElement.textContent.trim().replace(/,/g, '')) || 0 : 0;
+      let receipt = receiptElement ? parseFloat(receiptElement.textContent.trim().replace(/,/g, '')) || 0 : 0;
 
-      document.getElementById("totalPayment").textContent = totalPayment.toFixed(2);
-      document.getElementById("totalReceipt").textContent = totalReceipt.toFixed(2);
+      totalPayment += payment;
+      totalReceipt += receipt;
 
-      // Calculate closing balance
-      let closingPayment = totalPayment > totalReceipt ? (totalPayment - totalReceipt).toFixed(2) : "";
-      let closingReceipt = totalReceipt > totalPayment ? (totalReceipt - totalPayment).toFixed(2) : "";
+      // Format individual payment and receipt cells
+      paymentElement.textContent = payment.toLocaleString("en-TZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      receiptElement.textContent = receipt.toLocaleString("en-TZ", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    });
 
-      document.getElementById("closingPayment").textContent = closingPayment;
-      document.getElementById("closingReceipt").textContent = closingReceipt;
+    document.getElementById("totalPayment").textContent = totalPayment.toLocaleString("en-TZ", { minimumFractionDigits: 2 });
+    document.getElementById("totalReceipt").textContent = totalReceipt.toLocaleString("en-TZ", { minimumFractionDigits: 2 });
+
+    // Calculate closing balance
+    let closingPayment = totalPayment > totalReceipt ? (totalPayment - totalReceipt) : 0;
+    let closingReceipt = totalReceipt > totalPayment ? (totalReceipt - totalPayment) : 0;
+
+    document.getElementById("closingPayment").textContent = closingPayment ? closingPayment.toLocaleString("en-TZ", { minimumFractionDigits: 2 }) : "";
+    document.getElementById("closingReceipt").textContent = closingReceipt ? closingReceipt.toLocaleString("en-TZ", { minimumFractionDigits: 2 }) : "";
   });
 </script>
+
 @endsection
