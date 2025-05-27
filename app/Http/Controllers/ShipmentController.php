@@ -117,7 +117,9 @@ class ShipmentController extends Controller
          ->whereHas('purchaseConformation', function ($query) use ($request, $supplier_id) {
              $query->where('shipment_id', $request->shipment_id)
                    ->where('supplier_id', $supplier_id);
+                   
          })
+          ->where('total_accepted_qty', '>', 0)
          ->get();
 
 
