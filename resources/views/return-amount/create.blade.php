@@ -41,8 +41,9 @@
     <label class="required">Return Type:</label>
     <select name="type" id="type" class="form-control" required>
         <option value="">Select Type</option>
-        <option value="opening_balance">Opening Balance</option>
-        <option value="transaction">Transaction</option>
+        <option value="Opening balance">Opening Balance</option>
+        <option value="Transaction">Transaction</option>
+        <option value="Return to supplier">Return To Supplier</option>
     </select>
 </div><div class="col-md-4" id="shipment_section">
     <label class="required">Shipment No:</label>
@@ -144,10 +145,10 @@
         });
     });
 
-    $('#type').change(function () {
+   $('#type').change(function () {
     var type = $(this).val();
 
-    if (type === 'opening_balance') {
+    if (type === 'opening_balance' || type === 'return_supplier') {
         $('#shipment_section').hide();
         // Load all suppliers
         $.ajax({
@@ -171,6 +172,7 @@
         $('#outstanding_balance').val('0.00');
     }
 });
+
 
 $('#type').trigger('change'); // default behavior on load
 

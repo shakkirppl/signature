@@ -91,22 +91,32 @@ class ReturnAmountController extends Controller
             ]);
     
             // Step 2: Insert into outstandings table
-            Outstanding::create([
-                'date' => $request->date,
-                'time' => Carbon::now()->format('H:i:s'),
-                'account_id' => $request->supplier_id,
-                'receipt' => null,
-                'payment' => -abs($request->retrun_amount),
-                'narration' => $request->type === 'opening_balance' ? 'Return payment (Opening Balance)' : 'Return payment from supplier',
-                'transaction_id' => $returnPayment->id,
-                'transaction_type' => 'Return Payment',
-                'description' => 'Return Payment - ' . ($request->type === 'transaction' ? 'Shipment ID: ' . $request->shipment_id : 'Opening Balance'),
-                'account_type' => 'supplier',
-                'store_id' => $returnPayment->store_id,
-                'user_id' => $returnPayment->user_id,
-                'financial_year' => date('Y'),
-            ]);
-            
+           // Step 2: Insert into outstandings table
+Outstanding::create([
+    'date' => $request->date,
+    'time' => Carbon::now()->format('H:i:s'),
+    'account_id' => $request->supplier_id,
+    'receipt' => $request->type === 'return_supplier' ? -abs($request->retrun_amount) : null,
+    'payment' => in_array($request->type, ['opening_balance', 'transaction']) ? -abs($request->retrun_amount) : null,
+    'narration' => match ($request->type) {
+        'opening_balance' => 'Return payment (Opening Balance)',
+        'return_supplier' => 'Supplier return (against received amount)',
+        default => 'Return payment from supplier',
+    },
+    'transaction_id' => $returnPayment->id,
+    'transaction_type' => 'Return Payment',
+    'description' => 'Return Payment - ' . match ($request->type) {
+        'opening_balance' => 'Opening Balance',
+        'transaction' => 'Shipment ID: ' . $request->shipment_id,
+        'return_supplier' => 'Return Supplier',
+        default => '',
+    },
+    'account_type' => 'supplier',
+    'store_id' => $returnPayment->store_id,
+    'user_id' => $returnPayment->user_id,
+    'financial_year' => date('Y'),
+]);
+
     
             DB::commit();
     

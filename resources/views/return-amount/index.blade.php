@@ -32,6 +32,7 @@
                                     <th>Date</th>
                                     <th>Shipment No</th>
                                     <th>Supplier</th>
+                                     <th>Type</th>
                                     <th>Return Amount</th>
                                     <th>created By</th>
                                     <th>Action</th>
@@ -44,6 +45,7 @@
                                         <td>{{ $payment->date }}</td>
                                         <td>{{ $payment->shipment->shipment_no ?? 'N/A' }}</td>
                                         <td>{{ $payment->supplier->name ?? 'N/A' }}</td>
+                                         <td>{{ $payment->type }}</td>
                                         <td>{{ number_format($payment->retrun_amount, 2) }}</td>
                                          <td>{{ $payment->user->name ?? 'N/A' }}</td>
                                         <td>
