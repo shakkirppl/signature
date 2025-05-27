@@ -50,6 +50,18 @@ button.remove-row {
         </ul>
     </div>
 @endif
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
 
                     <form method="POST" action="{{ route('weight_calculator.store') }}" enctype="multipart/form-data">
                         @csrf

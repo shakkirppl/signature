@@ -66,9 +66,7 @@ class WeightCalculatorController extends Controller
                      ]);
                  } 
 
-                 
-                 
-       public function store(Request $request)
+ public function store(Request $request)
 {
     // Validation
     $validated = $request->validate([
@@ -81,15 +79,28 @@ class WeightCalculatorController extends Controller
         'weight.*' => 'required|numeric|min:0',
         'inspection.*' => 'required|exists:inspection,id',
         'purchaseOrder_id' => 'required|exists:purchase_order,id',
-        'document' => 'required',
+        'document' => 'required|file',
     ]);
 
     \DB::beginTransaction();
     try {
         $supplierId = $request->supplier_id;
+        $shipmentId = $request->shipment_id;
 
-        $existingWeightCalculator = WeightCalculatorMaster::where('shipment_id', $request->shipment_id)
+        // Check if a non-active (status != 1) record already exists
+        $nonActiveExists = WeightCalculatorMaster::where('shipment_id', $shipmentId)
             ->where('supplier_id', $supplierId)
+            ->whereIn('status', [0, 2, 3])
+            ->exists();
+
+        if ($nonActiveExists) {
+    return redirect()->back()->with('error', 'Weight has already been taken for this shipment and supplier. You cannot add or update it again.');
+        }
+
+        // If an active record exists (status = 1), delete it
+        $existingWeightCalculator = WeightCalculatorMaster::where('shipment_id', $shipmentId)
+            ->where('supplier_id', $supplierId)
+            ->where('status', 1)
             ->first();
 
         if ($existingWeightCalculator) {
@@ -97,11 +108,11 @@ class WeightCalculatorController extends Controller
             $existingWeightCalculator->delete();
         }
 
-        // Store WeightCalculatorMaster
+        // Store new WeightCalculatorMaster
         $weightCalculatorMaster = new WeightCalculatorMaster();
         $weightCalculatorMaster->weight_code = $request->weight_code;
         $weightCalculatorMaster->date = $request->date;
-        $weightCalculatorMaster->shipment_id = $request->shipment_id;
+        $weightCalculatorMaster->shipment_id = $shipmentId;
         $weightCalculatorMaster->purchaseOrder_id = $request->purchaseOrder_id ?? null;
         $weightCalculatorMaster->inspection_id = $request->inspection_id ?? null;
         $weightCalculatorMaster->supplier_id = $supplierId;
@@ -110,13 +121,12 @@ class WeightCalculatorController extends Controller
         $weightCalculatorMaster->store_id = 1;
         $weightCalculatorMaster->status = 1;
 
-        // 📁 Handle file upload
+        // Handle file upload
         if ($request->hasFile('document')) {
             $file = $request->file('document');
             $filename = time() . '_' . $file->getClientOriginalName();
             $filePath = $file->storeAs('uploads/documents', $filename, 'public');
-             // store in storage/app/public/uploads/documents
-            $weightCalculatorMaster->document = $filePath; // assuming column name is 'document'
+            $weightCalculatorMaster->document = $filePath;
         }
 
         $weightCalculatorMaster->save();
@@ -129,23 +139,110 @@ class WeightCalculatorController extends Controller
             $weightCalculatorDetail->total_accepted_qty = $request->total_accepted_qty[$index] ?? 0;
             $weightCalculatorDetail->weight = $request->weight[$index] ?? 0;
             $weightCalculatorDetail->supplier_id = $supplierId;
-            $weightCalculatorDetail->shipment_id = $request->shipment_id;
+            $weightCalculatorDetail->shipment_id = $shipmentId;
             $weightCalculatorDetail->save();
         }
 
+        // Update invoice number tracker
         InvoiceNumber::updateinvoiceNumber('weight_calculator', 1);
+
+        // Commit transaction
         \DB::commit();
 
+        // Update related inspection status
         Inspection::where('id', $request->inspection_id)->update(['weight_status' => 0]);
 
         return redirect()->route('weight_calculator.index')->with('success', 'Weight Calculator data saved successfully.');
     } catch (\Exception $e) {
         \DB::rollback();
-        \Log::error('Weight Calculator Store Error', ['error' => $e->getMessage(), 'request' => $request->all()]);
+        \Log::error('Weight Calculator Store Error', [
+            'error' => $e->getMessage(),
+            'request' => $request->all()
+        ]);
 
         return redirect()->back()->with('error', 'Failed to save Weight Calculator data. Please try again.');
     }
 }
+                
+                 
+//        public function store(Request $request)
+// {
+//     // Validation
+//     $validated = $request->validate([
+//         'date' => 'required|date',
+//         'weight_code' => 'required|string',
+//         'shipment_id' => 'required|integer',
+//         'supplier_id' => 'required|integer',
+//         'total_weight' => 'required|numeric',
+//         'weight' => 'required|array',
+//         'weight.*' => 'required|numeric|min:0',
+//         'inspection.*' => 'required|exists:inspection,id',
+//         'purchaseOrder_id' => 'required|exists:purchase_order,id',
+//         'document' => 'required',
+//     ]);
+
+//     \DB::beginTransaction();
+//     try {
+//         $supplierId = $request->supplier_id;
+
+//         $existingWeightCalculator = WeightCalculatorMaster::where('shipment_id', $request->shipment_id)
+//             ->where('supplier_id', $supplierId)
+//             ->first();
+
+//         if ($existingWeightCalculator) {
+//             WeightCalculatorDetail::where('weight_master_id', $existingWeightCalculator->id)->delete();
+//             $existingWeightCalculator->delete();
+//         }
+
+//         // Store WeightCalculatorMaster
+//         $weightCalculatorMaster = new WeightCalculatorMaster();
+//         $weightCalculatorMaster->weight_code = $request->weight_code;
+//         $weightCalculatorMaster->date = $request->date;
+//         $weightCalculatorMaster->shipment_id = $request->shipment_id;
+//         $weightCalculatorMaster->purchaseOrder_id = $request->purchaseOrder_id ?? null;
+//         $weightCalculatorMaster->inspection_id = $request->inspection_id ?? null;
+//         $weightCalculatorMaster->supplier_id = $supplierId;
+//         $weightCalculatorMaster->total_weight = $request->total_weight;
+//         $weightCalculatorMaster->user_id = Auth::id();
+//         $weightCalculatorMaster->store_id = 1;
+//         $weightCalculatorMaster->status = 1;
+
+//         // 📁 Handle file upload
+//         if ($request->hasFile('document')) {
+//             $file = $request->file('document');
+//             $filename = time() . '_' . $file->getClientOriginalName();
+//             $filePath = $file->storeAs('uploads/documents', $filename, 'public');
+//              // store in storage/app/public/uploads/documents
+//             $weightCalculatorMaster->document = $filePath; // assuming column name is 'document'
+//         }
+
+//         $weightCalculatorMaster->save();
+
+//         // Store weight details
+//         foreach ($request->product_id as $index => $productId) {
+//             $weightCalculatorDetail = new WeightCalculatorDetail();
+//             $weightCalculatorDetail->weight_master_id = $weightCalculatorMaster->id;
+//             $weightCalculatorDetail->product_id = $productId;
+//             $weightCalculatorDetail->total_accepted_qty = $request->total_accepted_qty[$index] ?? 0;
+//             $weightCalculatorDetail->weight = $request->weight[$index] ?? 0;
+//             $weightCalculatorDetail->supplier_id = $supplierId;
+//             $weightCalculatorDetail->shipment_id = $request->shipment_id;
+//             $weightCalculatorDetail->save();
+//         }
+
+//         InvoiceNumber::updateinvoiceNumber('weight_calculator', 1);
+//         \DB::commit();
+
+//         Inspection::where('id', $request->inspection_id)->update(['weight_status' => 0]);
+
+//         return redirect()->route('weight_calculator.index')->with('success', 'Weight Calculator data saved successfully.');
+//     } catch (\Exception $e) {
+//         \DB::rollback();
+//         \Log::error('Weight Calculator Store Error', ['error' => $e->getMessage(), 'request' => $request->all()]);
+
+//         return redirect()->back()->with('error', 'Failed to save Weight Calculator data. Please try again.');
+//     }
+// }
 
                  
 
