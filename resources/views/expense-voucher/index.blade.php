@@ -20,7 +20,7 @@
           <!-- Search form -->
           <form method="GET" action="{{ route('expensevoucher.index') }}" class="form-inline mb-3 mt-3">
             <div class="input-group">
-              <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Search by Code, COA or Type">
+              <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Search ">
               <div class="input-group-append">
                 <button type="submit" class="btn btn-sm btn-primary">Search</button>
               </div>
