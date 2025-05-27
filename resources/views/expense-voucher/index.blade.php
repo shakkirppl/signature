@@ -1,5 +1,3 @@
-
-
 @extends('layouts.layout')
 @section('content')
 @php
@@ -15,9 +13,20 @@
               <h4 class="card-title">Expense Vouchers List</h4>
             </div>
             <div class="col-md-6 text-right">
-            <a href="{{ route('expensevoucher.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
+              <a href="{{ route('expensevoucher.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
             </div>
           </div>
+
+          <!-- Search form -->
+          <form method="GET" action="{{ route('expensevoucher.index') }}" class="form-inline mb-3 mt-3">
+            <div class="input-group">
+              <input type="text" name="search" value="{{ request('search') }}" class="form-control form-control-sm" placeholder="Search by Code, COA or Type">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-sm btn-primary">Search</button>
+              </div>
+            </div>
+          </form>
+
           <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
             <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
               <thead style="background-color: #d6d6d6; color: #000;">
@@ -34,6 +43,8 @@
                 </tr>
               </thead>
               <tbody>
+               
+
                 @foreach ($vouchers as $index => $voucher)
                 <tr>
                   <td>{{ $index + 1 }}</td>
@@ -43,35 +54,43 @@
                   <td>{{ $voucher->shipment->shipment_no ?? '-' }}</td>
                   <td>{{ number_format($voucher->amount, 2) }}</td>
                   <td>{{ ucfirst($voucher->type) }}</td>
-                    <td>
-                        @if($voucher->type === 'bank' && $voucher->bank_id)
-                             {{ $voucher->bank->bank_name }}
-                                     @else
-                                        N/A
-                                     @endif
-                    </td>
-                    <td>
-                    @if($user->designation_id == 1)
-                        <a href="{{ route('expensevoucher.edit', $voucher->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="{{ route('expensevoucher.destroy', $voucher->id) }}" 
-                                                    class="btn btn-danger btn-sm delete-btn" 
-                                                    onclick="return confirm('Are you sure you want to delete this record?')">
-                                                    <i class="mdi mdi-delete"></i> Delete
-                                            </a>
+                  <td>
+                    @if($voucher->type === 'bank' && $voucher->bank_id)
+                      {{ $voucher->bank->bank_name }}
+                    @else
+                      N/A
                     @endif
-                                           
-                    </td>
-                 
+                  </td>
+                  <td>
+                    @if($user->designation_id == 1)
+                      <a href="{{ route('expensevoucher.edit', $voucher->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                      <a href="{{ route('expensevoucher.destroy', $voucher->id) }}"
+                         class="btn btn-danger btn-sm delete-btn"
+                         onclick="return confirm('Are you sure you want to delete this record?')">
+                        <i class="mdi mdi-delete"></i> Delete
+                      </a>
+                    @endif
+                  </td>
                 </tr>
                 @endforeach
               </tbody>
+               @php
+                  $totalAmount = $vouchers->sum('amount');
+                @endphp
+                <tr style="background-color: #f0f0f0;">
+                  <td colspan="5" class="text-right"><strong>Total</strong></td>
+                  <td><strong>{{ number_format($totalAmount, 2) }}</strong></td>
+                  <td colspan="3"></td>
+                </tr>
             </table>
           </div>
+
         </div>
       </div>
     </div>
   </div>
 </div>
+
 <style>
   .table-responsive {
     overflow-x: auto;
@@ -85,15 +104,7 @@
     font-size: 10px;
   }
   .newicon i {
-    font-size: 30px;}
+    font-size: 30px;
+  }
 </style>
 @endsection
-
-
-
-
-
-
-
-
-

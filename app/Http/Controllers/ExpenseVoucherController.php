@@ -14,21 +14,40 @@ use App\Models\AccountTransactions;
 
 class ExpenseVoucherController extends Controller
 {
-    public function index()
+//     public function index()
+// {
+//     $vouchers = ExpenseVoucher::with(['bank', 'account'])
+//         ->whereHas('shipment', function ($query) {
+//             $query->where('shipment_status', 0);
+//         })
+//         ->paginate(10);
+
+//     return view('expense-voucher.index', compact('vouchers'));
+// }
+
+public function index(Request $request)
 {
-    $vouchers = ExpenseVoucher::with(['bank', 'account'])
-        ->whereHas('shipment', function ($query) {
-            $query->where('shipment_status', 0);
-        })
-        ->paginate(10);
+    $query = ExpenseVoucher::with(['bank', 'account', 'shipment'])
+        ->whereHas('shipment', function ($q) {
+            $q->where('shipment_status', 0);
+        });
 
-    return view('expense-voucher.index', compact('vouchers'));
+    if ($request->has('search') && $request->search) {
+        $search = $request->search;
+        $query->where(function ($q) use ($search) {
+            $q->where('code', 'like', "%{$search}%")
+              ->orWhereHas('account', function ($q2) use ($search) {
+                  $q2->where('name', 'like', "%{$search}%");
+              })
+              ->orWhere('type', 'like', "%{$search}%");
+        });
+    }
+
+    $vouchers = $query->paginate(10);
+    $totalAmount = $vouchers->sum('amount'); // Total on current page
+
+    return view('expense-voucher.index', compact('vouchers', 'totalAmount'));
 }
-
-    
-    
-
-
 
     public function create()
     {
