@@ -1,5 +1,8 @@
 @extends('layouts.layout')
 @section('content')
+@php
+    $user = Auth::user();
+@endphp
 <div class="main-panel">
   <div class="content-wrapper">
     <div class="col-12 grid-margin">
