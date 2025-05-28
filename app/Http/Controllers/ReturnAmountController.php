@@ -158,6 +158,56 @@ public function destroy($id)
     }
 }
 
+public function requestDelete($id)
+{
+    $payment = ReturnAmount::findOrFail($id);
+
+    // Only allow designation_id == 3 to request delete
+    if (auth()->user()->designation_id == 3) {
+        $payment->status = 'pending_delete';
+        $payment->save();
+
+        return redirect()->back()->with('success', 'Delete request sent successfully.');
+    }
+
+    return back()->with('error', 'Unauthorized action.');
+}
+
+
+public function pendingDeleteList()
+{
+    $pendingDeletes = ReturnAmount::with(['supplier', 'shipment', 'user'])
+        ->where('status', 'pending_delete')
+        ->get();
+
+    return view('return-amount.pending-delete', compact('pendingDeletes'));
+}
+
+
+public function approveDelete($id)
+{
+    DB::beginTransaction();
+
+    try {
+        $payment = ReturnAmount::findOrFail($id);
+
+        // Delete related outstanding
+        Outstanding::where('transaction_type', 'Return Payment')
+            ->where('transaction_id', $payment->id)
+            ->delete();
+
+        $payment->delete(); // Hard delete
+
+        DB::commit();
+        return redirect()->back()->with('success', 'Return payment permanently deleted.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return redirect()->back()->with('error', 'Error deleting return payment.');
+    }
+}
+
+
+
 
 }
 

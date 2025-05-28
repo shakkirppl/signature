@@ -56,6 +56,13 @@
                                                 <button class="btn btn-danger btn-sm">Delete</button>
                                             </form>
                                             @endif
+                                            @if(auth()->user()->designation_id == 3)
+                                         <form action="{{ route('return-payment.requestDelete', $payment->id) }}" method="POST" onsubmit="return confirm('Request deletion of this return payment?');">
+                                          @csrf
+                                        <button type="submit" class="btn btn-danger btn-sm"><i class="mdi mdi-delete"></i>Request Delete</button>
+                                        </form>
+                                          @endif
+
                                         </td>
                                     </tr>
                                 @endforeach

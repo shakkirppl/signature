@@ -636,6 +636,11 @@ Route::post('/airline/softdelete/{id}', [AirlineController::class, 'softDelete']
 Route::get('/admin/airline/deletion-requests', [AirlineController::class, 'deletionRequests'])->name('admin.airline.deletion_requests');
 Route::delete('/admin/airline/{id}', [AirlineController::class, 'adminDestroy'])->name('admin.airline.destroy');
 
+Route::post('/return-payment/request-delete/{id}', [ReturnAmountController::class, 'requestDelete'])->name('return-payment.requestDelete');
+Route::get('/return-payment/pending-delete', [ReturnAmountController::class, 'pendingDeleteList'])->name('return-payment.pendingDeleteList');
+Route::delete('/return-payment/approve-delete/{id}', [ReturnAmountController::class, 'approveDelete'])->name('return-payment.approveDelete');
+
+
 
 
 
