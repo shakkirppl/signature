@@ -628,6 +628,14 @@ Route::post('water-quality-store', [WaterQualityTestRecordController::class, 'st
 Route::delete('water-quality/{id}', [WaterQualityTestRecordController::class, 'destroy'])->name('water-quality.destroy');
 
 
+    Route::post('/paymentvoucher/soft-delete/{id}', [PaymentVoucherController::class, 'softDelete'])->name('paymentvoucher.softdelete');
+
+
+        Route::get('/admin/paymentvoucher/deleted', [PaymentVoucherController::class, 'viewMarkedForDeletion'])->name('admin.paymentvoucher.deleted');
+        Route::delete('/admin/paymentvoucher/destroy/{id}', [PaymentVoucherController::class, 'admindelete'])->name('admin.paymentvoucher.destroy');
+
+
+
 
 
 

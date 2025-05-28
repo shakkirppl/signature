@@ -219,4 +219,30 @@ public function report(Request $request)
     return view('paymentvoucher.report', compact('paymentVouchers', 'banks'));
 }
 
+public function softDelete($id)
+{
+    $voucher = PaymentVoucher::findOrFail($id);
+    $voucher->delete_status = 1;
+    $voucher->save();
+
+    return redirect()->route('paymentvoucher.index')->with('success', 'Voucher marked for deletion and pending admin approval.');
+}
+
+public function admindelete($id)
+{
+    $voucher = PaymentVoucher::where('delete_status', 1)->findOrFail($id);
+    $voucher->delete();
+
+    return redirect()->route('admin.paymentvoucher.deleted')->with('success', 'Voucher permanently deleted.');
+}
+
+
+public function viewMarkedForDeletion()
+{
+    $vouchers = PaymentVoucher::where('delete_status', 1)->get();
+    return view('paymentvoucher.pending-delete', compact('vouchers'));
+}
+
+
+
 }

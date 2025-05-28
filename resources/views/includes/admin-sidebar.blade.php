@@ -332,7 +332,19 @@
  @endif
 
  
-
+<li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#delete-request" aria-expanded="false" aria-controls="charts">
+            <i class="mdi mdi-group menu-icon"></i> 
+              <span class="menu-title">Delete Requests </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="delete-request">
+              <ul class="nav flex-column sub-menu">
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/paymentvoucher/deleted')}}">PaymentVoucher</a></li> 
+              
+              </ul>
+            </div>
+          </li> 
 
 
 
