@@ -49,4 +49,9 @@ class Airline extends Model
     {
         return $this->belongsTo(COA::class, 'coa_id');
     }
+  public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }

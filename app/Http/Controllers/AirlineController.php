@@ -196,6 +196,29 @@ public function destroy($id)
 }
 
 
+public function softDelete($id)
+{
+    $airline = Airline::findOrFail($id);
+    $airline->delete_status = 1;
+    $airline->save();
+
+    return redirect()->route('airline.index')->with('success', 'Deletion request submitted for admin approval.');
+}
+
+
+public function deletionRequests()
+{
+    $deletionRequests = Airline::where('delete_status', 1)->with(['shipment', 'customer', 'user'])->get();
+    return view('airline-payment.pending-delete', compact('deletionRequests'));
+}
+
+
+public function adminDestroy($id)
+{
+    $airline = Airline::findOrFail($id);
+    $airline->delete(); 
+    return back()->with('success', 'Airline record permanently deleted.');
+}
 
 
 

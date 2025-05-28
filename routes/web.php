@@ -627,12 +627,17 @@ Route::get('water-quality-index', [WaterQualityTestRecordController::class, 'ind
 Route::post('water-quality-store', [WaterQualityTestRecordController::class, 'store'])->name('water-quality.store');
 Route::delete('water-quality/{id}', [WaterQualityTestRecordController::class, 'destroy'])->name('water-quality.destroy');
 
+// 
+Route::post('/paymentvoucher/soft-delete/{id}', [PaymentVoucherController::class, 'softDelete'])->name('paymentvoucher.softdelete');
+Route::get('/admin/paymentvoucher/deleted', [PaymentVoucherController::class, 'viewMarkedForDeletion'])->name('admin.paymentvoucher.deleted');
+Route::delete('/admin/paymentvoucher/destroy/{id}', [PaymentVoucherController::class, 'admindelete'])->name('admin.paymentvoucher.destroy');
 
-    Route::post('/paymentvoucher/soft-delete/{id}', [PaymentVoucherController::class, 'softDelete'])->name('paymentvoucher.softdelete');
+Route::post('/airline/softdelete/{id}', [AirlineController::class, 'softDelete'])->name('airline.softdelete');
+Route::get('/admin/airline/deletion-requests', [AirlineController::class, 'deletionRequests'])->name('admin.airline.deletion_requests');
+Route::delete('/admin/airline/{id}', [AirlineController::class, 'adminDestroy'])->name('admin.airline.destroy');
 
 
-        Route::get('/admin/paymentvoucher/deleted', [PaymentVoucherController::class, 'viewMarkedForDeletion'])->name('admin.paymentvoucher.deleted');
-        Route::delete('/admin/paymentvoucher/destroy/{id}', [PaymentVoucherController::class, 'admindelete'])->name('admin.paymentvoucher.destroy');
+
 
 
 

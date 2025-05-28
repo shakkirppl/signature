@@ -341,6 +341,9 @@
             <div class="collapse" id="delete-request">
               <ul class="nav flex-column sub-menu">
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/paymentvoucher/deleted')}}">PaymentVoucher</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/airline/deletion-requests')}}">Airline Payment</a></li> 
+
+              
               
               </ul>
             </div>

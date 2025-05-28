@@ -240,6 +240,7 @@ public function admindelete($id)
 public function viewMarkedForDeletion()
 {
     $vouchers = PaymentVoucher::where('delete_status', 1)->get();
+     
     return view('paymentvoucher.pending-delete', compact('vouchers'));
 }
 

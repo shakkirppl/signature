@@ -65,6 +65,12 @@
                                                 </button>
                                             </form>
                                             @endif
+                                            @if(Auth::user()->designation_id == 3)
+<form action="{{ route('airline.softdelete', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to request deletion of this payment?');">
+    @csrf
+    <button type="submit" class="btn btn-danger btn-sm">Request Delete</button>
+</form>
+@endif
                                         </td>
                                         </tr> 
                                 @endforeach
