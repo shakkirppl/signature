@@ -112,6 +112,41 @@ public function getAllSuppliers()
     return response()->json(['suppliers' => $suppliers]);
 }
 
+public function destroy($id)
+{
+    $return = ReturnToSupplier::findOrFail($id);
+
+    DB::beginTransaction();
+    try {
+        // Restore the deducted amount back to Outstanding
+        Outstanding::create([
+            'date' => Carbon::now()->format('Y-m-d'),
+            'time' => Carbon::now()->format('H:i:s'),
+            'account_id' => $return->supplier_id,
+            'receipt' => abs($return->retrun_amount), // restore it as positive
+            'payment' => null,
+            'narration' => 'Restore after deleting Return To Supplier',
+            'transaction_id' => $return->id,
+            'transaction_type' => 'Return To Supplier Delete',
+            'description' => 'Reversal of return to supplier',
+            'account_type' => 'supplier',
+            'store_id' => $return->store_id,
+            'user_id' => auth()->id(),
+            'financial_year' => date('Y'),
+        ]);
+
+        // Delete the return entry
+        $return->delete();
+
+        DB::commit();
+        return redirect()->route('return-to-supplier.index')->with('success', 'Return entry deleted and balance restored.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Error: ' . $e->getMessage());
+    }
+}
+
+
 
 
 }

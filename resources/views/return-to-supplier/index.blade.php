@@ -49,13 +49,14 @@
                                         <td>{{ number_format($payment->retrun_amount, 2) }}</td>
                                          <td>{{ $payment->user->name ?? 'N/A' }}</td>
                                         <td>
-                                        <!-- @if($user->designation_id == 1)
-                                            <form action="{{ route('return-payment.destroy', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this return payment?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button class="btn btn-danger btn-sm">Delete</button>
-                                            </form>
-                                            @endif -->
+                                        @if($user->designation_id == 1)
+                                           <form action="{{ route('return-to-supplier.destroy', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this entry?');">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+</form>
+
+                                            @endif
                                             <!-- @if(auth()->user()->designation_id == 3)
                                          <form action="{{ route('return-payment.requestDelete', $payment->id) }}" method="POST" onsubmit="return confirm('Request deletion of this return payment?');">
                                           @csrf

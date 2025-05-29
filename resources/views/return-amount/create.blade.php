@@ -41,7 +41,7 @@
     <label class="required">Return Type:</label>
     <select name="type" id="type" class="form-control" required>
         <option value="">Select Type</option>
-        <option value="opening_balance">Opening Balance</option>
+        <option value="opening balance">Opening Balance</option>
         <option value="transaction">Transaction</option>
     </select>
 </div><div class="col-md-4" id="shipment_section">
