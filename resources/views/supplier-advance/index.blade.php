@@ -33,12 +33,13 @@
                                     <th>Supplier</th>
                                     <th>Type</th>
                                     <th>Advance Amount</th>
+                                    <th>Action</th>
                                    
                                   </tr>
                                      </thead>
                                      <tbody>
                                      @if($supplierAdvances->isEmpty())
-                                        <tr><td colspan="8">No data available</td></tr>
+                                        <tr><td colspan="9">No data available</td></tr>
                                      @else
                                       @foreach($supplierAdvances as $key => $advance)
                                  <tr>
@@ -50,6 +51,27 @@
                                      <td>{{ $advance->supplier->name ?? 'N/A' }}</td>
                                      <td>{{ ucfirst($advance->type) }}</td>
                                      <td>{{ number_format($advance->advance_amount, 2) }}</td>
+                                     @if($user->designation_id == 1)
+<td>
+    <form action="{{ route('supplieradvance.destroy', $advance->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+    </form>
+@endif
+    @if($user->designation_id == 3 && $advance->delete_status == 0)
+<td>
+    <form action="{{ route('supplieradvance.requestDelete', $advance->id) }}" method="POST" onsubmit="return confirm('Request to delete this Supplier Advance?');">
+        @csrf
+        <button type="submit" class="btn btn-sm btn-danger">Request Delete</button>
+    </form>
+</td>
+@endif
+
+</td>
+
+
+
                                  </tr>
                                    @endforeach
                                     @endif

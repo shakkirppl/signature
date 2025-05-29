@@ -164,4 +164,81 @@ return redirect()->back()->withErrors(['error' => 'Supplier not found.'])->withI
     }
 }
 
+
+public function destroy($id)
+{
+    DB::beginTransaction();
+    try {
+        $advance = SupplierAdvance::findOrFail($id);
+
+        // Delete related account transactions
+        AccountTransactions::where('transaction_type', 'supplier advance')
+            ->where('transaction_id', $advance->id)
+            ->delete();
+
+        // Delete supplier advance
+        $advance->delete();
+
+        DB::commit();
+        return redirect()->route('supplieradvance.index')->with('success', 'Supplier advance deleted successfully.');
+    } catch (\Exception $e) {
+        DB::rollback();
+        \Log::error('Supplier advance delete error: ' . $e->getMessage());
+        return redirect()->back()->withErrors(['error' => 'Error deleting supplier advance: ' . $e->getMessage()]);
+    }
+}
+
+
+public function requestDelete($id)
+{
+    $advance = SupplierAdvance::findOrFail($id);
+
+    if (Auth::user()->designation_id != 3) {
+        abort(403);
+    }
+
+    $advance->delete_status = 1; // 1 means requested for deletion
+    $advance->save();
+
+    return redirect()->route('supplieradvance.index')->with('success', 'Delete request sent for approval.');
+}
+
+
+public function deleteRequests()
+{
+    $user = Auth::user();
+    if ($user->designation_id != 1) {
+        abort(403);
+    }
+
+    $pendingDeletes = SupplierAdvance::where('delete_status', 1)->get();
+
+    return view('supplier-advance.pending-delete', compact('pendingDeletes'));
+}
+
+
+public function approveDelete($id)
+{
+    DB::beginTransaction();
+    try {
+        $advance = SupplierAdvance::findOrFail($id);
+
+        // Delete related account transactions
+        AccountTransactions::where('transaction_type', 'supplier advance')
+            ->where('transaction_id', $advance->id)
+            ->delete();
+
+        // Delete the supplier advance
+        $advance->delete();
+
+        DB::commit();
+        return redirect()->route('supplieradvance.deleteRequests')->with('success', 'Supplier advance deleted successfully.');
+    } catch (\Exception $e) {
+        DB::rollback();
+        \Log::error('Approve delete error: ' . $e->getMessage());
+        return redirect()->back()->withErrors(['error' => 'Error: ' . $e->getMessage()]);
+    }
+}
+
+
 }

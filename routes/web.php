@@ -438,6 +438,8 @@ Route::get('supplier-advance-index', [SupplierAdvanceController::class, 'index']
 Route::get('/get-suppliers', [SupplierAdvanceController::class, 'getSuppliersByShipment'])->name('getSuppliersByShipment');
 Route::get('/get-orders', [SupplierAdvanceController::class, 'getOrdersBySupplier'])->name('getOrdersBySupplier');
 Route::post('supplier-advance-store', [SupplierAdvanceController::class, 'store'])->name('supplieradvance.store');
+Route::delete('/supplieradvance/{id}', [SupplierAdvanceController::class, 'destroy'])->name('supplieradvance.destroy');
+
 
 
 
@@ -639,6 +641,11 @@ Route::delete('/admin/airline/{id}', [AirlineController::class, 'adminDestroy'])
 Route::post('/return-payment/request-delete/{id}', [ReturnAmountController::class, 'requestDelete'])->name('return-payment.requestDelete');
 Route::get('/return-payment/pending-delete', [ReturnAmountController::class, 'pendingDeleteList'])->name('return-payment.pendingDeleteList');
 Route::delete('/return-payment/approve-delete/{id}', [ReturnAmountController::class, 'approveDelete'])->name('return-payment.approveDelete');
+
+Route::post('/supplieradvance/request-delete/{id}', [SupplierAdvanceController::class, 'requestDelete'])->name('supplieradvance.requestDelete');
+Route::get('/supplieradvance/delete-requests', [SupplierAdvanceController::class, 'deleteRequests'])->name('supplieradvance.deleteRequests');
+Route::delete('/supplieradvance/approve-delete/{id}', [SupplierAdvanceController::class, 'approveDelete'])->name('supplieradvance.approveDelete');
+
 
 
 
