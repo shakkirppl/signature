@@ -654,7 +654,9 @@ Route::get('return-supplier-index', [ReturnToSupplierController::class, 'index']
 Route::get('/getsupplier-outstanding', [ReturnToSupplierController::class, 'getSupplierOutstanding'])->name('getsupplier.outstanding');
 Route::get('/getsuppliers-by-shipment', [ReturnToSupplierController::class, 'getSuppliersByShipment'])->name('getsuppliers.by.shipment');
 Route::get('getall-suppliers', [ReturnToSupplierController::class, 'getAllSuppliers'])->name('getall.suppliers');
-Route::delete('/return-to-supplier/{id}', [ReturnToSupplierController::class, 'destroy'])->name('return-to-supplier.destroy');
+Route::delete('/return-to-supplier/{id}', [ReturnToSupplierController::class, 'approvedestroy'])->name('return-to-supplier.destroy');
+Route::get('/return-to-supplier/delete-requests', [ReturnToSupplierController::class, 'pendingDeletes'])->name('return-to-supplier.pending-deletes');
+Route::patch('/return-to-supplier/request-delete/{id}', [ReturnToSupplierController::class, 'requestDelete'])->name('return-to-supplier.request-delete');
 
 
 

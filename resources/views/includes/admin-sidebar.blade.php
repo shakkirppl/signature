@@ -346,6 +346,8 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/airline/deletion-requests')}}">Airline Payment</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-payment/pending-delete')}}">Return Amount</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplieradvance/delete-requests')}}">Supplier Advance</a></li> 
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-to-supplier/delete-requests')}}">Supplier Final Payment</a></li> 
+              
               
 
               </ul>

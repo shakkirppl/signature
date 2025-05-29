@@ -146,6 +146,67 @@ public function destroy($id)
     }
 }
 
+public function requestDelete($id)
+{
+    $return = ReturnToSupplier::findOrFail($id);
+
+    // Only users with designation_id == 3 can request delete
+    if (auth()->user()->designation_id != 3) {
+        return back()->with('error', 'Unauthorized action.');
+    }
+
+    $return->update(['delete_status' => true]);
+
+    return back()->with('success', 'Delete request submitted.');
+}
+
+public function pendingDeletes()
+{
+    if (auth()->user()->designation_id != 1) {
+        abort(403);
+    }
+
+    $returns = ReturnToSupplier::where('delete_status', true)->with('supplier')->get();
+
+    return view('return-to-supplier.pending-delete', compact('returns'));
+}
+
+public function approvedestroy($id)
+{
+    $return = ReturnToSupplier::findOrFail($id);
+
+    if (auth()->user()->designation_id != 1) {
+        return back()->with('error', 'Only admins can delete.');
+    }
+
+    DB::beginTransaction();
+    try {
+        Outstanding::create([
+            'date' => Carbon::now()->format('Y-m-d'),
+            'time' => Carbon::now()->format('H:i:s'),
+            'account_id' => $return->supplier_id,
+            'receipt' => abs($return->retrun_amount),
+            'payment' => null,
+            'narration' => 'Restore after deleting Return To Supplier',
+            'transaction_id' => $return->id,
+            'transaction_type' => 'Return To Supplier Delete',
+            'description' => 'Reversal of return to supplier',
+            'account_type' => 'supplier',
+            'store_id' => $return->store_id,
+            'user_id' => auth()->id(),
+            'financial_year' => date('Y'),
+        ]);
+
+        $return->delete();
+
+        DB::commit();
+        return redirect()->route('return-to-supplier.pending-delete')->with('success', 'Entry deleted successfully.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return back()->with('error', 'Error: ' . $e->getMessage());
+    }
+}
+
 
 
 

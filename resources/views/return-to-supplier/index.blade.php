@@ -51,18 +51,20 @@
                                         <td>
                                         @if($user->designation_id == 1)
                                            <form action="{{ route('return-to-supplier.destroy', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this entry?');">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-</form>
-
-                                            @endif
-                                            <!-- @if(auth()->user()->designation_id == 3)
-                                         <form action="{{ route('return-payment.requestDelete', $payment->id) }}" method="POST" onsubmit="return confirm('Request deletion of this return payment?');">
-                                          @csrf
-                                        <button type="submit" class="btn btn-danger btn-sm"><i class="mdi mdi-delete"></i>Request Delete</button>
-                                        </form>
-                                          @endif -->
+                                       @csrf
+                                       @method('DELETE')
+                                       <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                     @endif
+                                           @if(auth()->user()->designation_id == 3 && !$payment->delete_status)
+                <form action="{{ route('return-to-supplier.request-delete', $payment->id) }}" method="POST" onsubmit="return confirm('Request delete this entry?')">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-danger btn-sm">Request Delete</button>
+                </form>
+            @elseif($payment->delete_status)
+                <span class="text-danger">Delete Requested</span>
+            @endif
 
                                         </td>
                                     </tr>
