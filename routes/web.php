@@ -55,6 +55,7 @@ use App\Http\Controllers\CalibrationRecordController;
 use App\Http\Controllers\CustomerFeedbackController;
 use App\Http\Controllers\RequestingFormController;
 use App\Http\Controllers\WaterQualityTestRecordController;
+use App\Http\Controllers\ReturnToSupplierController;
 
 
 
@@ -645,6 +646,15 @@ Route::delete('/return-payment/approve-delete/{id}', [ReturnAmountController::cl
 Route::post('/supplieradvance/request-delete/{id}', [SupplierAdvanceController::class, 'requestDelete'])->name('supplieradvance.requestDelete');
 Route::get('/supplieradvance/delete-requests', [SupplierAdvanceController::class, 'deleteRequests'])->name('supplieradvance.deleteRequests');
 Route::delete('/supplieradvance/approve-delete/{id}', [SupplierAdvanceController::class, 'approveDelete'])->name('supplieradvance.approveDelete');
+
+
+Route::get('/return-supplier-create', [ReturnToSupplierController::class, 'create'])->name('return-supplier.create');
+Route::post('return-supplier-store', [ReturnToSupplierController::class, 'store'])->name('return-to-supplier.store');
+Route::get('return-supplier-index', [ReturnToSupplierController::class, 'index'])->name('return-to-supplier.index');
+Route::get('/getsupplier-outstanding', [ReturnToSupplierController::class, 'getSupplierOutstanding'])->name('getsupplier.outstanding');
+Route::get('/getsuppliers-by-shipment', [ReturnToSupplierController::class, 'getSuppliersByShipment'])->name('getsuppliers.by.shipment');
+Route::get('getall-suppliers', [ReturnToSupplierController::class, 'getAllSuppliers'])->name('getall.suppliers');
+
 
 
 

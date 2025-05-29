@@ -76,7 +76,9 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher-index')}}">payment Voucher </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('airline-index')}}">Airline Payment</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('receiptvoucher-index')}}">Receipt Voucher </a></li>  
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('expensevoucher-index')}}">Expense Voucher </a></li>  
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('expensevoucher-index')}}">Expense Voucher </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-supplier-index')}}">Supplier Final Payment </a></li>   
+              
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/account-heads')}}">COA </a></li>  
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('ledger')}}"> Ledger </a></li>
               @endif
@@ -346,17 +348,9 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplieradvance/delete-requests')}}">Supplier Advance</a></li> 
               
 
-             
-              
               </ul>
             </div>
           </li> 
-
-
-
-  
-
-        
 
 
         </ul>

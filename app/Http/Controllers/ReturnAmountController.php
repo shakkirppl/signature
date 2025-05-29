@@ -63,7 +63,72 @@ class ReturnAmountController extends Controller
         $suppliers = Supplier::select('id', 'name')->get();
         return response()->json(['suppliers' => $suppliers]);
     }
-    public function store(Request $request)
+//     public function store(Request $request)
+//     {
+//         // return $request->all();
+//         $request->validate([
+//             'date' => 'required|date',
+//             'shipment_id' => 'nullable|exists:shipment,id',
+//             'supplier_id' => 'required|exists:supplier,id',
+//             'retrun_amount' => 'required|numeric|min:0.01',
+//         ]);
+    
+//         DB::beginTransaction();
+    
+//         try {
+           
+    
+//             // Step 1: Insert into return_payments table
+//             $returnPayment = ReturnAmount::create([
+//                 'date' => $request->date,
+//                 'type' => $request->type,
+//                 'supplier_id' => $request->supplier_id,
+//                 'retrun_amount' => $request->retrun_amount,
+//                 'store_id' => 1,
+//                  'user_id' => auth()->id(),
+//                  'shipment_id' => $request->type === 'transaction' ? $request->shipment_id : null,
+
+//             ]);
+    
+//             // Step 2: Insert into outstandings table
+//            // Step 2: Insert into outstandings table
+// Outstanding::create([
+//     'date' => $request->date,
+//     'time' => Carbon::now()->format('H:i:s'),
+//     'account_id' => $request->supplier_id,
+//     'receipt' => $request->type === 'return_supplier' ? -abs($request->retrun_amount) : null,
+//     'payment' => in_array($request->type, ['opening_balance', 'transaction']) ? -abs($request->retrun_amount) : null,
+//     'narration' => match ($request->type) {
+//         'opening_balance' => 'Return payment (Opening Balance)',
+//         'return_supplier' => 'Supplier return (against received amount)',
+//         default => 'Return payment from supplier',
+//     },
+//     'transaction_id' => $returnPayment->id,
+//     'transaction_type' => 'Return Payment',
+//     'description' => 'Return Payment - ' . match ($request->type) {
+//         'opening_balance' => 'Opening Balance',
+//         'transaction' => 'Shipment ID: ' . $request->shipment_id,
+//         'return_supplier' => 'Return Supplier',
+//         default => '',
+//     },
+//     'account_type' => 'supplier',
+//     'store_id' => $returnPayment->store_id,
+//     'user_id' => $returnPayment->user_id,
+//     'financial_year' => date('Y'),
+// ]);
+
+    
+//             DB::commit();
+    
+//             return redirect()->route('return-payment.index')->with('success', 'Return payment saved successfully.');
+    
+//         } catch (\Exception $e) {
+//             DB::rollBack();
+//             return back()->with('error', 'Failed to save return payment: ' . $e->getMessage());
+//         }
+//     }
+
+ public function store(Request $request)
     {
         // return $request->all();
         $request->validate([
@@ -91,32 +156,22 @@ class ReturnAmountController extends Controller
             ]);
     
             // Step 2: Insert into outstandings table
-           // Step 2: Insert into outstandings table
-Outstanding::create([
-    'date' => $request->date,
-    'time' => Carbon::now()->format('H:i:s'),
-    'account_id' => $request->supplier_id,
-    'receipt' => $request->type === 'return_supplier' ? -abs($request->retrun_amount) : null,
-    'payment' => in_array($request->type, ['opening_balance', 'transaction']) ? -abs($request->retrun_amount) : null,
-    'narration' => match ($request->type) {
-        'opening_balance' => 'Return payment (Opening Balance)',
-        'return_supplier' => 'Supplier return (against received amount)',
-        default => 'Return payment from supplier',
-    },
-    'transaction_id' => $returnPayment->id,
-    'transaction_type' => 'Return Payment',
-    'description' => 'Return Payment - ' . match ($request->type) {
-        'opening_balance' => 'Opening Balance',
-        'transaction' => 'Shipment ID: ' . $request->shipment_id,
-        'return_supplier' => 'Return Supplier',
-        default => '',
-    },
-    'account_type' => 'supplier',
-    'store_id' => $returnPayment->store_id,
-    'user_id' => $returnPayment->user_id,
-    'financial_year' => date('Y'),
-]);
-
+            Outstanding::create([
+                'date' => $request->date,
+                'time' => Carbon::now()->format('H:i:s'),
+                'account_id' => $request->supplier_id,
+                'receipt' => null,
+                'payment' => -abs($request->retrun_amount),
+                'narration' => $request->type === 'opening_balance' ? 'Return payment (Opening Balance)' : 'Return payment from supplier',
+                'transaction_id' => $returnPayment->id,
+                'transaction_type' => 'Return Payment',
+                'description' => 'Return Payment - ' . ($request->type === 'transaction' ? 'Shipment ID: ' . $request->shipment_id : 'Opening Balance'),
+                'account_type' => 'supplier',
+                'store_id' => $returnPayment->store_id,
+                'user_id' => $returnPayment->user_id,
+                'financial_year' => date('Y'),
+            ]);
+            
     
             DB::commit();
     
@@ -127,6 +182,7 @@ Outstanding::create([
             return back()->with('error', 'Failed to save return payment: ' . $e->getMessage());
         }
     }
+
 
     public function index()
 {
