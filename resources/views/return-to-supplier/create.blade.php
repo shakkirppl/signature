@@ -12,7 +12,7 @@
         <div class="col-lg-12 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Final Payment to Supplier</h4>
+                    <h4 class="card-title">Supplier Final Payment</h4>
                     <div class="col-md-12 heading mb-3">
                         <a href="{{ route('return-to-supplier.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                     </div>
@@ -53,7 +53,7 @@
                                 </div>
 
                                 <div class="col-md-4 mt-3">
-                                    <label>Return Amount:</label>
+                                    <label> Amount:</label>
                                     <input type="text" id="retrun_amount" name="retrun_amount" class="form-control">
                                 </div>
                             </div>
