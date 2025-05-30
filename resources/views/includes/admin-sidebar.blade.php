@@ -332,7 +332,7 @@
  </li>
  
  @endif
-
+  @if($user->designation_id == 1 )
  
 <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#delete-request" aria-expanded="false" aria-controls="charts">
@@ -354,15 +354,11 @@
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier-payment/pending-deletes')}}">Supplier Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/customer-payment/pending-deletes')}}">Customer Payment</a></li>
 
-              
-              
-              
-              
-
+            
               </ul>
             </div>
           </li> 
-
+@endif
 
         </ul>
       </nav>
