@@ -58,6 +58,14 @@
                                                     <i class="mdi mdi-delete"></i> Delete
                                             </a>
                                             @endif
+                                              @if($user->designation_id == 3 && $voucher->delete_status == 0)
+        <form method="POST" action="{{ route('receiptvoucher.requestDelete', $voucher->id) }}">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Request delete this voucher?')">
+                Request Delete
+            </button>
+        </form>
+    @endif
                                            
                     </td>
                  

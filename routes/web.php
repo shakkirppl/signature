@@ -663,6 +663,11 @@ Route::post('/expensevoucher/request-delete/{id}', [ExpenseVoucherController::cl
 Route::get('/expensevoucher/pending-deletes', [ExpenseVoucherController::class, 'pendingDeleteRequests'])->name('expensevoucher.pendingDeletes');
 Route::delete('/expensevoucher/approve-delete/{id}', [ExpenseVoucherController::class, 'approveDelete'])->name('expensevoucher.approveDelete');
 
+Route::post('/receiptvoucher/request-delete/{id}', [ReceiptVoucherController::class, 'requestDelete'])->name('receiptvoucher.requestDelete');
+Route::get('/receiptvoucher/delete-requests', [ReceiptVoucherController::class, 'deleteRequests'])->name('receiptvoucher.deleteRequests');
+Route::delete('/receiptvoucher/confirm-delete/{id}', [ReceiptVoucherController::class, 'confirmDelete'])->name('receiptvoucher.confirmDelete');
+
+
 
 
 

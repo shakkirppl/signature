@@ -29,4 +29,8 @@ class paymentVoucher extends Model
     {
         return $this->belongsTo(Employee::class, 'employee_id'); // Ensure 'employee_id' is used as the foreign key
     }
+     public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

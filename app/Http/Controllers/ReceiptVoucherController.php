@@ -179,4 +179,40 @@ public function report(Request $request)
     return view('receiptvoucher.report', compact('receiptVouchers', 'banks'));
 }
 
+public function requestDelete($id)
+{
+    $voucher = ReceiptVoucher::findOrFail($id);
+
+    if (Auth::user()->designation_id == 3) {
+        $voucher->delete_status = 1;
+        $voucher->save();
+        return redirect()->back()->with('success', 'Delete request sent to admin.');
+    }
+
+    return redirect()->back()->withErrors('Unauthorized action.');
+}
+
+public function deleteRequests()
+{
+    if (Auth::user()->designation_id != 1) {
+        abort(403);
+    }
+
+    $vouchers = ReceiptVoucher::where('delete_status', 1)->get();
+    return view('receiptvoucher.pending-delete', compact('vouchers'));
+}
+
+public function confirmDelete($id)
+{
+    $voucher = ReceiptVoucher::findOrFail($id);
+
+    if (Auth::user()->designation_id == 1 && $voucher->delete_status == 1) {
+        $voucher->delete(); // Or forceDelete if you're using soft deletes
+        return redirect()->back()->with('success', 'Voucher permanently deleted.');
+    }
+
+    return redirect()->back()->withErrors('Unauthorized or invalid action.');
+}
+
+
 }
