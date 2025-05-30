@@ -64,11 +64,18 @@
                                                      Delete
                                             </a>
                                             @endif
+                                             @if($user->designation_id == 3 && $payment->status != 1 )
+        <form method="POST" action="{{ route('supplier-payment.request-delete', $payment->id) }}" style="display:inline;">
+            @csrf
+            @method('PATCH')
+            <button class="btn btn-danger btn-sm" onclick="return confirm('Request delete for this record?')">Request Delete</button>
+        </form>
+    @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="6" class="text-center">No records found</td>
+                                        <td colspan="10" class="text-center">No records found</td>
                                     </tr>
                                 @endforelse
                             </tbody>

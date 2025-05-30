@@ -668,6 +668,11 @@ Route::get('/receiptvoucher/delete-requests', [ReceiptVoucherController::class, 
 Route::delete('/receiptvoucher/confirm-delete/{id}', [ReceiptVoucherController::class, 'confirmDelete'])->name('receiptvoucher.confirmDelete');
 
 
+Route::patch('/supplier-payment/request-delete/{id}', [SupplierPaymentController::class, 'requestDelete'])->name('supplier-payment.request-delete');
+Route::get('/supplier-payment/pending-deletes', [SupplierPaymentController::class, 'pendingDeletes'])->name('supplier-payment.pending-deletes');
+
+
+
 
 
 

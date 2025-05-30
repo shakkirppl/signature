@@ -230,6 +230,30 @@ public function report(Request $request)
 }
 
 
+public function requestDelete($id)
+{
+    $payment = SupplierPaymentMaster::findOrFail($id);
+  if (Auth::user()->designation_id == 3) {
+            $payment->delete_status = 1; // pending delete
+            $payment->save();
+    if (Auth::user()->designation_id != 3) {
+        abort(403, 'Unauthorized');
+    }
+
+ 
+  }
+    return redirect()->route('supplier-payment.pending-deletes')->with('success', 'Delete request submitted successfully.');
+}
+
+public function pendingDeletes()
+{
+    $pendingPayments = SupplierPaymentMaster::where('delete_status', '1')->get();
+
+    return view('supplier-payment.pending-delete', compact('pendingPayments'));
+}
+
+
+
 
 
 }
