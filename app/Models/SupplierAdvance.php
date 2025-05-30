@@ -12,7 +12,7 @@ class SupplierAdvance extends Model
 
     
     protected $table = 'supplier_advance';
-    protected $fillable = ['code', 'date','shipment_id','supplier_id','type','order_no','advance_amount','bank_id','store_id','user_id','description','purchaseOrder_id'];
+    protected $fillable = ['code', 'date','shipment_id','supplier_id','type','order_no','advance_amount','bank_id','store_id','user_id','description','purchaseOrder_id','delete_status'];
 
     
     public function bank()

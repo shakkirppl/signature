@@ -29,7 +29,8 @@ class Airline extends Model
         'store_id',
         'user_id',
         'type',
-        'currency'
+        'currency',
+        'delete_status'
     ];
 
     protected $dates = ['deleted_at']; 

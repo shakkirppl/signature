@@ -13,7 +13,7 @@ class ReturnAmount extends Model
     use HasFactory,SoftDeletes;
     protected $table = 'return_payment';
     protected $fillable = [
-        'date', 'shipment_id', 'supplier_id', 'retrun_amount','store_id','user_id','type'
+        'date', 'shipment_id', 'supplier_id', 'retrun_amount','store_id','user_id','type','status'
     ];
 
    

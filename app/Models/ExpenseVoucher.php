@@ -11,7 +11,7 @@ class ExpenseVoucher extends Model
     use HasFactory,SoftDeletes;
 
     protected $table = 'expense_voucher';
-    protected $fillable = ['code', 'date','name','coa_id','type','amount','description','bank_id','store_id','user_id','shipment_id','status','currency'];
+    protected $fillable = ['code', 'date','name','coa_id','type','amount','description','bank_id','store_id','user_id','shipment_id','status','currency','delete_status'];
 
 
    
