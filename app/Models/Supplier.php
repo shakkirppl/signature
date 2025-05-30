@@ -10,7 +10,7 @@ class Supplier extends Model
 {
     use HasFactory ,SoftDeletes;
     protected $table = 'supplier';
-    protected $fillable = ['id', 'name','code','address','contact_number','email','credit_limit_days','store_id','user_id','opening_balance','dr_cr','state','country','account_head_id'];
+    protected $fillable = ['id', 'name','code','address','contact_number','email','credit_limit_days','store_id','user_id','opening_balance','dr_cr','state','country','account_head_id','delete_status'];
 
 
     protected $dates = ['deleted_at']; 

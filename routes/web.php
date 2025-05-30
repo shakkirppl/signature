@@ -674,6 +674,11 @@ Route::get('/supplier-payment/pending-deletes', [SupplierPaymentController::clas
 Route::post('/customer-payment/{id}/request-delete', [CustomerPaymentController::class, 'requestDelete'])->name('customer-payment.request-delete');
 Route::get('/customer-payment/pending-deletes', [CustomerPaymentController::class, 'pendingDeletes'])->name('customer-payment.pending-deletes');
 
+Route::post('/supplier/request-delete/{id}', [SupplierController::class, 'requestDelete'])->name('supplier.requestDelete');
+Route::get('/supplier/delete-requests', [SupplierController::class, 'deleteRequests'])->name('supplier.deleteRequests');
+
+
+
 
 
 

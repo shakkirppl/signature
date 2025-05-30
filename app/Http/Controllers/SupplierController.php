@@ -210,6 +210,32 @@ public function destroy($id)
 }
 
 
+public function requestDelete($id)
+{
+    $supplier = Supplier::findOrFail($id);
+
+    if (auth()->user()->designation_id != 3) {
+        return redirect()->route('supplier.index')->with('error', 'Unauthorized');
+    }
+
+    $supplier->delete_status = '1';
+    $supplier->save();
+
+    return redirect()->route('supplier.index')->with('success', 'Delete request submitted. Waiting for admin approval.');
+}
+
+public function deleteRequests()
+{
+    if (auth()->user()->designation_id != 1) {
+        return redirect()->route('supplier.index')->with('error', 'Unauthorized');
+    }
+
+    $suppliers = Supplier::where('delete_status', '1')->get();
+    return view('supplier.pending-delete', compact('suppliers'));
+}
+
+
+
 
 
 

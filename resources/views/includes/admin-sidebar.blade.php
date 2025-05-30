@@ -342,7 +342,9 @@
             </a>
             <div class="collapse" id="delete-request">
               <ul class="nav flex-column sub-menu">
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/paymentvoucher/deleted')}}">PaymentVoucher</a></li> 
+               
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier/delete-requests')}}">Supplier</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/paymentvoucher/deleted')}}">PaymentVoucher</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/airline/deletion-requests')}}">Airline Payment</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-payment/pending-delete')}}">Return Amount</a></li> 
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplieradvance/delete-requests')}}">Supplier Advance</a></li> 

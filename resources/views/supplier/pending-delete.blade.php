@@ -16,11 +16,9 @@
 @endif
           <div class="row">
             <div class="col-md-6">
-              <h4 class="card-title">Supplier List</h4>
+          <h4 class="card-title">Supplier Delete Requests</h4>
             </div>
-            <div class="col-md-6 text-right">
-            <a href="{{ route('supplier.create') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
-            </div>
+           
           </div>
           <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
             <table class="table table-bordered table-striped table-sm" style="font-size: 12px;">
@@ -55,29 +53,18 @@
             <td>{{ $supplier->credit_limit_days }}</td>
             <td>{{ $supplier->opening_balance }}</td>
             <td>{{ $supplier->dr_cr }}</td>
-            @if($user->designation_id == 1)      
+                
                   <td>
-                  <a href="{{ route('supplier.edit', $supplier->id) }}" class="btn btn-warning btn-sm">Edit</a>
                   <form action="{{ route('supplier.destroy', $supplier->id) }}" method="POST" style="display:inline;">
                      @csrf
                      @method('DELETE')
                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">
-                    <i class="mdi mdi-delete"></i> Delete
+                    <i class="mdi mdi-delete"></i> Approve Delete
                    </button>
                  </form>
                  </td>
-                 @endif
-                 @if($user->designation_id == 3 && $supplier->delete_status != '1')
-  <td>
-    <form action="{{ route('supplier.requestDelete', $supplier->id) }}" method="POST" style="display:inline;">
-      @csrf
-      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Request delete this record?')">
-        <i class="mdi mdi-delete"></i> Request Delete
-      </button>
-    </form>
-  </td>
-
-@endif
+                
+               
                  
                 </tr>
                 @endforeach
