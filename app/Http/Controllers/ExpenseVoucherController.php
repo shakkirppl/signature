@@ -92,7 +92,6 @@ public function index(Request $request)
 
 
 
-
                  public function store(Request $request)
                  {
                      try {
@@ -201,4 +200,45 @@ public function destroy($id)
         return redirect()->route('expensevoucher.index')->with('error', 'Error deleting record: ' . $e->getMessage());
     }
 }
+
+public function requestDelete($id)
+{
+    try {
+        $voucher = ExpenseVoucher::findOrFail($id);
+        // Check if the user is authorized
+        if (Auth::user()->designation_id == 3) {
+            $voucher->status = 3; // pending delete
+            $voucher->save();
+            return back()->with('success', 'Delete request sent for approval.');
+        } else {
+            return back()->withErrors(['error' => 'Unauthorized action.']);
+        }
+    } catch (\Exception $e) {
+        \Log::error('Delete request error: ' . $e->getMessage());
+        return back()->withErrors(['error' => 'Something went wrong.']);
+    }
+}
+
+public function pendingDeleteRequests()
+{
+    $vouchers = ExpenseVoucher::where('status', 3)->get();
+    return view('expense-voucher.pending_delete', compact('vouchers'));
+}
+
+public function approveDelete($id)
+{
+    try {
+        if (Auth::user()->designation_id == 1) {
+            $voucher = ExpenseVoucher::findOrFail($id);
+            $voucher->delete(); // Final delete
+            return back()->with('success', 'Expense voucher deleted successfully.');
+        }
+        return back()->withErrors(['error' => 'Unauthorized action.']);
+    } catch (\Exception $e) {
+        \Log::error('Final delete error: ' . $e->getMessage());
+        return back()->withErrors(['error' => 'Something went wrong.']);
+    }
+}
+
+
 }

@@ -659,6 +659,13 @@ Route::get('/return-to-supplier/delete-requests', [ReturnToSupplierController::c
 Route::patch('/return-to-supplier/request-delete/{id}', [ReturnToSupplierController::class, 'requestDelete'])->name('return-to-supplier.request-delete');
 
 
+Route::post('/expensevoucher/request-delete/{id}', [ExpenseVoucherController::class, 'requestDelete'])->name('expensevoucher.requestDelete');
+Route::get('/expensevoucher/pending-deletes', [ExpenseVoucherController::class, 'pendingDeleteRequests'])->name('expensevoucher.pendingDeletes');
+Route::delete('/expensevoucher/approve-delete/{id}', [ExpenseVoucherController::class, 'approveDelete'])->name('expensevoucher.approveDelete');
+
+
+
+
 
 
 

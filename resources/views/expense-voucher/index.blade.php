@@ -70,6 +70,15 @@
                         <i class="mdi mdi-delete"></i> Delete
                       </a>
                     @endif
+                     @($user->designation_id == 3 && $voucher->status != 3)
+    <form method="POST" action="{{ route('expensevoucher.requestDelete', $voucher->id) }}" style="display:inline;">
+      @csrf
+      <button type="submit" class="btn btn-danger btn-sm"
+              onclick="return confirm('Are you sure you want to request delete for this record?')">
+        Request Delete
+      </button>
+    </form>
+  @endif
                   </td>
                 </tr>
                 @endforeach

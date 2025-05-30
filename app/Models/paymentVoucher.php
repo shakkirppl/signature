@@ -11,7 +11,7 @@ class paymentVoucher extends Model
     use HasFactory,SoftDeletes;
 
     protected $table = 'payment_voucher';
-    protected $fillable = ['code', 'date','name','coa_id','type','amount','description','bank_id','store_id','user_id','employee_id','currency'];
+    protected $fillable = ['code', 'date','name','coa_id','type','amount','description','bank_id','store_id','user_id','employee_id','currency','delete_status'];
 
    
 
