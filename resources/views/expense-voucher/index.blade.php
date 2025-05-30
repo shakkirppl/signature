@@ -70,7 +70,7 @@
                         <i class="mdi mdi-delete"></i> Delete
                       </a>
                     @endif
-                     @($user->designation_id == 3 && $voucher->status != 3)
+                     @if($user->designation_id == 3 && $voucher->status != 3)
     <form method="POST" action="{{ route('expensevoucher.requestDelete', $voucher->id) }}" style="display:inline;">
       @csrf
       <button type="submit" class="btn btn-danger btn-sm"
