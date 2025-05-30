@@ -29,17 +29,20 @@
               <tbody>
               @forelse ($conformations as $index => $conformation)
         <tr>
+
             <td>{{ $index + 1 }}</td>
             <td>{{ $conformation->weight_code }}</td>
             <td>{{ $conformation->date }}</td>
             <td>{{ $conformation->supplier->name ?? 'N/A' }}</td>
             <td>
             <a href="{{ route('purchase-conformation.Confirm', $conformation->id) }}" class="btn btn-warning btn-sm">Confirm</a>
+            @if($user->designation_id == 1)
             <a href="" 
                      class="btn btn-danger btn-sm" 
                      onclick="return confirm('Are you sure you want to delete this record?')">
                      Delete
                   </a>
+                   @endif
             </td>
         </tr>
     @empty
