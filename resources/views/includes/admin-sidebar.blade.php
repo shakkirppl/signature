@@ -350,8 +350,9 @@
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/expensevoucher/pending-deletes')}}">Expense Voucher</a></li>
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/receiptvoucher/delete-requests')}}">Receipt Voucher</a></li>
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier-payment/pending-deletes')}}">Supplier Payment</a></li>
-               
-               
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/customer-payment/pending-deletes')}}">Customer Payment</a></li>
+
+              
               
               
               

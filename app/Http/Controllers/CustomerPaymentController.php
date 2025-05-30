@@ -202,5 +202,24 @@ public function store(Request $request)
         }
     }
     
+public function requestDelete($id)
+{
+    $payment = CustomerPayment::findOrFail($id);
+
+    if (auth()->user()->designation_id != 3) {
+        return redirect()->back()->withErrors(['error' => 'Unauthorized action.']);
+    }
+
+    $payment->update(['status' => 'delete_requested']);
+
+    return redirect()->route('customer-payment.index')->with('success', 'Delete request submitted successfully.');
+}
+
+public function pendingDeletes()
+{
+    $pendingPayments = CustomerPayment::where('status', 'delete_requested')->get();
+    return view('customer-payment.pending-delete', compact('pendingPayments'));
+}
+
 
 }

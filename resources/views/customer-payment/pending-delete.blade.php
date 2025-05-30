@@ -11,11 +11,9 @@
                     <div class="card-body">
                        <div class="row">
                            <div class="col-6 col-md-6 col-sm-6 col-xs-12" >
-                                <h4 class="card-title">Customer Payment List</h4>
+                                <h4 class="card-title">Pending Delete Requests</h4>
                             </div>
-                            <div class="col-6 col-md-6 col-sm-6 col-xs-12  heading" style="text-align:end;">
-                              <a href="{{ route('customer-payment.create')  }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
-                           </div>
+                          
                        </div>
                     @if ($message = Session::get('success'))
                         <div class="alert alert-success">
@@ -41,7 +39,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($customerPayments as $payment)
+                               @foreach ($pendingPayments as $payment)
                                     <tr>
                                     <td>{{ $loop->iteration }}</td>
                                         <td>{{ $payment->payment_date }}</td>
@@ -60,29 +58,19 @@
                                         <td>
                                        
                                         <a href="{{ route('customer-payment.view', $payment->id) }}" class="btn btn-info btn-sm">View</a>
-                                        @if($user->designation_id == 1)
-                                            <a href="{{ route('customer-payment.destroy',  $payment->id) }}" 
+                                       
+                                         <a href="{{ route('customer-payment.destroy',  $payment->id) }}" 
                                                     class="btn btn-danger btn-sm" 
                                                     onclick="return confirm('Are you sure you want to delete this record?')">
                                                      Delete
                                             </a>
-                                            @endif
-                                            @if($user->designation_id == 3)
-    <form action="{{ route('customer-payment.request-delete', $payment->id) }}" method="POST" style="display:inline;">
-        @csrf
-        <button class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to request delete?')">
-            Request Delete
-        </button>
-    </form>
-@endif
-
                                         </td>
                                     </tr>
-                                @empty
+                              
                                     <tr>
                                         <td colspan="9" class="text-center">No records found</td>
                                     </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

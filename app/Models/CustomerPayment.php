@@ -11,7 +11,7 @@ class CustomerPayment extends Model
     use HasFactory,SoftDeletes;
 
     protected $table = 'customer_payment_master';
-    protected $fillable = ['id', 'payment_date','bank_name','payment_type','cheque_date','cheque_no','trans_reference','outstanding_amount','allocated_amount','balance','payment_to','notes','user_id','store_id','total_balance','total_paid','total_amount'];
+    protected $fillable = ['id', 'payment_date','bank_name','payment_type','cheque_date','cheque_no','trans_reference','outstanding_amount','allocated_amount','balance','payment_to','notes','user_id','store_id','total_balance','total_paid','total_amount','status'];
 
     protected $dates = ['deleted_at']; 
 

@@ -242,7 +242,7 @@ public function requestDelete($id)
 
  
   }
-    return redirect()->route('supplier-payment.pending-deletes')->with('success', 'Delete request submitted successfully.');
+    return redirect()->route('customer-payment.request-delete')->with('success', 'Delete request submitted successfully.');
 }
 
 public function pendingDeletes()
