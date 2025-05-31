@@ -356,11 +356,10 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order/pending-deletes')}}">Sales Order</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales-payment/pending-delete')}}">Sales </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/packinglist/pending-delete')}}">Packing List </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/purchase-order/delete-requests')}}">Purchase Order </a></li>
+                
 
                 
-                
-
-            
               </ul>
             </div>
           </li> 

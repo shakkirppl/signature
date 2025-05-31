@@ -290,5 +290,32 @@ public function getOutstandingBalance($supplierId)
     }
 }
 
+public function requestDelete($id)
+{
+    try {
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+        $user = auth()->user();
+
+        if ($user->designation_id == 3 && $purchaseOrder->delete_status == 0) {
+            $purchaseOrder->delete_status = 1; 
+            $purchaseOrder->save();
+
+            return redirect()->route('purchase-order.index')->with('success', 'Delete request sent for admin approval.');
+        }
+
+        return redirect()->route('purchase-order.index')->with('error', 'Unauthorized or already requested.');
+    } catch (\Exception $e) {
+        return redirect()->route('purchase-order.index')->with('error', 'Error requesting delete: ' . $e->getMessage());
+    }
+}
+
+public function pendingDeleteRequests()
+{
+    $requests = PurchaseOrder::where('delete_status', 1)->with('supplier', 'shipment', 'salesOrder', 'user')->get();
+    return view('purchase-order.pending-delete', compact('requests'));
+}
+
+
+
     
 }

@@ -11,7 +11,7 @@ class SkinningMaster extends Model
     use HasFactory,SoftDeletes;
 
     protected $table = 'skinning_master';
-    protected $fillable = ['id', 'date','time','skinning_code','shipment_id','user_id','store_id','status'];
+    protected $fillable = ['id', 'date','time','skinning_code','shipment_id','user_id','store_id','status','delete_status'];
     protected $dates = ['deleted_at']; 
     
     public function product()
