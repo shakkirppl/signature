@@ -200,7 +200,35 @@ public function report(Request $request)
 
     return view('sales-order.report', compact('salesOrders', 'customers'));
 }
+public function requestDelete($id)
+{
+    try {
+        $order = SalesOrder::findOrFail($id);
 
+        if (auth()->user()->designation_id != 3) {
+            abort(403);
+        }
+
+        $order->delete_status = '1';
+        $order->save();
+
+        return redirect()->route('goodsout-order.index')->with('success', 'Delete request submitted.');
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+    }
+}
+
+
+public function pendingDeletes()
+{
+    if (auth()->user()->designation_id != 1) {
+        abort(403);
+    }
+
+    $salesOrders = SalesOrder::where('delete_status', '1')->with('customer')->get();
+
+    return view('sales-order.pending-delete', compact('salesOrders'));
+}
 
 
 

@@ -43,6 +43,7 @@
                   <td>{{ number_format($order->advance_amount, 2) }}</td>
                   <td>{{ number_format($order->balance_amount, 2) }}</td>
                   <td>
+                    <div class="d-flex align-items-center gap-2">
                     <a href="{{ route('goodsout-order.view', $order->id) }}" class="btn btn-info btn-sm">View</a>
                     @if($user->designation_id == 1)
                     <a href="{{ route('goodsout-order.edit', $order->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -52,6 +53,16 @@
                        Delete
                     </a>
                     @endif
+                    @if($user->designation_id == 3 )
+  <form action="{{ route('goodsout-order.request-delete', $order->id) }}" method="POST">
+    @csrf
+    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to request deletion?')">
+      Request Delete
+    </button>
+  </form>
+@endif
+</div>
+
                   </td>
                 </tr>
                 @endforeach

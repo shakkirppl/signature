@@ -13,9 +13,9 @@
                         <div class="col-md-6 text-right">
             <a href="{{ route('new.schedule') }}" class="newicon"><i class="mdi mdi-new-box"></i></a>
             </div>
-            <a href="{{ route('slaughter.stop') }}" class="btn btn-danger float-right">
+            <!-- <a href="{{ route('slaughter.stop') }}" class="btn btn-danger float-right">
     Stop Slaughter
-</a>
+</a> -->
                     </div>
 
                     @if(session('success'))
