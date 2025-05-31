@@ -26,7 +26,7 @@ class SalesPayment extends Model
     'shipping_mode',
     'shipping_agent',
 'shrinkage',
-'packaging'];
+'packaging','delete_status'];
 protected $dates = ['deleted_at'];
 
     

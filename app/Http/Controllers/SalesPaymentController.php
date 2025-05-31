@@ -301,4 +301,30 @@ public function getOutstandingBalance($customerId)
 }
 
 
+public function requestDelete($id)
+{
+    $user = auth()->user();
+
+    if ($user->designation_id != 3) {
+        abort(403);
+    }
+
+    $salesPayment = SalesPayment::findOrFail($id);
+    $salesPayment->delete_status = 1; 
+    $salesPayment->save();
+
+    return redirect()->route('sales_payment.index')->with('success', 'Delete request submitted for admin approval.');
+}
+
+public function pendingDelete()
+{
+    if (auth()->user()->designation_id != 1) {
+        abort(403);
+    }
+
+    $SalesPayments = SalesPayment::where('delete_status', 1)->with(['customer', 'SalesOrder', 'shipment'])->get();
+    return view('sales-payment.pending-delete', compact('SalesPayments'));
+}
+
+
 }

@@ -354,6 +354,8 @@
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier-payment/pending-deletes')}}">Supplier Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/customer-payment/pending-deletes')}}">Customer Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order/pending-deletes')}}">Sales Order</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales-payment/pending-delete')}}">Sales </a></li>
+                
                 
 
             

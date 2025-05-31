@@ -57,6 +57,15 @@
                                                      Delete
                                             </a>
                                             @endif
+                                            @if($user->designation_id == 3 && $sale->delete_status == 0)
+                                            <form action="{{ route('sales_payment.request_delete', $sale->id) }}" method="POST" style="display:inline-block;">
+                                             @csrf
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Request to delete this record?')">
+                                             Request Delete
+                                            </button>
+                                           </form>
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @endforeach
