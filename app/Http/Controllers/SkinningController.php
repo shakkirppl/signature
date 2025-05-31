@@ -211,7 +211,7 @@ public function destroy($id)
     }
 }
 
-
+ 
 
 public function report(Request $request)
 {
@@ -244,6 +244,28 @@ public function report(Request $request)
 
     return view('skinning.report', compact('skinningRecords', 'shipments', 'employees'));
 }
+
+
+public function requestDelete($id)
+{
+    $skinning = SkinningMaster::findOrFail($id);
+
+    // Only allow if not already requested
+    if ($skinning->delete_status == 0) {
+        $skinning->delete_status = 1;
+        $skinning->save();
+        return redirect()->route('skinning.index')->with('success', 'Delete request sent for approval.');
+    }
+
+    return redirect()->route('skinning.index')->with('error', 'Delete request already sent.');
+}
+
+public function pendingDeleteRequests()
+{
+    $pendingSkinnings = SkinningMaster::where('delete_status', 1)->get();
+    return view('skinning.pending-delete', compact('pendingSkinnings'));
+}
+
 
 
 

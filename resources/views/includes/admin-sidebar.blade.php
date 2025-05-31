@@ -357,6 +357,8 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales-payment/pending-delete')}}">Sales </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/packinglist/pending-delete')}}">Packing List </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/purchase-order/delete-requests')}}">Purchase Order </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/skinning/delete-requests')}}">Skinning </a></li>
+                
                 
 
                 

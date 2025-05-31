@@ -32,6 +32,11 @@ class SkinningMaster extends Model
     return $this->hasMany(SkinningDetail::class, 'skinning_id', 'id');
 }
 
+ public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 
 
 

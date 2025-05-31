@@ -689,6 +689,11 @@ Route::post('/packinglist/{id}/request-delete', [PackingListController::class, '
 Route::post('/purchase-order/{id}/request-delete', [PurchaseOrderController::class, 'requestDelete'])->name('purchase-order.requestDelete');
 Route::get('/purchase-order/delete-requests', [PurchaseOrderController::class, 'pendingDeleteRequests'])->name('purchase-order.pendingDeletes');
 
+Route::post('/skinning/{id}/request-delete', [SkinningController::class, 'requestDelete'])->name('skinning.request-delete');
+Route::get('/skinning/delete-requests', [SkinningController::class, 'pendingDeleteRequests'])->name('skinning.delete-requests');
+
+
+
 
 
 

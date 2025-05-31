@@ -26,6 +26,7 @@
                         <th>Date</th>
                         <th>Time</th>
                         <th>Shipment No</th>
+                        <th>Created By</th>
                         <th>Actions</th>
                 </tr>
               </thead>
@@ -37,6 +38,7 @@
                 <td>{{ $record->date }}</td>
                 <td>{{ $record->time }}</td>
                 <td>{{ $record->shipment->shipment_no ?? 'N/A' }}</td>
+                <td>{{ $record->user->name ?? 'Unknown' }}</td>
                
                        
                   <td>
@@ -52,6 +54,12 @@
                  </a>
 
                  @endif
+                 @if($user->designation_id == 3 && $record->delete_status == 0)
+    <form action="{{ route('skinning.request-delete', $record->id) }}" method="POST" style="display:inline;">
+        @csrf
+        <button class="btn btn-danger btn-sm" onclick="return confirm('Send delete request?')">Request Delete</button>
+    </form>
+@endif
 
                    
                  </td>
