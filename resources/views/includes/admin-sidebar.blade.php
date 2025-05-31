@@ -345,16 +345,18 @@
                
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier/delete-requests')}}">Supplier</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/paymentvoucher/deleted')}}">PaymentVoucher</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/airline/deletion-requests')}}">Airline Payment</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-payment/pending-delete')}}">Return Amount</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplieradvance/delete-requests')}}">Supplier Advance</a></li> 
-              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-to-supplier/delete-requests')}}">Supplier Final Payment</a></li> 
-               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/expensevoucher/pending-deletes')}}">Expense Voucher</a></li>
-               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/receiptvoucher/delete-requests')}}">Receipt Voucher</a></li>
-               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier-payment/pending-deletes')}}">Supplier Payment</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/admin/airline/deletion-requests')}}">Airline Payment</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-payment/pending-delete')}}">Return Amount</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplieradvance/delete-requests')}}">Supplier Advance</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/return-to-supplier/delete-requests')}}">Supplier Final Payment</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/expensevoucher/pending-deletes')}}">Expense Voucher</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/receiptvoucher/delete-requests')}}">Receipt Voucher</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/supplier-payment/pending-deletes')}}">Supplier Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/customer-payment/pending-deletes')}}">Customer Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order/pending-deletes')}}">Sales Order</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('sales-payment/pending-delete')}}">Sales </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/packinglist/pending-delete')}}">Packing List </a></li>
+
                 
                 
 

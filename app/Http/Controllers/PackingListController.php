@@ -178,6 +178,7 @@ public function update(Request $request, $id)
 }
 
 
+
 public function packlistPrint($id)
 {
     // Fetch the packing list master data along with customer and sales order
@@ -192,6 +193,36 @@ public function packlistPrint($id)
 
     return view('packing_list.print', compact( 'packingList', 'totalPackaging', 'totalWeight', 
     'totalAmount'));
+}
+
+public function pendingDelete()
+{
+    $pendingDeletes = PackingListMaster::where('delete_status', 1)->get();
+    return view('packing_list.pending-delete', compact('pendingDeletes'));
+}
+
+
+public function requestDelete($id)
+{
+    try {
+        $packing = PackingListMaster::findOrFail($id);
+        $user = auth()->user();
+
+        if ($user->designation_id == 3) {
+            if ($packing->delete_status == 0) {
+                $packing->delete_status = 1;
+                $packing->save();
+
+                return redirect()->route('packinglist.index')->with('success', 'Delete request sent for admin approval.');
+            } else {
+                return redirect()->route('packinglist.index')->with('info', 'This packing list has already been requested for deletion.');
+            }
+        } else {
+            return redirect()->route('packinglist.index')->with('error', 'Unauthorized action.');
+        }
+    } catch (\Exception $e) {
+        return redirect()->route('packinglist.index')->with('error', 'Error sending delete request: ' . $e->getMessage());
+    }
 }
 
 

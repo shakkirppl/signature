@@ -683,6 +683,11 @@ Route::post('goodsout-order/{id}/request-delete', [SalesOrderController::class, 
 Route::post('sales-payment/request-delete/{id}', [SalesPaymentController::class, 'requestDelete'])->name('sales_payment.request_delete');
 Route::get('sales-payment/pending-delete', [SalesPaymentController::class, 'pendingDelete'])->name('sales_payment.pending_delete');
 
+Route::get('/packinglist/pending-delete', [PackingListController::class, 'pendingDelete'])->name('packinglist.pendingDelete');
+Route::post('/packinglist/{id}/request-delete', [PackingListController::class, 'requestDelete'])->name('packinglist.requestDelete');
+
+
+
 
 
 

@@ -63,6 +63,13 @@
                                             <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
                                         </form>
                                         @endif
+                                      @if($user->designation_id == 3 && $packing->delete_status == 0)
+                                     <form action="{{ route('packinglist.requestDelete', $packing->id) }}" method="POST" style="display:inline;">
+                                      @csrf
+                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to request deletion?')">Request Delete</button>
+                                     </form>
+                                      @endif
+
                                     </td>
                                 </tr>
                                 @endforeach
