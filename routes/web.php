@@ -716,11 +716,17 @@ Route::get('/skinning/delete-requests', [SkinningController::class, 'pendingDele
 // For accountant
 Route::get('paymentvoucher/editrequest/{id}', [PaymentVoucherController::class, 'editRequest'])->name('paymentvoucher.editrequest');
 Route::post('paymentvoucher/editrequest/{id}', [PaymentVoucherController::class, 'submitEditRequest'])->name('paymentvoucher.submitEditRequest');
-
 // For admin
 Route::get('paymentvoucher/editrequests/pending', [PaymentVoucherController::class, 'pendingEditRequests'])->name('paymentvoucher.editrequests.pending');
 Route::post('paymentvoucher/approveedit/{id}', [PaymentVoucherController::class, 'approveEdit'])->name('paymentvoucher.approveEdit');
 Route::post('/paymentvoucher/reject-edit/{id}', [PaymentVoucherController::class, 'rejectEditRequest'])->name('paymentvoucher.rejectEditRequest');
+
+Route::post('expensevoucher/{id}/approve-edit', [ExpenseVoucherController::class, 'approveEditRequest'])->name('expensevoucher.approveEditRequest');
+Route::post('expensevoucher/{id}/reject-edit', [ExpenseVoucherController::class, 'rejectEditRequest'])->name('expensevoucher.rejectEditRequest');
+Route::get('expensevoucher/pending-edit-requests', [ExpenseVoucherController::class, 'pendingEditRequests'])->name('expensevoucher.pendingEditRequests');
+Route::get('/expensevoucher/{id}/edit-request', [ExpenseVoucherController::class, 'editRequest'])->name('expensevoucher.editRequest');
+Route::post('/expensevoucher/{id}/send-edit-request', [ExpenseVoucherController::class, 'sendEditRequest'])->name('expensevoucher.sendEditRequest');
+
 
 
 

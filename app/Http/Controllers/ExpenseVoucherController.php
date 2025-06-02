@@ -240,5 +240,105 @@ public function approveDelete($id)
     }
 }
 
+public function editRequest($id)
+{
+             $voucher = ExpenseVoucher::findOrFail($id);
+                     $banks = BankMaster::all(); 
+                     $shipments = Shipment::where('shipment_status', 0)->get();
+                     $coa = AccountHead::whereIn('parent_id', function ($query) {
+                        $query->select('id')
+                              ->from('account_heads')
+                              ->whereIn('name', ['Expenses']);
+                    })->get();
+
+    return view('expense-voucher.edit-request', compact('voucher', 'coa', 'banks', 'shipments'));
+}
+
+public function sendEditRequest(Request $request, $id)
+{
+    $voucher = ExpenseVoucher::findOrFail($id);
+
+    // Validate the request inputs
+    $validated = $request->validate([
+        'date' => 'required|date',
+        'coa_id' => 'required|exists:account_heads,id',
+        'type' => 'required|string',
+        'amount' => 'required|numeric',
+        'description' => 'nullable|string',
+        'bank_id' => 'nullable|exists:bank_master,id',
+        'shipment_id' => 'nullable|exists:shipment,id',
+        'currency' => 'required|string',
+    ]);
+
+    // Store the edited data as JSON in edit_request_data field
+    $voucher->edit_request_data = json_encode([
+        'date' => $request->date,
+        'coa_id' => $request->coa_id,
+        'type' => $request->type,
+        'amount' => (float) str_replace(',', '', $request->amount),
+        'description' => $request->description,
+        'bank_id' => $request->type === 'bank' ? $request->bank_id : null,
+        'shipment_id' => $request->shipment_id,
+        'currency' => $request->currency,
+    ]);
+
+    // Set edit status to 'pending' to indicate an edit request is awaiting approval
+    $voucher->edit_status = 'pending';
+    $voucher->save();
+
+    return redirect()->route('expensevoucher.index')->with('success', 'Edit request sent successfully and is pending approval.');
+}
+
+
+public function pendingEditRequests()
+{
+    $pendingVouchers = ExpenseVoucher::where('edit_status', 'pending')->get();
+    return view('expense-voucher.pending-edit-request', compact('pendingVouchers'));
+}
+
+public function approveEditRequest($id)
+{
+    $voucher = ExpenseVoucher::findOrFail($id);
+
+    if ($voucher->edit_status !== 'pending') {
+        return back()->withErrors('No pending edit request found.');
+    }
+
+    // Decode JSON string into array
+    $data = json_decode($voucher->edit_request_data, true);
+
+    if (is_array($data)) {
+        foreach ($data as $field => $value) {
+            $voucher->$field = $value;
+        }
+    } else {
+        return back()->withErrors('Invalid edit request data.');
+    }
+
+    $voucher->edit_status = 'approved';
+    $voucher->edit_request_data = null;
+    $voucher->save();
+
+    return redirect()->back()->with('success', 'Edit request approved and changes saved.');
+}
+
+
+public function rejectEditRequest($id)
+{
+    $voucher = ExpenseVoucher::findOrFail($id);
+
+    if ($voucher->edit_status !== 'pending') {
+        return back()->withErrors('No pending edit request found.');
+    }
+
+    $voucher->edit_status = 'rejected';
+    $voucher->edit_request_data = null;
+    $voucher->save();
+
+    return redirect()->back()->with('success', 'Edit request rejected.');
+}
+
+
+
 
 }

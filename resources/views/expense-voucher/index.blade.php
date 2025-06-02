@@ -72,6 +72,12 @@
                         <i class="mdi mdi-delete"></i> Delete
                       </a>
                     @endif
+                    @if ($user->designation_id == 3 && $voucher->edit_status === 'none')
+    <a href="{{ route('expensevoucher.editRequest', $voucher->id) }}" class="btn btn-primary btn-sm">
+        Request Edit
+    </a>
+@endif
+
                      @if($user->designation_id == 3 && $voucher->status != 3)
     <form method="POST" action="{{ route('expensevoucher.requestDelete', $voucher->id) }}" style="display:inline;">
       @csrf
