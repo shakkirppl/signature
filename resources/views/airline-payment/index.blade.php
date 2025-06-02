@@ -35,6 +35,7 @@
                                     <th>Air waybill Charge</th>
                                     <th>Documents Charge</th>
                                     <th>Amount</th>
+                                    <!-- <th>Currency</th> -->
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -52,6 +53,7 @@
                                         <td>{{ $payment->air_waybill_charge }}</td>
                                         <td>{{ $payment->documents_charge }}</td>
                                         <td>{{ number_format($payment->amount, 2) }}</td>
+                                        <!-- <td>{{ $payment->currency }}</td> -->
                                         <td>
                                         @if($user->designation_id == 1)
                                             <a href="{{ route('airline.edit', $payment->id) }}" class="btn btn-warning btn-sm">

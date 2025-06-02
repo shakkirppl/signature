@@ -40,6 +40,7 @@
                   <th>Amount</th>
                   <th>Type</th>
                   <th>Bank</th>
+                  <th>Currency</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -60,6 +61,7 @@
                                         N/A
                                      @endif
                     </td>
+                    <td>{{ $voucher->currency }}</td>
                     <td>
                     @if($user->designation_id == 1)
                         <a href="{{ route('paymentvoucher.edit', $voucher->id) }}" class="btn btn-warning btn-sm">Edit</a>
@@ -69,12 +71,17 @@
                                                     <i class="mdi mdi-delete"></i> Delete
                                             </a>
                        @endif
-                         @if($user->designation_id == 3)
-    <form action="{{ route('paymentvoucher.softdelete', $voucher->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to request deletion of this voucher?');">
-        @csrf
-        <button type="submit" class="btn btn-danger btn-sm delete-btn">Request Delete</button>
-    </form>
-@endif                  
+                     @if($user->designation_id == 3  && $voucher->edit_status == 'none')
+                         <div class="d-flex align-items-center gap-1">
+                         <a href="{{ route('paymentvoucher.editrequest', $voucher->id) }}" class="btn btn-primary btn-sm " >Edit Request</a>
+                           @endif
+                          @if($user->designation_id == 3  )
+                        <form action="{{ route('paymentvoucher.softdelete', $voucher->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to request deletion of this voucher?');">
+                        @csrf
+                       <button type="submit" class="btn btn-danger btn-sm delete-btn">Request Delete</button>
+                      </form>
+                      @endif   
+                      </div>               
                     </td>
 
                  

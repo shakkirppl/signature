@@ -246,4 +246,118 @@ public function viewMarkedForDeletion()
 
 
 
+public function editRequest($id)
+{
+    $voucher = paymentVoucher::findOrFail($id);
+    $coas = AccountHead::all();
+    $employees = Employee::all();
+    $banks = BankMaster::all();
+
+    return view('paymentvoucher.edit-request', compact('voucher', 'coas', 'employees', 'banks'));
+}
+
+public function submitEditRequest(Request $request, $id)
+{
+    $voucher = paymentVoucher::findOrFail($id);
+
+    // Validate only requested fields
+    $data = $request->validate([
+        'date' => 'required|date',
+        'coa_id' => 'required|exists:account_heads,id',
+        'type' => 'required|string',
+        'amount' => 'required',
+        'bank_id' => 'nullable|exists:bank_master,id',
+        'employee_id' => 'required|exists:employee,id',
+        'currency' => 'required',
+        'description' => 'nullable|string',
+    ]);
+
+    $voucher->edit_request_data = json_encode($data);
+    $voucher->edit_status = 'pending';
+    $voucher->save();
+
+    return redirect()->route('paymentvoucher.index')->with('success', 'Edit request submitted successfully!');
+}
+
+
+// public function pendingEditRequests()
+// {
+//     $pendingRequests = paymentVoucher::where('edit_status', 'pending')->get();
+//  return view('paymentvoucher.pending-edit-request', compact('pendingRequests'));}
+public function pendingEditRequests()
+{
+    $vouchers = paymentVoucher::where('edit_status', 'pending')->get();
+
+    foreach ($vouchers as $voucher) {
+        $requestedData = json_decode($voucher->edit_request_data, true);
+        $changedFields = [];
+
+        if (!$requestedData) continue;
+
+        foreach ($requestedData as $field => $newValue) {
+            $originalValue = $voucher->$field;
+
+            // Convert amounts to float for accurate comparison
+            if (in_array($field, ['amount'])) {
+                $originalValue = (float) $originalValue;
+                $newValue = (float) $newValue;
+            }
+
+            // Skip if no change
+            if ($originalValue != $newValue) {
+                $changedFields[$field] = [
+                    'original' => $originalValue,
+                    'requested' => $newValue,
+                ];
+            }
+        }
+
+        $voucher->changed_fields = $changedFields;
+    }
+
+    return view('paymentvoucher.pending-edit-request', compact('vouchers'));
+}
+
+
+
+public function approveEdit($id)
+{
+    $voucher = paymentVoucher::findOrFail($id);
+
+    if ($voucher->edit_status !== 'pending' || !$voucher->edit_request_data) {
+        return redirect()->back()->withErrors(['error' => 'No pending edit request found.']);
+    }
+
+    $editData = json_decode($voucher->edit_request_data, true);
+
+    // Apply the changes
+    $voucher->fill($editData);
+    $voucher->edit_status = 'approved';
+    $voucher->edit_request_data = null;
+    $voucher->save();
+
+    return redirect()->route('paymentvoucher.index')->with('success', 'Edit request approved and data updated.');
+}
+
+public function rejectEditRequest($id)
+{
+    try {
+        $voucher = paymentVoucher::findOrFail($id);
+
+        // Only process if it’s in pending status
+        if ($voucher->edit_status === 'pending') {
+            $voucher->edit_status = 'rejected';
+            $voucher->edit_request_data = null;
+            $voucher->save();
+        }
+
+        return redirect()->back()->with('success', 'Edit request rejected successfully.');
+    } catch (\Exception $e) {
+        \Log::error('Reject edit request error: ' . $e->getMessage());
+        return redirect()->back()->withErrors(['error' => 'Failed to reject the edit request.']);
+    }
+}
+
+
+
 }

@@ -366,6 +366,40 @@
             </div>
           </li> 
 @endif
+  @if($user->designation_id == 1 )
+ 
+<li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#edit-request" aria-expanded="false" aria-controls="charts">
+            <i class="mdi mdi-group menu-icon"></i> 
+              <span class="menu-title">Edit Requests </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="edit-request">
+              <ul class="nav flex-column sub-menu">
+               
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher/editrequests/pending')}}">PaymentVoucher</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Airline Payment</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Return Amount</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Advance</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Final Payment</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Expense Voucher</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Receipt Voucher</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Payment</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Customer Payment</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales Order</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Packing List </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Purchase Order </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Skinning </a></li>
+                
+                
+
+                
+              </ul>
+            </div>
+          </li> 
+@endif
 
         </ul>
       </nav>

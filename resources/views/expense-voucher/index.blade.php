@@ -39,6 +39,7 @@
                   <th>Amount</th>
                   <th>Type</th>
                   <th>Bank</th>
+                  <th>Currency</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -61,6 +62,7 @@
                       N/A
                     @endif
                   </td>
+                  <td>{{ $voucher->currency }}</td>
                   <td>
                     @if($user->designation_id == 1)
                       <a href="{{ route('expensevoucher.edit', $voucher->id) }}" class="btn btn-warning btn-sm">Edit</a>

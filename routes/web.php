@@ -713,6 +713,17 @@ Route::post('/skinning/{id}/request-delete', [SkinningController::class, 'reques
 Route::get('/skinning/delete-requests', [SkinningController::class, 'pendingDeleteRequests'])->name('skinning.delete-requests');
 
 
+// For accountant
+Route::get('paymentvoucher/editrequest/{id}', [PaymentVoucherController::class, 'editRequest'])->name('paymentvoucher.editrequest');
+Route::post('paymentvoucher/editrequest/{id}', [PaymentVoucherController::class, 'submitEditRequest'])->name('paymentvoucher.submitEditRequest');
+
+// For admin
+Route::get('paymentvoucher/editrequests/pending', [PaymentVoucherController::class, 'pendingEditRequests'])->name('paymentvoucher.editrequests.pending');
+Route::post('paymentvoucher/approveedit/{id}', [PaymentVoucherController::class, 'approveEdit'])->name('paymentvoucher.approveEdit');
+Route::post('/paymentvoucher/reject-edit/{id}', [PaymentVoucherController::class, 'rejectEditRequest'])->name('paymentvoucher.rejectEditRequest');
+
+
+
 
 
 
