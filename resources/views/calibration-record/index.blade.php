@@ -73,11 +73,17 @@
                     @endif
                   </td>
                   <td>{{ $record->user->name ?? 'N/A' }}</td>
-                  <td>  <form action="{{ route('calibration-record.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                  <td> 
+                     <div class="d-flex align-items-center gap-1">
+                     <a href="{{ route('calibration-record.edit', $record->id) }}" class="btn btn-sm btn-warning">
+      Edit
+    </a> <form action="{{ route('calibration-record.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
     @csrf
     @method('DELETE')
     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-  </form></td>
+  </form>
+ </div>
+</td>
                 </tr>
                 @endforeach
               </tbody>

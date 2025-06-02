@@ -70,4 +70,44 @@ public function destroy($id)
 }
 
 
+public function edit($id)
+{
+    $record = InternalAuditChecklist::findOrFail($id);
+    return view('internal-auditchecklist.edit', compact('record'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'audit_date' => 'required|date',
+        'area_audited' => 'required|string',
+        'auditor_name' => 'required|string',
+        'follow_up_date' => 'required|date',
+    ]);
+
+    $record = InternalAuditChecklist::findOrFail($id);
+    $fileName = $record->auditor_signature;
+
+    if ($request->auditor_signature && Str::startsWith($request->auditor_signature, 'data:image')) {
+        $base64Image = str_replace('data:image/png;base64,', '', $request->auditor_signature);
+        $base64Image = str_replace(' ', '+', $base64Image);
+        $imageData = base64_decode($base64Image);
+        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+
+        Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+    }
+
+    $record->update([
+        'audit_date' => $request->audit_date,
+        'area_audited' => $request->area_audited,
+        'auditor_name' => $request->auditor_name,
+        'non_conformities_found' => $request->non_conformities_found,
+        'corrective_actions_needed' => $request->corrective_actions_needed,
+        'follow_up_date' => $request->follow_up_date,
+        'auditor_signature' => $fileName,
+    ]);
+
+    return redirect()->route('internal-auditchecklist.index')->with('success', 'Record updated successfully.');
+}
+
 }

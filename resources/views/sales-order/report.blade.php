@@ -47,7 +47,7 @@
                                 <tr>
                                     <td>{{ $salesOrder->order_no }}</td>
                                     <td>{{ $salesOrder->date }}</td>
-                                    <td>{{ $salesOrder->customer->customer_name }}</td>
+                                    <td>{{ $salesOrder->customer->customer_name ?? 'N/A'}}</td>
                                     <td>{{ number_format($salesOrder->grand_total, 2) }}</td>
                                     <td>
                                     <a href="{{ route('goodsout-order.view', $salesOrder->id) }}" class="btn btn-warning">View</a>

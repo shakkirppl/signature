@@ -44,6 +44,34 @@ class GMPController extends Controller
 
     return redirect()->route('gmp.index')->with('success', 'GMP Checklist submitted successfully.');
 }
+public function edit($id)
+{
+    $record = GmpChecklist::findOrFail($id);
+    return view('gmp-dailychecklist.edit', compact('record'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'date' => 'required|date',
+        'facility_cleanliness' => 'required|string',
+        'pest_control' => 'required|string',
+        'personal_hygiene' => 'nullable|string',
+        'equipment_sanitation' => 'required|string',
+    ]);
+
+    $record = GmpChecklist::findOrFail($id);
+    $record->update([
+        'date' => $request->date,
+        'facility_cleanliness' => $request->facility_cleanliness,
+        'pest_control' => $request->pest_control,
+        'personal_hygiene' => $request->personal_hygiene,
+        'equipment_sanitation' => $request->equipment_sanitation,
+    ]);
+
+    return redirect()->route('gmp.index')->with('success', 'GMP Checklist updated successfully.');
+}
+
 
 public function destroy($id)
 {

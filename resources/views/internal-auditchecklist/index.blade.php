@@ -74,11 +74,18 @@
                     @endif
                   </td>
                   <td>{{ $record->user->name ?? 'N/A' }}</td>
-                  <td>  <form action="{{ route('internal-auditchecklist.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
+                  <td> 
+                    <div class="d-flex align-items-center gap-1">
+                     <a href="{{ route('internal-auditchecklist.edit', $record->id) }}" class="btn btn-sm btn-warning">
+                    <i class="mdi mdi-pencil"></i> Edit
+                </a>
+                 <form action="{{ route('internal-auditchecklist.destroy', $record->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this record?');">
     @csrf
     @method('DELETE')
     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-  </form></td>
+  </form>
+</div>
+</td>
                 </tr>
                 @endforeach
               </tbody>

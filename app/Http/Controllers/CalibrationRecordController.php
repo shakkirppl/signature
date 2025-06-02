@@ -23,6 +23,7 @@ class CalibrationRecordController extends Controller
         return view('calibration-record.create');
     }
 
+
     public function store(Request $request)
 {
     $request->validate([
@@ -64,6 +65,53 @@ if ($request->signature) {
 
     return redirect()->route('calibration-record.index')->with('success', 'Record created successfully.');
 }
+
+public function edit($id)
+{
+    $record = CalibrationRecord::findOrFail($id);
+    return view('calibration-record.edit', compact('record'));
+}
+
+public function update(Request $request, $id)
+{
+    $record = CalibrationRecord::findOrFail($id);
+
+    $request->validate([
+        'date' => 'required|date',
+        'equipment_name' => 'required|string|max:255',
+        'standard_used' => 'required|string|max:255',
+        'calibration_result' => 'required|string',
+        'next_calibration_due' => 'required|date',
+        'technician_name' => 'required|string|max:255',
+        'signature' => 'nullable|string',
+    ]);
+
+    $fileName = $record->signature;
+
+    if ($request->filled('signature')) {
+        // New signature submitted
+        $base64Image = str_replace('data:image/png;base64,', '', $request->signature);
+        $base64Image = str_replace(' ', '+', $base64Image);
+        $imageData = base64_decode($base64Image);
+
+        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+        Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+    }
+
+    $record->update([
+        'date' => $request->date,
+        'equipment_name' => $request->equipment_name,
+        'standard_used' => $request->standard_used,
+        'calibration_result' => $request->calibration_result,
+        'next_calibration_due' => $request->next_calibration_due,
+        'technician_name' => $request->technician_name,
+        'signature' => $fileName,
+    ]);
+
+    return redirect()->route('calibration-record.index')->with('success', 'Record updated successfully.');
+}
+
+
 
 public function destroy($id)
 {

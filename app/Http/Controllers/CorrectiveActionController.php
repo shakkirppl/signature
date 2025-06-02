@@ -21,6 +21,7 @@ class CorrectiveActionController extends Controller
         return view('corrective-action.create');
     }
 
+
     public function store(Request $request)
 {
     $request->validate([
@@ -75,5 +76,55 @@ public function destroy($id)
     $record = CorrectiveAction::findOrFail($id);
     $record->delete();
  return redirect()->route('corrective-action.index')->with('success', 'Record deleted successfully.');
+}  
+
+
+public function edit($id)
+{
+    $record = CorrectiveAction::findOrFail($id);
+    return view('corrective-action.edit', compact('record'));
 }
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'date' => 'required|date',
+        'non_conformity' => 'required|string',
+        'action_taken' => 'required|string',
+        'responsible_person' => 'required|string',
+        'department' => 'nullable|string',
+        'root_cause' => 'required|string',
+        'date_of_completion' => 'required|date',
+        'verified_by' => 'required|string',
+        'signature' => 'nullable|string', // optional in update
+    ]);
+
+    $record = CorrectiveAction::findOrFail($id);
+
+    // Handle signature update
+    if ($request->signature) {
+        $base64Image = str_replace('data:image/png;base64,', '', $request->signature);
+        $base64Image = str_replace(' ', '+', $base64Image);
+        $imageData = base64_decode($base64Image);
+        $fileName = 'corrective_signature_' . time() . '_' . Str::random(10) . '.png';
+        Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+        $record->signature = $fileName;
+    }
+
+    // Update fields
+    $record->update([
+        'date' => $request->date,
+        'non_conformity' => $request->non_conformity,
+        'action_taken' => $request->action_taken,
+        'responsible_person' => $request->responsible_person,
+        'department' => $request->department,
+        'root_cause' => $request->root_cause,
+        'date_of_completion' => $request->date_of_completion,
+        'verified_by' => $request->verified_by,
+        'signature' => $record->signature, // keep existing if not replaced
+    ]);
+
+    return redirect()->route('corrective-action.index')->with('success', 'Corrective Action updated successfully!');
+}
+
 }

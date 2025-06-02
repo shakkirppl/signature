@@ -68,6 +68,51 @@ if ($request->inspector_signature) {
     return redirect()->route('temperature-monitoring.index')->with('success', 'Record saved successfully!');
 }
 
+public function edit($id)
+{
+    $record = TemperatureMonitoringRecord::findOrFail($id);
+    return view('temperature-monitoring.edit', compact('record'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'date' => 'required|date',
+        'time' => 'required',
+        'temp_before' => 'required',
+        'temp_after' => 'required',
+        'average_carcass' => 'required',
+        'inspector_name' => 'required',
+    ]);
+
+    $record = TemperatureMonitoringRecord::findOrFail($id);
+
+    $fileName = $record->inspector_signature;
+
+    if ($request->inspector_signature) {
+        $base64Image = str_replace('data:image/png;base64,', '', $request->inspector_signature);
+        $base64Image = str_replace(' ', '+', $base64Image);
+        $imageData = base64_decode($base64Image);
+
+        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+        Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+    }
+
+    $record->update([
+        'date' => $request->date,
+        'time' => $request->time,
+        'temp_before' => $request->temp_before,
+        'temp_after' => $request->temp_after,
+        'slaughter_area' => $request->slaughter_area,
+        'average_carcass' => $request->average_carcass,
+        'inspector_name' => $request->inspector_name,
+        'inspector_signature' => $fileName,
+    ]);
+
+    return redirect()->route('temperature-monitoring.index')->with('success', 'Record updated successfully!');
+}
+
+
 public function destroy($id)
 {
     $record = TemperatureMonitoringRecord::findOrFail($id);

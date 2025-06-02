@@ -68,6 +68,49 @@ if ($request->manager_signature) {
     return redirect()->route('customer-complaint.index')->with('success', 'Customer complaint submitted successfully!');
 }
 
+public function edit($id)
+{
+    $record = CustomerComplaint::findOrFail($id);
+    return view('customer-complaint.edit', compact('record'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'date_received' => 'required|date',
+        'customer_name' => 'required|string',
+        'complaint_details' => 'required|string',
+        'investigation_findings' => 'required|string',
+        'corrective_action' => 'required|string',
+        'responsible_person' => 'required|string',
+        'date_closed' => 'required|date',
+    ]);
+
+    $record = CustomerComplaint::findOrFail($id);
+    $fileName = $record->manager_signature;
+
+    if ($request->manager_signature && Str::startsWith($request->manager_signature, 'data:image')) {
+        $base64Image = str_replace('data:image/png;base64,', '', $request->manager_signature);
+        $base64Image = str_replace(' ', '+', $base64Image);
+        $imageData = base64_decode($base64Image);
+        $fileName = 'signature_' . time() . '_' . Str::random(10) . '.png';
+        Storage::disk('public')->put('signatures/' . $fileName, $imageData);
+    }
+
+    $record->update([
+        'date_received' => $request->date_received,
+        'customer_name' => $request->customer_name,
+        'complaint_details' => $request->complaint_details,
+        'investigation_findings' => $request->investigation_findings,
+        'corrective_action' => $request->corrective_action,
+        'responsible_person' => $request->responsible_person,
+        'date_closed' => $request->date_closed,
+        'manager_signature' => $fileName,
+    ]);
+
+    return redirect()->route('customer-complaint.index')->with('success', 'Customer complaint updated successfully!');
+}
+
 public function destroy($id)
 {
     $record = CustomerComplaint::findOrFail($id);
