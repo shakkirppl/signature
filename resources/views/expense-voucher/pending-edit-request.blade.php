@@ -13,6 +13,9 @@
 
 <div class="container">
   <h3>Pending Edit Requests</h3>
+   @if($pendingVouchers->isEmpty())
+                        <p>No edit requests pending.</p>
+                    @else
   @foreach($pendingVouchers as $voucher)
   <div class="border p-3 mb-4">
     <h5>Voucher Code: {{ $voucher->code }}</h5>
@@ -65,6 +68,7 @@
     </form>
 <br><br>
   @endforeach
+     @endif
 </div>
 </div>
 @endsection
