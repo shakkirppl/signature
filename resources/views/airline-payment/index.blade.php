@@ -55,6 +55,7 @@
                                         <td>{{ number_format($payment->amount, 2) }}</td>
                                         <!-- <td>{{ $payment->currency }}</td> -->
                                         <td>
+                                            <div class="d-flex align-items-center gap-1">
                                         @if($user->designation_id == 1)
                                             <a href="{{ route('airline.edit', $payment->id) }}" class="btn btn-warning btn-sm">
                                                 <i class="mdi mdi-pencil"></i> Edit
@@ -67,12 +68,18 @@
                                                 </button>
                                             </form>
                                             @endif
+                                          @if ($user->designation_id == 3 && $payment->edit_status === 'none')
+                                          <a href="{{ route('airline.editRequest', $payment->id) }}" class="btn btn-primary btn-sm">
+                                         Request Edit
+                                         </a>
+                                        @endif
                                             @if(Auth::user()->designation_id == 3)
 <form action="{{ route('airline.softdelete', $payment->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to request deletion of this payment?');">
     @csrf
     <button type="submit" class="btn btn-danger btn-sm">Request Delete</button>
 </form>
 @endif
+</div>
                                         </td>
                                         </tr> 
                                 @endforeach

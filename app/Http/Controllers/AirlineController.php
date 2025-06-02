@@ -221,5 +221,141 @@ public function adminDestroy($id)
 }
 
 
+// Show edit request form for accountant (designation_id == 3)
+public function editRequest($id)
+{
+     $user = auth()->user();
+    if ($user->designation_id != 3) {
+        return redirect()->back()->withErrors(['error' => 'Unauthorized']);
+    }
+  $airline = Airline::findOrFail($id);
+                     $shipments = Shipment::where('shipment_status', 0)->get(); 
+                     $customers = Customer::all();
+                     $airlinesParent = AccountHead::where('name', 'AIRLINES')->first();
+                     $agentsParent = AccountHead::where('name', 'AIRLINES AGENT')->first();
+                 
+                     // Fetch subcategories (child accounts) under "AIRLINES" and "AIRLINES AGENT"
+                     $airlinesCOA = $airlinesParent ? AccountHead::where('parent_id', $airlinesParent->id)->get() : [];
+                     $agentsCOA = $agentsParent ? AccountHead::where('parent_id', $agentsParent->id)->get() : [];
+
+    return view('airline-payment.edit-request', compact('airlinesCOA', 'shipments', 'customers', 'agentsCOA','airline'));
+}
+
+public function submitEditRequest(Request $request, $id)
+{
+    $user = auth()->user();
+    if ($user->designation_id != 3) {
+        return redirect()->back()->withErrors(['error' => 'Unauthorized']);
+    }
+
+    $payment = Airline::findOrFail($id);
+
+    $data = $request->validate([
+        'code' => 'required|string',
+        'date' => 'required|date',
+        'airline_name' => 'required|string',
+        'airline_number' => 'required|string',
+        'shipment_id' => 'required|exists:shipment,id',
+        'customer_id' => 'required|exists:customer,id',
+        'coa_id' => 'required|exists:account_heads,id',
+        'air_waybill_no' => 'nullable|string',
+        'air_waybill_charge' => 'nullable|numeric',
+        'documents_charge' => 'nullable|numeric',
+        'amount' => 'required|numeric',
+        'description' => 'nullable|string',
+        'total_weight' => 'nullable|numeric',
+    ]);
+
+    $payment->edit_request_data = json_encode($data);
+    $payment->edit_status = 'pending';
+    $payment->save();
+
+    return redirect()->route('airline.index')->with('success', 'Edit request submitted successfully!');
+}
+
+
+public function pendingEditRequests()
+{
+    $user = auth()->user();
+    if ($user->designation_id != 1) {
+        return redirect()->back()->withErrors(['error' => 'Unauthorized']);
+    }
+
+    $payments = Airline::where('edit_status', 'pending')->get();
+
+    foreach ($payments as $payment) {
+        $requestedData = json_decode($payment->edit_request_data, true);
+        $changedFields = [];
+
+        if (!$requestedData) continue;
+
+        foreach ($requestedData as $field => $newValue) {
+            $originalValue = $payment->$field;
+
+            if (in_array($field, ['air_waybill_charge', 'documents_charge', 'amount', 'total_weight'])) {
+                $originalValue = (float) $originalValue;
+                $newValue = (float) $newValue;
+            }
+
+            if ($originalValue != $newValue) {
+                $changedFields[$field] = [
+                    'original' => $originalValue,
+                    'requested' => $newValue,
+                ];
+            }
+        }
+
+        $payment->changed_fields = $changedFields;
+    }
+
+    return view('airline-payment.pending-edit-request', compact('payments'));
+}
+
+
+// Approve the edit request
+public function approveEdit($id)
+{
+    $user = auth()->user();
+    if ($user->designation_id != 1) {
+        return redirect()->back()->withErrors(['error' => 'Unauthorized']);
+    }
+
+    $payment = Airline::findOrFail($id);
+
+    if ($payment->edit_status !== 'pending' || !$payment->edit_request_data) {
+        return redirect()->back()->withErrors(['error' => 'No pending edit request found.']);
+    }
+
+    $editData = json_decode($payment->edit_request_data, true);
+
+    $payment->fill($editData);
+    $payment->edit_status = 'approved';
+    $payment->edit_request_data = null;
+    $payment->save();
+
+    return redirect()->route('airline.index')->with('success', 'Edit request approved and data updated.');
+}
+
+public function rejectEditRequest($id)
+{
+    $user = auth()->user();
+    if ($user->designation_id != 1) {
+        return redirect()->back()->withErrors(['error' => 'Unauthorized']);
+    }
+
+    $payment = Airline::findOrFail($id);
+
+    if ($payment->edit_status === 'pending') {
+        $payment->edit_status = 'rejected';
+        $payment->edit_request_data = null;
+        $payment->save();
+    }
+
+    return redirect()->back()->with('success', 'Edit request rejected successfully.');
+}
+
+
+
+
 
 }

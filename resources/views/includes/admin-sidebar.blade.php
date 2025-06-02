@@ -379,7 +379,7 @@
                
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher/editrequests/pending')}}">PaymentVoucher</a></li> 
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Airline Payment</a></li> 
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('airline/pending-edit-requests')}}">Airline Payment</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Return Amount</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Advance</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Final Payment</a></li> 

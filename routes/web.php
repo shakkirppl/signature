@@ -727,6 +727,15 @@ Route::get('expensevoucher/pending-edit-requests', [ExpenseVoucherController::cl
 Route::get('/expensevoucher/{id}/edit-request', [ExpenseVoucherController::class, 'editRequest'])->name('expensevoucher.editRequest');
 Route::post('/expensevoucher/{id}/send-edit-request', [ExpenseVoucherController::class, 'sendEditRequest'])->name('expensevoucher.sendEditRequest');
 
+Route::get('airline/{id}/edit-request', [AirlineController::class, 'editRequest'])->name('airline.editRequest');
+Route::post('airline/{id}/submit-edit-request', [AirlineController::class, 'submitEditRequest'])->name('airline.submitEditRequest');
+
+Route::get('airline/pending-edit-requests', [AirlineController::class, 'pendingEditRequests'])->name('airline.pendingEditRequests');
+Route::post('airline/{id}/approve-edit', [AirlineController::class, 'approveEdit'])->name('airline.approveEdit');
+Route::post('airline/{id}/reject-edit', [AirlineController::class, 'rejectEditRequest'])->name('airline.rejectEdit');
+
+
+
 
 
 
