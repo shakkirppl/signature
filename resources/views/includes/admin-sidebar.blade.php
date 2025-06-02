@@ -384,7 +384,7 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Advance</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Final Payment</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('expensevoucher/pending-edit-requests')}}">Expense Voucher</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Receipt Voucher</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('receiptvoucher/pending-edit-requests')}}">Receipt Voucher</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Customer Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales Order</a></li>

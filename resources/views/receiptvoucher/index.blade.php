@@ -52,6 +52,7 @@
                     </td>
                     <td>{{ $voucher->currency }}</td>
                     <td>
+                      <div class="d-flex align-items-center gap-1">
                     @if($user->designation_id == 1)
                         <a href="{{ route('receiptvoucher.edit', $voucher->id) }}" class="btn btn-warning btn-sm">Edit</a>
                         <a href="{{ route('receiptvoucher.destroy', $voucher->id) }}" 
@@ -60,6 +61,9 @@
                                                     <i class="mdi mdi-delete"></i> Delete
                                             </a>
                                             @endif
+                                            @if($user->designation_id == 3 && $voucher->edit_status == 'none')
+    <a href="{{ route('receiptvoucher.editRequest', $voucher->id) }}" class="btn btn-warning btn-sm">Request Edit</a>
+@endif
                                               @if($user->designation_id == 3 && $voucher->delete_status == 0)
         <form method="POST" action="{{ route('receiptvoucher.requestDelete', $voucher->id) }}">
             @csrf
@@ -68,6 +72,7 @@
             </button>
         </form>
     @endif
+    </div>
                                            
                     </td>
                  
