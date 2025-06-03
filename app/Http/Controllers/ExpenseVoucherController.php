@@ -11,6 +11,7 @@ use App\Models\Localcustomer;
 use App\Models\Shipment;
 use App\Models\AccountHead;
 use App\Models\AccountTransactions;
+use App\Models\ActionHistory;
 
 class ExpenseVoucherController extends Controller
 {
@@ -107,7 +108,6 @@ public function index(Request $request)
                             'currency' => 'required',
                          ]);
                  
-                         // Create a new payment voucher instance
                          $voucher = new ExpenseVoucher();
                          $voucher->code = $request->code; 
                          $voucher->date = $request->date;
@@ -209,6 +209,13 @@ public function requestDelete($id)
         if (Auth::user()->designation_id == 3) {
             $voucher->status = 3; // pending delete
             $voucher->save();
+               ActionHistory::create([
+    'page_name'   => 'Expense Voucher',
+    'record_id' => $voucher->id . '-' . $voucher->code,
+    'action_type' => 'delete_requested',
+    'user_id'     => Auth::id(),
+    'changes'     => null,
+]);
             return back()->with('success', 'Delete request sent for approval.');
         } else {
             return back()->withErrors(['error' => 'Unauthorized action.']);
@@ -230,7 +237,15 @@ public function approveDelete($id)
     try {
         if (Auth::user()->designation_id == 1) {
             $voucher = ExpenseVoucher::findOrFail($id);
-            $voucher->delete(); // Final delete
+            $voucher->delete(); 
+                ActionHistory::create([
+    'page_name'   => 'Expense Voucher',
+    'record_id' => $voucher->id . '-' . $voucher->code,
+    'action_type' => 'delete_approved',
+    'user_id'     => Auth::id(),
+    'changes'     => null,
+]);
+            // Final delete
             return back()->with('success', 'Expense voucher deleted successfully.');
         }
         return back()->withErrors(['error' => 'Unauthorized action.']);
@@ -258,7 +273,6 @@ public function sendEditRequest(Request $request, $id)
 {
     $voucher = ExpenseVoucher::findOrFail($id);
 
-    // Validate the request inputs
     $validated = $request->validate([
         'date' => 'required|date',
         'coa_id' => 'required|exists:account_heads,id',
@@ -270,8 +284,7 @@ public function sendEditRequest(Request $request, $id)
         'currency' => 'required|string',
     ]);
 
-    // Store the edited data as JSON in edit_request_data field
-    $voucher->edit_request_data = json_encode([
+    $data = [
         'date' => $request->date,
         'coa_id' => $request->coa_id,
         'type' => $request->type,
@@ -280,14 +293,36 @@ public function sendEditRequest(Request $request, $id)
         'bank_id' => $request->type === 'bank' ? $request->bank_id : null,
         'shipment_id' => $request->shipment_id,
         'currency' => $request->currency,
-    ]);
+    ];
 
-    // Set edit status to 'pending' to indicate an edit request is awaiting approval
+    $voucher->edit_request_data = json_encode($data);
     $voucher->edit_status = 'pending';
     $voucher->save();
 
+    // Create diff with old/new structure
+    $changes = [];
+    foreach ($data as $field => $newValue) {
+        $oldValue = $voucher->getOriginal($field);
+        if ($oldValue != $newValue) {
+            $changes[$field] = [
+                'old' => $oldValue,
+                'new' => $newValue,
+            ];
+        }
+    }
+
+    ActionHistory::create([
+        'page_name'   => 'Expense Voucher',
+        'record_id'   => $voucher->id . '-' . $voucher->code,
+        'action_type' => 'edit_requested',
+        'user_id'     => Auth::id(),
+        'changes'     => !empty($changes) ? json_encode($changes) : null,
+    ]);
+
     return redirect()->route('expensevoucher.index')->with('success', 'Edit request sent successfully and is pending approval.');
 }
+
+
 
 
 public function pendingEditRequests()
@@ -300,16 +335,24 @@ public function approveEditRequest($id)
 {
     $voucher = ExpenseVoucher::findOrFail($id);
 
-    if ($voucher->edit_status !== 'pending') {
+    if ($voucher->edit_status !== 'pending' || !$voucher->edit_request_data) {
         return back()->withErrors('No pending edit request found.');
     }
 
-    // Decode JSON string into array
-    $data = json_decode($voucher->edit_request_data, true);
+    $editData = json_decode($voucher->edit_request_data, true);
 
-    if (is_array($data)) {
-        foreach ($data as $field => $value) {
-            $voucher->$field = $value;
+    $changes = [];
+
+    if (is_array($editData)) {
+        foreach ($editData as $field => $newValue) {
+            $oldValue = $voucher->getOriginal($field);
+            if ($oldValue != $newValue) {
+                $changes[$field] = [
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ];
+            }
+            $voucher->$field = $newValue;
         }
     } else {
         return back()->withErrors('Invalid edit request data.');
@@ -319,24 +362,58 @@ public function approveEditRequest($id)
     $voucher->edit_request_data = null;
     $voucher->save();
 
+    ActionHistory::create([
+        'page_name'   => 'Expense Voucher',
+        'record_id'   => $voucher->id . '-' . $voucher->code,
+        'action_type' => 'edit_approved',
+        'user_id'     => Auth::id(),
+        'changes'     => !empty($changes) ? json_encode($changes) : null,
+    ]);
+
     return redirect()->back()->with('success', 'Edit request approved and changes saved.');
 }
+
 
 
 public function rejectEditRequest($id)
 {
     $voucher = ExpenseVoucher::findOrFail($id);
 
-    if ($voucher->edit_status !== 'pending') {
+    if ($voucher->edit_status !== 'pending' || !$voucher->edit_request_data) {
         return back()->withErrors('No pending edit request found.');
+    }
+
+    $editData = json_decode($voucher->edit_request_data, true);
+
+    $changes = [];
+
+    if (is_array($editData)) {
+        foreach ($editData as $field => $newValue) {
+            $oldValue = $voucher->getOriginal($field);
+            if ($oldValue != $newValue) {
+                $changes[$field] = [
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ];
+            }
+        }
     }
 
     $voucher->edit_status = 'rejected';
     $voucher->edit_request_data = null;
     $voucher->save();
 
+    ActionHistory::create([
+        'page_name'   => 'Expense Voucher',
+        'record_id'   => $voucher->id . '-' . $voucher->code,
+        'action_type' => 'edit_rejected',
+        'user_id'     => Auth::id(),
+        'changes'     => !empty($changes) ? json_encode($changes) : null,
+    ]);
+
     return redirect()->back()->with('success', 'Edit request rejected.');
 }
+
 
 
 

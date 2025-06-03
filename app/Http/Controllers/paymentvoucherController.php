@@ -10,6 +10,7 @@ use App\Models\BankMaster;
 use App\Models\AccountHead;
 use App\Models\Employee;
 use App\Models\AccountTransactions;
+use App\Models\ActionHistory;
 
 
 class paymentvoucherController extends Controller
@@ -224,6 +225,14 @@ public function softDelete($id)
     $voucher = PaymentVoucher::findOrFail($id);
     $voucher->delete_status = 1;
     $voucher->save();
+    ActionHistory::create([
+    'page_name'   => 'Payment Voucher',
+    'record_id' => $voucher->id . '-' . $voucher->code,
+    'action_type' => 'delete_requested',
+    'user_id'     => Auth::id(),
+    'changes'     => null,
+]);
+
 
     return redirect()->route('paymentvoucher.index')->with('success', 'Voucher marked for deletion and pending admin approval.');
 }
@@ -232,6 +241,15 @@ public function admindelete($id)
 {
     $voucher = PaymentVoucher::where('delete_status', 1)->findOrFail($id);
     $voucher->delete();
+
+    ActionHistory::create([
+    'page_name'   => 'Payment Voucher',
+    'record_id' => $voucher->id . '-' . $voucher->code,
+    'action_type' => 'delete_approved',
+    'user_id'     => Auth::id(),
+    'changes'     => null,
+]);
+
 
     return redirect()->route('admin.paymentvoucher.deleted')->with('success', 'Voucher permanently deleted.');
 }
@@ -260,7 +278,6 @@ public function submitEditRequest(Request $request, $id)
 {
     $voucher = paymentVoucher::findOrFail($id);
 
-    // Validate only requested fields
     $data = $request->validate([
         'date' => 'required|date',
         'coa_id' => 'required|exists:account_heads,id',
@@ -276,8 +293,32 @@ public function submitEditRequest(Request $request, $id)
     $voucher->edit_status = 'pending';
     $voucher->save();
 
+    // Capture original values before edit
+    $originalData = $voucher->only(array_keys($data));
+
+    $changes = [];
+    foreach ($data as $field => $newValue) {
+        $oldValue = $originalData[$field] ?? null;
+
+        if ($oldValue != $newValue) {
+            $changes[$field] = [
+                'old' => $oldValue,
+                'new' => $newValue,
+            ];
+        }
+    }
+
+    ActionHistory::create([
+        'page_name'   => 'Payment Voucher',
+        'record_id'   => $voucher->id . '-' . $voucher->code,
+        'action_type' => 'edit_requested',
+        'user_id'     => Auth::id(),
+        'changes'     => json_encode($changes),
+    ]);
+
     return redirect()->route('paymentvoucher.index')->with('success', 'Edit request submitted successfully!');
 }
+
 
 
 // public function pendingEditRequests()
@@ -330,25 +371,77 @@ public function approveEdit($id)
 
     $editData = json_decode($voucher->edit_request_data, true);
 
+    // Capture original values before changes
+    $originalData = $voucher->only(array_keys($editData));
+
+    // Save both old and new for the action log
+    $changes = [];
+    foreach ($editData as $field => $newValue) {
+        $oldValue = $originalData[$field] ?? null;
+
+        if ($oldValue != $newValue) {
+            $changes[$field] = [
+                'old' => $oldValue,
+                'new' => $newValue,
+            ];
+        }
+    }
+
     // Apply the changes
     $voucher->fill($editData);
     $voucher->edit_status = 'approved';
     $voucher->edit_request_data = null;
     $voucher->save();
 
-    return redirect()->route('paymentvoucher.index')->with('success', 'Edit request approved and data updated.');
+    // Log to ActionHistory with both old and new
+    ActionHistory::create([
+        'page_name'   => 'Payment Voucher',
+        'record_id'   => $voucher->id . '-' . $voucher->code,
+        'action_type' => 'edit_approved',
+        'user_id'     => Auth::id(),
+        'changes'     => json_encode($changes),
+    ]);
+
+    return redirect()->route('paymentvoucher.index')->with('success', 'Edit approved successfully!');
 }
+
 
 public function rejectEditRequest($id)
 {
     try {
-        $voucher = paymentVoucher::findOrFail($id);
+        $voucher = PaymentVoucher::findOrFail($id);
 
         // Only process if it’s in pending status
         if ($voucher->edit_status === 'pending') {
+            $editData = json_decode($voucher->edit_request_data, true);
+
             $voucher->edit_status = 'rejected';
-            $voucher->edit_request_data = null;
             $voucher->save();
+
+            $changes = [];
+
+            if ($editData) {
+                $originalData = $voucher->getOriginal();
+
+                foreach ($editData as $field => $newValue) {
+                    $oldValue = $originalData[$field] ?? null;
+
+                    if ($oldValue != $newValue) {
+                        $changes[$field] = [
+                            'old' => $oldValue,
+                            'new' => $newValue,
+                        ];
+                    }
+                }
+            }
+
+            ActionHistory::create([
+                'page_name'   => 'Payment Voucher',
+                'record_id'   => $voucher->id . '-' . $voucher->code,
+                'action_type' => 'edit_rejected',
+                'user_id'     => Auth::id(),
+                'changes'     => !empty($changes) ? json_encode($changes) : null,
+            ]);
         }
 
         return redirect()->back()->with('success', 'Edit request rejected successfully.');
@@ -357,6 +450,8 @@ public function rejectEditRequest($id)
         return redirect()->back()->withErrors(['error' => 'Failed to reject the edit request.']);
     }
 }
+
+
 
 
 

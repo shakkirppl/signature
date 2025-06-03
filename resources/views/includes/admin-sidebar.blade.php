@@ -309,6 +309,8 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('skinning-report')}}"> Skinning  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-ledger')}}"> Customer Ledger  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-outstanding')}}"> Customer Outstanding  </a></li>
+               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/action-history-report')}}">History</a></li>
+              
               @endif  
               @if($user->designation_id == 1 || $user->designation_id == 3 || $user->designation_id == 5 || $user->designation_id == 4)             
                <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-outstanding')}}"> Supplier Outstanding  </a></li>

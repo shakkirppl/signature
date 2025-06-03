@@ -56,6 +56,7 @@ use App\Http\Controllers\CustomerFeedbackController;
 use App\Http\Controllers\RequestingFormController;
 use App\Http\Controllers\WaterQualityTestRecordController;
 use App\Http\Controllers\ReturnToSupplierController;
+use App\Http\Controllers\ActionHistoryController;
 
 
 
@@ -739,6 +740,10 @@ Route::post('receiptvoucher/{id}/send-edit-request', [ReceiptVoucherController::
 Route::get('receiptvoucher/pending-edit-requests', [ReceiptVoucherController::class, 'pendingEditRequests'])->name('receiptvoucher.pendingEditRequests');
 Route::post('receiptvoucher/{id}/approve-edit-request', [ReceiptVoucherController::class, 'approveEditRequest'])->name('receiptvoucher.approveEditRequest');
 Route::post('receiptvoucher/{id}/reject-edit-request', [ReceiptVoucherController::class, 'rejectEditRequest'])->name('receiptvoucher.rejectEditRequest');
+
+
+Route::get('/action-history-report', [ActionHistoryController::class, 'report'])->name('actionhistory.report');
+
 
 
 

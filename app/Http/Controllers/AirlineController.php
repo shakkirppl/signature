@@ -14,6 +14,7 @@ use App\Models\Customer;
 use App\Models\AccountTransactions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\ActionHistory;
 
 class AirlineController extends Controller
 {
@@ -201,6 +202,14 @@ public function softDelete($id)
     $airline = Airline::findOrFail($id);
     $airline->delete_status = 1;
     $airline->save();
+      ActionHistory::create([
+    'page_name'   => 'Airline Payment',
+    'record_id' => $airline->id . '-' . $airline->code,
+    'action_type' => 'delete_requested',
+    'user_id'     => Auth::id(),
+    'changes'     => null,
+]);
+
 
     return redirect()->route('airline.index')->with('success', 'Deletion request submitted for admin approval.');
 }
@@ -217,6 +226,13 @@ public function adminDestroy($id)
 {
     $airline = Airline::findOrFail($id);
     $airline->delete(); 
+     ActionHistory::create([
+    'page_name'   => 'Airline Payment',
+    'record_id' => $airline->id . '-' . $airline->code,
+    'action_type' => 'delete_approved',
+    'user_id'     => Auth::id(),
+    'changes'     => null,
+]);
     return back()->with('success', 'Airline record permanently deleted.');
 }
 
@@ -248,7 +264,7 @@ public function submitEditRequest(Request $request, $id)
         return redirect()->back()->withErrors(['error' => 'Unauthorized']);
     }
 
-    $payment = Airline::findOrFail($id);
+    $airline = Airline::findOrFail($id);
 
     $data = $request->validate([
         'code' => 'required|string',
@@ -266,12 +282,33 @@ public function submitEditRequest(Request $request, $id)
         'total_weight' => 'nullable|numeric',
     ]);
 
-    $payment->edit_request_data = json_encode($data);
-    $payment->edit_status = 'pending';
-    $payment->save();
+    $airline->edit_request_data = json_encode($data);
+    $airline->edit_status = 'pending';
+    $airline->save();
+
+    // Track what changed
+    $changes = [];
+    foreach ($data as $key => $newValue) {
+        $oldValue = $airline->getOriginal($key);
+        if ($oldValue != $newValue) {
+            $changes[$key] = [
+                'old' => $oldValue,
+                'new' => $newValue,
+            ];
+        }
+    }
+
+    ActionHistory::create([
+        'page_name'   => 'Airline Payment',
+        'record_id'   => $airline->id . '-' . $airline->code,
+        'action_type' => 'edit_requested',
+        'user_id'     => $user->id,
+        'changes'     => !empty($changes) ? json_encode($changes) : null,
+    ]);
 
     return redirect()->route('airline.index')->with('success', 'Edit request submitted successfully!');
 }
+
 
 
 public function pendingEditRequests()
@@ -312,7 +349,6 @@ public function pendingEditRequests()
 }
 
 
-// Approve the edit request
 public function approveEdit($id)
 {
     $user = auth()->user();
@@ -320,21 +356,44 @@ public function approveEdit($id)
         return redirect()->back()->withErrors(['error' => 'Unauthorized']);
     }
 
-    $payment = Airline::findOrFail($id);
+    $airline = Airline::findOrFail($id);
 
-    if ($payment->edit_status !== 'pending' || !$payment->edit_request_data) {
+    if ($airline->edit_status !== 'pending' || !$airline->edit_request_data) {
         return redirect()->back()->withErrors(['error' => 'No pending edit request found.']);
     }
 
-    $editData = json_decode($payment->edit_request_data, true);
+    $editData = json_decode($airline->edit_request_data, true);
+    $changes = [];
 
-    $payment->fill($editData);
-    $payment->edit_status = 'approved';
-    $payment->edit_request_data = null;
-    $payment->save();
+   $original = $airline->replicate(); // Clone the original before applying changes
+
+foreach ($editData as $field => $newValue) {
+    $oldValue = $original->$field; // Compare against the untouched copy
+    if ($oldValue != $newValue) {
+        $changes[$field] = [
+            'old' => $oldValue,
+            'new' => $newValue,
+        ];
+    }
+    $airline->$field = $newValue;
+}
+
+
+    $airline->edit_status = 'approved';
+    $airline->edit_request_data = null;
+    $airline->save();
+
+    ActionHistory::create([
+        'page_name'   => 'Airline Payment',
+        'record_id'   => $airline->id . '-' . $airline->code,
+        'action_type' => 'edit_approved',
+        'user_id'     => $user->id,
+        'changes'     => !empty($changes) ? json_encode($changes) : null,
+    ]);
 
     return redirect()->route('airline.index')->with('success', 'Edit request approved and data updated.');
 }
+
 
 public function rejectEditRequest($id)
 {
@@ -343,16 +402,42 @@ public function rejectEditRequest($id)
         return redirect()->back()->withErrors(['error' => 'Unauthorized']);
     }
 
-    $payment = Airline::findOrFail($id);
+    $airline = Airline::findOrFail($id);
 
-    if ($payment->edit_status === 'pending') {
-        $payment->edit_status = 'rejected';
-        $payment->edit_request_data = null;
-        $payment->save();
+    if ($airline->edit_status !== 'pending' || !$airline->edit_request_data) {
+        return redirect()->back()->withErrors(['error' => 'No pending edit request found.']);
     }
+
+    $editData = json_decode($airline->edit_request_data, true);
+    $changes = [];
+
+    if (is_array($editData)) {
+        foreach ($editData as $key => $newValue) {
+            $oldValue = $airline->getOriginal($key);
+            if ($oldValue != $newValue) {
+                $changes[$key] = [
+                    'old' => $oldValue,
+                    'new' => $newValue,
+                ];
+            }
+        }
+    }
+
+    $airline->edit_status = 'rejected';
+    $airline->edit_request_data = null;
+    $airline->save();
+
+    ActionHistory::create([
+        'page_name'   => 'Airline Payment',
+        'record_id'   => $airline->id . '-' . $airline->code,
+        'action_type' => 'edit_rejected',
+        'user_id'     => $user->id,
+        'changes'     => !empty($changes) ? json_encode($changes) : null,
+    ]);
 
     return redirect()->back()->with('success', 'Edit request rejected successfully.');
 }
+
 
 
 
