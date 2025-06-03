@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Models\SalesOrder;
 use App\Models\Outstanding;
 use Illuminate\Support\Facades\Log;
+use App\Models\ActionHistory;
 
 
 class PurchaseOrderController extends Controller
@@ -290,30 +291,178 @@ public function getOutstandingBalance($supplierId)
     }
 }
 
-public function requestDelete($id)
+public function softDelete($id)
 {
-    try {
-        $purchaseOrder = PurchaseOrder::findOrFail($id);
-        $user = auth()->user();
+    $po = PurchaseOrder::findOrFail($id);
+    $po->delete_status = 1;
+    $po->save();
 
-        if ($user->designation_id == 3 && $purchaseOrder->delete_status == 0) {
-            $purchaseOrder->delete_status = 1; 
-            $purchaseOrder->save();
+    ActionHistory::create([
+        'page_name'   => 'Purchase Order',
+        'record_id'   => $po->id . '-' . $po->order_number,
+        'action_type' => 'delete_requested',
+        'user_id'     => Auth::id(),
+        'changes'     => null,
+    ]);
 
-            return redirect()->route('purchase-order.index')->with('success', 'Delete request sent for admin approval.');
-        }
-
-        return redirect()->route('purchase-order.index')->with('error', 'Unauthorized or already requested.');
-    } catch (\Exception $e) {
-        return redirect()->route('purchase-order.index')->with('error', 'Error requesting delete: ' . $e->getMessage());
-    }
+    return redirect()->route('purchase-order.index')->with('success', 'Purchase Order marked for deletion.');
 }
+
 
 public function pendingDeleteRequests()
 {
     $requests = PurchaseOrder::where('delete_status', 1)->with('supplier', 'shipment', 'salesOrder', 'user')->get();
     return view('purchase-order.pending-delete', compact('requests'));
 }
+
+public function adminDelete($id)
+{
+   
+$po = PurchaseOrder::where('delete_status', 1)->findOrFail($id);    
+          
+            $po->details()->delete();
+    
+            
+            $po->delete();
+
+    ActionHistory::create([
+        'page_name'   => 'Purchase Order',
+        'record_id'   => $po->id . '-' . $po->order_number,
+        'action_type' => 'delete_approved',
+        'user_id'     => Auth::id(),
+        'changes'     => null,
+    ]);
+
+    return redirect()->route('admin.purchaseorder.pendingEdits')->with('success', 'PO permanently deleted.');
+}
+
+   public function editRequest($id)
+        {
+            $purchaseOrder = PurchaseOrder::with('details','products')->findOrFail($id);
+            $suppliers = Supplier::all();
+            $products = Product::all();
+            $SalesOrders=SalesOrder::all();
+           
+            $shipments = Shipment::where('shipment_status', 0)->get();
+            return view('purchase-order.edit-request', compact('purchaseOrder', 'suppliers', 'products','SalesOrders','shipments'));
+        }
+
+public function submitEditRequest(Request $request, $id)
+{
+    $po = PurchaseOrder::findOrFail($id);
+
+    $data = $request->validate([
+        'supplier_id' => 'required',
+        'date' => 'required|date',
+        
+        // Add other fields as needed
+    ]);
+
+    $po->edit_request_data = json_encode($data);
+    $po->edit_status = 'pending';
+    $po->save();
+
+    $original = $po->only(array_keys($data));
+    $changes = [];
+
+    foreach ($data as $key => $new) {
+        $old = $original[$key] ?? null;
+        if ($old != $new) {
+            $changes[$key] = ['old' => $old, 'new' => $new];
+        }
+    }
+
+    ActionHistory::create([
+        'page_name' => 'Purchase Order',
+        'record_id' => $po->id . '-' . $po->order_number,
+        'action_type' => 'edit_requested',
+        'user_id' => Auth::id(),
+        'changes' => json_encode($changes),
+    ]);
+
+    return redirect()->route('purchase-order.index')->with('success', 'Edit request submitted.');
+}
+
+public function approveEdit($id)
+{
+    $po = PurchaseOrder::findOrFail($id);
+
+    if ($po->edit_status !== 'pending' || !$po->edit_request_data) {
+        return redirect()->back()->withErrors(['error' => 'No edit request found.']);
+    }
+
+    $editData = json_decode($po->edit_request_data, true);
+    $original = $po->only(array_keys($editData));
+    $changes = [];
+
+    foreach ($editData as $field => $newValue) {
+        $oldValue = $original[$field] ?? null;
+        if ($oldValue != $newValue) {
+            $changes[$field] = ['old' => $oldValue, 'new' => $newValue];
+        }
+    }
+
+    $po->fill($editData);
+    $po->edit_status = 'approved';
+    $po->edit_request_data = null;
+    $po->save();
+
+    ActionHistory::create([
+        'page_name' => 'Purchase Order',
+        'record_id' => $po->id . '-' . $po->order_number,
+        'action_type' => 'edit_approved',
+        'user_id' => Auth::id(),
+        'changes' => json_encode($changes),
+    ]);
+
+    return redirect()->route('purchaseorder.index')->with('success', 'Edit approved.');
+}
+
+
+public function rejectEditRequest($id)
+{
+    $po = PurchaseOrder::findOrFail($id);
+
+    if ($po->edit_status === 'pending') {
+        $editData = json_decode($po->edit_request_data, true);
+        $po->edit_status = 'rejected';
+        $po->save();
+
+        $changes = [];
+
+        if ($editData) {
+            $original = $po->getOriginal();
+
+            foreach ($editData as $key => $newVal) {
+                $oldVal = $original[$key] ?? null;
+                if ($oldVal != $newVal) {
+                    $changes[$key] = ['old' => $oldVal, 'new' => $newVal];
+                }
+            }
+        }
+
+        ActionHistory::create([
+            'page_name' => 'Purchase Order',
+            'record_id' => $po->id . '-' . $po->order_number,
+            'action_type' => 'edit_rejected',
+            'user_id' => Auth::id(),
+            'changes' => !empty($changes) ? json_encode($changes) : null,
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Edit request rejected.');
+}
+
+
+public function pendingEditRequests()
+{
+    $pendingEdits = PurchaseOrder::where('edit_status', 'pending')->get();
+
+    return view('purchase-order.pending-edit-request', compact('pendingEdits'));
+}
+
+
+
 
 
 

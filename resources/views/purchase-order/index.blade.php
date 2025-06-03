@@ -101,8 +101,14 @@
               Delete
             </a>
           @endif
+          @if($user->designation_id == 3 && $order->edit_status == 'none')
+          <a href="{{ route('purchaseorder.editRequest', $order->id) }}" class="btn btn-warning btn-sm">
+    Request Edit
+</a>
+ @endif
+
             @if($user->designation_id == 3 && $order->delete_status == 0)
-                                            <form action="{{ route('purchase-order.requestDelete', $order->id) }}" method="POST" style="display:inline;">
+                                            <form action="{{ route('purchase-order.pendingDeletes', $order->id) }}" method="POST" style="display:inline;">
     @csrf
     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Send delete request?')">Request Delete</button>
 </form>

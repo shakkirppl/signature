@@ -220,6 +220,7 @@ public function report(Request $request)
     return view('paymentvoucher.report', compact('paymentVouchers', 'banks'));
 }
 
+
 public function softDelete($id)
 {
     $voucher = PaymentVoucher::findOrFail($id);

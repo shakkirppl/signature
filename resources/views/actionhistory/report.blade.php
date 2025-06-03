@@ -100,12 +100,12 @@
                                 'currency' => 'Currency',
                                 'shipment_id' => 'Shipment No',
                                 'airline_name' => 'Airline Name',
-                                'airline_number' => 'Airline Number',
+                                'airline_number' => 'Flight Number',
+                                'customer_id' => 'Customer',
                                 'air_waybill_no' => 'Air Waybill No',
                                 'air_waybill_charge' => 'Air Waybill Charge',
                                 'documents_charge' => 'Documents Charge',
-                                'total_weight' => 'Total Weight',
-                                'customer_id' => 'Customer',
+    
                             ];
 
                             $coaNames = $coaNames ?? [];

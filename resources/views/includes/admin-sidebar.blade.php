@@ -392,7 +392,7 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales Order</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Packing List </a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Purchase Order </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('admin/purchaseorder/pending-edits')}}">Purchase Order </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Skinning </a></li>
                 
                 
