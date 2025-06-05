@@ -9,35 +9,40 @@ use App\Models\BankMaster;
 use App\Models\PaymentVoucher;
 use App\Models\Shipment;
 use App\Models\Customer;
+use App\Models\Supplier;
+use App\Models\SalesOrder;
+use App\Models\Product;
 
 class ActionHistoryController extends Controller
 {
-    public function report(Request $request)
-    {
-        $query = ActionHistory::query();
+   public function report(Request $request)
+{
+    $query = ActionHistory::with('user');
 
-        if ($request->filled('from_date')) {
-            $query->whereDate('created_at', '>=', $request->from_date);
-        }
+    // Rest of your filtering code...
 
-        if ($request->filled('to_date')) {
-            $query->whereDate('created_at', '<=', $request->to_date);
-        }
-         if ($request->filled('page_name')) {
-        $query->where('page_name', $request->page_name);
-    }
+    $histories = $query->latest()->get();
 
-        $histories = $query->latest()->get();
+    $coaNames = AccountHead::pluck('name', 'id')->toArray();
+    $bankNames = BankMaster::pluck('bank_name', 'id')->toArray();
+    $shipments = Shipment::pluck('shipment_no', 'id')->toArray();
+    $customers = Customer::pluck('customer_name', 'id')->toArray();
+    $suppliers = Supplier::pluck('name', 'id')->toArray();
+    $salesOrders = SalesOrder::pluck('order_no', 'id')->toArray();
+    $products = Product::pluck('product_name', 'id')->toArray();
+    $pageNames = ActionHistory::select('page_name')->distinct()->pluck('page_name');
 
-       
-        $coaNames = AccountHead::pluck('name', 'id')->toArray();
-        $bankNames = BankMaster::pluck('bank_name', 'id')->toArray();
-        $shipments = Shipment::pluck('shipment_no', 'id')->toArray();
-        $customers = Customer::pluck('customer_name', 'id')->toArray();
-        $pageNames = ActionHistory::select('page_name')->distinct()->pluck('page_name');
-
-
-        return view('actionhistory.report', compact('histories', 'coaNames', 'bankNames','pageNames','shipments','customers'));
-    }
+    return view('actionhistory.report', compact(
+        'histories', 
+        'coaNames', 
+        'bankNames',
+        'pageNames',
+        'shipments',
+        'customers',
+        'suppliers',
+        'salesOrders',
+        'products'
+,    ));
+}
 }
 

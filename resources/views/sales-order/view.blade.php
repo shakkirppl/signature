@@ -24,7 +24,7 @@
                         </div>
                         <div class="col-md-4">
                             <label for="customer" class="form-label">Customer:</label>
-                            <input type="text" class="form-control" id="customer" value="{{ $salesOrder->customer->customer_name }}" readonly>
+                            <input type="text" class="form-control" id="customer" value="{{ $salesOrder->customer->customer_name ?? 'N/A' }}" readonly>
                         </div>
                     </div>
                     <div class="table-responsive">

@@ -699,7 +699,16 @@ Route::post('/supplier/request-delete/{id}', [SupplierController::class, 'reques
 Route::get('/supplier/delete-requests', [SupplierController::class, 'deleteRequests'])->name('supplier.deleteRequests');
 
 Route::get('goodsout-order/pending-deletes', [SalesOrderController::class, 'pendingDeletes'])->name('goodsout-order.pending-deletes');
-Route::post('goodsout-order/{id}/request-delete', [SalesOrderController::class, 'requestDelete'])->name('goodsout-order.request-delete');
+Route::post('sales-order/{id}/soft-delete', [SalesOrderController::class, 'softDelete'])->name('sales-order.softdelete');
+Route::post('admin/sales-order/{id}/approve-delete', [SalesOrderController::class, 'adminDelete'])->name('admin.salesorder.admindelete');
+
+Route::get('sales-order/{id}/edit-request', [SalesOrderController::class, 'editRequest'])->name('sales-order.edit-request');
+Route::post('sales-order/{id}/submit-edit-request', [SalesOrderController::class, 'submitEditRequest'])->name('sales-order.submit-edit-request');
+Route::get('admin/sales-order/pending-edit', [SalesOrderController::class, 'pendingEditRequests'])->name('admin.salesorder.pendingedit');
+Route::post('salesorder/{id}/approve-edit', [SalesOrderController::class, 'approveEditRequest'])->name('salesorder.approveEdit');
+Route::post('salesorder/{id}/reject-edit', [SalesOrderController::class, 'rejectEdit'])->name('salesorder.rejectEdit');
+
+
 
 Route::post('sales-payment/request-delete/{id}', [SalesPaymentController::class, 'requestDelete'])->name('sales_payment.request_delete');
 Route::get('sales-payment/pending-delete', [SalesPaymentController::class, 'pendingDelete'])->name('sales_payment.pending_delete');
@@ -715,8 +724,10 @@ Route::get('/purchase-order/delete-requests', [PurchaseOrderController::class, '
 Route::get('purchaseorder/{id}/edit-request', [PurchaseOrderController::class, 'editRequest'])->name('purchaseorder.editRequest');
 Route::post('purchaseorder/{id}/submit-edit-request', [PurchaseOrderController::class, 'submitEditRequest'])->name('purchaseorder.submitEditRequest');
 Route::get('admin/purchaseorder/pending-edits', [PurchaseOrderController::class, 'pendingEditRequests'])->name('admin.purchaseorder.pendingEdits');
-Route::post('purchaseorder/{id}/approve-edit', [PurchaseOrderController::class, 'approveEdit'])->name('purchaseorder.approveEdit');
-Route::post('purchaseorder/{id}/reject-edit', [PurchaseOrderController::class, 'rejectEditRequest'])->name('purchaseorder.rejectEdit');
+Route::post('/purchase-order/approve-edit/{id}', [PurchaseOrderController::class, 'approveEditRequest'])->name('purchaseorder.approveEdit');
+Route::post('/purchase-order/reject-edit/{id}', [PurchaseOrderController::class, 'rejectEdit'])->name('purchaseorder.rejectEdit');
+
+
 
 
 Route::post('/skinning/{id}/request-delete', [SkinningController::class, 'requestDelete'])->name('skinning.request-delete');

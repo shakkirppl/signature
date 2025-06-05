@@ -389,7 +389,7 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('receiptvoucher/pending-edit-requests')}}">Receipt Voucher</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Customer Payment</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales Order</a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('admin/sales-order/pending-edit')}}">Sales Order</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Sales </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Packing List </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('admin/purchaseorder/pending-edits')}}">Purchase Order </a></li>

@@ -25,7 +25,8 @@ class PurchaseOrder extends Model
     'shipment_id',
     'SalesOrder_id',
     'requesting_form_id',
-    'delete_status'
+    'delete_status',
+    'edit_status','edit_request_data'
 ];
 
 protected $dates = ['deleted_at'];

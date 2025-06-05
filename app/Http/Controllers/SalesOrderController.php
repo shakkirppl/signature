@@ -10,6 +10,8 @@ use App\Models\SalesOrder;
 use App\Models\Customer;
 use App\Models\SalesOrderDetail;
 use Carbon\Carbon;
+use App\Models\ActionHistory;
+use Illuminate\Support\Facades\DB;
 
 
 class SalesOrderController extends Controller
@@ -51,7 +53,7 @@ class SalesOrderController extends Controller
                      ]);
                  
                      try {
-                        InvoiceNumber::updateinvoiceNumber('sales_order',1);
+                        
 
                          // Fetch the customer details
                          $customer = Customer::find($request->customer_id);
@@ -89,6 +91,7 @@ class SalesOrderController extends Controller
                                  'store_id' => 1, 
                              ]);
                          }
+                         InvoiceNumber::updateinvoiceNumber('sales_order',1);
                  
                          return redirect()->route('goodsout-order.index')->with('success', 'Sales Order created successfully.');
                      } catch (\Exception $e) {
@@ -200,35 +203,344 @@ public function report(Request $request)
 
     return view('sales-order.report', compact('salesOrders', 'customers'));
 }
-public function requestDelete($id)
-{
-    try {
-        $order = SalesOrder::findOrFail($id);
+// public function requestDelete($id)
+// {
+//     try {
+//         $order = SalesOrder::findOrFail($id);
 
-        if (auth()->user()->designation_id != 3) {
-            abort(403);
+//         if (auth()->user()->designation_id != 3) {
+//             abort(403);
+//         }
+
+//         $order->delete_status = '1';
+//         $order->save();
+
+//         return redirect()->route('goodsout-order.index')->with('success', 'Delete request submitted.');
+//     } catch (\Exception $e) {
+//         return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+//     }
+// }
+public function softDelete($id)
+{
+    $order = SalesOrder::findOrFail($id);
+    $order->delete_status = 1;
+    $order->save();
+
+    ActionHistory::create([
+        'page_name'   => 'Sales Order',
+        'record_id'   => $order->id . '-' . $order->order_no,
+        'action_type' => 'delete_requested',
+        'user_id'     => Auth::id(),
+        'changes'     => null,
+    ]);
+
+    return redirect()->route('goodsout-order.index')->with('success', 'Sales Order marked for deletion.');
+}
+
+
+public function pendingDeleteRequests()
+{
+    $orders = SalesOrder::where('delete_status', 1)->with('customer')->get();
+    return view('sales-order.pending-delete', compact('orders'));
+}
+
+public function adminDelete($id)
+{
+    $order = SalesOrder::where('delete_status', 1)->findOrFail($id);
+
+    ActionHistory::create([
+        'page_name'   => 'Sales Order',
+        'record_id'   => $order->id . '-' . $order->order_no,
+        'action_type' => 'delete_approved',
+        'user_id'     => Auth::id(),
+        'changes'     => null,
+    ]);
+
+    $order->details()->delete();
+    $order->delete();
+
+    return redirect()->route('admin.salesorder.admindelete')->with('success', 'Sales Order permanently deleted.');
+}
+
+
+public function editRequest($id)
+{
+    $order = SalesOrder::with('details')->findOrFail($id);
+    $customers = Customer::all();
+    $products = Product::all();
+    return view('sales-order.edit-request', compact('order', 'customers', 'products'));
+}
+
+
+public function submitEditRequest(Request $request, $id)
+{
+    $order = SalesOrder::with('details')->findOrFail($id);
+
+    $data = $request->validate([
+        'order_no' => 'required',
+        'date' => 'required|date',
+        'customer_id' => 'required',
+        'grand_total' => 'required|numeric',
+        'advance_amount' => 'nullable|numeric',
+        'balance_amount' => 'nullable|numeric',
+        'products' => 'required|array',
+        'products.*.product_id' => 'required',
+        'products.*.qty' => 'required|numeric',
+        'products.*.rate' => 'required|numeric',
+        'products.*.total' => 'required|numeric',
+    ]);
+
+    // Only store changed main fields
+    $editData = [];
+    foreach (['order_no', 'date', 'customer_id', 'grand_total', 'advance_amount', 'balance_amount'] as $field) {
+        if (isset($data[$field]) && $order->$field != $data[$field]) {
+            $editData[$field] = $data[$field];
+        }
+    }
+
+    $existingProducts = $order->details->keyBy('product_id');
+    $productChanges = [];
+    $submittedProductIds = [];
+
+    foreach ($data['products'] as $newProduct) {
+        $productId = $newProduct['product_id'];
+        $submittedProductIds[] = $productId;
+
+        if ($existingProducts->has($productId)) {
+            $old = $existingProducts[$productId];
+            $productChange = ['product_id' => $productId, 'old_product_id' => $productId];
+            $hasChanges = false;
+
+            foreach (['qty', 'rate', 'total'] as $field) {
+                if ($old->$field != $newProduct[$field]) {
+                    $productChange['old_'.$field] = $old->$field;
+                    $productChange[$field] = $newProduct[$field];
+                    $hasChanges = true;
+                }
+            }
+
+            if ($hasChanges) {
+                $productChanges[] = $productChange;
+            }
+        } else {
+            // New product addition
+            $productChanges[] = [
+                'product_id' => $productId,
+                'old_product_id' => null,
+                'qty' => $newProduct['qty'],
+                'rate' => $newProduct['rate'],
+                'total' => $newProduct['total'],
+            ];
+        }
+    }
+
+    // Check for deleted products
+    foreach ($existingProducts as $productId => $detail) {
+        if (!in_array($productId, $submittedProductIds)) {
+            $productChanges[] = [
+                'product_id' => null,
+                'old_product_id' => $productId,
+                'old_qty' => $detail->qty,
+                'old_rate' => $detail->rate,
+                'old_total' => $detail->total,
+            ];
+        }
+    }
+
+    $order->edit_request_data = json_encode([
+        'main' => $editData,
+        'products' => $productChanges,
+    ]);
+
+    $order->edit_status = 'pending';
+    $order->save();
+
+    ActionHistory::create([
+        'page_name' => 'Sales Order',
+        'record_id' => $order->id . '-' . $order->order_no,
+        'action_type' => 'edit_requested',
+        'user_id' => Auth::id(),
+        'changes' => json_encode([
+            'main' => $editData,
+            'products' => $productChanges,
+        ]),
+    ]);
+
+    return redirect()->route('goodsout-order.index')->with('success', 'Edit request submitted.');
+}
+
+
+
+
+public function approveEditRequest($id)
+{
+    $order = SalesOrder::with('details')->findOrFail($id);
+
+    if ($order->edit_status !== 'pending' || !$order->edit_request_data) {
+        return back()->with('error', 'No pending edit request found or request already processed.');
+    }
+
+    $editData = json_decode($order->edit_request_data, true);
+
+    DB::beginTransaction();
+    try {
+        // Update main order fields if they exist in the edit data
+        if (isset($editData['main'])) {
+            $order->update($editData['main']);
         }
 
-        $order->delete_status = '1';
+        // Process product changes
+        $processedDetailIds = [];
+        $productChanges = $editData['products'] ?? [];
+
+        foreach ($productChanges as $productEdit) {
+            $productId = $productEdit['product_id'] ?? null;
+            $oldProductId = $productEdit['old_product_id'] ?? $productId;
+
+            // Handle product modifications and additions
+            if ($productId !== null) {
+                $existingDetail = $order->details->firstWhere('product_id', $oldProductId);
+
+                if ($existingDetail) {
+                    // Update existing product
+                    $existingDetail->update([
+                        'product_id' => $productId,
+                        'qty' => $productEdit['qty'] ?? $existingDetail->qty,
+                        'rate' => $productEdit['rate'] ?? $existingDetail->rate,
+                        'total' => $productEdit['total'] ?? $existingDetail->total,
+                    ]);
+                    $processedDetailIds[] = $existingDetail->id;
+                } else {
+                    // Add new product
+                    $newDetail = SalesOrderDetail::create([
+                        'sales_order_id' => $order->id,
+                        'product_id' => $productId,
+                        'qty' => $productEdit['qty'] ?? 0,
+                        'rate' => $productEdit['rate'] ?? 0,
+                        'total' => $productEdit['total'] ?? 0,
+                        'store_id' => 1, // Assuming default store
+                        'user_id' => Auth::id(),
+                    ]);
+                    $processedDetailIds[] = $newDetail->id;
+                }
+            } else {
+                // Handle product deletions (where product_id is null)
+                $order->details()
+                    ->where('product_id', $oldProductId)
+                    ->delete();
+            }
+        }
+
+        // Clean up and finalize
+        $order->edit_status = 'approved';
+        $order->edit_request_data = null;
         $order->save();
 
-        return redirect()->route('goodsout-order.index')->with('success', 'Delete request submitted.');
+        // Log the approval
+        ActionHistory::create([
+            'page_name' => 'Sales Order',
+            'record_id' => $order->id . '-' . $order->order_no,
+            'action_type' => 'edit_approved',
+            'user_id' => Auth::id(),
+            'changes' => json_encode($editData),
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('goodsout-order.index')
+            ->with('success', 'Edit request approved successfully.');
     } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        DB::rollBack();
+        Log::error('Error approving edit request: ' . $e->getMessage());
+        
+        return back()->with('error', 'Failed to approve edit request. Please try again.');
     }
 }
-
-
-public function pendingDeletes()
+public function pendingEditRequests()
 {
-    if (auth()->user()->designation_id != 1) {
-        abort(403);
+    $orders = SalesOrder::with(['details', 'customer'])
+        ->where('edit_status', 'pending')
+        ->get();
+
+    foreach ($orders as $order) {
+        $editData = json_decode($order->edit_request_data, true);
+        $changes = [];
+
+        if ($editData) {
+            // Main field changes
+            if (isset($editData['main'])) {
+                foreach ($editData['main'] as $key => $newVal) {
+                    $changes[$key] = [
+                        'original' => $order->$key,
+                        'requested' => $newVal,
+                    ];
+                }
+            }
+
+            // Product changes
+            if (isset($editData['products'])) {
+                $changes['products'] = [];
+
+                foreach ($editData['products'] as $productEdit) {
+                    $productChanges = [];
+
+                    $productId = $productEdit['product_id'] ?? null;
+                    $oldProductId = $productEdit['old_product_id'] ?? null;
+
+                    // Always include product_id for context
+                    $productChanges['product_id'] = [
+                        'original' => $oldProductId ?? $productId,
+                        'requested' => $productId ?? $oldProductId,
+                    ];
+
+                    // Handle qty, rate, total changes
+                    foreach (['qty', 'rate', 'total'] as $field) {
+                        if (isset($productEdit[$field]) || isset($productEdit['old_' . $field])) {
+                            $productChanges[$field] = [
+                                'original' => $productEdit['old_' . $field] ?? null,
+                                'requested' => $productEdit[$field] ?? null,
+                            ];
+                        }
+                    }
+
+                    if (!empty($productChanges)) {
+                        $changes['products'][] = $productChanges;
+                    }
+                }
+            }
+
+            $order->changed_fields = $changes;
+        }
     }
 
-    $salesOrders = SalesOrder::where('delete_status', '1')->with('customer')->get();
-
-    return view('sales-order.pending-delete', compact('salesOrders'));
+    return view('sales-order.pending-edit-request', compact('orders'));
 }
+
+
+
+public function rejectEdit($id)
+{
+    $order = SalesOrder::findOrFail($id);
+    if ($order->edit_status === 'pending') {
+        $editData = json_decode($order->edit_request_data, true);
+        $order->edit_status = 'rejected';
+        $order->save();
+
+        ActionHistory::create([
+            'page_name' => 'Sales Order',
+            'record_id' => $order->id . '-' . $order->order_no,
+            'action_type' => 'edit_rejected',
+            'user_id' => Auth::id(),
+            'changes' => json_encode($editData),
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Edit request rejected.');
+}
+
+
+
+
 
 
 

@@ -34,9 +34,14 @@
                     <td>
                                   <a href="{{ route('purchase-order.view', $order->id) }}" class="btn btn-info btn-sm">View</a>
 
-                        <a href="{{ route('purchase-order.destroy', $order->id) }}"  class="btn btn-danger btn-sm"   onclick="return confirm('Are you sure you want to delete this record?')">
-                            Approve Delete
-                       </a>
+                     <form action="{{ route('admin.purchaseorder.admindelete', $order->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to approve permanent deletion?')">
+        Approve Delete
+    </button>
+</form>
+
                     </td>
                 </tr>
                 @endforeach

@@ -53,14 +53,22 @@
                        Delete
                     </a>
                     @endif
-                    @if($user->designation_id == 3 )
-  <form action="{{ route('goodsout-order.request-delete', $order->id) }}" method="POST">
-    @csrf
-    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to request deletion?')">
-      Request Delete
-    </button>
-  </form>
-@endif
+
+                      @if($user->designation_id == 3  && $order->edit_status == 'none')
+                         <div class="d-flex align-items-center gap-1">
+                          <a href="{{ route('sales-order.edit-request', $order->id) }}" class="btn btn-warning btn-sm">
+                             Request Edit
+                           </a>                          
+                            @endif
+                          @if($user->designation_id == 3  )
+                          <form action="{{ route('sales-order.softdelete', $order->id) }}" method="POST" class="d-inline-block" onsubmit="return confirm('Are you sure to request delete?')">
+            @csrf
+            <button type="submit" class="btn btn-danger btn-sm">
+                Request Delete
+            </button>
+        </form>
+                      @endif 
+                    
 </div>
 
                   </td>
