@@ -13,7 +13,7 @@ class PackingListMaster extends Model
     protected $fillable = [
         'packing_no', 'date', 'salesOrder_id', 'customer_id', 'shipping_mode', 
         'shipping_agent', 'terms_of_delivery', 'terms_of_payment', 'currency', 
-        'sum_total', 'net_weight', 'gross_weight','store_id','user_id','delete_status'
+        'sum_total', 'net_weight', 'gross_weight','store_id','user_id','delete_status','edit_status','edit_request_data'
     ];
 
     protected $dates = ['deleted_at'];

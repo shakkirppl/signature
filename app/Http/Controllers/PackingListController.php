@@ -10,6 +10,8 @@ use App\Models\InvoiceNumber;
 use Illuminate\Support\Facades\Auth; 
 use App\Models\PackingListMaster;
 use App\Models\PackingListDetail;
+use App\Models\ActionHistory;
+use Illuminate\Support\Facades\DB;
 
 class PackingListController extends Controller
 {
@@ -81,30 +83,6 @@ class PackingListController extends Controller
     }
 
     return redirect()->route('packinglist.index')->with('success', 'Sales Data Stored Successfully.');
-}
-
-public function show($id)
-{
-    $packing = PackingListMaster::with('details')->findOrFail($id);
-    return view('packing_list.show', compact('packing'));
-}
-
-
-public function destroy($id)
-{
-    try {
-        $packing = PackingListMaster::findOrFail($id);
-
-        
-        $packing->details()->delete();
-
-        
-        $packing->delete();
-        InvoiceNumber::decreaseInvoice('packinglist_no', 1);
-        return redirect()->route('packinglist.index')->with('success', 'Packing list deleted successfully.');
-    } catch (\Exception $e) {
-        return redirect()->route('packinglist.index')->with('error', 'Error deleting packing list: ' . $e->getMessage());
-    }
 }
 
 
@@ -179,6 +157,33 @@ public function update(Request $request, $id)
 
 
 
+public function show($id)
+{
+    $packing = PackingListMaster::with('details')->findOrFail($id);
+    return view('packing_list.show', compact('packing'));
+}
+
+
+public function destroy($id)
+{
+    try {
+        $packing = PackingListMaster::findOrFail($id);
+
+        
+        $packing->details()->delete();
+
+        
+        $packing->delete();
+        InvoiceNumber::decreaseInvoice('packinglist_no', 1);
+        return redirect()->route('packinglist.index')->with('success', 'Packing list deleted successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('packinglist.index')->with('error', 'Error deleting packing list: ' . $e->getMessage());
+    }
+}
+
+
+
+
 public function packlistPrint($id)
 {
     // Fetch the packing list master data along with customer and sales order
@@ -223,6 +228,304 @@ public function requestDelete($id)
     } catch (\Exception $e) {
         return redirect()->route('packinglist.index')->with('error', 'Error sending delete request: ' . $e->getMessage());
     }
+}
+
+
+public function editRequest($id)
+{
+    $packing = PackingListMaster::with('details')->findOrFail($id);
+    $customers = Customer::all();
+    $products = Product::all();
+    $SalesOrders = SalesOrder::all();
+    return view('packing_list.edit-request', compact('packing', 'customers', 'products','SalesOrders'));
+}
+public function submitEditRequest(Request $request, $id)
+{
+    $packingList = PackingListMaster::with('details')->findOrFail($id);
+
+    $data = $request->validate([
+        'packing_no' => 'required',
+        'date' => 'required|date',
+        'customer_id' => 'required',
+        'salesOrder_id' => 'required',
+        'shipping_mode' => 'nullable',
+        'shipping_agent' => 'nullable',
+        'terms_of_delivery' => 'nullable',
+        'terms_of_payment' => 'nullable',
+        'currency' => 'nullable',
+        'net_weight' => 'required|numeric',
+        'gross_weight' => 'required|numeric',
+        'products' => 'required|array',
+        'products.*.product_id' => 'required',
+        'products.*.packaging' => 'nullable|numeric',
+        'products.*.weight' => 'nullable|numeric',
+        'products.*.par' => 'nullable',
+        'products.*.total' => 'nullable|numeric',
+    ]);
+
+    // Only store changed main fields
+    $editData = [];
+    $mainFields = [
+        'packing_no', 'date', 'customer_id', 'salesOrder_id', 'shipping_mode', 
+        'shipping_agent', 'terms_of_delivery', 'terms_of_payment', 'currency',
+        'net_weight', 'gross_weight'
+    ];
+    
+    foreach ($mainFields as $field) {
+        if (isset($data[$field])) {
+            if ($packingList->$field != $data[$field]) {
+                $editData[$field] = $data[$field];
+            }
+        }
+    }
+
+    $existingProducts = $packingList->details->keyBy('product_id');
+    $productChanges = [];
+    $submittedProductIds = [];
+
+    foreach ($data['products'] as $newProduct) {
+        $productId = $newProduct['product_id'];
+        $submittedProductIds[] = $productId;
+
+        if ($existingProducts->has($productId)) {
+            $old = $existingProducts[$productId];
+            $productChange = ['product_id' => $productId, 'old_product_id' => $productId];
+            $hasChanges = false;
+
+            foreach (['packaging', 'weight', 'par', 'total'] as $field) {
+                if (isset($newProduct[$field]) && $old->$field != $newProduct[$field]) {
+                    $productChange['old_'.$field] = $old->$field;
+                    $productChange[$field] = $newProduct[$field];
+                    $hasChanges = true;
+                }
+            }
+
+            if ($hasChanges) {
+                $productChanges[] = $productChange;
+            }
+        } else {
+            // New product addition
+            $productChanges[] = [
+                'product_id' => $productId,
+                'old_product_id' => null,
+                'packaging' => $newProduct['packaging'] ?? null,
+                'weight' => $newProduct['weight'] ?? null,
+                'par' => $newProduct['par'] ?? null,
+                'total' => $newProduct['total'] ?? null,
+            ];
+        }
+    }
+
+    // Check for deleted products
+    foreach ($existingProducts as $productId => $detail) {
+        if (!in_array($productId, $submittedProductIds)) {
+            $productChanges[] = [
+                'product_id' => null,
+                'old_product_id' => $productId,
+                'old_packaging' => $detail->packaging,
+                'old_weight' => $detail->weight,
+                'old_par' => $detail->par,
+                'old_total' => $detail->total,
+            ];
+        }
+    }
+
+    $packingList->edit_request_data = json_encode([
+        'main' => $editData,
+        'products' => $productChanges,
+    ]);
+
+    $packingList->edit_status = 'pending';
+    $packingList->save();
+
+    ActionHistory::create([
+        'page_name' => 'Packing List',
+        'record_id' => $packingList->id . '-' . $packingList->packing_no,
+        'action_type' => 'edit_requested',
+        'user_id' => Auth::id(),
+        'changes' => json_encode([
+            'main' => $editData,
+            'products' => $productChanges,
+        ]),
+    ]);
+
+    return redirect()->route('packinglist.index')->with('success', 'Edit request submitted.');
+}
+
+public function approveEditRequest($id)
+{
+    $packingList = PackingListMaster::with('details')->findOrFail($id);
+
+    if ($packingList->edit_status !== 'pending' || !$packingList->edit_request_data) {
+        return back()->with('error', 'No pending edit request found or request already processed.');
+    }
+
+    $editData = json_decode($packingList->edit_request_data, true);
+
+    DB::beginTransaction();
+    try {
+        // Update main packing list fields if they exist in the edit data
+        if (isset($editData['main'])) {
+            $packingList->update($editData['main']);
+        }
+
+        // Process product changes
+        $processedDetailIds = [];
+        $productChanges = $editData['products'] ?? [];
+
+        foreach ($productChanges as $productEdit) {
+            $productId = $productEdit['product_id'] ?? null;
+            $oldProductId = $productEdit['old_product_id'] ?? $productId;
+
+            // Handle product modifications and additions
+            if ($productId !== null) {
+                $existingDetail = $packingList->details->firstWhere('product_id', $oldProductId);
+
+                if ($existingDetail) {
+                    // Update existing product
+                    $existingDetail->update([
+                        'product_id' => $productId,
+                        'packaging' => $productEdit['packaging'] ?? $existingDetail->packaging,
+                        'weight' => $productEdit['weight'] ?? $existingDetail->weight,
+                        'par' => $productEdit['par'] ?? $existingDetail->par,
+                        'total' => $productEdit['total'] ?? $existingDetail->total,
+                    ]);
+                    $processedDetailIds[] = $existingDetail->id;
+                } else {
+                    // Add new product
+                    $newDetail = PackingListDetail::create([
+                        'packing_master_id' => $packingList->id,
+                        'product_id' => $productId,
+                        'packaging' => $productEdit['packaging'] ?? null,
+                        'weight' => $productEdit['weight'] ?? null,
+                        'par' => $productEdit['par'] ?? null,
+                        'total' => $productEdit['total'] ?? null,
+                    ]);
+                    $processedDetailIds[] = $newDetail->id;
+                }
+            } else {
+                // Handle product deletions (where product_id is null)
+                $packingList->details()
+                    ->where('product_id', $oldProductId)
+                    ->delete();
+            }
+        }
+
+        // Clean up and finalize
+        $packingList->edit_status = 'approved';
+        $packingList->edit_request_data = null;
+        $packingList->save();
+
+        // Log the approval
+        ActionHistory::create([
+            'page_name' => 'Packing List',
+            'record_id' => $packingList->id . '-' . $packingList->packing_no,
+            'action_type' => 'edit_approved',
+            'user_id' => Auth::id(),
+            'changes' => json_encode($editData),
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('packinglist.index')
+            ->with('success', 'Edit request approved successfully.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error approving edit request: ' . $e->getMessage());
+        
+        return back()->with('error', 'Failed to approve edit request. Please try again.');
+    }
+}
+
+public function rejectEditRequest($id)
+{
+    $packingList = PackingListMaster::findOrFail($id);
+
+    if ($packingList->edit_status !== 'pending') {
+        return back()->with('error', 'No pending edit request found or request already processed.');
+    }
+
+    $packingList->edit_status = 'rejected';
+    $packingList->edit_request_data = null;
+    $packingList->save();
+
+    ActionHistory::create([
+        'page_name' => 'Packing List',
+        'record_id' => $packingList->id . '-' . $packingList->packing_no,
+        'action_type' => 'edit_rejected',
+        'user_id' => Auth::id(),
+    ]);
+
+    return redirect()->route('packinglist.index')
+        ->with('success', 'Edit request rejected successfully.');
+}
+
+public function pendingEditRequests()
+{
+    $packingLists = PackingListMaster::with(['details', 'customer', 'salesOrder'])
+        ->where('edit_status', 'pending')
+        ->get();
+
+    foreach ($packingLists as $packingList) {
+        $editData = json_decode($packingList->edit_request_data, true);
+        $changes = [];
+
+        if ($editData) {
+            // Main fields
+            if (isset($editData['main'])) {
+                foreach ($editData['main'] as $key => $newVal) {
+                    $changes[$key] = [
+                        'original' => $packingList->$key,
+                        'requested' => $newVal,
+                    ];
+                }
+            }
+
+            // Product changes
+            if (isset($editData['products'])) {
+                $changes['products'] = [];
+
+                foreach ($editData['products'] as $productEdit) {
+                    $productChanges = [];
+
+                    $productId = $productEdit['product_id'] ?? null;
+                    $oldProductId = $productEdit['old_product_id'] ?? null;
+
+                    // Only include product_id if there was a product change
+                    if ($oldProductId != $productId) {
+                        $productChanges['product_id'] = [
+                            'original' => $oldProductId,
+                            'requested' => $productId,
+                        ];
+                    } else {
+                        // Include original/current product ID for context
+                        $productChanges['product_id'] = $productId;
+                    }
+
+                    // Handle packaging, weight, par, total changes
+                    foreach (['packaging', 'weight', 'par', 'total'] as $field) {
+                        if (
+                            isset($productEdit[$field]) &&
+                            (!isset($productEdit['old_' . $field]) || $productEdit[$field] != $productEdit['old_' . $field])
+                        ) {
+                            $productChanges[$field] = [
+                                'original' => $productEdit['old_' . $field] ?? null,
+                                'requested' => $productEdit[$field] ?? null,
+                            ];
+                        }
+                    }
+
+                    if (!empty($productChanges)) {
+                        $changes['products'][] = $productChanges;
+                    }
+                }
+            }
+
+            $packingList->changed_fields = $changes;
+        }
+    }
+
+    return view('packing_list.pending-edit-request', compact('packingLists'));
 }
 
 

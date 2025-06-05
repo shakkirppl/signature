@@ -725,6 +725,12 @@ Route::get('/sales-payment/pending-edit-requests', [SalesPaymentController::clas
 Route::get('/packinglist/pending-delete', [PackingListController::class, 'pendingDelete'])->name('packinglist.pendingDelete');
 Route::post('/packinglist/{id}/request-delete', [PackingListController::class, 'requestDelete'])->name('packinglist.requestDelete');
 
+Route::get('packinglist/{id}/edit-request', [PackingListController::class, 'editRequest'])->name('packinglist.edit-request');
+Route::post('/packinglist/{id}/submit-edit', [PackingListController::class, 'submitEditRequest'])->name('packinglist.submitEdit');
+Route::post('/packinglist/{id}/approve-edit', [PackingListController::class, 'approveEditRequest'])->name('packinglist.approveEdit');
+Route::post('/packinglist/{id}/reject-edit', [PackingListController::class, 'rejectEditRequest'])->name('packinglist.rejectEdit');
+Route::get('/packinglist/pending-edit-requests', [PackingListController::class, 'pendingEditRequests'])->name('packinglist.pendingEdits');
+
 Route::post('purchaseorder/{id}/soft-delete', [PurchaseOrderController::class, 'softDelete']) ->name('purchaseorder.softDelete');
 Route::delete('admin/purchaseorder/{id}/delete', [PurchaseOrderController::class, 'admindelete'])->name('admin.purchaseorder.admindelete');
 Route::get('/purchase-order/delete-requests', [PurchaseOrderController::class, 'pendingDeleteRequests'])->name('purchase-order.pendingDeletes');
