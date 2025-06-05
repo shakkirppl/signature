@@ -82,40 +82,34 @@
 {{-- Product changes --}}
 @if(isset($order->changed_fields['products']))
     @foreach($order->changed_fields['products'] as $productChange)
-        @php
-            // Get the current product ID (either from new data or original)
-            $currentProductId = $productChange['product_id']['requested'] ?? 
-                              ($productChange['product_id'] ?? 
-                              ($productChange['old_product_id'] ?? null));
-            
-            // Get the original product ID if available
-            $originalProductId = $productChange['product_id']['original'] ?? 
-                                $productChange['old_product_id'] ?? null;
-            
-            // Get product names
-            $currentProductName = $currentProductId ? ($allProducts[$currentProductId] ?? 'N/A') : 'N/A';
-            $originalProductName = $originalProductId ? ($allProducts[$originalProductId] ?? 'N/A') : 'N/A';
-            
-            // Determine change type
-            $isNewProduct = is_null($originalProductId) && !is_null($currentProductId);
-            $isDeletedProduct = !is_null($originalProductId) && is_null($currentProductId);
-            $isProductChange = !$isNewProduct && !$isDeletedProduct && ($originalProductId != $currentProductId);
-        @endphp
+       @php
+    $hasProductIdChange = isset($productChange['product_id']) && is_array($productChange['product_id']);
+    $originalProductId = $hasProductIdChange ? $productChange['product_id']['original'] : ($productChange['product_id'] ?? null);
+    $currentProductId = $hasProductIdChange ? $productChange['product_id']['requested'] : ($productChange['product_id'] ?? null);
 
-        <tr class="table-info">
-            <td colspan="3">
-                <strong>Product Changes</strong>
-                @if($isNewProduct)
-                    <span class="badge bg-success">New Product Added</span>
-                @elseif($isDeletedProduct)
-                    <span class="badge bg-danger">Product Removed</span>
-                @elseif($isProductChange)
-                    <span class="badge bg-primary">Product Changed</span>
-                @else
-                    <span class="badge bg-warning">Product Modified</span>
-                @endif
-            </td>
-        </tr>
+    $isNewProduct = is_null($originalProductId) && !is_null($currentProductId);
+    $isDeletedProduct = !is_null($originalProductId) && is_null($currentProductId);
+    $isProductChange = $hasProductIdChange && $originalProductId != $currentProductId;
+
+    $originalProductName = $originalProductId ? ($allProducts[$originalProductId] ?? 'N/A') : 'N/A';
+    $currentProductName = $currentProductId ? ($allProducts[$currentProductId] ?? 'N/A') : 'N/A';
+@endphp
+
+<tr class="table-info">
+    <td colspan="3">
+        <strong>Product Changes</strong>
+        @if($isNewProduct)
+            <span class="badge bg-success">New Product Added</span>
+        @elseif($isDeletedProduct)
+            <span class="badge bg-danger">Product Removed</span>
+        @elseif($isProductChange)
+            <span class="badge bg-primary">Product Changed</span>
+        @else
+            <span class="badge bg-warning">Product Modified</span>
+        @endif
+    </td>
+</tr>
+
 
         {{-- Always show product name --}}
         <tr>

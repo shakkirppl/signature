@@ -57,6 +57,13 @@
                                                      Delete
                                             </a>
                                             @endif
+                                                 @if($user->designation_id == 3 && $sale->edit_status == 'none')
+                                                 <a href="{{ route('sales_payment.edit-request', $sale->id) }}" class="btn btn-warning btn-sm">
+                                                 Request Edit
+                                                </a>
+                                                @endif
+
+        
                                             @if($user->designation_id == 3 && $sale->delete_status == 0)
                                             <form action="{{ route('sales_payment.request_delete', $sale->id) }}" method="POST" style="display:inline-block;">
                                              @csrf

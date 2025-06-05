@@ -362,7 +362,7 @@ public function submitEditRequest(Request $request, $id)
         'supplier_id' => 'required',
         'shipment_id' => 'required',
         'SalesOrder_id' => 'required',
-        'advance_amount' => 'nullable',
+        'advance_amount' => 'nullable|numeric',
         'products' => 'required|array',
         'products.*.product_id' => 'required|exists:product,id',
         'products.*.qty' => 'required|numeric',
@@ -370,83 +370,81 @@ public function submitEditRequest(Request $request, $id)
         'products.*.female' => 'nullable|numeric',
     ]);
 
-    // Store the main PO data
-    $editData = [
-        'order_no' => $data['order_no'],
-        'date' => $data['date'],
-        'supplier_id' => $data['supplier_id'],
-        'shipment_id' => $data['shipment_id'],
-        'SalesOrder_id' => $data['SalesOrder_id'],
-        'advance_amount' => $data['advance_amount'] ?? 0,
-    ];
-
-    // Prepare product changes
-    $productChanges = [];
-    foreach ($data['products'] as $index => $product) {
-        $existingDetail = $po->details->firstWhere('product_id', $product['product_id']);
-        $productChanges[] = [
-            'product_id' => $product['product_id'],
-            'qty' => $product['qty'],
-            'male' => $product['male'],
-            'female' => $product['female'],
-            'existing_id' => $existingDetail ? $existingDetail->id : null,
-        ];
+    // Only store changed main fields
+    $editData = [];
+    foreach (['order_no', 'date', 'supplier_id', 'shipment_id', 'SalesOrder_id', 'advance_amount'] as $field) {
+        if (isset($data[$field]) && $po->$field != $data[$field]) {
+            $editData[$field] = $data[$field];
+        }
     }
 
-    // Store all requested edits
+    $existingProducts = $po->details->keyBy('product_id');
+    $productChanges = [];
+    $submittedProductIds = [];
+
+    foreach ($data['products'] as $newProduct) {
+        $productId = $newProduct['product_id'];
+        $submittedProductIds[] = $productId;
+
+        if ($existingProducts->has($productId)) {
+            $old = $existingProducts[$productId];
+            $productChange = ['product_id' => $productId, 'old_product_id' => $productId];
+            $hasChanges = false;
+
+            foreach (['qty', 'male', 'female'] as $field) {
+                if ($old->$field != $newProduct[$field]) {
+                    $productChange['old_'.$field] = $old->$field;
+                    $productChange[$field] = $newProduct[$field];
+                    $hasChanges = true;
+                }
+            }
+
+            if ($hasChanges) {
+                $productChanges[] = $productChange;
+            }
+        } else {
+            // New product addition
+            $productChanges[] = [
+                'product_id' => $productId,
+                'old_product_id' => null,
+                'qty' => $newProduct['qty'],
+                'male' => $newProduct['male'],
+                'female' => $newProduct['female'],
+            ];
+        }
+    }
+
+    // Check for deleted products
+    foreach ($existingProducts as $productId => $detail) {
+        if (!in_array($productId, $submittedProductIds)) {
+            $productChanges[] = [
+                'product_id' => null,
+                'old_product_id' => $productId,
+                'old_qty' => $detail->qty,
+                'old_male' => $detail->male,
+                'old_female' => $detail->female,
+            ];
+        }
+    }
+
     $po->edit_request_data = json_encode([
         'main' => $editData,
         'products' => $productChanges,
     ]);
+
     $po->edit_status = 'pending';
     $po->save();
 
-    // Log changes
-    $original = $po->only(array_keys($editData));
-    $changes = [];
-    foreach ($editData as $key => $new) {
-        $old = $original[$key] ?? null;
-        if ($old != $new) {
-            $changes[$key] = ['old' => $old, 'new' => $new];
-        }
-    }
-
-    // Check changes in purchase_order_detail
-    foreach ($productChanges as $p) {
-        $existingDetail = $po->details->firstWhere('product_id', $p['product_id']);
-        if ($existingDetail) {
-            if (
-                $existingDetail->qty != $p['qty'] ||
-                $existingDetail->male != $p['male'] ||
-                $existingDetail->female != $p['female']
-            ) {
-                $changes['Product ID ' . $p['product_id']] = [
-                    'old' => [
-                        'qty' => $existingDetail->qty,
-                        'male' => $existingDetail->male,
-                        'female' => $existingDetail->female
-                    ],
-                    'new' => [
-                        'qty' => $p['qty'],
-                        'male' => $p['male'],
-                        'female' => $p['female']
-                    ]
-                ];
-            }
-        }
-    }
-
-   ActionHistory::create([
-    'page_name' => 'Purchase Order',
-    'record_id' => $po->id . '-' . $po->order_no,
-    'action_type' => 'edit_requested',
-    'user_id' => Auth::id(),
-    'changes' => json_encode([
-    'main' => $editData,       
-    'products' => $productChanges
-    ]),
-]);
-
+    ActionHistory::create([
+        'page_name' => 'Purchase Order',
+        'record_id' => $po->id . '-' . $po->order_no,
+        'action_type' => 'edit_requested',
+        'user_id' => Auth::id(),
+        'changes' => json_encode([
+            'main' => $editData,
+            'products' => $productChanges,
+        ]),
+    ]);
 
     return redirect()->route('purchase-order.index')->with('success', 'Edit request submitted.');
 }
@@ -456,107 +454,145 @@ public function approveEditRequest($id)
     $po = PurchaseOrder::with('details')->findOrFail($id);
 
     if ($po->edit_status !== 'pending' || !$po->edit_request_data) {
-        return redirect()->back()->with('error', 'No pending request found.');
+        return back()->with('error', 'No pending edit request found or request already processed.');
     }
 
     $editData = json_decode($po->edit_request_data, true);
 
-    // Update main purchase order
-    $po->update($editData['main']);
-
-    // Update products
-    foreach ($editData['products'] as $product) {
-        $detail = $po->details->firstWhere('product_id', $product['product_id']);
-        if ($detail) {
-            $detail->update([
-                'qty' => $product['qty'],
-                'male' => $product['male'],
-                'female' => $product['female'],
-            ]);
-        } else {
-            // Optionally handle new products
+    DB::beginTransaction();
+    try {
+        // Update main order fields if they exist in the edit data
+        if (isset($editData['main'])) {
+            $po->update($editData['main']);
         }
+
+        // Process product changes
+        $processedDetailIds = [];
+        $productChanges = $editData['products'] ?? [];
+
+        foreach ($productChanges as $productEdit) {
+            $productId = $productEdit['product_id'] ?? null;
+            $oldProductId = $productEdit['old_product_id'] ?? $productId;
+
+            // Handle product modifications and additions
+            if ($productId !== null) {
+                $existingDetail = $po->details->firstWhere('product_id', $oldProductId);
+
+                if ($existingDetail) {
+                    // Update existing product
+                    $existingDetail->update([
+                        'product_id' => $productId,
+                        'qty' => $productEdit['qty'] ?? $existingDetail->qty,
+                        'male' => $productEdit['male'] ?? $existingDetail->male,
+                        'female' => $productEdit['female'] ?? $existingDetail->female,
+                    ]);
+                    $processedDetailIds[] = $existingDetail->id;
+                } else {
+                    // Add new product
+                    $newDetail = PurchaseOrderDetail::create([
+                        'purchase_order_id' => $po->id,
+                        'product_id' => $productId,
+                        'qty' => $productEdit['qty'] ?? 0,
+                        'male' => $productEdit['male'] ?? 0,
+                        'female' => $productEdit['female'] ?? 0,
+                        'user_id' => Auth::id(),
+                        'store_id' =>1
+                    ]);
+                    $processedDetailIds[] = $newDetail->id;
+                }
+            } else {
+                // Handle product deletions (where product_id is null)
+                $po->details()
+                    ->where('product_id', $oldProductId)
+                    ->delete();
+            }
+        }
+
+        // Clean up and finalize
+        $po->edit_status = 'approved';
+        $po->edit_request_data = null;
+        $po->save();
+
+        // Log the approval
+        ActionHistory::create([
+            'page_name' => 'Purchase Order',
+            'record_id' => $po->id . '-' . $po->order_no,
+            'action_type' => 'edit_approved',
+            'user_id' => Auth::id(),
+            'changes' => json_encode($editData),
+        ]);
+
+        DB::commit();
+
+        return redirect()->route('purchase-order.index')
+            ->with('success', 'Edit request approved successfully.');
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Error approving edit request: ' . $e->getMessage());
+        
+        return back()->with('error', 'Failed to approve edit request. Please try again.');
     }
-
-    $po->edit_status = 'approved';
-    $po->edit_request_data = null;
-    $po->save();
-      ActionHistory::create([
-        'page_name' => 'Purchase Order',
-        'record_id' => $po->id . '-' . $po->order_no,
-        'action_type' => 'edit_approved',
-        'user_id' => Auth::id(),
-        'changes' => json_encode($editData),
-    ]);
-
-
-    return redirect()->route('purchase-order.index')->with('success', 'Edit request approved and changes applied.');
 }
 public function pendingEditRequests()
 {
-    $orders = PurchaseOrder::with(['details', 'supplier'])->where('edit_status', 'pending')->get();
+    $orders = PurchaseOrder::with(['details', 'supplier'])
+        ->where('edit_status', 'pending')
+        ->get();
 
     foreach ($orders as $order) {
-        $requestedData = json_decode($order->edit_request_data, true);
-        $changedFields = [];
+        $editData = json_decode($order->edit_request_data, true);
+        $changes = [];
 
-        if (!$requestedData) continue;
-
-        // Compare main fields
-        foreach ($requestedData['main'] as $field => $newValue) {
-            $originalValue = $order->$field;
-
-            if (in_array($field, ['advance_amount'])) {
-                $originalValue = (float) $originalValue;
-                $newValue = (float) $newValue;
-            }
-
-            if ($originalValue != $newValue) {
-                $changedFields[$field] = [
-                    'original' => $originalValue,
-                    'requested' => $newValue,
-                ];
-            }
-        }
-
-        // Compare product details
-        foreach ($requestedData['products'] as $requestedProduct) {
-            $productId = $requestedProduct['product_id'];
-            $existingDetail = $order->details->firstWhere('product_id', $productId);
-            
-            $productChanges = [];
-            if ($existingDetail) {
-                foreach (['qty', 'male', 'female'] as $field) {
-                    if ($existingDetail->$field != $requestedProduct[$field]) {
-                        $productChanges[$field] = [
-                            'original' => $existingDetail->$field,
-                            'requested' => $requestedProduct[$field],
-                        ];
-                    }
-                }
-            } else {
-                // New product being added
-                foreach (['qty', 'male', 'female'] as $field) {
-                    if (isset($requestedProduct[$field])) {
-                        $productChanges[$field] = [
-                            'original' => null,
-                            'requested' => $requestedProduct[$field],
-                        ];
-                    }
+        if ($editData) {
+            // Main field changes
+            if (isset($editData['main'])) {
+                foreach ($editData['main'] as $key => $newVal) {
+                    $changes[$key] = [
+                        'original' => $order->$key,
+                        'requested' => $newVal,
+                    ];
                 }
             }
 
-            if (!empty($productChanges)) {
-                $changedFields["products"][$productId] = $productChanges;
+            // Product changes
+            if (isset($editData['products'])) {
+                $changes['products'] = [];
+                
+                foreach ($editData['products'] as $productEdit) {
+                    $productChanges = [];
+                    $productId = $productEdit['product_id'] ?? null;
+                    $oldProductId = $productEdit['old_product_id'] ?? null;
+                    
+                    // Handle product ID changes (additions/deletions/modifications)
+                    if ($oldProductId != $productId) {
+                        $productChanges['product_id'] = [
+                            'original' => $oldProductId,
+                            'requested' => $productId,
+                        ];
+                    }
+                    
+                    // Handle quantity, male, female changes
+                    foreach (['qty', 'male', 'female'] as $field) {
+                        if (isset($productEdit[$field]) || isset($productEdit['old_'.$field])) {
+                            $productChanges[$field] = [
+                                'original' => $productEdit['old_'.$field] ?? null,
+                                'requested' => $productEdit[$field] ?? null,
+                            ];
+                        }
+                    }
+                    
+                    if (!empty($productChanges)) {
+                        $changes['products'][] = $productChanges;
+                    }
+                }
             }
-        }
 
-        $order->changed_fields = $changedFields;
+            $order->changed_fields = $changes;
+        }
     }
 
     return view('purchase-order.pending-edit-request', compact('orders'));
 }
-  
 
 
 public function rejectEdit($id)

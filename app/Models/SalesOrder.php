@@ -20,7 +20,8 @@ class SalesOrder extends Model
     'balance_amount',
     'store_id',
     'user_id',
-    'delete_status'];
+    'delete_status',
+'edit_status','edit_request_data'];
 
 
     protected $dates = ['deleted_at']; 

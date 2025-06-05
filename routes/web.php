@@ -713,6 +713,15 @@ Route::post('salesorder/{id}/reject-edit', [SalesOrderController::class, 'reject
 Route::post('sales-payment/request-delete/{id}', [SalesPaymentController::class, 'requestDelete'])->name('sales_payment.request_delete');
 Route::get('sales-payment/pending-delete', [SalesPaymentController::class, 'pendingDelete'])->name('sales_payment.pending_delete');
 
+Route::get('sales-payment/{id}/edit-request', [SalesPaymentController::class, 'editRequest'])->name('sales_payment.edit-request');
+
+Route::post('/sales-payment/{id}/submit-edit-request', [SalesPaymentController::class, 'submitEditRequest'])->name('sales_payment.submitEditRequest');   
+Route::post('/sales-payment/{id}/approve-edit', [SalesPaymentController::class, 'approveEditRequest']) ->name('sales_payment.approveEdit');
+Route::post('/sales-payment/{id}/reject-edit', [SalesPaymentController::class, 'rejectEditRequest'])->name('sales_payment.rejectEdit');
+Route::get('/sales-payment/pending-edit-requests', [SalesPaymentController::class, 'pendingEditRequests'])->name('sales_payment.pendingEditRequests');
+
+
+
 Route::get('/packinglist/pending-delete', [PackingListController::class, 'pendingDelete'])->name('packinglist.pendingDelete');
 Route::post('/packinglist/{id}/request-delete', [PackingListController::class, 'requestDelete'])->name('packinglist.requestDelete');
 

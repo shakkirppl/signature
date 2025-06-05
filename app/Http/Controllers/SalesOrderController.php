@@ -467,7 +467,7 @@ public function pendingEditRequests()
         $changes = [];
 
         if ($editData) {
-            // Main field changes
+            // Main fields
             if (isset($editData['main'])) {
                 foreach ($editData['main'] as $key => $newVal) {
                     $changes[$key] = [
@@ -487,15 +487,23 @@ public function pendingEditRequests()
                     $productId = $productEdit['product_id'] ?? null;
                     $oldProductId = $productEdit['old_product_id'] ?? null;
 
-                    // Always include product_id for context
-                    $productChanges['product_id'] = [
-                        'original' => $oldProductId ?? $productId,
-                        'requested' => $productId ?? $oldProductId,
-                    ];
+                    // Only include product_id if there was a product change
+                    if ($oldProductId != $productId) {
+                        $productChanges['product_id'] = [
+                            'original' => $oldProductId,
+                            'requested' => $productId,
+                        ];
+                    } else {
+                        // Include original/current product ID for context
+                        $productChanges['product_id'] = $productId;
+                    }
 
                     // Handle qty, rate, total changes
                     foreach (['qty', 'rate', 'total'] as $field) {
-                        if (isset($productEdit[$field]) || isset($productEdit['old_' . $field])) {
+                        if (
+                            isset($productEdit[$field]) &&
+                            (!isset($productEdit['old_' . $field]) || $productEdit[$field] != $productEdit['old_' . $field])
+                        ) {
                             $productChanges[$field] = [
                                 'original' => $productEdit['old_' . $field] ?? null,
                                 'requested' => $productEdit[$field] ?? null,
@@ -515,6 +523,67 @@ public function pendingEditRequests()
 
     return view('sales-order.pending-edit-request', compact('orders'));
 }
+
+// public function pendingEditRequests()
+// {
+//     $orders = SalesOrder::with(['details', 'customer'])
+//         ->where('edit_status', 'pending')
+//         ->get();
+
+//     foreach ($orders as $order) {
+//         $editData = json_decode($order->edit_request_data, true);
+//         $changes = [];
+
+//         if ($editData) {
+//             // Main field changes
+//             if (isset($editData['main'])) {
+//                 foreach ($editData['main'] as $key => $newVal) {
+//                     $changes[$key] = [
+//                         'original' => $order->$key,
+//                         'requested' => $newVal,
+//                     ];
+//                 }
+//             }
+
+//             // Product changes
+//             if (isset($editData['products'])) {
+//                 $changes['products'] = [];
+
+//                 foreach ($editData['products'] as $productEdit) {
+//                     $productChanges = [];
+
+//                     $productId = $productEdit['product_id'] ?? null;
+//                     $oldProductId = $productEdit['old_product_id'] ?? null;
+
+//                     // Always include product_id for context
+//                     $productChanges['product_id'] = [
+//                         'original' => $oldProductId ?? $productId,
+//                         'requested' => $productId ?? $oldProductId,
+//                     ];
+
+//                     // Handle qty, rate, total changes
+//                     foreach (['qty', 'rate', 'total'] as $field) {
+//                         if (isset($productEdit[$field]) || isset($productEdit['old_' . $field])) {
+//                             $productChanges[$field] = [
+//                                 'original' => $productEdit['old_' . $field] ?? null,
+//                                 'requested' => $productEdit[$field] ?? null,
+//                             ];
+//                         }
+//                     }
+
+//                     if (!empty($productChanges)) {
+//                         $changes['products'][] = $productChanges;
+//                     }
+//                 }
+//             }
+
+//             $order->changed_fields = $changes;
+//         }
+//     }
+
+//     return view('sales-order.pending-edit-request', compact('orders'));
+// }
+
 
 
 
