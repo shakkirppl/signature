@@ -5,7 +5,7 @@
     <div class="col-12 grid-margin">
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Pending Edit Requests</h4>
+          <h4 class="card-title">Pending Edit Requests (payment voucher)</h4>
  @if($vouchers->isEmpty())
                         <p>No edit requests pending.</p>
                     @else

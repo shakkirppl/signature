@@ -12,7 +12,7 @@
 ]; @endphp
 
 <div class="container">
-  <h3>Pending Edit Requests</h3>
+  <h3>Pending Edit Requests (Expense voucher)</h3>
    @if($pendingVouchers->isEmpty())
                         <p>No edit requests pending.</p>
                     @else
