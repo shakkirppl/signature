@@ -7,6 +7,36 @@
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Action History Report</h4>
+                    <!-- Load Material Design Icons -->
+<link href="https://cdn.jsdelivr.net/npm/@mdi/font@6.9.96/css/materialdesignicons.min.css" rel="stylesheet">
+
+<!-- Add this style section -->
+<style>
+    /* Color coding for changes */
+    .change-old { color: #6c757d; }  /* Old value - gray */
+    .change-new { color: #0d6efd; } /* New value - blue */
+    .change-added { color: #198754; } /* Added - green */
+    .change-deleted { color: #dc3545; }  /* Deleted - red */
+    .change-modified { color: #fd7e14; } /* Changed - orange */
+    
+    /* Badge styles */
+    .change-badge {
+        padding: 2px 6px;
+        font-size: 0.75em;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
+    .badge-added { background-color: #198754; color: white; }
+    .badge-deleted { background-color: #dc3545; color: white; }
+    .badge-modified { background-color: #fd7e14; color: white; }
+    
+    /* Icon alignment */
+    .change-icon {
+        font-size: 1em;
+        margin-right: 5px;
+        vertical-align: middle;
+    }
+</style>
 
                     <form method="GET" action="{{ route('actionhistory.report') }}" class="row g-3 mb-4">
                         <div class="col-md-3">
@@ -55,30 +85,20 @@
                 <td>{{ $history->record_id }}</td>
                 <td>{{ ucfirst(str_replace('_', ' ', $history->action_type)) }}</td>
                 <td>{{ $history->user->name ?? 'N/A' }}</td>
-                <td>
+       <td>
     @if ($history->changes)
         @php
-            $changes = json_decode($history->changes, true);
-
-            if (is_null($changes)) {
-                echo '<em>Invalid JSON changes data</em>';
-                $changes = [];
-            }
-
-            // Improved record ID extraction
-            $recordId = $history->record_id;
+            $changes = json_decode($history->changes, true) ?? [];
+            $record = null; // Initialize $record
+            $detailsRelation = null;
             $realRecordId = null;
-            
-            // Handle different record_id formats
-            if (str_contains($recordId, '-')) {
-                $parts = explode('-', $recordId);
-                $realRecordId = is_numeric($parts[0]) ? $parts[0] : $recordId;
-            } else {
-                $realRecordId = is_numeric($recordId) ? $recordId : null;
+
+            if (!is_null($history->record_id)) {
+                $recordIdParts = explode('-', $history->record_id);
+                $realRecordId = is_numeric($recordIdParts[0]) ? $recordIdParts[0] : $history->record_id;
             }
 
-            // Load the original record
-            $record = null;
+            // Load the record based on page type
             switch ($history->page_name) {
                 case 'Payment Voucher':
                     $record = \App\Models\PaymentVoucher::find($realRecordId);
@@ -94,14 +114,16 @@
                     break;
                 case 'Purchase Order':
                     $record = \App\Models\PurchaseOrder::with('details')->find($realRecordId);
+                    $detailsRelation = 'details';
                     break;
-                default:
-                    $record = null;
+                case 'Sales Order':
+                    $record = \App\Models\SalesOrder::with('details')->find($realRecordId);
+                    $detailsRelation = 'details';
                     break;
             }
 
             // Field name translations
-            $fieldNames = [
+           $fieldNames = [
                 'coa_id' => 'COA',
                 'employee_id' => 'Payment To',
                 'bank_id' => 'Bank',
@@ -122,121 +144,81 @@
                 'SalesOrder_id' => 'Sales Order No',
                 'advance_amount' => 'Advance Amount',
                 'product_id' => 'Products',
+                'total' => 'Total Amount',
+                'balance_amount' => 'Balance Amount',
+                'grand_total' => 'Grand Total'
             ];
+
         @endphp
 
-        @if (!$record && $realRecordId)
+        @if ($record === null && $realRecordId)
             <div class="text-danger fw-bold">
                 Original record not found (ID: {{ $realRecordId }})
             </div>
         @else
             <ul class="mb-0">
-                @foreach ($changes as $field => $value)
-                    @php
-                        if (is_array($value) && isset($value['old'], $value['new'])) {
-                            $originalValue = $value['old'];
-                            $newValue = $value['new'];
-                        } else {
-                            // For purchase order products
-                            if ($field === 'products' && $history->page_name === 'Purchase Order') {
-                                $originalValue = $record->details ?? [];
-                                $newValue = $value;
-                                continue; // We'll handle products specially below
-                            }
-                            
-                            $originalValue = $record ? $record->getOriginal($field) : null;
-                            $newValue = $value;
-                        }
-
-                        // Translate foreign keys
-                        if ($field === 'coa_id') {
-                            $originalValue = $coaNames[$originalValue] ?? $originalValue;
-                            $newValue = $coaNames[$newValue] ?? $newValue;
-                        }
-                        if ($field === 'bank_id') {
-                            $originalValue = $bankNames[$originalValue] ?? $originalValue;
-                            $newValue = $bankNames[$newValue] ?? $newValue;
-                        }
-                        if ($field === 'shipment_id') {
-                            $originalValue = $shipments[$originalValue] ?? $originalValue;
-                            $newValue = $shipments[$newValue] ?? $newValue;
-                        }
-                        if ($field === 'customer_id') {
-                            $originalValue = $customers[$originalValue] ?? $originalValue;
-                            $newValue = $customers[$newValue] ?? $newValue;
-                        }
-                        if ($field === 'supplier_id') {
-                            $originalValue = $suppliers[$originalValue] ?? $originalValue;
-                            $newValue = $suppliers[$newValue] ?? $newValue;
-                        }
-                         if ($field === 'product_id') {
-                            $originalValue = $products[$originalValue] ?? $originalValue;
-                            $newValue = $products[$newValue] ?? $newValue;
-                        }
-                        if ($field === 'SalesOrder_id') {
-                            $originalValue = $salesOrders[$originalValue] ?? $originalValue;
-                            $newValue = $salesOrders[$newValue] ?? $newValue;
-                        }
-
-                        // Normalize numeric values
-                        if (is_numeric($originalValue) && is_numeric($newValue)) {
-                            $originalValue = (float) $originalValue;
-                            $newValue = (float) $newValue;
-                        }
-                    @endphp
-
-                    <!-- @if ($originalValue != $newValue && $field !== 'products')
-                        <li>
-                            <strong>{{ $fieldNames[$field] ?? ucfirst(str_replace('_', ' ', $field)) }}:</strong>
-                            {{ is_array($originalValue) ? json_encode($originalValue) : $originalValue }}
-                            →
-                            {{ is_array($newValue) ? json_encode($newValue) : $newValue }}
-                        </li>
-                    @endif -->
-                @endforeach
-
-                {{-- Special handling for purchase order products --}}
-                @if (isset($changes['products']) && $history->page_name === 'Purchase Order')
-                    @php
-                        $productChanges = $changes['products'];
-                        $originalProducts = $record->details ?? [];
-                    @endphp
-                    
-                 @foreach ($productChanges as $productChange)
-    @if (isset($productChange['product_id']))
-        @php
-            $productId = $productChange['product_id'];
-            $product = \App\Models\Product::find($productId);
-            $productName = $product ? $product->product_name : "Product $productId";
-
-            $originalProduct = collect($originalProducts)->firstWhere('product_id', $productId);
-        @endphp
-        
-        <li class="mt-2">
-            <strong>Product: {{ $productName }}</strong>
-            <ul>
-                @foreach (['qty', 'male', 'female'] as $field)
-                    @if (isset($productChange[$field]))
-                        @php
-                            $originalValue = $originalProduct ? $originalProduct->$field : null;
-                            $newValue = $productChange[$field];
-                        @endphp
-                        
-                        @if ($originalValue != $newValue)
+                {{-- Simple field changes --}}
+                @if (!isset($changes['main']) && !isset($changes['products']))
+                    @foreach ($changes as $field => $value)
+                        @if (is_array($value) && isset($value['old'], $value['new']))
                             <li>
-                                <strong>{{ ucfirst($field) }}:</strong>
-                                {{ $originalValue ?? 'N/A' }}
-                                →
-                                {{ $newValue }}
+                                <strong>{{ $fieldNames[$field] ?? ucfirst(str_replace('_', ' ', $field)) }}:</strong>
+                                {{ $value['old'] ?? 'N/A' }} → {{ $value['new'] ?? 'N/A' }}
                             </li>
                         @endif
+                    @endforeach
+                @else
+                    {{-- Main document fields --}}
+                    @if (isset($changes['main']))
+                        @foreach ($changes['main'] as $field => $newValue)
+                            @php
+                                $originalValue = $record ? $record->getOriginal($field) : null;
+                                // Add your translation logic here if needed
+                            @endphp
+                            @if ($originalValue != $newValue)
+                                <li>
+                                    <strong>{{ $fieldNames[$field] ?? ucfirst(str_replace('_', ' ', $field)) }}:</strong>
+                                    {{ $originalValue ?? 'N/A' }} → {{ $newValue ?? 'N/A' }}
+                                </li>
+                            @endif
+                        @endforeach
                     @endif
-                @endforeach
-            </ul>
-        </li>
-    @endif
-@endforeach
 
+                    {{-- Product changes --}}
+                    @if (isset($changes['products']) && in_array($history->page_name, ['Purchase Order', 'Sales Order']))
+                        @php
+                            $originalProducts = $detailsRelation ? ($record->$detailsRelation ?? []) : [];
+                        @endphp
+                        
+                        @foreach ($changes['products'] as $productChange)
+                            @if (isset($productChange['product_id']) || isset($productChange['old_product_id']))
+                                @php
+                                    $productId = $productChange['product_id'] ?? null;
+                                    $oldProductId = $productChange['old_product_id'] ?? $productId;
+                                    $product = \App\Models\Product::find($productId ?? $oldProductId);
+                                    $productName = $product ? $product->product_name : "Product " . ($productId ?? $oldProductId);
+                                @endphp
+                                
+                                <li class="mt-2">
+                                    <strong>{{ $productName }}</strong>
+                                    <ul>
+                                        @foreach (['qty', 'rate', 'total'] as $field)
+                                            @if (isset($productChange[$field]) || isset($productChange['old_' . $field]))
+                                                @php
+                                                    $originalValue = $productChange['old_' . $field] ?? null;
+                                                    $newValue = $productChange[$field] ?? null;
+                                                @endphp
+                                                <li>
+                                                    <strong>{{ ucfirst($field) }}:</strong>
+                                                    {{ $originalValue ?? 'N/A' }} → {{ $newValue ?? 'N/A' }}
+                                                </li>
+                                            @endif
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            @endif
+                        @endforeach
+                    @endif
                 @endif
             </ul>
         @endif

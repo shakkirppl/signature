@@ -42,7 +42,6 @@ class ActionHistoryController extends Controller
         'suppliers',
         'salesOrders',
         'products'
-,    ));
+    ));
 }
 }
-
