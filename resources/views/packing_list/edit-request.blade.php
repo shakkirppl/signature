@@ -41,7 +41,7 @@ button.remove-row {
         <div class="col-12 grid-margin">
             <div class="card">
                 <div class="card-body">
-                    <h4 class="card-title">Edit Sales Packing List</h4>
+                    <h4 class="card-title">Edit Packing List Request</h4>
                     <div class="col-md-6 text-right">
                         <a href="{{ route('packinglist.index') }}" class="backicon"><i class="mdi mdi-backburger"></i></a>
                         </div>

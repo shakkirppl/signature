@@ -54,6 +54,11 @@
                  </a>
 
                  @endif
+                  @if($user->designation_id == 3 && $record->edit_status == 'none')
+                                         <a href="{{ route('skinning.editRequest', $record->id) }}" class="btn btn-warning btn-sm">
+                                         Request Edit
+                                         </a>
+                                         @endif
                  @if($user->designation_id == 3 && $record->delete_status == 0)
     <form action="{{ route('skinning.request-delete', $record->id) }}" method="POST" style="display:inline;">
         @csrf

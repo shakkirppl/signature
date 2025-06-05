@@ -748,6 +748,13 @@ Route::post('/purchase-order/reject-edit/{id}', [PurchaseOrderController::class,
 Route::post('/skinning/{id}/request-delete', [SkinningController::class, 'requestDelete'])->name('skinning.request-delete');
 Route::get('/skinning/delete-requests', [SkinningController::class, 'pendingDeleteRequests'])->name('skinning.delete-requests');
 
+// Edit request routes
+Route::get('skinning/{id}/edit-request', [SkinningController::class, 'editRequest'])->name('skinning.editRequest');
+Route::post('/skinning/{id}/submit-edit-request', [SkinningController::class, 'submitEditRequest'])->name('skinning.submitEdit');
+Route::post('/skinning/{id}/approve-edit', [SkinningController::class, 'approveEditRequest'])->name('skinning.approveEdit');
+Route::post('/skinning/{id}/reject-edit', [SkinningController::class, 'rejectEdit'])->name('skinning.rejectEdit');
+Route::get('/skinning/pending-edit-requests', [SkinningController::class, 'pendingEditRequests'])->name('skinning.pendingEdits');
+
 
 // For accountant
 Route::get('paymentvoucher/editrequest/{id}', [PaymentVoucherController::class, 'editRequest'])->name('paymentvoucher.editrequest');

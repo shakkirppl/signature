@@ -379,21 +379,15 @@
             <div class="collapse" id="edit-request">
               <ul class="nav flex-column sub-menu">
                
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher/editrequests/pending')}}">PaymentVoucher</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('airline/pending-edit-requests')}}">Airline Payment</a></li> 
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Return Amount</a></li> 
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Advance</a></li> 
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Final Payment</a></li> 
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('expensevoucher/pending-edit-requests')}}">Expense Voucher</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('receiptvoucher/pending-edit-requests')}}">Receipt Voucher</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Supplier Payment</a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Customer Payment</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('admin/sales-order/pending-edit')}}">Sales Order</a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/sales-payment/pending-edit-requests')}}">Sales </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/packinglist/pending-edit-requests')}}">Packing List </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('admin/purchaseorder/pending-edits')}}">Purchase Order </a></li>
-                <li class="nav-item"> <a class="nav-link" href="{{URL::to('')}}">Skinning </a></li>
+                <li class="nav-item"> <a class="nav-link" href="{{URL::to('/skinning/pending-edit-requests')}}">Skinning </a></li>
                 
                 
 
