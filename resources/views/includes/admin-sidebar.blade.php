@@ -389,13 +389,18 @@
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('admin/purchaseorder/pending-edits')}}">Purchase Order </a></li>
                 <li class="nav-item"> <a class="nav-link" href="{{URL::to('/skinning/pending-edit-requests')}}">Skinning </a></li>
                 
-                
-
-                
               </ul>
             </div>
           </li> 
 @endif
+
+
+ <li class="nav-item">
+   <a class="nav-link" href="{{URL::to('/aging-summary/customers')}}">
+   <i class="mdi mdi-group menu-icon"></i> 
+   <span class="menu-title">Aging Summary</span>
+   </a>
+ </li>
 
         </ul>
       </nav>

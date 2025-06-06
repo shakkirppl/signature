@@ -113,29 +113,55 @@ class OutstandingController extends Controller
 // }
 public function supplierOutstanding()
 {
-    $outstandings = Outstanding::select(
-            'account_id',
-            \DB::raw('SUM(payment) as total_payment'),
-            \DB::raw('SUM(receipt) as total_receipt')
-        )
-        ->where('account_type', 'supplier')
-        ->groupBy('account_id')
-        ->get();
+    $accountType = 'supplier';
+    $outstandings = Outstanding::where('account_type', $accountType)
+        ->orderBy('date')
+        ->get()
+        ->groupBy('account_id');
 
-    $suppliers = Supplier::whereIn('id', $outstandings->pluck('account_id'))->pluck('name', 'id');
+    $finalOutstandings = [];
+    $suppliers = Supplier::whereIn('id', $outstandings->keys())->pluck('name', 'id');
 
-    foreach ($outstandings as $outstanding) {
-        $outstanding->outstanding_balance = abs($outstanding->total_payment - $outstanding->total_receipt);
-        $outstanding->is_receivable = $outstanding->total_payment > $outstanding->total_receipt;
+    foreach ($outstandings as $accountId => $transactions) {
+        $totalPayment = 0;
+        $totalReceipt = 0;
+        $outstandingBalance = 0;
+        $lastZeroBalanceDate = null;
+
+        foreach ($transactions as $transaction) {
+            $totalPayment += $transaction->payment;
+            $totalReceipt += $transaction->receipt;
+
+            $currentBalance = $totalPayment - $totalReceipt;
+
+            if (round($currentBalance, 2) == 0) {
+                $lastZeroBalanceDate = $transaction->date;
+            }
+        }
+
+        $outstandingBalance = abs($totalPayment - $totalReceipt);
+
+        if ($outstandingBalance == 0) {
+            continue; // Skip if no outstanding
+        }
+
+        // Use last zero balance date or first transaction if never settled
+        $baseDate = $lastZeroBalanceDate ?? $transactions->first()->date;
+        $daysSince = \Carbon\Carbon::parse($baseDate)->diffInDays(now());
+
+        $finalOutstandings[] = (object)[
+            'account_id' => $accountId,
+            'supplier_name' => $suppliers[$accountId] ?? 'Unknown Supplier',
+            'total_payment' => $totalPayment,
+            'total_receipt' => $totalReceipt,
+            'outstanding_balance' => $outstandingBalance,
+            'is_receivable' => $totalPayment > $totalReceipt,
+            'days_since_outstanding_started' => $daysSince,
+        ];
     }
 
-    // Filter out entries where outstanding_balance == 0
-    $filteredOutstandings = $outstandings->filter(function ($item) {
-        return $item->outstanding_balance > 0;
-    })->values(); // Reindex the array
-
     return view('supplier_outstanding.index', [
-        'outstandings' => $filteredOutstandings,
+        'outstandings' => collect($finalOutstandings),
         'suppliers' => $suppliers,
     ]);
 }
@@ -144,29 +170,96 @@ public function supplierOutstanding()
 
 public function customerOutstanding()
 {
-    $outstandings = Outstanding::select(
-            'account_id',
-            \DB::raw('SUM(payment) as total_payment'),
-            \DB::raw('SUM(receipt) as total_receipt')
-        )
-        ->where('account_type', 'customer')
-        ->groupBy('account_id')
-        ->get();
+    $accountType = 'customer';
+
+    // Fetch all customer transactions sorted by date
+    $grouped = Outstanding::where('account_type', $accountType)
+        ->orderBy('date')
+        ->get()
+        ->groupBy('account_id');
+
+    $finalOutstandings = [];
+    $customers = Customer::whereIn('id', $grouped->keys())->pluck('customer_name', 'id');
 
     $totalNegative = 0;
-    $customers = Customer::whereIn('id', $outstandings->pluck('account_id'))->pluck('customer_name', 'id');
 
-    foreach ($outstandings as $outstanding) {
-        if ($outstanding->total_payment > $outstanding->total_receipt) {
-            $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
-            $totalNegative += $outstanding->outstanding_balance;
-        } else {
-            $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+    foreach ($grouped as $accountId => $transactions) {
+        $totalPayment = 0;
+        $totalReceipt = 0;
+        $outstandingBalance = 0;
+        $lastZeroBalanceDate = null;
+
+        foreach ($transactions as $transaction) {
+            $totalPayment += $transaction->payment;
+            $totalReceipt += $transaction->receipt;
+
+            $currentBalance = $totalReceipt - $totalPayment;
+
+            if (round($currentBalance, 2) == 0) {
+                $lastZeroBalanceDate = $transaction->date;
+            }
         }
+
+        $outstandingBalance = abs($totalPayment - $totalReceipt);
+
+        if ($outstandingBalance == 0) {
+            continue; // Skip if no outstanding balance
+        }
+
+        $isReceivable = $totalReceipt > $totalPayment;
+
+        $baseDate = $lastZeroBalanceDate ?? $transactions->first()->date;
+        $daysSinceOutstanding = \Carbon\Carbon::parse($baseDate)->diffInDays(now());
+
+        if (!$isReceivable) {
+            $totalNegative += $outstandingBalance;
+        }
+
+        $finalOutstandings[] = (object)[
+            'account_id' => $accountId,
+            'customer_name' => $customers[$accountId] ?? 'Unknown Customer',
+            'total_payment' => $totalPayment,
+            'total_receipt' => $totalReceipt,
+            'outstanding_balance' => $outstandingBalance,
+            'is_receivable' => $isReceivable,
+            'days_since_outstanding_started' => $daysSinceOutstanding,
+        ];
     }
 
-    return view('customer_outstanding.index', compact('outstandings', 'customers', 'totalNegative'));
+    return view('customer_outstanding.index', [
+        'outstandings' => collect($finalOutstandings),
+        'customers' => $customers,
+        'totalNegative' => $totalNegative,
+    ]);
 }
+
+
+
+// public function customerOutstanding()
+// {
+//     $outstandings = Outstanding::select(
+//             'account_id',
+//             \DB::raw('SUM(payment) as total_payment'),
+//             \DB::raw('SUM(receipt) as total_receipt')
+//         )
+//         ->where('account_type', 'customer')
+//         ->groupBy('account_id')
+//         ->get();
+
+//     $totalNegative = 0;
+//     $customers = Customer::whereIn('id', $outstandings->pluck('account_id'))->pluck('customer_name', 'id');
+
+//     foreach ($outstandings as $outstanding) {
+//         if ($outstanding->total_payment > $outstanding->total_receipt) {
+//             $outstanding->outstanding_balance = $outstanding->total_payment - $outstanding->total_receipt;
+//             $totalNegative += $outstanding->outstanding_balance;
+//         } else {
+//             $outstanding->outstanding_balance = $outstanding->total_receipt - $outstanding->total_payment;
+//         }
+//     }
+
+//     return view('customer_outstanding.index', compact('outstandings', 'customers', 'totalNegative'));
+// }
 
 public function customerOutstandingPrint()
 {

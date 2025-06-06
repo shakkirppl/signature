@@ -57,6 +57,7 @@ use App\Http\Controllers\RequestingFormController;
 use App\Http\Controllers\WaterQualityTestRecordController;
 use App\Http\Controllers\ReturnToSupplierController;
 use App\Http\Controllers\ActionHistoryController;
+use App\Http\Controllers\AgingsummaryController;
 
 
 
@@ -785,6 +786,18 @@ Route::post('receiptvoucher/{id}/reject-edit-request', [ReceiptVoucherController
 
 
 Route::get('/action-history-report', [ActionHistoryController::class, 'report'])->name('actionhistory.report');
+
+
+
+    Route::get('/aging-summary', [AgingsummaryController::class, 'agingSummary'])->name('aging.summary');
+    Route::get('/aging-summary/detailed', [AgingsummaryController::class, 'agingDetailed'])->name('aging.detailed');
+    Route::get('/aging-summary/customers', [AgingsummaryController::class, 'customerAging'])->name('aging.customers');
+    Route::get('/aging-summary/suppliers', [AgingsummaryController::class, 'supplierAging'])->name('aging.suppliers');
+
+    Route::get('/customer-aging-summary', [AgingsummaryController::class, 'customerAgingSummary'])->name('customer.aging.summary');
+    Route::get('/supplier-aging-summary', [AgingsummaryController::class, 'supplierAgingSummary'])->name('supplier.aging.summary');
+
+
 
 
 

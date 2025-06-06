@@ -21,9 +21,10 @@
                   <th>Total Payment</th>
                   <th>Total Receipt</th>
                   <th>Outstanding Balance</th>
+                  <th> Transaction Days</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody> 
                 @php
                     $totalPayment = 0;
                     $totalReceipt = 0;
@@ -51,6 +52,7 @@
                         <td class="{{ $outstanding->total_payment > $outstanding->total_receipt ? 'text-danger' : 'text-success' }}">
                             {{ number_format($outstanding->outstanding_balance, 2) }}
                         </td>
+                         <td>{{ $outstanding->days_since_outstanding_started}} days</td>
                     </tr>
                 @endforeach
                 <tr style="font-weight: bold; background-color: #f2f2f2;">
