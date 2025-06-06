@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container-fluid">
-    <h1 class="mb-4">Customer Aging Report</h1>
+    <h4 class="mb-4">Customer Aging Report</h4>
 
     <!-- Summary Section -->
     <div class="card shadow mb-4">
