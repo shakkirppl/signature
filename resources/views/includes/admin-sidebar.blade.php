@@ -395,12 +395,27 @@
 @endif
 
 
- <li class="nav-item">
-   <a class="nav-link" href="{{URL::to('/aging-summary/customers')}}">
-   <i class="mdi mdi-group menu-icon"></i> 
-   <span class="menu-title">Aging Summary</span>
-   </a>
- </li>
 
+
+
+ <li class="nav-item">
+            <a class="nav-link" data-toggle="collapse" href="#agingsummary" aria-expanded="false" aria-controls="charts">
+            <i class="mdi mdi-group menu-icon"></i> 
+              <span class="menu-title">Aging Summary </span>
+              <i class="menu-arrow"></i>
+            </a>
+            <div class="collapse" id="agingsummary">
+              <ul class="nav flex-column sub-menu">
+             
+              <!-- <li class="nav-item"> <a class="nav-link" href="{{URL::to('/aging-summary/suppliers')}}">Suppliers</a></li> -->
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/aging-summary/customers')}}">Customers</a></li>
+              
+              
+
+        
+              </ul>
+            </div>
+            
+          </li>
         </ul>
       </nav>

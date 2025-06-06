@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Outstanding;
 use App\Models\Customer;
-
+use App\Models\Supplier;
 class AgingsummaryController extends Controller
 {
 public function agingSummary()
@@ -60,7 +60,11 @@ public function customerAging()
 public function supplierAging()
 {
     $agingData = $this->calculateAging('supplier', true);
-    return view('aging-report.supplier', $agingData);
+    
+    return view('aging-report.supplier', [
+        'summary' => $agingData['summary'],
+        'transactions' => $agingData['transactions'],
+    ]);
 }
 
 public function calculateAging($accountType = 'customer', $includeDetails = false)
