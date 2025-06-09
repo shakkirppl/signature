@@ -38,10 +38,37 @@
         </div>
     </div>
 
-    <!-- Detailed Transactions -->
+    <!-- Filter and Get Button -->
     <div class="card shadow mb-4">
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">Detailed Transactions</h6>
+        </div>
+
+        
+        <div class="row m-3 align-items-end">
+            <div class="col-md-4">
+                <label for="supplierFilter">Select Supplier:</label>
+                <select id="supplierFilter" class="form-control">
+                    <option value="">-- All Suppliers --</option>
+                    @foreach($suppliers as $id => $supplier)
+                        <option value="{{ $id }}">{{ $supplier->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+
+            <div class="col-md-2">
+                <button id="btnGet" class="btn btn-primary">Get</button>
+                <button id="btnReset" class="btn btn-secondary ml-2">Reset</button>
+            </div>
+
+            <div class="col-md-6">
+                <div id="supplierSummary" class="alert alert-info mt-4 d-none">
+                    <strong>Supplier Summary:</strong>
+                    Total Amount: <span id="summaryAmount">0.00</span>,
+                    Avg. Days Outstanding: <span id="summaryDays">0</span> days
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
@@ -61,7 +88,8 @@
                     <tbody>
                         @foreach($transactions as $transaction)
                             @php
-                                $amount = $transaction->payment - $transaction->receipt;
+                                $supplier = $suppliers[$transaction->account_id] ?? null;
+                                $amount = $transaction->receipt - $transaction->payment;
                                 $absAmount = abs($amount);
 
                                 if ($transaction->days_old <= 30) {
@@ -79,8 +107,10 @@
                                 }
                             @endphp
                             @if($amount > 0)
-                            <tr>
-                                <td>{{ $transaction->supplier->supplier_name ?? 'N/A' }}</td>
+                            <tr data-account-id="{{ $transaction->account_id }}" 
+                                data-amount="{{ $absAmount }}" 
+                                data-days="{{ $transaction->days_old }}">
+                                <td>{{ $supplier->name ?? 'N/A' }}</td>
                                 <td>{{ $transaction->date }}</td>
                                 <td class="text-center">{{ $transaction->days_old }}</td>
                                 <td>{{ $transaction->transaction_id }}</td>
@@ -100,13 +130,12 @@
         </div>
     </div>
 </div>
-@endsection
 
-@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         // Initialize DataTable
-        $('#dataTable').DataTable({
+        const dataTable = $('#dataTable').DataTable({
             order: [[2, 'desc']],
             pageLength: 25,
             dom: 'Bfrtip',
@@ -116,6 +145,57 @@
                 { targets: [6], className: 'text-center' }
             ]
         });
+
+        const $supplierSummary = $('#supplierSummary');
+        const $summaryAmount = $('#summaryAmount');
+        const $summaryDays = $('#summaryDays');
+
+        // Filter button click handler
+        $('#btnGet').on('click', function () {
+            const selectedId = $('#supplierFilter').val();
+            
+            if (selectedId === '') {
+                // Show all rows if no supplier selected
+                dataTable.search('').columns().search('').draw();
+                $supplierSummary.addClass('d-none');
+                return;
+            }
+
+            // Filter by supplier name (first column)
+            const supplierName = $('#supplierFilter option:selected').text();
+            dataTable.columns(0).search(supplierName).draw();
+
+            // Calculate summary
+            let totalAmount = 0;
+            let totalDays = 0;
+            let count = 0;
+
+            dataTable.rows({ search: 'applied' }).every(function() {
+                const rowData = this.data();
+                const rowNode = this.node();
+                const amount = parseFloat($(rowNode).data('amount'));
+                const days = parseInt($(rowNode).data('days'));
+                
+                totalAmount += amount;
+                totalDays += days;
+                count++;
+            });
+
+            if (count > 0) {
+                $summaryAmount.text(totalAmount.toFixed(2));
+                $summaryDays.text(Math.round(totalDays / count));
+                $supplierSummary.removeClass('d-none');
+            } else {
+                $supplierSummary.addClass('d-none');
+            }
+        });
+
+        // Reset button click handler
+        $('#btnReset').on('click', function() {
+            $('#supplierFilter').val('');
+            dataTable.search('').columns().search('').draw();
+            $supplierSummary.addClass('d-none');
+        });
     });
 </script>
-@endsection
+@endsection 

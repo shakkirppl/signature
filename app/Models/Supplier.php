@@ -35,4 +35,6 @@ public function outstanding()
 {
     return $this->hasMany(Outstanding::class, 'account_id', 'id');
 }
+
+
 }

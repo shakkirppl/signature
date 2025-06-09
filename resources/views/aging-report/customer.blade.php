@@ -45,7 +45,7 @@
         </div>
 
         <div class="row m-3 align-items-end">
-            <!-- <div class="col-md-4">
+            <div class="col-md-4">
                 <label for="customerFilter">Select Customer:</label>
                 <select id="customerFilter" class="form-control">
                     <option value="">-- All Customers --</option>
@@ -67,7 +67,7 @@
                     Avg. Days Outstanding: <span id="summaryDays">0</span> days
                 </div>
             </div>
-        </div> -->
+        </div>
 
         <div class="card-body">
             <div class="table-responsive">
@@ -128,9 +128,8 @@
         </div>
     </div>
 </div>
-@endsection
 
-@section('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         // Initialize DataTable

@@ -288,6 +288,8 @@ Route::get('expensevoucher-index', [ExpenseVoucherController::class, 'index'])->
 Route::get('expensevoucher-edit/{id}', [ExpenseVoucherController::class, 'edit'])->name('expensevoucher.edit');
 Route::post('expensevoucher-update/{id}', [ExpenseVoucherController::class, 'update'])->name('expensevoucher.update');
 Route::get('expensevoucher-delete/{id}', [ExpenseVoucherController::class, 'destroy'])->name('expensevoucher.destroy');
+Route::get('/expensevoucher/report', [ExpenseVoucherController::class, 'report'])->name('expensevoucher.report');
+
 
 
 Route::get('employee-create', [EmployeeController::class, 'create'])->name('employee.create');

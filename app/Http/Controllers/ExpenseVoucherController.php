@@ -25,7 +25,7 @@ class ExpenseVoucherController extends Controller
 
 //     return view('expense-voucher.index', compact('vouchers'));
 // }
-
+ 
 public function index(Request $request)
 {
     $query = ExpenseVoucher::with(['bank', 'account', 'shipment'])
@@ -414,6 +414,21 @@ public function rejectEditRequest($id)
     return redirect()->back()->with('success', 'Edit request rejected.');
 }
 
+public function report(Request $request)
+{
+    $query = ExpenseVoucher::with(['account', 'bank'])
+        ->whereHas('shipment', function ($q) {
+            $q->where('shipment_status', 0);
+        });
+
+    if ($request->filled('from_date') && $request->filled('to_date')) {
+        $query->whereBetween('date', [$request->from_date, $request->to_date]);
+    }
+
+    $vouchers = $query->orderBy('date', 'asc')->get();
+
+    return view('expense-voucher.report', compact('vouchers'));
+}
 
 
 

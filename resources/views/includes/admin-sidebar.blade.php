@@ -303,6 +303,7 @@
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('goodsout-order-report')}}">Sales Order </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('offal-sales-report')}}">Offal Sales  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('paymentvoucher-report')}}">Payment Voucher  </a></li>
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/expensevoucher/report')}}">Expense Voucher  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('receiptvoucher-report')}}">Receipt Voucher  </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('supplier-payment-report')}}">Supplier Payment </a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('customer-payment-report')}}">Customer Payment  </a></li>
@@ -407,7 +408,7 @@
             <div class="collapse" id="agingsummary">
               <ul class="nav flex-column sub-menu">
              
-              <!-- <li class="nav-item"> <a class="nav-link" href="{{URL::to('/aging-summary/suppliers')}}">Suppliers</a></li> -->
+              <li class="nav-item"> <a class="nav-link" href="{{URL::to('/aging-summary/suppliers')}}">Suppliers</a></li>
               <li class="nav-item"> <a class="nav-link" href="{{URL::to('/aging-summary/customers')}}">Customers</a></li>
               
               

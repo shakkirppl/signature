@@ -53,7 +53,7 @@ public function customerAging()
     return view('aging-report.customer', [
         'summary' => $agingData['summary'],
         'transactions' => $agingData['transactions'],
-        'customers' => Customer::all()->keyBy('id') // Load all customers
+        'customers' => Customer::all()->keyBy('id')
     ]);
 }
 
@@ -64,6 +64,7 @@ public function supplierAging()
     return view('aging-report.supplier', [
         'summary' => $agingData['summary'],
         'transactions' => $agingData['transactions'],
+        'suppliers' => Supplier::all()->keyBy('id') // Load all suppliers
     ]);
 }
 
