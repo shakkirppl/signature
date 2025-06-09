@@ -397,7 +397,7 @@
 
 
 
-
+ @if($user->designation_id == 1 || $user->designation_id == 3 )
 
  <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#agingsummary" aria-expanded="false" aria-controls="charts">
@@ -418,5 +418,6 @@
             </div>
             
           </li>
+          @endif
         </ul>
       </nav>
